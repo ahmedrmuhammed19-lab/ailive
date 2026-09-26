@@ -6,13 +6,19 @@ tracking, automatic email delivery, and a permanent design-standard QA gate.
 
 ## Features
 
-- Access-code gated client submission portal (upload + case form)
+- Per-account sign-in (ID + password): scrypt-hashed passwords, HMAC-signed
+  HttpOnly session cookies, brute-force brake on the login endpoint
+- Accounts are created on demand with `scripts/add-user.mjs` — one command
+  per new client or operator
+- Statement uploads stored hash-locked (MD5) on arrival: Vercel Blob in
+  production, local filesystem in development (`src/lib/storage.ts`)
 - Joint-applicant aware visa-threshold baselines (UK / Schengen / US / fallback)
 - Automatic case-brief generation for the analysis pipeline (`scripts/start_case.py`)
 - Design Standard v1.3 permanent compliance gate (`scripts/qa_v13_check.py`)
 - Provider-agnostic SMTP notifications (Gmail / Brevo / SendGrid) with an
   outbox queue, status tracking, and operator alerts
-- Finished reports delivered to clients by email as HTML + PDF attachments
+- Finished reports delivered to clients by email as an HTML attachment, and
+  downloadable from the portal's Reports tab (`scripts/publish-report.mjs`)
 
 ## Stack
 
@@ -38,6 +44,16 @@ bun install
 bunx prisma db push
 bun run dev
 ```
+
+Create portal accounts:
+
+```bash
+bun scripts/add-user.mjs add <id> <password> [label] [client|operator]
+bun scripts/add-user.mjs list
+```
+
+`SESSION_SECRET` must be set (see `.env.example`) — every session check
+fails closed without it.
 
 ## Privacy
 

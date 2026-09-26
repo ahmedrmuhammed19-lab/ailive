@@ -23,7 +23,7 @@ interface UploadResponse {
   handshake?: HandshakeFile[];
 }
 
-export function UploadPanel({ code }: { code: string }) {
+export function UploadPanel() {
   const [queueId, setQueueId] = useState("");
   const [clientEmail, setClientEmail] = useState("");
   const [country, setCountry] = useState("");
@@ -61,7 +61,6 @@ export function UploadPanel({ code }: { code: string }) {
     setResult(null);
     try {
       const fd = new FormData();
-      fd.set("code", code);
       fd.set("userId", queueId);
       fd.set("email", clientEmail.trim());
       fd.set("country", country.trim());
@@ -86,7 +85,7 @@ export function UploadPanel({ code }: { code: string }) {
     } finally {
       setUploading(false);
     }
-  }, [code, queueId, clientEmail, country, visaType, travelers, files]);
+  }, [queueId, clientEmail, country, visaType, travelers, files]);
 
   return (
     <div className="mx-auto max-w-2xl space-y-4">

@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
-  ShieldCheck, CheckCircle2, Loader2, Lock, ListOrdered, LayoutDashboard, FileText, UploadCloud,
+  ShieldCheck, CheckCircle2, Loader2, Lock, ListOrdered, LayoutDashboard, FileText, UploadCloud, LogOut, User,
 } from "lucide-react";
 import { UploadPanel } from "@/components/portal/upload-panel";
 import { QueuePanel } from "@/components/portal/queue-panel";
@@ -14,39 +14,72 @@ import { ReportsPanel } from "@/components/portal/reports-panel";
 import { GH } from "@/lib/format";
 
 export default function PortalPage() {
-  const [code, setCode] = useState("");
-  const [unlocked, setUnlocked] = useState(false);
+  const [user, setUser] = useState<string | null>(null);
+  const [checking, setChecking] = useState(true); // session restore on first load
+  const [userId, setUserId] = useState("");
+  const [password, setPassword] = useState("");
   const [gateBusy, setGateBusy] = useState(false);
   const [gateError, setGateError] = useState<string | null>(null);
   const [refreshKey, setRefreshKey] = useState(0);
 
-  // Bump refreshKey whenever the queue/dashboard tab is opened so data reloads.
-  const verifyCode = useCallback(async () => {
-    if (!code.trim()) {
-      setGateError("Enter the access code.");
+  // Restore an existing session (signed cookie) on first mount.
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const res = await fetch("/api/me", { cache: "no-store" });
+        const data = (await res.json()) as { ok: boolean; user?: string | null };
+        if (!cancelled && data.ok && data.user) setUser(data.user);
+      } catch {
+        // not signed in — show the gate
+      } finally {
+        if (!cancelled) setChecking(false);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const signIn = useCallback(async () => {
+    if (!userId.trim() || !password) {
+      setGateError("Enter your ID and password.");
       return;
     }
     setGateBusy(true);
     setGateError(null);
     try {
-      const res = await fetch("/api/verify-code", {
+      const res = await fetch("/api/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ code }),
+        body: JSON.stringify({ username: userId, password }),
       });
-      const data = (await res.json()) as { ok: boolean };
-      if (data.ok) {
-        setUnlocked(true);
+      const data = (await res.json()) as { ok: boolean; error?: string; user?: { username: string } };
+      if (data.ok && data.user) {
+        setUser(data.user.username);
+        setPassword("");
       } else {
-        setGateError("Invalid access code — check the code provided by Global EIS.");
+        setGateError(data.error ?? "Wrong ID or password.");
       }
     } catch {
       setGateError("Network error.");
     } finally {
       setGateBusy(false);
     }
-  }, [code]);
+  }, [userId, password]);
 
+  const signOut = useCallback(async () => {
+    try {
+      await fetch("/api/logout", { method: "POST" });
+    } catch {
+      // ignore — clearing locally regardless
+    }
+    setUser(null);
+    setUserId("");
+    setPassword("");
+  }, []);
+
+  // Bump refreshKey whenever the queue/dashboard tab is opened so data reloads.
   useEffect(() => {
     const t = setInterval(() => setRefreshKey((k) => k + 1), 30_000);
     return () => clearInterval(t);
@@ -68,10 +101,20 @@ export default function PortalPage() {
             <span className="hidden rounded-full border border-[#d0d7de] bg-white px-2.5 py-0.5 font-mono sm:inline">
               ahmedr.muhammed19@gmail.com
             </span>
-            {unlocked ? (
-              <span className="flex items-center gap-1.5 rounded-full border border-[#d0d7de] bg-[#dafbe1] px-2.5 py-0.5 font-medium text-[#1a7f37]">
-                <CheckCircle2 className="h-3.5 w-3.5" aria-hidden="true" /> Unlocked
-              </span>
+            {user ? (
+              <>
+                <span className="flex items-center gap-1.5 rounded-full border border-[#d0d7de] bg-[#dafbe1] px-2.5 py-0.5 font-medium text-[#1a7f37]">
+                  <User className="h-3.5 w-3.5" aria-hidden="true" /> {user}
+                </span>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={signOut}
+                  className="h-7 gap-1.5 border-[#d0d7de] px-2.5 text-xs text-[#59636e] hover:bg-[#f6f8fa] hover:text-[#cf222e]"
+                >
+                  <LogOut className="h-3.5 w-3.5" aria-hidden="true" /> Sign out
+                </Button>
+              </>
             ) : (
               <span className="flex items-center gap-1.5 rounded-full border border-[#d0d7de] bg-white px-2.5 py-0.5 font-medium">
                 <Lock className="h-3.5 w-3.5" aria-hidden="true" /> Locked
@@ -82,40 +125,49 @@ export default function PortalPage() {
       </header>
 
       <main className="mx-auto w-full max-w-5xl flex-1 px-4 py-6 sm:px-6">
-        {/* Access gate */}
-        {!unlocked && (
+        {/* Sign-in gate */}
+        {!user && !checking && (
           <div className="mx-auto mt-10 max-w-md">
             <div className="rounded-md border border-[#d0d7de] bg-white">
               <div className="border-b border-[#d8dee4] bg-[#f6f8fa] px-4 py-2.5 text-sm font-semibold">
-                Access code
+                Sign in
               </div>
               <div className="space-y-3 p-4">
                 <p className="text-sm text-[#59636e]">
-                  Enter the access code provided by Global EIS to unlock the portal.
+                  Enter the ID and password provided by Global EIS.
                 </p>
-                <div className="flex flex-col gap-2 sm:flex-row">
+                <div className="space-y-2">
+                  <Input
+                    type="text"
+                    placeholder="ID"
+                    value={userId}
+                    onChange={(e) => setUserId(e.target.value)}
+                    onKeyDown={(e) => e.key === "Enter" && signIn()}
+                    autoComplete="username"
+                    aria-label="ID"
+                  />
                   <Input
                     type="password"
-                    placeholder="Access code"
-                    value={code}
-                    onChange={(e) => setCode(e.target.value)}
-                    onKeyDown={(e) => e.key === "Enter" && verifyCode()}
-                    aria-label="Access code"
-                    className="sm:max-w-xs"
+                    placeholder="Password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    onKeyDown={(e) => e.key === "Enter" && signIn()}
+                    autoComplete="current-password"
+                    aria-label="Password"
                   />
-                  <Button
-                    onClick={verifyCode}
-                    disabled={gateBusy}
-                    className="bg-[#1f883d] text-white hover:bg-[#1a7f37]"
-                  >
-                    {gateBusy ? (
-                      <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
-                    ) : (
-                      <ShieldCheck className="h-4 w-4" aria-hidden="true" />
-                    )}
-                    Unlock
-                  </Button>
                 </div>
+                <Button
+                  onClick={signIn}
+                  disabled={gateBusy}
+                  className="w-full bg-[#1f883d] text-white hover:bg-[#1a7f37] sm:w-auto"
+                >
+                  {gateBusy ? (
+                    <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
+                  ) : (
+                    <ShieldCheck className="h-4 w-4" aria-hidden="true" />
+                  )}
+                  Sign in
+                </Button>
                 {gateError && (
                   <p className="rounded-md border border-[#d0d7de] bg-[#ffebe9] px-3 py-2 text-sm" style={{ color: GH.danger }} role="alert">
                     {gateError}
@@ -126,8 +178,14 @@ export default function PortalPage() {
           </div>
         )}
 
+        {checking && (
+          <div className="flex items-center justify-center gap-2 py-16 text-sm text-[#59636e]">
+            <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" /> Checking session…
+          </div>
+        )}
+
         {/* Workspace */}
-        {unlocked && (
+        {user && (
           <Tabs defaultValue="upload" onValueChange={() => setRefreshKey((k) => k + 1)}>
             <TabsList className="mb-4 flex h-auto w-full justify-start gap-1 rounded-none border-b border-[#d0d7de] bg-transparent p-0">
               {[
@@ -148,16 +206,16 @@ export default function PortalPage() {
             </TabsList>
 
             <TabsContent value="upload" className="mt-2">
-              <UploadPanel code={code} />
+              <UploadPanel />
             </TabsContent>
             <TabsContent value="queue" className="mt-2">
-              <QueuePanel code={code} refreshKey={refreshKey} />
+              <QueuePanel refreshKey={refreshKey} />
             </TabsContent>
             <TabsContent value="dashboard" className="mt-2">
-              <DashboardPanel code={code} refreshKey={refreshKey} />
+              <DashboardPanel refreshKey={refreshKey} />
             </TabsContent>
             <TabsContent value="reports" className="mt-2">
-              <ReportsPanel code={code} />
+              <ReportsPanel />
             </TabsContent>
           </Tabs>
         )}

@@ -1,16 +1,16 @@
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import {
-  accessCodeValid,
   extAllowed,
   generateQueueId,
   md5,
   normalizeQueueId,
   sanitizeName,
-  storeFile,
   submissionDirName,
 } from "@/lib/portal";
+import { putStatement } from "@/lib/storage";
 import { loadMailCreds, operatorAddress, sendOrQueue } from "@/lib/mail";
+import { sessionUser } from "@/lib/session";
 import path from "path";
 
 export const maxDuration = 120;
@@ -26,11 +26,11 @@ export async function POST(req: Request) {
     );
   }
 
-  // --- Gate: access code ---
-  const code = String(form.get("code") ?? "");
-  if (!accessCodeValid(code)) {
+  // --- Gate: signed-in portal account ---
+  const account = await sessionUser(req);
+  if (!account) {
     return NextResponse.json(
-      { ok: false, error: "Invalid access code." },
+      { ok: false, error: "Sign in required." },
       { status: 401 }
     );
   }
@@ -88,6 +88,7 @@ export async function POST(req: Request) {
         country,
         visaType,
         travelers,
+        submittedBy: account,
       },
     });
   } catch (err) {
@@ -118,12 +119,13 @@ export async function POST(req: Request) {
       const buf = Buffer.from(await f.arrayBuffer());
       const digest = md5(buf);
       const safeName = sanitizeName(f.name);
-      const storedPath = await storeFile(subdir, safeName, buf);
+      const stored = await putStatement(subdir, safeName, buf);
       const record = await db.statementFile.create({
         data: {
           submissionId: submission.id,
           originalName: f.name,
-          storedPath,
+          storedPath: stored.key,
+          storedUrl: stored.url || null,
           sizeBytes: buf.length,
           md5: digest,
         },
@@ -131,7 +133,7 @@ export async function POST(req: Request) {
       handshake.push({
         fileId: record.id,
         name: f.name,
-        storedAs: path.basename(storedPath),
+        storedAs: path.basename(stored.key),
         sizeBytes: buf.length,
         md5: digest,
         receivedAt: record.createdAt.toISOString(),

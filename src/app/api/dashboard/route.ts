@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
-import { accessCodeValid } from "@/lib/portal";
+import { sessionUser } from "@/lib/session";
 
 function dayKey(d: Date): string {
   // Local (server) date key YYYY-MM-DD
@@ -11,15 +11,16 @@ function dayKey(d: Date): string {
 }
 
 /**
- * GET /api/dashboard?code=...&month=YYYY-MM
+ * GET /api/dashboard?month=YYYY-MM   (requires a signed-in account)
  * Returns operator stats: today counters, totals by status, and per-day
  * uploaded/analyzed counts for the requested month (calendar heatmap).
  */
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
-  if (!accessCodeValid(searchParams.get("code"))) {
+  const user = await sessionUser(req);
+  if (!user) {
     return NextResponse.json(
-      { ok: false, error: "Invalid access code." },
+      { ok: false, error: "Sign in required." },
       { status: 401 }
     );
   }

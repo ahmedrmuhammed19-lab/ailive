@@ -37,7 +37,7 @@ function shiftMonth(key: string, delta: number): string {
 
 const WEEKDAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
-export function DashboardPanel({ code, refreshKey }: { code: string; refreshKey: number }) {
+export function DashboardPanel({ refreshKey }: { refreshKey: number }) {
   const [data, setData] = useState<DashData | null>(null);
   const [busy, setBusy] = useState(false);
   const [monthKey, setMonthKey] = useState<string | null>(null);
@@ -46,7 +46,7 @@ export function DashboardPanel({ code, refreshKey }: { code: string; refreshKey:
     async (mk?: string | null) => {
       setBusy(true);
       try {
-        const q = new URLSearchParams({ code });
+        const q = new URLSearchParams();
         if (mk) q.set("month", mk);
         const res = await fetch(`/api/dashboard?${q.toString()}`);
         if (res.status === 401) {
@@ -60,7 +60,7 @@ export function DashboardPanel({ code, refreshKey }: { code: string; refreshKey:
         setBusy(false);
       }
     },
-    [code]
+    []
   );
 
   useEffect(() => {

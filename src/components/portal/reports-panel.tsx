@@ -16,14 +16,14 @@ interface ReportEntry {
   modified: string;
 }
 
-export function ReportsPanel({ code }: { code: string }) {
+export function ReportsPanel() {
   const [reports, setReports] = useState<ReportEntry[] | null>(null);
   const [busy, setBusy] = useState(false);
 
   const load = useCallback(async () => {
     setBusy(true);
     try {
-      const res = await fetch(`/api/reports?code=${encodeURIComponent(code)}`);
+      const res = await fetch(`/api/reports`);
       if (res.status === 401) {
         setReports([]);
         return;
@@ -35,7 +35,7 @@ export function ReportsPanel({ code }: { code: string }) {
     } finally {
       setBusy(false);
     }
-  }, [code]);
+  }, []);
 
   useEffect(() => {
     load();
@@ -95,7 +95,7 @@ export function ReportsPanel({ code }: { code: string }) {
                     </TableCell>
                     <TableCell className="text-right">
                       <a
-                        href={`/api/report/download?code=${encodeURIComponent(code)}&file=${encodeURIComponent(r.name)}`}
+                        href={`/api/report/download?file=${encodeURIComponent(r.name)}`}
                         download={r.name}
                         aria-label={`Download ${r.name}`}
                       >

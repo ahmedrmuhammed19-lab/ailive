@@ -28,14 +28,16 @@ interface QueueItem {
   travelers: number;
   email: string | null;
   notes: string | null;
+  submittedBy: string | null;
   analyzedAt: string | null;
   fileCount: number;
+  files: Array<{ id: string; name: string }>;
   createdAt: string;
 }
 
 const FILTERS = ["ALL", "WAITING", "ANALYZING", "DONE"] as const;
 
-export function QueuePanel({ code, refreshKey }: { code: string; refreshKey: number }) {
+export function QueuePanel({ refreshKey }: { refreshKey: number }) {
   const [items, setItems] = useState<QueueItem[] | null>(null);
   const [busy, setBusy] = useState(false);
   const [filter, setFilter] = useState<(typeof FILTERS)[number]>("ALL");
@@ -46,7 +48,7 @@ export function QueuePanel({ code, refreshKey }: { code: string; refreshKey: num
   const load = useCallback(async () => {
     setBusy(true);
     try {
-      const res = await fetch(`/api/queue?code=${encodeURIComponent(code)}`);
+      const res = await fetch(`/api/queue`);
       if (res.status === 401) {
         setItems([]);
         return;
@@ -58,7 +60,7 @@ export function QueuePanel({ code, refreshKey }: { code: string; refreshKey: num
     } finally {
       setBusy(false);
     }
-  }, [code]);
+  }, []);
 
   useEffect(() => {
     load();
@@ -71,14 +73,14 @@ export function QueuePanel({ code, refreshKey }: { code: string; refreshKey: num
         await fetch("/api/queue/update", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ code, id, ...patch }),
+          body: JSON.stringify({ id, ...patch }),
         });
         await load();
       } finally {
         setSavingId(null);
       }
     },
-    [code, load]
+    [load]
   );
 
   const counts = { ALL: items?.length ?? 0, WAITING: 0, ANALYZING: 0, DONE: 0 };
@@ -188,6 +190,27 @@ export function QueuePanel({ code, refreshKey }: { code: string; refreshKey: num
                   {/* Expanded detail / editor */}
                   {open && (
                     <div className="space-y-4 border-t border-[#d8dee4] bg-[#f6f8fa] px-4 py-4 sm:px-10">
+                      {item.files.length > 0 && (
+                        <div className="rounded-md border border-[#d0d7de] bg-white px-3 py-2">
+                          <p className="text-xs font-semibold text-[#59636e]">
+                            Statements ({item.files.length}) — click to download
+                          </p>
+                          <ul className="mt-1.5 space-y-1">
+                            {item.files.map((f) => (
+                              <li key={f.id}>
+                                <a
+                                  href={`/api/statement?id=${encodeURIComponent(f.id)}`}
+                                  download={f.name}
+                                  className="flex items-center gap-1.5 text-sm text-[#0969da] hover:underline"
+                                >
+                                  <FileText className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
+                                  <span className="truncate">{f.name}</span>
+                                </a>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
                       <div className="grid gap-3 sm:grid-cols-2">
                         <div className="space-y-1">
                           <Label className="text-xs text-[#59636e]">Customer name</Label>

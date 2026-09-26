@@ -1,5 +1,4 @@
-import { createHash, timingSafeEqual } from "crypto";
-import { mkdir, writeFile } from "fs/promises";
+import { createHash } from "crypto";
 import path from "path";
 
 /** Root directories (workspace-relative, outside Next source tree). */
@@ -9,16 +8,6 @@ export const REPORTS_DIR = path.join(WORKSPACE_ROOT, "download");
 
 /** Allowed statement file extensions. */
 const ALLOWED_EXT = new Set([".pdf", ".png", ".jpg", ".jpeg"]);
-
-/** Returns true when the submitted access code matches the configured one (constant-time). */
-export function accessCodeValid(code: string | null | undefined): boolean {
-  const expected = process.env.PORTAL_ACCESS_CODE;
-  if (!expected || !code) return false;
-  const a = Buffer.from(code.trim());
-  const b = Buffer.from(expected.trim());
-  if (a.length !== b.length) return false;
-  return timingSafeEqual(a, b);
-}
 
 /** Human-readable byte size. */
 export function humanSize(bytes: number): string {
@@ -45,19 +34,6 @@ export function extAllowed(original: string): boolean {
 /** Compute MD5 of a buffer (hex, lowercase). */
 export function md5(buf: Buffer): string {
   return createHash("md5").update(buf).digest("hex");
-}
-
-/** Persist one uploaded file under upload/portal/<subdir>/ and return its stored path. */
-export async function storeFile(
-  subdir: string,
-  safeName: string,
-  data: Buffer
-): Promise<string> {
-  const dir = path.join(PORTAL_UPLOAD_DIR, subdir);
-  await mkdir(dir, { recursive: true });
-  const stored = path.join(dir, safeName);
-  await writeFile(stored, data);
-  return stored;
 }
 
 /** Build a per-submission directory name. */

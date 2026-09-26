@@ -18,9 +18,33 @@ model Submission {
   travelers  Int     @default(1) // joint applicants sharing this bank statement
   email      String?
   notes      String? // free-form case notes
+  submittedBy String? // portal account (ID) that uploaded this statement
   analyzedAt DateTime? // set when status -> DONE (dashboard "analyzed today")
   files      StatementFile[]
   createdAt  DateTime        @default(now())
+}
+
+/** Portal login accounts (ID + password). Managed via scripts/add-user.mjs. */
+model PortalUser {
+  id           String    @id @default(cuid())
+  username     String    @unique // login ID (lowercase)
+  passwordHash String // scrypt$salt$hash — see src/lib/session.ts
+  label        String? // optional display name (client or operator)
+  role         String    @default("client") // client | operator
+  active       Boolean   @default(true)
+  createdAt    DateTime  @default(now())
+  lastLoginAt  DateTime?
+}
+
+/** Report files published to the portal (blob storage in production, local dir in dev). */
+model ReportFile {
+  id           String   @id @default(cuid())
+  submissionId String? // queue item this report belongs to
+  queueId      String? // human queue ID (EIS-XXXXX)
+  name         String
+  url          String // blob URL in production; empty in local fs mode
+  sizeBytes    Int
+  createdAt    DateTime @default(now())
 }
 
 model StatementFile {
@@ -28,7 +52,8 @@ model StatementFile {
   submissionId String
   submission   Submission @relation(fields: [submissionId], references: [id])
   originalName String
-  storedPath   String
+  storedPath   String // fs path (dev) or blob key (production)
+  storedUrl    String? // blob URL (production); null in local fs mode
   sizeBytes    Int
   md5          String
   createdAt    DateTime   @default(now())

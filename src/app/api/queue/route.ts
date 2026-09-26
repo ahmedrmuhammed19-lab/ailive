@@ -1,20 +1,20 @@
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
-import { accessCodeValid } from "@/lib/portal";
+import { sessionUser } from "@/lib/session";
 
-/** GET /api/queue?code=... — full queue list for the operator (behind access code). */
+/** GET /api/queue — full queue list (requires a signed-in account). */
 export async function GET(req: Request) {
-  const { searchParams } = new URL(req.url);
-  if (!accessCodeValid(searchParams.get("code"))) {
+  const user = await sessionUser(req);
+  if (!user) {
     return NextResponse.json(
-      { ok: false, error: "Invalid access code." },
+      { ok: false, error: "Sign in required." },
       { status: 401 }
     );
   }
 
   const rows = await db.submission.findMany({
     orderBy: { createdAt: "desc" },
-    include: { files: { select: { id: true } } },
+    include: { files: { select: { id: true, originalName: true } } },
   });
 
   const queue = rows.map((r) => ({
@@ -27,8 +27,10 @@ export async function GET(req: Request) {
     travelers: r.travelers,
     email: r.email,
     notes: r.notes,
+    submittedBy: r.submittedBy,
     analyzedAt: r.analyzedAt?.toISOString() ?? null,
     fileCount: r.files.length,
+    files: r.files.map((f) => ({ id: f.id, name: f.originalName })),
     createdAt: r.createdAt.toISOString(),
   }));
 

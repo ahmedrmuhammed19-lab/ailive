@@ -2,18 +2,19 @@ import { NextResponse } from "next/server";
 import { existsSync } from "fs";
 import path from "path";
 import { db } from "@/lib/db";
-import { accessCodeValid, REPORTS_DIR } from "@/lib/portal";
+import { REPORTS_DIR } from "@/lib/portal";
 import { loadMailCreds, OPERATOR_EMAIL, operatorAddress, sendOrQueue } from "@/lib/mail";
+import { sessionUser } from "@/lib/session";
 
 /**
  * POST /api/queue/update — operator actions on a queue item:
- *   { code, id, status?, clientName?, country?, visaType?, email?, notes?, reportNames? }
+ *   { id, status?, clientName?, country?, visaType?, email?, notes?, reportNames? }
  * Moving to DONE stamps analyzedAt and emails the "report ready" notice
  * (client if their email is on file, operator always gets a copy).
+ * Email delivery is HTML-only: the .html report is attached, PDF is not sent.
  */
 export async function POST(req: Request) {
   let body: {
-    code?: string;
     id?: string;
     status?: string;
     clientName?: string;
@@ -30,8 +31,9 @@ export async function POST(req: Request) {
     return NextResponse.json({ ok: false, error: "Invalid JSON body." }, { status: 400 });
   }
 
-  if (!accessCodeValid(body.code ?? null)) {
-    return NextResponse.json({ ok: false, error: "Invalid access code." }, { status: 401 });
+  const user = await sessionUser(req);
+  if (!user) {
+    return NextResponse.json({ ok: false, error: "Sign in required." }, { status: 401 });
   }
   if (!body.id) {
     return NextResponse.json({ ok: false, error: "Submission id is required." }, { status: 400 });
@@ -82,30 +84,24 @@ export async function POST(req: Request) {
     const reportList =
       (body.reportNames ?? []).map((n) => `  • ${n}`).join("\n") ||
       "  • (report files being published)";
-    // Attach the actual report files (traversal-safe: resolved inside REPORTS_DIR only).
-    // ALIGNED PAIRS: pass one format and the other (html <-> pdf) is attached automatically,
-    // so the client always receives the identical report in both formats.
+    // Attach the HTML report only (per delivery policy: HTML, no PDF).
+    // Traversal-safe: resolved inside REPORTS_DIR only.
     const base = path.resolve(REPORTS_DIR);
     const attachments: Array<{ filename: string; path: string }> = [];
     const seen = new Set<string>();
-    const tryAttach = (p: string) => {
-      if (seen.has(path.basename(p))) return;
-      attachments.push({ filename: path.basename(p), path: p });
-      seen.add(path.basename(p));
-    };
     for (const name of body.reportNames ?? []) {
       const target = path.resolve(base, name);
       const ext = path.extname(target).toLowerCase();
       if (
         !target.startsWith(base + path.sep) ||
-        (ext !== ".pdf" && ext !== ".html") ||
+        ext !== ".html" ||
         !existsSync(target)
       ) {
         continue;
       }
-      tryAttach(target);
-      const counterpart = target.slice(0, target.length - ext.length) + (ext === ".pdf" ? ".html" : ".pdf");
-      if (existsSync(counterpart)) tryAttach(counterpart);
+      if (seen.has(path.basename(target))) continue;
+      attachments.push({ filename: path.basename(target), path: target });
+      seen.add(path.basename(target));
     }
     const greet = updated.clientName ? `Dear ${updated.clientName},` : "Hello,";
     const clientMail = {
@@ -116,14 +112,14 @@ export async function POST(req: Request) {
         `The financial readiness assessment for queue item ${updated.userId ?? updated.id} is complete.\n\n` +
         `Reports:\n${reportList}\n` +
         (attachments.length
-          ? `\nAttached (HTML + PDF, identical content):\n${attachments.map((a) => `  • ${a.filename}`).join("\n")}\n`
+          ? `\nAttached (HTML report):\n${attachments.map((a) => `  • ${a.filename}`).join("\n")}\n`
           : "") +
         (updated.country
           ? `\nDestination: ${updated.country}${updated.visaType ? ` — ${updated.visaType}` : ""}${
               (updated.travelers ?? 1) > 1 ? ` (${updated.travelers} joint applicants sharing this statement)` : ""
             }\n`
           : "") +
-        `\nThe report is also available on the Global EIS portal under "Reports" (access code required), ` +
+        `\nThe report is also available on the Global EIS portal under "Reports" (ID & password required), ` +
         `and replies reach us directly at ${OPERATOR_EMAIL}.\n\n` +
         `Kind regards,\nGlobal EIS — Financial Intelligence Services`,
       kind: "report_ready" as const,
