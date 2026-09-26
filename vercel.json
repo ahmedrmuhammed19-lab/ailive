@@ -1,0 +1,11 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": "nextjs",
+  "buildCommand": "sed 's/provider = \"sqlite\"/provider = \"postgres\"/' prisma/schema.prisma > prisma/schema.deploy.prisma && prisma generate --schema prisma/schema.deploy.prisma && prisma db push --schema prisma/schema.deploy.prisma --skip-generate --accept-data-loss && next build",
+  "installCommand": "bun install",
+  "functions": {
+    "src/app/api/upload/route.ts": {
+      "maxDuration": 120
+    }
+  }
+}

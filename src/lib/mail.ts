@@ -50,6 +50,19 @@ export interface MailResult {
 }
 
 async function loadCreds(): Promise<MailCreds | null> {
+  // 1) Environment override — used on serverless deploys (Vercel) where the
+  //    git-ignored config file does not exist. MAIL_CREDS_JSON holds the same
+  //    JSON shape as config/mail_credentials.json.
+  const envJson = process.env.MAIL_CREDS_JSON;
+  if (envJson) {
+    try {
+      const creds = JSON.parse(envJson) as MailCreds;
+      if (creds.email && creds.app_password) return creds;
+    } catch {
+      // malformed env JSON — fall through to the file
+    }
+  }
+  // 2) Local config file
   if (!existsSync(MAIL_CREDS_PATH)) return null;
   try {
     const raw = await readFile(MAIL_CREDS_PATH, "utf8");
@@ -67,30 +80,39 @@ export function loadMailCreds(): Promise<MailCreds | null> {
 }
 
 async function writeOutbox(mail: QueuedMail, status: "QUEUED" | "SENT", error?: string) {
-  await mkdir(OUTBOX_DIR, { recursive: true });
-  const ts = new Date().toISOString().replace(/[-:T]/g, "").slice(0, 14);
-  const slug = mail.kind + "_" + (mail.submissionId ?? "x").slice(-8);
-  const file = path.join(OUTBOX_DIR, `${ts}_${slug}.json`);
-  await writeFile(
-    file,
-    JSON.stringify(
-      {
-        ...mail,
-        attachments: mail.attachments?.map((a) => path.basename(a.path)) ?? [],
-        status,
-        error: error ?? null,
-        at: new Date().toISOString(),
-      },
-      null,
-      2
-    )
-  );
-  // Always-visible arrival/delivery log line
-  await writeFile(
-    path.join(OUTBOX_DIR, "NOTIFICATIONS.log"),
-    `[${new Date().toISOString()}] ${status} ${mail.kind} -> ${mail.to} :: ${mail.subject}${error ? " :: " + error : ""}\n`,
-    { flag: "a" }
-  );
+  // Outbox writes are best-effort: on read-only serverless filesystems they
+  // are skipped (mail still attempts live SMTP via MAIL_CREDS_JSON when set).
+  try {
+    await mkdir(OUTBOX_DIR, { recursive: true });
+    const ts = new Date().toISOString().replace(/[-:T]/g, "").slice(0, 14);
+    const slug = mail.kind + "_" + (mail.submissionId ?? "x").slice(-8);
+    const file = path.join(OUTBOX_DIR, `${ts}_${slug}.json`);
+    await writeFile(
+      file,
+      JSON.stringify(
+        {
+          ...mail,
+          attachments: mail.attachments?.map((a) => path.basename(a.path)) ?? [],
+          status,
+          error: error ?? null,
+          at: new Date().toISOString(),
+        },
+        null,
+        2
+      )
+    );
+    // Always-visible arrival/delivery log line
+    await writeFile(
+      path.join(OUTBOX_DIR, "NOTIFICATIONS.log"),
+      `[${new Date().toISOString()}] ${status} ${mail.kind} -> ${mail.to} :: ${mail.subject}${error ? " :: " + error : ""}\n`,
+      { flag: "a" }
+    );
+  } catch (err) {
+    console.warn(
+      "[mail] outbox write skipped (read-only fs?):",
+      err instanceof Error ? err.message : err
+    );
+  }
 }
 
 /**
