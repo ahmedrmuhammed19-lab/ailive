@@ -24,7 +24,10 @@ export async function GET(req: Request) {
     return NextResponse.json({ ok: false, error: "File not found." }, { status: 404 });
   }
 
-  const data = await getStoredObject({ key: row.storedPath, url: row.storedUrl ?? "" });
+  // DB storage mode: bytes live on the row itself; otherwise blob/fs lookup.
+  const data = row.data
+    ? Buffer.from(row.data)
+    : await getStoredObject({ key: row.storedPath, url: row.storedUrl ?? "" });
   if (!data) {
     return NextResponse.json({ ok: false, error: "File not found." }, { status: 404 });
   }

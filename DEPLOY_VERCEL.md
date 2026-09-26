@@ -9,8 +9,8 @@ generation, mail tooling) keeps running locally exactly as it does today.
 | Concern | Local (today) | Vercel (after deploy) |
 |---|---|---|
 | Database | SQLite file (`db/custom.db`) | Postgres (Neon) — same schema, swapped at build time |
-| Statement storage | `upload/portal/` | Vercel Blob (unguessable keys, session-guarded downloads) |
-| Reports storage | `download/` | Vercel Blob via `scripts/publish-report.mjs` |
+| Statement storage | `upload/portal/` | **In the database itself** (postgres bytea) — session-guarded downloads; Vercel Blob optional |
+| Reports storage | `download/` | **In the database itself** via `scripts/publish-report.mjs` |
 | Sign-in | ID + password (scrypt) | Same — accounts live in the DB |
 | Email | SMTP via local config | SMTP via `MAIL_CREDS_JSON` env var |
 | Analysis pipeline | Local Python scripts | Unchanged — run locally as always |
@@ -36,11 +36,12 @@ generation, mail tooling) keeps running locally exactly as it does today.
 3. When asked **Connect to project**, select this project. Vercel injects
    `DATABASE_URL` (and the pooled variant) automatically.
 
-## Step 4 — Attach a Blob store (~1 min)
+## Step 4 — Blob store (OPTIONAL — skip it)
 
-1. Project → **Storage** tab → **Create Database** → **Blob**.
-2. Name it e.g. `eis-files`, free tier, same region.
-3. Connect it to the project — `BLOB_READ_WRITE_TOKEN` is injected.
+Files are stored **in the Postgres database** (bytea) on hosted deploys — no
+Blob store is needed. Only attach a Blob store if you later prefer object
+storage (Settings → the `FILE_STORAGE` logic picks Blob automatically when
+`BLOB_READ_WRITE_TOKEN` exists).
 
 ## Step 5 — Set the required env vars (~2 min)
 
@@ -74,6 +75,10 @@ More accounts: sign in as an operator → **Accounts** tab → add client or
 operator accounts with any ID/password you choose. To add accounts any time
 later, just ask, or do it yourself in two clicks.
 
+Alternative (workspace-driven): with the Neon connection string exported as
+`DATABASE_URL`, `bun scripts/add-user.mjs add <id> <password> "Name" operator`
+creates accounts without touching the portal UI.
+
 ## Day-to-day flow after going live
 
 1. Client signs in on the Vercel portal and uploads their statement
@@ -84,8 +89,7 @@ later, just ask, or do it yourself in two clicks.
 3. Publish the finished report so the client sees it and gets it by email:
 
 ```bash
-export DATABASE_URL="<Neon URL>"
-export BLOB_READ_WRITE_TOKEN="<from Vercel → Storage → Blob → .env.local tab>"
+export DATABASE_URL="<Neon connection string>"
 bun scripts/publish-report.mjs download/GlobalEIS_Report_X.html EIS-XXXXX <submissionId>
 ```
 

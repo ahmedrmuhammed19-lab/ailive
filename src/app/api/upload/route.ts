@@ -8,7 +8,7 @@ import {
   sanitizeName,
   submissionDirName,
 } from "@/lib/portal";
-import { putStatement } from "@/lib/storage";
+import { DB_STORAGE, putStatement } from "@/lib/storage";
 import { loadMailCreds, operatorAddress, sendOrQueue } from "@/lib/mail";
 import { sessionUser } from "@/lib/session";
 import path from "path";
@@ -126,6 +126,7 @@ export async function POST(req: Request) {
           originalName: f.name,
           storedPath: stored.key,
           storedUrl: stored.url || null,
+          ...(DB_STORAGE ? { data: buf } : {}),
           sizeBytes: buf.length,
           md5: digest,
         },

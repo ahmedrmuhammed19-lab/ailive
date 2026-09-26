@@ -56,9 +56,9 @@ server.log
 config/mail_credentials.json
 
 # client data & runtime state — NEVER push to any remote
-db/
-upload/
-download/
+/db/
+/upload/
+/download/
 .env
 config/mail_credentials.json
 *.db

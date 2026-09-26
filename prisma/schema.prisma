@@ -36,13 +36,14 @@ model PortalUser {
   lastLoginAt  DateTime?
 }
 
-/** Report files published to the portal (blob storage in production, local dir in dev). */
+/** Report files published to the portal (DB bytes in production, local dir in dev). */
 model ReportFile {
   id           String   @id @default(cuid())
   submissionId String? // queue item this report belongs to
   queueId      String? // human queue ID (EIS-XXXXX)
   name         String
-  url          String // blob URL in production; empty in local fs mode
+  url          String // blob URL (blob mode); empty in local fs mode
+  data         Bytes? // file bytes in DB storage mode (postgres bytea)
   sizeBytes    Int
   createdAt    DateTime @default(now())
 }
@@ -53,7 +54,8 @@ model StatementFile {
   submission   Submission @relation(fields: [submissionId], references: [id])
   originalName String
   storedPath   String // fs path (dev) or blob key (production)
-  storedUrl    String? // blob URL (production); null in local fs mode
+  storedUrl    String? // blob URL (blob mode); null in local fs / DB mode
+  data         Bytes? // file bytes in DB storage mode (postgres bytea)
   sizeBytes    Int
   md5          String
   createdAt    DateTime   @default(now())

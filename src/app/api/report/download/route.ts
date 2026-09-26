@@ -22,12 +22,15 @@ export async function GET(req: Request) {
     return NextResponse.json({ ok: false, error: "Unsupported report type." }, { status: 400 });
   }
 
-  // 1) Published (blob) copy — looked up by exact file name
+  // 1) Published copy — DB bytes (DB storage mode) → blob URL → fall through
   try {
     const row = await db.reportFile.findFirst({
       where: { name },
       orderBy: { createdAt: "desc" },
     });
+    if (row?.data) {
+      return reportResponse(name, ext, Buffer.from(row.data));
+    }
     if (row?.url) {
       const upstream = await fetch(row.url);
       if (!upstream.ok) {
