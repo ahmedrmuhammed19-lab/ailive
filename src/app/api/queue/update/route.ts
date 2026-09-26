@@ -79,15 +79,30 @@ export async function POST(req: Request) {
   const updated = await db.submission.update({ where: { id: body.id }, data });
 
   // --- Report-ready email on completion ---
-  let notified: { to: string; queued: boolean } | null = null;
+  let notified: { to: string; queued: boolean; attachments?: number } | null = null;
   if (nextStatus === "DONE" && existing.status !== "DONE") {
+    // Reports published to this queue item. Hosted deploys (Vercel + Neon)
+    // store report bytes in Postgres — the DB rows double as the attachment
+    // source because the serverless filesystem has no REPORTS_DIR.
+    const dbReports = await db.reportFile.findMany({
+      where: { submissionId: updated.id },
+      orderBy: { createdAt: "asc" },
+    });
+    const reportNames = body.reportNames?.length
+      ? body.reportNames
+      : dbReports.map((r) => r.name);
     const reportList =
-      (body.reportNames ?? []).map((n) => `  • ${n}`).join("\n") ||
-      "  • (report files being published)";
+      reportNames.map((n) => `  • ${n}`).join("\n") ||
+      "  • (no report files attached)";
     // Attach the HTML report only (per delivery policy: HTML, no PDF).
     // Traversal-safe: resolved inside REPORTS_DIR only.
     const base = path.resolve(REPORTS_DIR);
-    const attachments: Array<{ filename: string; path: string }> = [];
+    const attachments: Array<{
+      filename: string;
+      path?: string;
+      content?: Buffer;
+      contentType?: string;
+    }> = [];
     const seen = new Set<string>();
     for (const name of body.reportNames ?? []) {
       const target = path.resolve(base, name);
@@ -102,6 +117,19 @@ export async function POST(req: Request) {
       if (seen.has(path.basename(target))) continue;
       attachments.push({ filename: path.basename(target), path: target });
       seen.add(path.basename(target));
+    }
+    // DB storage mode: attach the stored bytes directly (no disk files exist).
+    if (attachments.length === 0) {
+      for (const r of dbReports) {
+        if (!r.data || !r.name.toLowerCase().endsWith(".html")) continue;
+        if (seen.has(r.name)) continue;
+        attachments.push({
+          filename: r.name,
+          content: Buffer.from(r.data),
+          contentType: "text/html; charset=utf-8",
+        });
+        seen.add(r.name);
+      }
     }
     const greet = updated.clientName ? `Dear ${updated.clientName},` : "Hello,";
     const clientMail = {
@@ -127,7 +155,7 @@ export async function POST(req: Request) {
       attachments,
     };
     const res = await sendOrQueue(clientMail);
-    notified = { to: clientMail.to, queued: res.queued };
+    notified = { to: clientMail.to, queued: res.queued, attachments: attachments.length };
     // Operator always gets a completion copy
     await sendOrQueue({
       to: operatorAddress(await loadMailCreds()),
@@ -142,6 +170,7 @@ export async function POST(req: Request) {
         `— Global EIS automated intake`,
       kind: "operator_alert",
       submissionId: updated.id,
+      attachments,
     });
   }
 

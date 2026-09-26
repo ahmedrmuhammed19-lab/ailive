@@ -17,7 +17,7 @@ export interface QueuedMail {
   body: string;
   kind: "operator_alert" | "client_receipt" | "report_ready";
   submissionId?: string;
-  attachments?: Array<{ filename: string; path: string }>; // live SMTP only
+  attachments?: Array<{ filename: string; path?: string; content?: Buffer; contentType?: string }>; // live SMTP only
 }
 
 interface MailCreds {
@@ -92,7 +92,7 @@ async function writeOutbox(mail: QueuedMail, status: "QUEUED" | "SENT", error?: 
       JSON.stringify(
         {
           ...mail,
-          attachments: mail.attachments?.map((a) => path.basename(a.path)) ?? [],
+          attachments: mail.attachments?.map((a) => path.basename(a.path ?? a.filename)) ?? [],
           status,
           error: error ?? null,
           at: new Date().toISOString(),
