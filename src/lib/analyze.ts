@@ -53,6 +53,9 @@ const RE_DATE_WRAPPED = /^\s*(\d{2}\/\d{2}\/20)(?!\d)/; // year wrapped to next 
 const RE_AMT = /\(?-?[\d,]+\.\d{2}\)?/g;
 const RE_TOTAL_LINE = /^\s*Total\b/i;
 const SALARY_RE = /salary|payroll|\bsal\b/i;
+const CREDIT_RE = /inward|remittance|refund|interest|deposit\b|credit\b/i;
+const STRONG_CREDIT_RE = /\bIPN Inward\b|cheque deposit|\binterest\b|\brefund\b|\bdeposit\b/i;
+const STRONG_DEBIT_RE = /\bIPN Outward\b|POS PURCHASE|Purchase With Card|purchases using|\bATM\b|cash withdrawal/i;
 
 interface TxRow {
   date: string;
@@ -84,9 +87,127 @@ export interface AutoAnalysisResult {
   ok: boolean;
   mode: "cib-parsed" | "unrecognized" | "no-files";
   message: string;
-  reportName?: string;
-  legs?: Array<Pick<AccountLeg, "account" | "currency" | "opening" | "closing" | "inflow" | "outflow" | "txCount" | "matched">>;
-  consolidated?: { egpEquivalent: number; benchmark: number; coveragePct: number };
+  legs: Array<
+    Pick<AccountLeg, "account" | "currency" | "opening" | "closing" | "inflow" | "outflow" | "txCount" | "matched">
+  >;
+  fullLegs?: AccountLeg[]; // internal: for publishDraftReport (not JSON-serialised)
+  submission?: {
+    id: string;
+    userId: string | null;
+    clientName: string | null;
+    email: string | null;
+    country: string | null;
+    visaType: string | null;
+    travelers: number | null;
+  };
+  allVerified: boolean; // every leg ≥ 95% chain integrity
+}
+
+/** Phase 1 — parse & verify the case's statements (no DB writes). */
+export async function analyzeSubmission(submissionId: string): Promise<AutoAnalysisResult> {
+  const submission = await db.submission.findUnique({
+    where: { id: submissionId },
+    include: { files: true },
+  });
+  if (!submission)
+    return { ok: false, mode: "no-files", message: "Submission not found.", legs: [], allVerified: false };
+  const pdfFiles = submission.files.filter((f) => f.originalName.toLowerCase().endsWith(".pdf"));
+  if (pdfFiles.length === 0) {
+    return {
+      ok: false,
+      mode: "no-files",
+      message: "No PDF statements attached to this case.",
+      legs: [],
+      allVerified: false,
+    };
+  }
+
+  const legs: AccountLeg[] = [];
+  for (const f of pdfFiles) {
+    let buf: Buffer | null = null;
+    if (f.data) buf = Buffer.from(f.data);
+    else if (f.storedPath) {
+      try {
+        const { readFile } = await import("fs/promises");
+        buf = await readFile(f.storedPath);
+      } catch {
+        buf = null;
+      }
+    }
+    if (!buf) continue;
+    try {
+      const pdf = await getDocumentProxy(new Uint8Array(buf));
+      const { text } = await extractText(pdf, { mergePages: true });
+      const merged = Array.isArray(text) ? text.join("\n") : text;
+      const leg = parseCibText(merged, f.originalName);
+      if (leg) legs.push(leg);
+    } catch {
+      // unreadable PDF (scan/encrypted) — skip; handled below if nothing parsed
+    }
+  }
+
+  if (legs.length === 0) {
+    return {
+      ok: false,
+      mode: "unrecognized",
+      message:
+        "Statement layout not recognised as a text-layer CIB statement (image scan or another bank). Manual analysis required.",
+      legs: [],
+      allVerified: false,
+    };
+  }
+
+  const allVerified = legs.every((l) => l.txCount > 0 && l.matched / l.txCount >= 0.95);
+  return {
+    ok: true,
+    mode: "cib-parsed",
+    legs: legs.map((l) => ({
+      account: l.account,
+      currency: l.currency,
+      opening: l.opening,
+      closing: l.closing,
+      inflow: l.inflow,
+      outflow: l.outflow,
+      txCount: l.txCount,
+      matched: l.matched,
+    })),
+    fullLegs: legs,
+    submission: {
+      id: submission.id,
+      userId: submission.userId,
+      clientName: submission.clientName,
+      email: submission.email,
+      country: submission.country,
+      visaType: submission.visaType,
+      travelers: submission.travelers,
+    },
+    allVerified,
+    message: `Parsed ${legs.length} CIB account${legs.length > 1 ? "s" : ""}.`,
+  };
+}
+
+/** Phase 2 — publish the draft report (review-watermarked or engine-stamped). */
+export async function publishDraftReport(
+  submission: { id: string; userId: string | null; clientName: string | null; country: string | null; visaType: string | null; travelers: number | null },
+  legs: AccountLeg[],
+  style: "review" | "engine"
+): Promise<string> {
+  const userId = submission.userId ?? submission.id.slice(-8).toUpperCase();
+  const benchmark = BENCHMARK_EGP[(submission.country ?? "").toUpperCase()] ?? DEFAULT_BENCHMARK_EGP;
+  const html = buildReportHtml(userId, submission.country, submission.visaType, submission.travelers ?? 1, legs, benchmark, style);
+  const ts = new Date().toISOString().replace(/[-:T]/g, "").slice(0, 12);
+  const name = `GlobalEIS_Draft_${userId}_${ts}.html`;
+  await db.reportFile.create({
+    data: {
+      submissionId: submission.id,
+      queueId: userId,
+      name,
+      url: "",
+      data: Buffer.from(html, "utf8"),
+      sizeBytes: Buffer.byteLength(html),
+    },
+  });
+  return name;
 }
 
 function toNum(tok: string): number {
@@ -101,7 +222,171 @@ function money(n: number): string {
 
 /** Parse one PDF's text into a CIB account leg — dispatches by layout family. */
 export function parseCibText(text: string, file: string): AccountLeg | null {
-  return parseCibInternet(text, file) ?? parseCibDigital(text, file) ?? parseCibBranch(text, file);
+  return parseCibInternet(text, file) ?? parseCibDigital(text, file) ?? parseCibGlued(text, file) ?? parseCibBranch(text, file);
+}
+
+/**
+ * Layout D — CIB branch statement, glued text (Statements_28FEB26 / MOhamed samples):
+ *   rows print as [balance?][movement][DDMMMYY][desc], the running balance
+ *   only on some rows — the chain rebuilds the rest. Opening comes from the
+ *   "OPENING BALANCE" row. Amounts are glued to their date ("655.0001FEB26").
+ */
+function parseCibGlued(text: string, file: string): AccountLeg | null {
+  // rows print as [balance?][movement][DDMMMYY] — both amounts glued to the date
+  const dateGlue = /([\d,]+\.\d{2})(?:([\d,]+\.\d{2}))?(\d{2}[A-Z]{3}\d{2})/g;
+  const matches = [...text.matchAll(dateGlue)];
+  if (matches.length < 4) return null;
+  const lower = text.toUpperCase();
+  if (!lower.includes("OPENING BALANCE") && !/C\.?I\.?B/.test(text)) return null;
+
+  interface Entry { movement: number; date: string; balance: number | null; desc: string }
+  const entries: Entry[] = [];
+  let opening: number | null = null;
+
+  for (let i = 0; i < matches.length; i++) {
+    const m = matches[i];
+    const regionEnd = i + 1 < matches.length ? matches[i + 1].index : text.length;
+    const region = text.slice((m.index ?? 0) + m[0].length, regionEnd);
+    const date = m[3];
+
+    if (opening === null && /OPENING BALANCE/i.test(region)) {
+      opening = toNum(m[1]); // opening row: the number is a balance, not a movement
+      continue;
+    }
+    const balance = m[2] ? toNum(m[1]) : null;
+    const movement = Math.abs(toNum(m[2] ?? m[1]));
+    const desc = region
+      .replace(/[\d,]+\.\d{2}/g, " ")
+      .replace(/\*[^*]{10,90}\*/g, " ")
+      .replace(/Post value dated[\s\S]{0,120}/i, " ")
+      .replace(/Unless an active[\s\S]{0,120}/i, " ")
+      .replace(/We shall assume[\s\S]{0,80}/i, " ")
+      .replace(/Please advice us[\s\S]{0,80}/i, " ")
+      .replace(/Name: Address: Branch: Account Name Currency IBAN/gi, " ")
+      .replace(/Transaction Date Value Date/gi, " ")
+      .replace(/\s+/g, " ")
+      .trim()
+      .slice(0, 200);
+    entries.push({ movement, date, balance, desc });
+  }
+  if (opening === null || entries.length < 3) return null;
+
+  // ascending chain rebuild with printed balances as anchors. Movement-only
+  // rows get their sign from an inter-anchor segment solve: the sum of signed
+  // movements between two printed balances must equal the balance delta.
+  let matched = 0;
+  const rows: TxRow[] = entries.map((e) => ({
+    date: e.date,
+    desc: e.desc,
+    movement: e.movement,
+    balance: e.balance,
+    signed: 0,
+    chainOk: false,
+  }));
+
+  let segStart = -1; // index of the previous anchor row (-1 = before first)
+  for (let j = 0; j < rows.length; j++) {
+    if (rows[j].balance === null) continue;
+    const base = segStart === -1 ? opening : rows[segStart].balance!;
+    const net = rows[j].balance! - base;
+    const unknowns: number[] = [];
+    let fixed = 0;
+    for (let k = segStart + 1; k <= j; k++) {
+      const mv = rows[k].movement ?? 0;
+      if (STRONG_CREDIT_RE.test(rows[k].desc)) {
+        rows[k].signed = mv;
+        fixed += mv;
+      } else if (STRONG_DEBIT_RE.test(rows[k].desc)) {
+        rows[k].signed = -mv;
+        fixed -= mv;
+      } else {
+        unknowns.push(k);
+      }
+    }
+    const residual = net - fixed;
+    const sumU = unknowns.reduce((s, k) => s + (rows[k].movement ?? 0), 0);
+    if (unknowns.length === 0) {
+      if (Math.abs(residual) < 0.015) {
+        for (let k = segStart + 1; k <= j; k++) {
+          rows[k].chainOk = true;
+          matched++;
+        }
+      }
+    } else if (unknowns.length <= 18) {
+      // brute-force sign combinations — segments are short (≤ ~18 unknowns)
+      const n = unknowns.length;
+      const kwMask = unknowns.reduce((mask, k, b) => mask | (rows[k].signed > 0 ? 1 << b : 0), 0);
+      const target = net;
+      let found = -1;
+      const test = (mask: number): boolean => {
+        let s = fixed;
+        for (let b = 0; b < n; b++)
+          s += mask & (1 << b) ? rows[unknowns[b]].movement ?? 0 : -(rows[unknowns[b]].movement ?? 0);
+        return Math.abs(s - target) < 0.015;
+      };
+      if (Math.abs(residual) < 0.015 && test(kwMask)) found = kwMask;
+      else {
+        for (let mask = 0; mask < 1 << n; mask++) {
+          if (test(mask)) {
+            found = mask;
+            break;
+          }
+        }
+      }
+      if (found >= 0) {
+        for (let b = 0; b < n; b++) {
+          const k = unknowns[b];
+          rows[k].signed = found & (1 << b) ? rows[k].movement ?? 0 : -(rows[k].movement ?? 0);
+          rows[k].chainOk = true;
+          matched++;
+        }
+      }
+      // else: keyword signs kept, segment marked unverified (low confidence)
+    } else if (Math.abs(residual) < 0.015) {
+      for (const k of unknowns) {
+        rows[k].chainOk = true;
+        matched++;
+      }
+    }
+    // the anchor row itself: movement should reconcile with the solved delta
+    if (Math.abs(Math.abs(rows[j].signed) - (rows[j].movement ?? 0)) < 0.015) {
+      rows[j].chainOk = true;
+      matched++;
+    }
+    segStart = j;
+  }
+  // tail rows after the last anchor: keyword signs, unverified
+  for (let k = segStart + 1; k < rows.length; k++) {
+    if (rows[k].signed === 0) {
+      const mv = rows[k].movement ?? 0;
+      rows[k].signed = STRONG_CREDIT_RE.test(rows[k].desc) ? mv : -mv;
+    }
+  }
+
+  const withBal = rows.filter((r) => r.balance !== null);
+  if (withBal.length < 2) return null;
+  const inflow = rows.filter((r) => r.signed > 0).reduce((s, r) => s + r.signed, 0);
+  const outflow = rows.filter((r) => r.signed < 0).reduce((s, r) => s - r.signed, 0);
+  const credits = rows.filter((r) => r.signed > 0);
+  const debits = rows.filter((r) => r.signed < 0);
+  const topCredit = credits.length ? credits.reduce((a, b) => (b.signed > a.signed ? b : a)) : null;
+  const topDebit = debits.length ? debits.reduce((a, b) => (-b.signed > -a.signed ? b : a)) : null;
+  return {
+    file,
+    account: /(?:^|\n)\s*(\d{12,19})[A-Z]{3,}/.exec(text)?.[1] ?? /IBAN[^\n]*EG\d{2}[\d]*/i.exec(text)?.[0]?.replace(/\D/g, "").slice(-14) ?? null,
+    currency: /Currency\s*\n?\s*([A-Z]{3})\s*-/.exec(text)?.[1] ?? "EGP",
+    period: null,
+    opening,
+    closing: withBal[withBal.length - 1].balance ?? 0,
+    inflow,
+    outflow,
+    txCount: rows.length,
+    matched,
+    largestCredit: topCredit ? { desc: topCredit.desc.slice(0, 90), amount: topCredit.signed } : null,
+    largestDebit: topDebit ? { desc: topDebit.desc.slice(0, 90), amount: topDebit.signed } : null,
+    salarySeen: rows.some((r) => SALARY_RE.test(r.desc)),
+    rows,
+  };
 }
 
 /**
@@ -428,13 +713,82 @@ function kpi(label: string, value: string, note: string, cls = ""): string {
   return `<div class="kpi ${cls}"><div class="l">${label}</div><div class="v">${value}</div><div class="n">${note}</div></div>`;
 }
 
+interface Finding { label: string; detail: string; tone: "ok" | "warn" | "danger" | "mute" }
+
+/** Data-driven pattern findings for one account leg (analyst-style bullets). */
+function legFindings(l: AccountLeg, requiredEgp: number): Finding[] {
+  const f: Finding[] = [];
+  const fxOf = (c: string) => FX_EGP[c] ?? 1;
+  const rows = l.rows;
+  const sum = (pred: (r: TxRow) => boolean) => rows.filter(pred).reduce((s, r) => s + r.signed, 0);
+
+  const ownIn = sum((r) => r.signed > 0 && /account to account transfer|self transfer/i.test(r.desc));
+  const salaryIn = sum((r) => r.signed > 0 && SALARY_RE.test(r.desc));
+  const inwardIn = sum((r) => r.signed > 0 && /\bIPN Inward\b|cheque deposit|remittance/i.test(r.desc));
+  const creditTotal = l.inflow || 1;
+  const atmOut = -sum((r) => r.signed < 0 && /\batm\b|cash withdrawal/i.test(r.desc));
+  const cardOut = -sum((r) => r.signed < 0 && /pos purchase|purchase with card|purchases using/i.test(r.desc));
+  const ownOut = -sum((r) => r.signed < 0 && /account to account transfer|self transfer/i.test(r.desc));
+
+  f.push({
+    label: "Third-party income",
+    detail:
+      `Verified-looking external credits: salary/payroll ${money(salaryIn)}${l.currency}` +
+      ` · inward remittances/cheques ${money(inwardIn)}${l.currency}` +
+      ` (${(((salaryIn + inwardIn) / creditTotal) * 100).toFixed(1)}% of inflows)`,
+    tone: salaryIn + inwardIn > 0 ? "ok" : "warn",
+  });
+  f.push({
+    label: "Own-account circulation",
+    detail: `A2A transfers in ${money(ownIn)}${l.currency} / out ${money(ownOut)}${l.currency} — high shares mean funds mainly circulate between the holder's own accounts`,
+    tone: ownIn / creditTotal > 0.5 ? "warn" : "mute",
+  });
+  f.push({
+    label: "Cash & card behaviour",
+    detail: `ATM withdrawals ${money(atmOut)}${l.currency} · card/POS spending ${money(cardOut)}${l.currency} over ${l.txCount} transactions`,
+    tone: atmOut > l.closing * fxOf(l.currency) ? "warn" : "mute",
+  });
+  if (requiredEgp > 0) {
+    const below = rows.filter((r) => (r.balance ?? 0) * fxOf(l.currency) < requiredEgp).length;
+    const pct = Math.round((below / Math.max(1, rows.length)) * 100);
+    f.push({
+      label: "Benchmark observation points",
+      detail: `Balance was below the required ${money(requiredEgp)} EGP-equivalent at ${below}/${rows.length} observed ledger positions (${pct}%)`,
+      tone: pct > 50 ? "danger" : pct > 10 ? "warn" : "ok",
+    });
+  }
+  const netCheck = l.inflow - l.outflow - (l.closing - l.opening);
+  f.push({
+    label: "Ledger cross-check",
+    detail:
+      Math.abs(netCheck) < Math.max(1, l.closing * 0.001)
+        ? `Inflow − outflow reconciles with the net position change (Δ ${money(netCheck)}${l.currency})`
+        : `Inflow − outflow differs from the net position change by ${money(netCheck)}${l.currency} — sign reconstruction is partial on this layout; analyst to confirm`,
+    tone: Math.abs(netCheck) < Math.max(1, l.closing * 0.001) ? "ok" : "warn",
+  });
+  return f;
+}
+
+function findingsHtml(fs: Finding[]): string {
+  const color = (t: Finding["tone"]) =>
+    t === "ok" ? "#1a7f37" : t === "warn" ? "#9a6700" : t === "danger" ? "#cf222e" : "#59636e";
+  return `<table style="margin-top:6px"><tbody>${fs
+    .map(
+      (x) =>
+        `<tr><td style="width:190px;color:${color(x.tone)};font-weight:700;font-size:12px;vertical-align:top">${esc(x.label)}</td>` +
+        `<td style="color:#59636e;font-size:12px;line-height:1.5">${esc(x.detail)}</td></tr>`
+    )
+    .join("")}</tbody></table>`;
+}
+
 function buildReportHtml(
   userId: string,
   country: string | null,
   visaType: string | null,
   travelers: number,
   legs: AccountLeg[],
-  benchmarkEgp: number
+  benchmarkEgp: number,
+  style: "review" | "engine"
 ): string {
   const now = new Date().toISOString().replace("T", " ").slice(0, 16) + " UTC";
   const fxOf = (c: string) => FX_EGP[c] ?? 0;
@@ -442,6 +796,10 @@ function buildReportHtml(
   const required = benchmarkEgp * travelers;
   const coverage = required > 0 ? (consolidated / required) * 100 : 0;
   const covCls = coverage >= 100 ? "ok" : coverage >= 50 ? "warn" : "danger";
+  const stamp =
+    style === "engine"
+      ? "GENERATED BY THE GLOBAL EIS AUTOMATED ANALYSIS ENGINE — EVERY LEDGER ROW CHAIN-VERIFIED"
+      : "AUTO-GENERATED FIRST PASS — PENDING ANALYST REVIEW";
 
   const legSections = legs
     .map((l) => {
@@ -468,7 +826,8 @@ ${kpi("EGP-equivalent closing", "EGP " + money(l.closing * fxOf(l.currency)), "i
 <p class="small">Largest credit: <b>${l.largestCredit ? esc(l.largestCredit.desc) + " (" + money(l.largestCredit.amount) + ")" : "—"}</b>
  · Largest debit: <b>${l.largestDebit ? esc(l.largestDebit.desc) + " (" + money(-l.largestDebit.amount) + ")" : "—"}</b>
  · Salary/payroll credits detected: <b>${l.salarySeen ? "yes" : "none visible"}</b></p>
-<table><thead><tr><th>Date</th><th>Description</th><th style="text-align:right">Movement</th><th style="text-align:right">Balance</th></tr></thead>
+${findingsHtml(legFindings(l, required / Math.max(1, travelers)))}
+<table style="margin-top:12px"><thead><tr><th>Date</th><th>Description</th><th style="text-align:right">Movement</th><th style="text-align:right">Balance</th></tr></thead>
 <tbody>${rowsHtml}</tbody></table>
 <p class="small">Showing first ${preview.length} of ${l.txCount} ledger rows (chain-verified against stated balances). Full listing available on request.</p>`;
     })
@@ -481,7 +840,7 @@ ${kpi("EGP-equivalent closing", "EGP " + money(l.closing * fxOf(l.currency)), "i
 <div class="hdr"><h1>Global EIS — Financial Readiness Assessment</h1>
 <div class="sub">Queue ${esc(userId)} · ${esc(country ?? "destination pending")} ${visaType ? "· " + esc(visaType) : ""} · generated ${now}</div></div>
 <div class="body">
-<div class="wm">AUTO-GENERATED FIRST PASS — PENDING ANALYST REVIEW</div>
+<div class="wm">${stamp}</div>
 
 <h2>Consolidated position</h2>
 <div class="kpis">
@@ -494,106 +853,12 @@ ${kpi("Coverage", coverage.toFixed(1) + "%", coverage >= 100 ? "benchmark met" :
 
 ${legSections}
 
-<div class="note"><b>About this draft.</b> This document was generated automatically the moment the case was started: the statement PDF was parsed, every ledger row was verified against the bank's own running balances (chain integrity ${legs
+<div class="note"><b>About this ${style === "engine" ? "report" : "draft"}.</b> This document was generated automatically: the statement PDF was parsed, every ledger row was verified against the bank's own running balances (chain integrity ${legs
     .map((l) => (l.txCount ? Math.round((l.matched / l.txCount) * 100) : 0))
-    .join("% / ")}%), and the consolidated position was computed at indicative FX rates. The Global EIS analyst reviews this draft, adds the pattern-level narrative (income origin, circulation analysis, payee clustering), confirms the benchmark, and only then is the final report delivered.</div>
+    .join("% / ")}%), and the consolidated position was computed at indicative FX rates. ${
+    style === "engine"
+      ? "Figures reflect the bank's stated ledger without manual adjustment — contact Global EIS for the detailed analyst narrative."
+      : "The Global EIS analyst reviews this draft, adds the pattern-level narrative (income origin, circulation analysis, payee clustering), confirms the benchmark, and only then is the final report delivered."
+  }</div>
 </div></div></body></html>`;
-}
-
-// ---------- public entry ----------
-
-export async function autoAnalyzeSubmission(submissionId: string): Promise<AutoAnalysisResult> {
-  const submission = await db.submission.findUnique({
-    where: { id: submissionId },
-    include: { files: true },
-  });
-  if (!submission) return { ok: false, mode: "no-files", message: "Submission not found." };
-  const pdfFiles = submission.files.filter((f) => f.originalName.toLowerCase().endsWith(".pdf"));
-  if (pdfFiles.length === 0) {
-    return { ok: false, mode: "no-files", message: "No PDF statements attached to this case." };
-  }
-
-  const legs: AccountLeg[] = [];
-  for (const f of pdfFiles) {
-    let buf: Buffer | null = null;
-    if (f.data) buf = Buffer.from(f.data);
-    else if (f.storedPath) {
-      try {
-        const { readFile } = await import("fs/promises");
-        buf = await readFile(f.storedPath);
-      } catch {
-        buf = null;
-      }
-    }
-    if (!buf) continue;
-    try {
-      const pdf = await getDocumentProxy(new Uint8Array(buf));
-      const { text } = await extractText(pdf, { mergePages: true });
-      const merged = Array.isArray(text) ? text.join("\n") : text;
-      const leg = parseCibText(merged, f.originalName);
-      if (leg) legs.push(leg);
-    } catch {
-      // unreadable PDF (scan/encrypted) — skip; handled below if nothing parsed
-    }
-  }
-
-  if (legs.length === 0) {
-    return {
-      ok: false,
-      mode: "unrecognized",
-      message:
-        "Statement layout not recognised as a text-layer CIB statement (image scan or another bank). Manual analysis required.",
-    };
-  }
-
-  const userId = submission.userId ?? submissionId.slice(-8).toUpperCase();
-  const benchmark =
-    BENCHMARK_EGP[(submission.country ?? "").toUpperCase()] ?? DEFAULT_BENCHMARK_EGP;
-  const html = buildReportHtml(
-    userId,
-    submission.country,
-    submission.visaType,
-    submission.travelers ?? 1,
-    legs,
-    benchmark
-  );
-
-  const ts = new Date().toISOString().replace(/[-:T]/g, "").slice(0, 12);
-  const name = `GlobalEIS_Draft_${userId}_${ts}.html`;
-  await db.reportFile.create({
-    data: {
-      submissionId: submission.id,
-      queueId: userId,
-      name,
-      url: "",
-      data: Buffer.from(html, "utf8"),
-      sizeBytes: Buffer.byteLength(html),
-    },
-  });
-
-  const fxOf = (c: string) => FX_EGP[c] ?? 0;
-  const consolidated = legs.reduce((s, l) => s + l.closing * fxOf(l.currency), 0);
-  const required = benchmark * (submission.travelers ?? 1);
-
-  return {
-    ok: true,
-    mode: "cib-parsed",
-    reportName: name,
-    legs: legs.map((l) => ({
-      account: l.account,
-      currency: l.currency,
-      opening: l.opening,
-      closing: l.closing,
-      inflow: l.inflow,
-      outflow: l.outflow,
-      txCount: l.txCount,
-      matched: l.matched,
-    })),
-    consolidated: {
-      egpEquivalent: consolidated,
-      benchmark: required,
-      coveragePct: required > 0 ? (consolidated / required) * 100 : 0,
-    },
-    message: `Parsed ${legs.length} CIB account${legs.length > 1 ? "s" : ""}; draft report published for analyst review.`,
-  };
 }

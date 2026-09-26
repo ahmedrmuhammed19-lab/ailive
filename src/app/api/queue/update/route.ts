@@ -1,9 +1,6 @@
 import { NextResponse } from "next/server";
-import { existsSync } from "fs";
-import path from "path";
 import { db } from "@/lib/db";
-import { REPORTS_DIR } from "@/lib/portal";
-import { loadMailCreds, OPERATOR_EMAIL, operatorAddress, sendOrQueue } from "@/lib/mail";
+import { sendCompletionMails } from "@/lib/notify";
 import { sessionUser } from "@/lib/session";
 
 /**
@@ -78,101 +75,11 @@ export async function POST(req: Request) {
 
   const updated = await db.submission.update({ where: { id: body.id }, data });
 
-  // --- Report-ready email on completion ---
-  let notified: { to: string; queued: boolean; attachments?: number } | null = null;
-  if (nextStatus === "DONE" && existing.status !== "DONE") {
-    // Reports published to this queue item. Hosted deploys (Vercel + Neon)
-    // store report bytes in Postgres — the DB rows double as the attachment
-    // source because the serverless filesystem has no REPORTS_DIR.
-    const dbReports = await db.reportFile.findMany({
-      where: { submissionId: updated.id },
-      orderBy: { createdAt: "asc" },
-    });
-    const reportNames = body.reportNames?.length
-      ? body.reportNames
-      : dbReports.map((r) => r.name);
-    const reportList =
-      reportNames.map((n) => `  • ${n}`).join("\n") ||
-      "  • (no report files attached)";
-    // Attach the HTML report only (per delivery policy: HTML, no PDF).
-    // Traversal-safe: resolved inside REPORTS_DIR only.
-    const base = path.resolve(REPORTS_DIR);
-    const attachments: Array<{
-      filename: string;
-      path?: string;
-      content?: Buffer;
-      contentType?: string;
-    }> = [];
-    const seen = new Set<string>();
-    for (const name of body.reportNames ?? []) {
-      const target = path.resolve(base, name);
-      const ext = path.extname(target).toLowerCase();
-      if (
-        !target.startsWith(base + path.sep) ||
-        ext !== ".html" ||
-        !existsSync(target)
-      ) {
-        continue;
-      }
-      if (seen.has(path.basename(target))) continue;
-      attachments.push({ filename: path.basename(target), path: target });
-      seen.add(path.basename(target));
-    }
-    // DB storage mode: attach the stored bytes directly (no disk files exist).
-    if (attachments.length === 0) {
-      for (const r of dbReports) {
-        if (!r.data || !r.name.toLowerCase().endsWith(".html")) continue;
-        if (seen.has(r.name)) continue;
-        attachments.push({
-          filename: r.name,
-          content: Buffer.from(r.data),
-          contentType: "text/html; charset=utf-8",
-        });
-        seen.add(r.name);
-      }
-    }
-    const greet = updated.clientName ? `Dear ${updated.clientName},` : "Hello,";
-    const clientMail = {
-      to: updated.email?.trim() || operatorAddress(await loadMailCreds()),
-      subject: `Global EIS — analysis report ready (Queue ${updated.userId ?? ""})`,
-      body:
-        `${greet}\n\n` +
-        `The financial readiness assessment for queue item ${updated.userId ?? updated.id} is complete.\n\n` +
-        `Reports:\n${reportList}\n` +
-        (attachments.length
-          ? `\nAttached (HTML report):\n${attachments.map((a) => `  • ${a.filename}`).join("\n")}\n`
-          : "") +
-        (updated.country
-          ? `\nDestination: ${updated.country}${updated.visaType ? ` — ${updated.visaType}` : ""}${
-              (updated.travelers ?? 1) > 1 ? ` (${updated.travelers} joint applicants sharing this statement)` : ""
-            }\n`
-          : "") +
-        `\nThe report is also available on the Global EIS portal under "Reports" (ID & password required), ` +
-        `and replies reach us directly at ${OPERATOR_EMAIL}.\n\n` +
-        `Kind regards,\nGlobal EIS — Financial Intelligence Services`,
-      kind: "report_ready" as const,
-      submissionId: updated.id,
-      attachments,
-    };
-    const res = await sendOrQueue(clientMail);
-    notified = { to: clientMail.to, queued: res.queued, attachments: attachments.length };
-    // Operator always gets a completion copy
-    await sendOrQueue({
-      to: operatorAddress(await loadMailCreds()),
-      subject: `✅ Analysis finished — Queue ${updated.userId ?? ""}`,
-      body:
-        `Analysis completed and marked DONE.\n\n` +
-        `Queue ID   : ${updated.userId ?? updated.id}\n` +
-        `Client     : ${updated.clientName ?? "—"}\n` +
-        `Destination: ${updated.country ?? "—"} · ${updated.visaType ?? "—"}\n` +
-        `Joint applicants: ${updated.travelers ?? 1}\n` +
-        `Reports:\n${reportList}\n\n` +
-        `— Global EIS automated intake`,
-      kind: "operator_alert",
-      submissionId: updated.id,
-      attachments,
-    });
-  }
+  // --- Report-ready email on completion (shared flow with auto-delivery) ---
+  const notified =
+    nextStatus === "DONE" && existing.status !== "DONE"
+      ? await sendCompletionMails(updated, body.reportNames)
+      : null;
 
   return NextResponse.json({
     ok: true,

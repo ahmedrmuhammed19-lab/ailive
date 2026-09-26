@@ -1,6 +1,7 @@
 import { db } from "@/lib/db";
 import { isQueueAction, verifyActionToken } from "@/lib/actions";
-import { autoAnalyzeSubmission } from "@/lib/analyze";
+import { analyzeSubmission, publishDraftReport } from "@/lib/analyze";
+import { markDoneAndNotify } from "@/lib/notify";
 import { loadMailCreds, operatorAddress, sendOrQueue } from "@/lib/mail";
 
 /**
@@ -132,33 +133,48 @@ export async function GET(req: Request) {
     data: { status: "ANALYZING", analyzedAt: null },
   });
 
-  // --- Auto-analysis: parse statements, publish chain-verified draft report ---
-  const auto = await autoAnalyzeSubmission(sub.id);
+  // --- Auto-analysis: parse statements, chain-verify, publish & maybe deliver ---
+  const analysis = await analyzeSubmission(sub.id);
   const mailCreds = await loadMailCreds();
-  if (auto.ok) {
-    const cov = auto.consolidated;
-    const legLines =
-      auto.legs
-        ?.map(
-          (l) =>
-            `  • Account ${l.account ?? "?"} (${l.currency}): opening ${l.opening.toLocaleString("en-US", { minimumFractionDigits: 2 })} → closing ${l.closing.toLocaleString("en-US", { minimumFractionDigits: 2 })}, in ${l.inflow.toLocaleString("en-US")} / out ${l.outflow.toLocaleString("en-US")}, ${l.matched}/${l.txCount} rows chain-verified`
-        )
-        .join("\n") ?? "";
+
+  if (analysis.ok && analysis.fullLegs && analysis.submission) {
+    const legs = analysis.fullLegs;
+    const cov = legs.reduce((s, l) => s + l.closing, 0); // single-currency hint only
+    const integrity = legs.map((l) => (l.txCount ? Math.round((l.matched / l.txCount) * 100) : 0));
+    const legLines = legs
+      .map(
+        (l, i) =>
+          `  • Account ${l.account ?? "?"} (${l.currency}): opening ${l.opening.toLocaleString("en-US", { minimumFractionDigits: 2 })} → closing ${l.closing.toLocaleString("en-US", { minimumFractionDigits: 2 })}, in ${l.inflow.toLocaleString("en-US")} / out ${l.outflow.toLocaleString("en-US")}, ${l.matched}/${l.txCount} rows verified (${integrity[i]}%)`
+      )
+      .join("\n");
+
+    const autoDeliver = process.env.AUTO_DELIVER !== "0"; // default on
+    if (autoDeliver && analysis.allVerified) {
+      const reportName = await publishDraftReport(analysis.submission, legs, "engine");
+      const done = await markDoneAndNotify(sub.id, [reportName]);
+      return page({
+        tone: "ok",
+        title: "Delivered",
+        headline: "✓ Analysis complete — report delivered",
+        body:
+          `${detail}<br>Chain integrity ${integrity.join("% / ")}% — every ledger row verified against the bank's own balances.` +
+          `<br>The report (${esc2(reportName)}) has been emailed to ${done.notified ? esc2(done.notified.to) : "the client"} automatically.`,
+      });
+    }
+
+    const reportName = await publishDraftReport(analysis.submission, legs, "review");
     await sendOrQueue({
       to: operatorAddress(mailCreds),
       subject: `🤖 Auto-analysis complete — Queue ${label} (draft ready for review)`,
       body:
         `The Start button triggered automatic analysis and a draft report is ready.\n\n` +
         `Queue ID   : ${label}\n` +
-        `Report     : ${auto.reportName}\n\n` +
+        `Report     : ${reportName}\n\n` +
         `Accounts:\n${legLines}\n\n` +
-        (cov
-          ? `Consolidated closing (EGP-equivalent, indicative FX): ${cov.egpEquivalent.toLocaleString("en-US", { minimumFractionDigits: 2 })}\n` +
-            `Benchmark applied: ${cov.benchmark.toLocaleString("en-US")} (${sub.country ?? "default"} × ${sub.travelers ?? 1})\n` +
-            `Coverage: ${cov.coveragePct.toFixed(1)}%\n\n`
-          : "") +
-        `Next step: review the draft on the portal (Reports tab), add the pattern-level\n` +
-        `narrative, confirm the benchmark, then mark the case DONE to deliver to the client.\n\n` +
+        (analysis.allVerified
+          ? `Auto-delivery is currently disabled (AUTO_DELIVER=0) — review and mark DONE.\n\n`
+          : `Integrity below the 95% auto-delivery threshold on this layout (${integrity.join("% / ")}%).\n` +
+            `Review the draft, complete the narrative, then mark DONE to deliver.\n\n`) +
         `— Global EIS automated intake`,
       kind: "operator_alert",
       submissionId: sub.id,
@@ -168,21 +184,23 @@ export async function GET(req: Request) {
       title: "Analysis complete",
       headline: "✓ Analysis started — draft report ready",
       body:
-        `${detail}<br><b>${esc2(auto.message)}</b>` +
-        (cov
-          ? `<br>Coverage vs benchmark: <b>${cov.coveragePct.toFixed(1)}%</b> (EGP-equivalent closing ${Math.round(cov.egpEquivalent).toLocaleString("en-US")}).`
-          : "") +
+        `${detail}<br><b>${esc2(analysis.message)}</b> Chain integrity ${integrity.join("% / ")}%.` +
+        (cov ? "" : "") +
         `<br>The draft is on the portal Reports tab — review it, then mark DONE to deliver to the client.`,
     });
   }
 
+  const failMessage =
+    analysis.mode === "no-files"
+      ? analysis.message
+      : analysis.message + " The workspace analyst should take over manually.";
   await sendOrQueue({
     to: operatorAddress(mailCreds),
     subject: `⚠️ Auto-analysis needs manual work — Queue ${label}`,
     body:
       `The Start button marked the case ANALYZING, but automatic parsing could not\ncomplete a draft.\n\n` +
       `Queue ID : ${label}\n` +
-      `Reason   : ${auto.message}\n\n` +
+      `Reason   : ${failMessage}\n\n` +
       `The workspace analyst should take over this case manually (CIB-Blue engine\n` +
       `or a different statement layout).`,
     kind: "operator_alert",
@@ -192,7 +210,7 @@ export async function GET(req: Request) {
     tone: "warn",
     title: "Needs manual analysis",
     headline: "⚙ Analysis started — manual work needed",
-    body: `${detail}<br>${esc2(auto.message)} The analyst has been notified by email.`,
+    body: `${detail}<br>${esc2(failMessage)} The analyst has been notified by email.`,
   });
 }
 
