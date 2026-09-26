@@ -1,5 +1,7 @@
 import { db } from "@/lib/db";
 import { isQueueAction, verifyActionToken } from "@/lib/actions";
+import { autoAnalyzeSubmission } from "@/lib/analyze";
+import { loadMailCreds, operatorAddress, sendOrQueue } from "@/lib/mail";
 
 /**
  * GET /api/queue/action?id=<submissionId>&action=start&token=<hmac>
@@ -9,10 +11,13 @@ import { isQueueAction, verifyActionToken } from "@/lib/actions";
  * and the endpoint is intentionally session-free so it works straight from a
  * mailbox click on any device.
  *
- * Currently supported: start (WAITING → ANALYZING). The response is a small
- * branded HTML page, not JSON, because the "client" is an email button.
+ * start (WAITING → ANALYZING) also fires the auto-analysis engine: the PDFs
+ * are parsed, a chain-verified DRAFT report is published to the case, and the
+ * operator is emailed the outcome. The analyst then reviews and marks DONE —
+ * which delivers the report to the client automatically.
  */
 export const dynamic = "force-dynamic";
+export const maxDuration = 120;
 
 function page(opts: {
   tone: "ok" | "warn" | "err";
@@ -127,10 +132,70 @@ export async function GET(req: Request) {
     data: { status: "ANALYZING", analyzedAt: null },
   });
 
-  return page({
-    tone: "ok",
-    title: "Analysis started",
-    headline: "✓ Analysis started",
-    body: `${detail}<br>Status is now <b>ANALYZING</b>. The client will be emailed automatically when the report is marked DONE on the portal.`,
+  // --- Auto-analysis: parse statements, publish chain-verified draft report ---
+  const auto = await autoAnalyzeSubmission(sub.id);
+  const mailCreds = await loadMailCreds();
+  if (auto.ok) {
+    const cov = auto.consolidated;
+    const legLines =
+      auto.legs
+        ?.map(
+          (l) =>
+            `  • Account ${l.account ?? "?"} (${l.currency}): opening ${l.opening.toLocaleString("en-US", { minimumFractionDigits: 2 })} → closing ${l.closing.toLocaleString("en-US", { minimumFractionDigits: 2 })}, in ${l.inflow.toLocaleString("en-US")} / out ${l.outflow.toLocaleString("en-US")}, ${l.matched}/${l.txCount} rows chain-verified`
+        )
+        .join("\n") ?? "";
+    await sendOrQueue({
+      to: operatorAddress(mailCreds),
+      subject: `🤖 Auto-analysis complete — Queue ${label} (draft ready for review)`,
+      body:
+        `The Start button triggered automatic analysis and a draft report is ready.\n\n` +
+        `Queue ID   : ${label}\n` +
+        `Report     : ${auto.reportName}\n\n` +
+        `Accounts:\n${legLines}\n\n` +
+        (cov
+          ? `Consolidated closing (EGP-equivalent, indicative FX): ${cov.egpEquivalent.toLocaleString("en-US", { minimumFractionDigits: 2 })}\n` +
+            `Benchmark applied: ${cov.benchmark.toLocaleString("en-US")} (${sub.country ?? "default"} × ${sub.travelers ?? 1})\n` +
+            `Coverage: ${cov.coveragePct.toFixed(1)}%\n\n`
+          : "") +
+        `Next step: review the draft on the portal (Reports tab), add the pattern-level\n` +
+        `narrative, confirm the benchmark, then mark the case DONE to deliver to the client.\n\n` +
+        `— Global EIS automated intake`,
+      kind: "operator_alert",
+      submissionId: sub.id,
+    });
+    return page({
+      tone: "ok",
+      title: "Analysis complete",
+      headline: "✓ Analysis started — draft report ready",
+      body:
+        `${detail}<br><b>${esc2(auto.message)}</b>` +
+        (cov
+          ? `<br>Coverage vs benchmark: <b>${cov.coveragePct.toFixed(1)}%</b> (EGP-equivalent closing ${Math.round(cov.egpEquivalent).toLocaleString("en-US")}).`
+          : "") +
+        `<br>The draft is on the portal Reports tab — review it, then mark DONE to deliver to the client.`,
+    });
+  }
+
+  await sendOrQueue({
+    to: operatorAddress(mailCreds),
+    subject: `⚠️ Auto-analysis needs manual work — Queue ${label}`,
+    body:
+      `The Start button marked the case ANALYZING, but automatic parsing could not\ncomplete a draft.\n\n` +
+      `Queue ID : ${label}\n` +
+      `Reason   : ${auto.message}\n\n` +
+      `The workspace analyst should take over this case manually (CIB-Blue engine\n` +
+      `or a different statement layout).`,
+    kind: "operator_alert",
+    submissionId: sub.id,
   });
+  return page({
+    tone: "warn",
+    title: "Needs manual analysis",
+    headline: "⚙ Analysis started — manual work needed",
+    body: `${detail}<br>${esc2(auto.message)} The analyst has been notified by email.`,
+  });
+}
+
+function esc2(s: string): string {
+  return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 }
