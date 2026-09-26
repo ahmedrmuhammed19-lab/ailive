@@ -93,11 +93,27 @@ function cookieToken(req: Request): string | null {
  * Verifies the account still exists and is active (deactivation kills sessions).
  */
 export async function sessionUser(req: Request): Promise<string | null> {
+  const user = await sessionAccount(req);
+  return user?.username ?? null;
+}
+
+/**
+ * Same as sessionUser() but returns the full account row (includes role).
+ * Used by operator-guarded routes (e.g. account management).
+ */
+export async function sessionAccount(
+  req: Request
+): Promise<{ id: string; username: string; label: string | null; role: string } | null> {
   const username = readSessionToken(cookieToken(req));
   if (!username) return null;
   const user = await db.portalUser.findUnique({ where: { username } });
   if (!user || !user.active) return null;
-  return user.username;
+  return { id: user.id, username: user.username, label: user.label, role: user.role };
+}
+
+/** Username syntax enforced everywhere accounts are created (setup, add-user, portal). */
+export function validUsername(username: string): boolean {
+  return /^[a-z0-9][a-z0-9._-]{2,39}$/.test(username);
 }
 
 /** Normalize a login ID: trim + lowercase (usernames are stored lowercase). */

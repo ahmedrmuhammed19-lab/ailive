@@ -1,11 +1,11 @@
 import { NextResponse } from "next/server";
-import { sessionUser } from "@/lib/session";
+import { sessionAccount } from "@/lib/session";
 
-/** GET /api/me — returns the signed-in account, or null when not signed in. */
+/** GET /api/me — returns the signed-in account (username/label/role), or null when signed out. */
 export async function GET(req: Request) {
   try {
-    const username = await sessionUser(req);
-    return NextResponse.json({ ok: true, user: username });
+    const account = await sessionAccount(req);
+    return NextResponse.json({ ok: true, user: account });
   } catch (err) {
     // Session secret misconfigured etc. — fail closed but with a clear message.
     return NextResponse.json(

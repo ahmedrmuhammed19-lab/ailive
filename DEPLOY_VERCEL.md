@@ -50,6 +50,7 @@ Production + Preview:
 | Key | Value |
 |---|---|
 | `SESSION_SECRET` | random 64-hex — `python3 -c "import secrets; print(secrets.token_hex(32))"` |
+| `SETUP_KEY` | random 32-hex — `python3 -c "import secrets; print(secrets.token_hex(16))"` — used once to create the first account |
 | `MAIL_CREDS_JSON` | optional — one-line JSON, see `.env.vercel.example` |
 
 ## Step 6 — Deploy
@@ -59,18 +60,19 @@ few minutes: it swaps the Prisma provider to Postgres, pushes the schema to
 Neon, and builds the app. The portal is live at
 `https://<project>.vercel.app`.
 
-## Step 7 — Create the first account on the live portal
+## Step 7 — Create the first account on the live portal (self-service)
 
-Accounts live in the remote Postgres DB. From this workspace run:
+1. Open `https://<project>.vercel.app` while signed out. Because the database
+   has zero accounts, the portal shows a **First-time setup** card instead of
+   the sign-in form.
+2. Paste the `SETUP_KEY` you set in Step 5, choose your ID and password
+   (min 8 chars), optionally add a display name, and submit.
+3. You are signed in immediately as an **operator** — the setup form is now
+   gone for everyone (it only ever works on an empty portal).
 
-```bash
-export DATABASE_URL="<Neon connection string from Vercel → Storage → .env.local tab>"
-bun scripts/add-user.mjs add <client-id> <password> "Client Name"
-bun scripts/add-user.mjs list
-```
-
-Whoever you add here can sign in on the live portal immediately. To add
-accounts any time later: just ask, and one command does it.
+More accounts: sign in as an operator → **Accounts** tab → add client or
+operator accounts with any ID/password you choose. To add accounts any time
+later, just ask, or do it yourself in two clicks.
 
 ## Day-to-day flow after going live
 
