@@ -74,5 +74,7 @@ model ParseLog {
   integrityAvg  Int? // mean per-leg chain integrity %
   unmatched     String? // JSON — rows that failed chain verification (training evidence)
   textSample    String? // raw PDF text preview when the layout was unrecognized
+  lessonKey     String? // failure-pattern fingerprint — set only when this row was emailed as a NEW lesson (dedupe marker, see src/lib/lessons.ts)
+  lessonSentAt  DateTime? // when the "new lesson learned" operator email went out for this row
   createdAt     DateTime @default(now())
 }

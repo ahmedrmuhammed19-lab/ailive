@@ -3,6 +3,7 @@ import { isQueueAction, verifyActionToken } from "@/lib/actions";
 import { analyzeSubmission, autoDeliverMinPct, PARSER_VERSION, publishDraftReport } from "@/lib/analyze";
 import { markDoneAndNotify } from "@/lib/notify";
 import { loadMailCreds, operatorAddress, sendOrQueue } from "@/lib/mail";
+import { logAttemptAndTeach } from "@/lib/lessons";
 
 /**
  * GET /api/queue/action?id=<submissionId>&action=start&token=<hmac>
@@ -143,26 +144,21 @@ export async function GET(req: Request) {
   const telemetryLine =
     `Telemetry: v=${analysis.parserVersion} modes=${legModes ?? "—"} ` +
     `integrity=${integ.length ? `${integ.join("/")}%` : "n/a"} gate=${autoDeliverMinPct()}%.`;
-  const logOutcome = async (outcome: string) => {
-    try {
-      await db.parseLog.create({
-        data: {
-          submissionId: sub.id,
-          queueId: label,
-          outcome,
-          modes: legModes,
-          parserVersion: analysis.parserVersion || PARSER_VERSION,
-          legs: analysis.legs.length,
-          integrityMin: integ.length ? Math.min(...integ) : null,
-          integrityAvg: integ.length ? Math.round(integ.reduce((a, b) => a + b, 0) / integ.length) : null,
-          unmatched: analysis.evidence?.unmatched?.length ? JSON.stringify(analysis.evidence.unmatched) : null,
-          textSample: analysis.evidence?.textPreview ?? null,
-        },
-      });
-    } catch {
-      // telemetry is best-effort
-    }
-  };
+  // Telemetry row + lesson-learned loop: every attempt is logged; the FIRST
+  // occurrence of a never-seen failure pattern emails the operator (see lessons.ts).
+  const logOutcome = (outcome: string) =>
+    logAttemptAndTeach({
+      submissionId: sub.id,
+      queueId: label,
+      outcome,
+      modes: legModes,
+      parserVersion: analysis.parserVersion || PARSER_VERSION,
+      legs: analysis.legs.length,
+      integrityMin: integ.length ? Math.min(...integ) : null,
+      integrityAvg: integ.length ? Math.round(integ.reduce((a, b) => a + b, 0) / integ.length) : null,
+      unmatched: analysis.evidence?.unmatched ?? [],
+      textPreview: analysis.evidence?.textPreview,
+    });
 
   if (analysis.ok && analysis.fullLegs && analysis.submission) {
     const legs = analysis.fullLegs;

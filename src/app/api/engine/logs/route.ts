@@ -46,6 +46,8 @@ export async function GET(req: Request) {
       integrityMin: true,
       integrityAvg: true,
       unmatched: true,
+      lessonKey: true, // set = this attempt was emailed as a NEW lesson (dedupe marker)
+      lessonSentAt: true,
       createdAt: true,
       // textSample omitted in list view (can be 16KB) — fetch with ?id=
     },

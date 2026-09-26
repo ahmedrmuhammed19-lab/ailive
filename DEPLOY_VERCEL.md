@@ -55,6 +55,7 @@ Production + Preview:
 | `MAIL_CREDS_JSON` | optional — one-line JSON, see `.env.vercel.example` |
 | `AUTO_DELIVER_MIN` | optional — min per-account chain integrity (0–1) to auto-deliver in one tap. Default `1` = 100%: every row must reconcile; anything below emails the operator for review |
 | `AUTO_DELIVER` | optional — set `0` to disable auto-delivery entirely (every case parks in review, even at 100%) |
+| `LESSON_MAIL_COOLDOWN_MIN` | optional — min minutes between "engine learned a new lesson" operator emails (first-occurrence dedupe by failure-pattern fingerprint; this cooldown only caps bursts). Default `15` |
 
 ## Step 6 — Deploy
 
