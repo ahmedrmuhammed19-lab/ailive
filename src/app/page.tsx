@@ -12,6 +12,7 @@ import { QueuePanel } from "@/components/portal/queue-panel";
 import { DashboardPanel } from "@/components/portal/dashboard-panel";
 import { ReportsPanel } from "@/components/portal/reports-panel";
 import { AccountsPanel } from "@/components/portal/accounts-panel";
+import { ThemeToggle } from "@/components/portal/theme-toggle";
 import { GH } from "@/lib/format";
 
 type Account = { username: string; label: string | null; role: string };
@@ -155,6 +156,7 @@ export default function PortalPage() {
             <p className="truncate text-xs text-[#59636e]">Statement intake queue · Financial Intelligence Services</p>
           </div>
           <div className="ml-auto flex items-center gap-2 text-xs text-[#59636e]">
+            <ThemeToggle />
             <span className="hidden rounded-full border border-[#d0d7de] bg-white px-2.5 py-0.5 font-mono sm:inline">
               ahmedr.muhammed19@gmail.com
             </span>

@@ -21,24 +21,28 @@ export function timeAgo(iso: string): string {
   return `${months} month${months === 1 ? "" : "s"} ago`;
 }
 
-/** GitHub palette tokens (user-requested GitHub/Notion design language). */
+/**
+ * Theme-aware palette. Values are CSS variables defined in globals.css
+ * (:root = light, .dark = dark) so inline styles and SVG props flip with
+ * the portal's dark mode toggle without any component-level branching.
+ */
 export const GH = {
-  border: "#d0d7de",
-  borderMuted: "#d8dee4",
-  canvasSubtle: "#f6f8fa",
-  canvasInset: "#f6f8fa",
-  fg: "#1f2328",
-  muted: "#59636e",
-  accent: "#0969da",
-  accentSubtle: "#ddf4ff",
-  success: "#1a7f37",
-  successSubtle: "#dafbe1",
-  attention: "#9a6700",
-  attentionSubtle: "#fff8c5",
-  danger: "#cf222e",
-  dangerSubtle: "#ffebe9",
-  neutral: "#818b98",
-  cellEmpty: "#ebedf0",
+  border: "var(--eis-border)",
+  borderMuted: "var(--eis-border-muted)",
+  canvasSubtle: "var(--eis-canvas-subtle)",
+  canvasInset: "var(--eis-canvas-subtle)",
+  fg: "var(--eis-fg)",
+  muted: "var(--eis-muted)",
+  accent: "var(--eis-accent)",
+  accentSubtle: "var(--eis-accent-subtle)",
+  success: "var(--eis-success)",
+  successSubtle: "var(--eis-success-subtle)",
+  attention: "var(--eis-attention)",
+  attentionSubtle: "var(--eis-attention-subtle)",
+  danger: "var(--eis-danger)",
+  dangerSubtle: "var(--eis-danger-subtle)",
+  neutral: "var(--eis-neutral)",
+  cellEmpty: "var(--eis-cell-empty)",
 } as const;
 
 export const STATUS_META: Record<

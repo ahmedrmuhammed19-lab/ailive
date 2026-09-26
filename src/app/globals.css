@@ -120,3 +120,97 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* ============================================================
+   Global EIS portal — theme-aware palette (light / dark).
+   GH tokens in src/lib/format.ts reference these variables, so
+   inline styles and SVG props flip with the .dark class too.
+   ============================================================ */
+:root {
+  color-scheme: light;
+  --eis-canvas: #ffffff;
+  --eis-canvas-subtle: #f6f8fa;
+  --eis-hover: #eef1f4;
+  --eis-border: #d0d7de;
+  --eis-border-muted: #d8dee4;
+  --eis-fg: #1f2328;
+  --eis-muted: #59636e;
+  --eis-accent: #0969da;
+  --eis-accent-subtle: #ddf4ff;
+  --eis-success: #1a7f37;
+  --eis-success-subtle: #dafbe1;
+  --eis-attention: #9a6700;
+  --eis-attention-subtle: #fff8c5;
+  --eis-attention-fg: #4d2d00;
+  --eis-danger: #cf222e;
+  --eis-danger-strong: #d1242f;
+  --eis-danger-subtle: #ffebe9;
+  --eis-neutral: #818b98;
+  --eis-cell-empty: #ebedf0;
+  --eis-btn-green: #1f883d;
+  --eis-btn-green-hover: #1a7f37;
+  --eis-divide: #eaeef2;
+  --eis-scale-1: #9be9a8;
+  --eis-scale-2: #40c463;
+  --eis-scale-3: #30a14e;
+  --eis-scale-4: #216e39;
+}
+
+.dark {
+  color-scheme: dark;
+  --eis-canvas: #0d1117;
+  --eis-canvas-subtle: #161b22;
+  --eis-hover: #21262d;
+  --eis-border: #30363d;
+  --eis-border-muted: #262c36;
+  --eis-fg: #e6edf3;
+  --eis-muted: #8b949e;
+  --eis-accent: #4493f8;
+  --eis-accent-subtle: #121d2f;
+  --eis-success: #3fb950;
+  --eis-success-subtle: #0f2417;
+  --eis-attention: #d29922;
+  --eis-attention-subtle: #272115;
+  --eis-attention-fg: #e3b341;
+  --eis-danger: #f85149;
+  --eis-danger-strong: #da3633;
+  --eis-danger-subtle: #25171c;
+  --eis-neutral: #6e7681;
+  --eis-cell-empty: #21262d;
+  --eis-btn-green: #238636;
+  --eis-btn-green-hover: #2ea043;
+  --eis-divide: #21262d;
+  --eis-scale-1: #0e4429;
+  --eis-scale-2: #006d32;
+  --eis-scale-3: #26a641;
+  --eis-scale-4: #39d353;
+}
+
+/* --- Dark overrides for hardcoded light-only utilities --- */
+.dark .bg-white { background-color: var(--eis-canvas); }
+.dark .border-\[\#d0d7de\] { border-color: var(--eis-border); }
+.dark .border-\[\#d8dee4\] { border-color: var(--eis-border-muted); }
+.dark .border-\[\#d4a72c66\] { border-color: #d2992266; }
+.dark .border-\[\#0969da\] { border-color: var(--eis-accent); }
+.dark .hover\:border-\[\#0969da\]:hover { border-color: var(--eis-accent); }
+.dark .bg-\[\#f6f8fa\] { background-color: var(--eis-canvas-subtle); }
+.dark .hover\:bg-\[\#f6f8fa\]:hover { background-color: var(--eis-canvas-subtle); }
+.dark .hover\:bg-\[\#eef1f4\]:hover { background-color: var(--eis-hover); }
+.dark .bg-\[\#ddf4ff\] { background-color: var(--eis-accent-subtle); }
+.dark .bg-\[\#dafbe1\] { background-color: var(--eis-success-subtle); }
+.dark .bg-\[\#fff8c5\] { background-color: var(--eis-attention-subtle); }
+.dark .hover\:bg-\[\#fff8c5\]:hover { background-color: var(--eis-attention-subtle); }
+.dark .bg-\[\#ffebe9\] { background-color: var(--eis-danger-subtle); }
+.dark .bg-\[\#1f883d\] { background-color: var(--eis-btn-green); }
+.dark .hover\:bg-\[\#1a7f37\]:hover { background-color: var(--eis-btn-green-hover); }
+.dark .text-\[\#59636e\] { color: var(--eis-muted); }
+.dark .text-\[\#9a6700\] { color: var(--eis-attention); }
+.dark .text-\[\#1a7f37\] { color: var(--eis-success); }
+.dark .text-\[\#cf222e\] { color: var(--eis-danger); }
+.dark .text-\[\#4d2d00\] { color: var(--eis-attention-fg); }
+.dark .text-\[\#d1242f\] { color: var(--eis-danger-strong); }
+.dark .text-\[\#0969da\] { color: var(--eis-accent); }
+.dark .text-\[\#1f2328\] { color: var(--eis-fg); }
+.dark .hover\:text-\[\#cf222e\]:hover { color: var(--eis-danger); }
+.dark .divide-\[\#eaeef2\] > :not([hidden]) ~ :not([hidden]),
+.dark .divide-\[\#eaeef2\] > :not(:last-child) { border-color: var(--eis-divide); }

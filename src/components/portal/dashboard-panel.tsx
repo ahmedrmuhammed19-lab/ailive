@@ -20,13 +20,13 @@ interface DashData {
   month: { key: string; label: string; days: DayCell[] };
 }
 
-/** GitHub contribution-graph green scale by analyzed count. */
+/** GitHub contribution-graph green scale by analyzed count (theme-aware via CSS vars). */
 function cellColor(analyzed: number): string {
   if (analyzed <= 0) return GH.cellEmpty;
-  if (analyzed === 1) return "#9be9a8";
-  if (analyzed === 2) return "#40c463";
-  if (analyzed === 3) return "#30a14e";
-  return "#216e39";
+  if (analyzed === 1) return "var(--eis-scale-1)";
+  if (analyzed === 2) return "var(--eis-scale-2)";
+  if (analyzed === 3) return "var(--eis-scale-3)";
+  return "var(--eis-scale-4)";
 }
 
 function shiftMonth(key: string, delta: number): string {
@@ -190,10 +190,10 @@ export function DashboardPanel({ refreshKey }: { refreshKey: number }) {
               <div className="mt-4 flex flex-wrap items-center gap-4 text-[11px] text-[#59636e]">
                 <span className="flex items-center gap-1.5">
                   <span className="inline-block h-3 w-3 rounded-[3px]" style={{ backgroundColor: GH.cellEmpty }} />
-                  <span className="inline-block h-3 w-3 rounded-[3px]" style={{ backgroundColor: "#9be9a8" }} />
-                  <span className="inline-block h-3 w-3 rounded-[3px]" style={{ backgroundColor: "#40c463" }} />
-                  <span className="inline-block h-3 w-3 rounded-[3px]" style={{ backgroundColor: "#30a14e" }} />
-                  <span className="inline-block h-3 w-3 rounded-[3px]" style={{ backgroundColor: "#216e39" }} />
+                  <span className="inline-block h-3 w-3 rounded-[3px]" style={{ backgroundColor: "var(--eis-scale-1)" }} />
+                  <span className="inline-block h-3 w-3 rounded-[3px]" style={{ backgroundColor: "var(--eis-scale-2)" }} />
+                  <span className="inline-block h-3 w-3 rounded-[3px]" style={{ backgroundColor: "var(--eis-scale-3)" }} />
+                  <span className="inline-block h-3 w-3 rounded-[3px]" style={{ backgroundColor: "var(--eis-scale-4)" }} />
                   analyses completed
                 </span>
                 <span className="flex items-center gap-1.5">
