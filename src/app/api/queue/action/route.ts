@@ -1,6 +1,6 @@
 import { db } from "@/lib/db";
 import { isQueueAction, verifyActionToken } from "@/lib/actions";
-import { analyzeSubmission, publishDraftReport } from "@/lib/analyze";
+import { analyzeSubmission, autoDeliverMinPct, publishDraftReport } from "@/lib/analyze";
 import { markDoneAndNotify } from "@/lib/notify";
 import { loadMailCreds, operatorAddress, sendOrQueue } from "@/lib/mail";
 
@@ -173,7 +173,7 @@ export async function GET(req: Request) {
         `Accounts:\n${legLines}\n\n` +
         (analysis.allVerified
           ? `Auto-delivery is currently disabled (AUTO_DELIVER=0) — review and mark DONE.\n\n`
-          : `Integrity below the 95% auto-delivery threshold on this layout (${integrity.join("% / ")}%).\n` +
+          : `Integrity below the ${autoDeliverMinPct()}% auto-delivery threshold on this layout (${integrity.join("% / ")}%).\n` +
             `Review the draft, complete the narrative, then mark DONE to deliver.\n\n`) +
         `— Global EIS automated intake`,
       kind: "operator_alert",
@@ -186,7 +186,7 @@ export async function GET(req: Request) {
       body:
         `${detail}<br><b>${esc2(analysis.message)}</b> Chain integrity ${integrity.join("% / ")}%.` +
         (cov ? "" : "") +
-        `<br>The draft is on the portal Reports tab — review it, then mark DONE to deliver to the client.`,
+        `<br>The draft is on the portal Reports tab — review it, then mark DONE to deliver to the client.<br>A summary email is on its way to you with the per-account chain integrity.`,
     });
   }
 

@@ -53,6 +53,8 @@ Production + Preview:
 | `SESSION_SECRET` | random 64-hex — `python3 -c "import secrets; print(secrets.token_hex(32))"` |
 | `SETUP_KEY` | random 32-hex — `python3 -c "import secrets; print(secrets.token_hex(16))"` — used once to create the first account |
 | `MAIL_CREDS_JSON` | optional — one-line JSON, see `.env.vercel.example` |
+| `AUTO_DELIVER_MIN` | optional — min per-account chain integrity (0–1) to auto-deliver in one tap. Default `1` = 100%: every row must reconcile; anything below emails the operator for review |
+| `AUTO_DELIVER` | optional — set `0` to disable auto-delivery entirely (every case parks in review, even at 100%) |
 
 ## Step 6 — Deploy
 

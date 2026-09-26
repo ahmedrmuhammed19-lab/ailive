@@ -42,6 +42,22 @@ const BENCHMARK_EGP: Record<string, number> = {
 };
 const DEFAULT_BENCHMARK_EGP = 150_000;
 
+// ---------- auto-delivery gate ----------
+// Minimum per-leg ledger-chain integrity (matched rows / total rows) required
+// to auto-deliver the engine report and mark DONE in the same tap. Default 1
+// = 100%: every single row on EVERY account must reconcile against the
+// bank's own running balances. Anything below parks the draft for review and
+// emails the operator instead (AUTO_DELIVER=0 disables auto-delivery fully).
+export const AUTO_DELIVER_MIN = (() => {
+  const raw = parseFloat(process.env.AUTO_DELIVER_MIN ?? "1");
+  if (!Number.isFinite(raw)) return 1;
+  return Math.min(1, Math.max(0, raw));
+})();
+
+export function autoDeliverMinPct(): number {
+  return Math.round(AUTO_DELIVER_MIN * 100);
+}
+
 // ---------- CIB text-layer patterns ----------
 const RE_ACCT = /Account\s*Number:\s*(\d{6,})/i;
 const RE_CURR = /Account\s*Currency:\s*([A-Z]{3})/i;
@@ -100,7 +116,7 @@ export interface AutoAnalysisResult {
     visaType: string | null;
     travelers: number | null;
   };
-  allVerified: boolean; // every leg ≥ 95% chain integrity
+  allVerified: boolean; // every leg ≥ AUTO_DELIVER_MIN chain integrity (default 100%)
 }
 
 /** Phase 1 — parse & verify the case's statements (no DB writes). */
@@ -157,7 +173,7 @@ export async function analyzeSubmission(submissionId: string): Promise<AutoAnaly
     };
   }
 
-  const allVerified = legs.every((l) => l.txCount > 0 && l.matched / l.txCount >= 0.95);
+  const allVerified = legs.every((l) => l.txCount > 0 && l.matched / l.txCount >= AUTO_DELIVER_MIN);
   return {
     ok: true,
     mode: "cib-parsed",
