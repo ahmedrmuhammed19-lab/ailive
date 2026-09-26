@@ -42,7 +42,8 @@ export async function sendCompletionMails(
     visaType: string | null;
     travelers: number | null;
   },
-  reportNames?: string[]
+  reportNames?: string[],
+  operatorNote?: string
 ): Promise<NotifiedSummary | null> {
   const dbReports = await db.reportFile.findMany({
     where: { submissionId: submission.id },
@@ -118,6 +119,7 @@ export async function sendCompletionMails(
       `Destination: ${submission.country ?? "—"} · ${submission.visaType ?? "—"}\n` +
       `Joint applicants: ${submission.travelers ?? 1}\n` +
       `Reports:\n${reportList}\n\n` +
+      (operatorNote ? `${operatorNote}\n\n` : "") +
       `— Global EIS automated intake`,
     kind: "operator_alert" as const,
     submissionId: submission.id,
@@ -131,7 +133,8 @@ export async function sendCompletionMails(
  */
 export async function markDoneAndNotify(
   submissionId: string,
-  reportNames?: string[]
+  reportNames?: string[],
+  operatorNote?: string
 ): Promise<CompletionResult> {
   const existing = await db.submission.findUnique({ where: { id: submissionId } });
   if (!existing) return { ok: false, error: "Submission not found.", notified: null, reportNames: [] };
@@ -143,6 +146,6 @@ export async function markDoneAndNotify(
       data: { status: "DONE", analyzedAt: new Date() },
     });
   }
-  const notified = await sendCompletionMails(updated, reportNames);
+  const notified = await sendCompletionMails(updated, reportNames, operatorNote);
   return { ok: true, status: updated.status, notified, reportNames: reportNames ?? [] };
 }

@@ -60,3 +60,19 @@ model StatementFile {
   md5          String
   createdAt    DateTime   @default(now())
 }
+
+/** Self-improvement telemetry — one row per auto-analysis attempt (see /api/engine/logs). */
+model ParseLog {
+  id            String   @id @default(cuid())
+  submissionId  String? // portal submission (cuid) if one exists
+  queueId       String? // human queue label (e.g. AHMED-01)
+  outcome       String // auto-delivered | draft-review | unrecognized | no-files | error
+  modes         String? // layout family per leg, comma-joined (B-internet, C-digital, D-glued, A-branch)
+  parserVersion String // engine identity (eis-ts/x.y)
+  legs          Int      @default(0)
+  integrityMin  Int? // lowest per-leg chain integrity % (0-100)
+  integrityAvg  Int? // mean per-leg chain integrity %
+  unmatched     String? // JSON — rows that failed chain verification (training evidence)
+  textSample    String? // raw PDF text preview when the layout was unrecognized
+  createdAt     DateTime @default(now())
+}

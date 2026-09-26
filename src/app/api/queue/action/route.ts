@@ -1,6 +1,6 @@
 import { db } from "@/lib/db";
 import { isQueueAction, verifyActionToken } from "@/lib/actions";
-import { analyzeSubmission, autoDeliverMinPct, publishDraftReport } from "@/lib/analyze";
+import { analyzeSubmission, autoDeliverMinPct, PARSER_VERSION, publishDraftReport } from "@/lib/analyze";
 import { markDoneAndNotify } from "@/lib/notify";
 import { loadMailCreds, operatorAddress, sendOrQueue } from "@/lib/mail";
 
@@ -137,6 +137,33 @@ export async function GET(req: Request) {
   const analysis = await analyzeSubmission(sub.id);
   const mailCreds = await loadMailCreds();
 
+  // Self-improvement telemetry — one ParseLog row per attempt; must never break the flow.
+  const integ = analysis.legs.map((l) => (l.txCount ? Math.round((l.matched / l.txCount) * 100) : 0));
+  const legModes = analysis.legs.map((l) => l.mode ?? "unknown").join(",") || null;
+  const telemetryLine =
+    `Telemetry: v=${analysis.parserVersion} modes=${legModes ?? "—"} ` +
+    `integrity=${integ.length ? `${integ.join("/")}%` : "n/a"} gate=${autoDeliverMinPct()}%.`;
+  const logOutcome = async (outcome: string) => {
+    try {
+      await db.parseLog.create({
+        data: {
+          submissionId: sub.id,
+          queueId: label,
+          outcome,
+          modes: legModes,
+          parserVersion: analysis.parserVersion || PARSER_VERSION,
+          legs: analysis.legs.length,
+          integrityMin: integ.length ? Math.min(...integ) : null,
+          integrityAvg: integ.length ? Math.round(integ.reduce((a, b) => a + b, 0) / integ.length) : null,
+          unmatched: analysis.evidence?.unmatched?.length ? JSON.stringify(analysis.evidence.unmatched) : null,
+          textSample: analysis.evidence?.textPreview ?? null,
+        },
+      });
+    } catch {
+      // telemetry is best-effort
+    }
+  };
+
   if (analysis.ok && analysis.fullLegs && analysis.submission) {
     const legs = analysis.fullLegs;
     const cov = legs.reduce((s, l) => s + l.closing, 0); // single-currency hint only
@@ -151,7 +178,8 @@ export async function GET(req: Request) {
     const autoDeliver = process.env.AUTO_DELIVER !== "0"; // default on
     if (autoDeliver && analysis.allVerified) {
       const reportName = await publishDraftReport(analysis.submission, legs, "engine");
-      const done = await markDoneAndNotify(sub.id, [reportName]);
+      const done = await markDoneAndNotify(sub.id, [reportName], telemetryLine);
+      await logOutcome("auto-delivered");
       return page({
         tone: "ok",
         title: "Delivered",
@@ -175,10 +203,12 @@ export async function GET(req: Request) {
           ? `Auto-delivery is currently disabled (AUTO_DELIVER=0) — review and mark DONE.\n\n`
           : `Integrity below the ${autoDeliverMinPct()}% auto-delivery threshold on this layout (${integrity.join("% / ")}%).\n` +
             `Review the draft, complete the narrative, then mark DONE to deliver.\n\n`) +
+        `${telemetryLine}\n\n` +
         `— Global EIS automated intake`,
       kind: "operator_alert",
       submissionId: sub.id,
     });
+    await logOutcome("draft-review");
     return page({
       tone: "ok",
       title: "Analysis complete",
@@ -194,6 +224,7 @@ export async function GET(req: Request) {
     analysis.mode === "no-files"
       ? analysis.message
       : analysis.message + " The workspace analyst should take over manually.";
+  await logOutcome(analysis.mode); // "unrecognized" | "no-files"
   await sendOrQueue({
     to: operatorAddress(mailCreds),
     subject: `⚠️ Auto-analysis needs manual work — Queue ${label}`,
@@ -201,6 +232,9 @@ export async function GET(req: Request) {
       `The Start button marked the case ANALYZING, but automatic parsing could not\ncomplete a draft.\n\n` +
       `Queue ID : ${label}\n` +
       `Reason   : ${failMessage}\n\n` +
+      `${telemetryLine}\n\n` +
+      `The raw text evidence is stored in the engine log (/api/engine/logs) for the\n` +
+      `next parser iteration.\n\n` +
       `The workspace analyst should take over this case manually (CIB-Blue engine\n` +
       `or a different statement layout).`,
     kind: "operator_alert",

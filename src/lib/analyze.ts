@@ -58,6 +58,9 @@ export function autoDeliverMinPct(): number {
   return Math.round(AUTO_DELIVER_MIN * 100);
 }
 
+/** Parser identity — bumped when layout handling improves; recorded in ParseLog telemetry. */
+export const PARSER_VERSION = "eis-ts/1.1";
+
 // ---------- CIB text-layer patterns ----------
 const RE_ACCT = /Account\s*Number:\s*(\d{6,})/i;
 const RE_CURR = /Account\s*Currency:\s*([A-Z]{3})/i;
@@ -84,6 +87,7 @@ interface TxRow {
 
 interface AccountLeg {
   file: string;
+  mode?: string; // layout family that parsed it (B-internet / C-digital / D-glued / A-branch)
   account: string | null;
   currency: string;
   period: string | null;
@@ -104,7 +108,7 @@ export interface AutoAnalysisResult {
   mode: "cib-parsed" | "unrecognized" | "no-files";
   message: string;
   legs: Array<
-    Pick<AccountLeg, "account" | "currency" | "opening" | "closing" | "inflow" | "outflow" | "txCount" | "matched">
+    Pick<AccountLeg, "account" | "currency" | "mode" | "opening" | "closing" | "inflow" | "outflow" | "txCount" | "matched">
   >;
   fullLegs?: AccountLeg[]; // internal: for publishDraftReport (not JSON-serialised)
   submission?: {
@@ -117,6 +121,12 @@ export interface AutoAnalysisResult {
     travelers: number | null;
   };
   allVerified: boolean; // every leg ≥ AUTO_DELIVER_MIN chain integrity (default 100%)
+  parserVersion: string;
+  /** Self-improvement evidence: unmatched rows (below-threshold cases) and raw text preview (unrecognized cases). */
+  evidence?: {
+    unmatched: Array<{ file: string; date?: string; desc?: string; movement?: number | null; balance?: number | null }>;
+    textPreview?: string;
+  };
 }
 
 /** Phase 1 — parse & verify the case's statements (no DB writes). */
@@ -126,7 +136,7 @@ export async function analyzeSubmission(submissionId: string): Promise<AutoAnaly
     include: { files: true },
   });
   if (!submission)
-    return { ok: false, mode: "no-files", message: "Submission not found.", legs: [], allVerified: false };
+    return { ok: false, mode: "no-files", message: "Submission not found.", legs: [], allVerified: false, parserVersion: PARSER_VERSION };
   const pdfFiles = submission.files.filter((f) => f.originalName.toLowerCase().endsWith(".pdf"));
   if (pdfFiles.length === 0) {
     return {
@@ -135,10 +145,12 @@ export async function analyzeSubmission(submissionId: string): Promise<AutoAnaly
       message: "No PDF statements attached to this case.",
       legs: [],
       allVerified: false,
+      parserVersion: PARSER_VERSION,
     };
   }
 
   const legs: AccountLeg[] = [];
+  const rawSamples: string[] = []; // first bytes of each PDF's text — failure evidence for ParseLog
   for (const f of pdfFiles) {
     let buf: Buffer | null = null;
     if (f.data) buf = Buffer.from(f.data);
@@ -155,6 +167,7 @@ export async function analyzeSubmission(submissionId: string): Promise<AutoAnaly
       const pdf = await getDocumentProxy(new Uint8Array(buf));
       const { text } = await extractText(pdf, { mergePages: true });
       const merged = Array.isArray(text) ? text.join("\n") : text;
+      rawSamples.push(`===== ${f.originalName} =====\n${merged.slice(0, 8000)}`);
       const leg = parseCibText(merged, f.originalName);
       if (leg) legs.push(leg);
     } catch {
@@ -170,16 +183,27 @@ export async function analyzeSubmission(submissionId: string): Promise<AutoAnaly
         "Statement layout not recognised as a text-layer CIB statement (image scan or another bank). Manual analysis required.",
       legs: [],
       allVerified: false,
+      parserVersion: PARSER_VERSION,
+      evidence: { unmatched: [], textPreview: rawSamples.join("\n\n").slice(0, 16384) },
     };
   }
 
   const allVerified = legs.every((l) => l.txCount > 0 && l.matched / l.txCount >= AUTO_DELIVER_MIN);
+  const unmatched = allVerified
+    ? []
+    : legs.flatMap((l) =>
+        l.rows
+          .filter((r) => !r.chainOk)
+          .slice(0, 40)
+          .map((r) => ({ file: l.file, date: r.date, desc: r.desc?.slice(0, 120), movement: r.movement, balance: r.balance }))
+      );
   return {
     ok: true,
     mode: "cib-parsed",
     legs: legs.map((l) => ({
       account: l.account,
       currency: l.currency,
+      mode: l.mode ?? "unknown",
       opening: l.opening,
       closing: l.closing,
       inflow: l.inflow,
@@ -198,6 +222,8 @@ export async function analyzeSubmission(submissionId: string): Promise<AutoAnaly
       travelers: submission.travelers,
     },
     allVerified,
+    parserVersion: PARSER_VERSION,
+    evidence: { unmatched },
     message: `Parsed ${legs.length} CIB account${legs.length > 1 ? "s" : ""}.`,
   };
 }
@@ -236,9 +262,19 @@ function money(n: number): string {
   return n.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 }
 
-/** Parse one PDF's text into a CIB account leg — dispatches by layout family. */
+/** Parse one PDF's text into a CIB account leg — dispatches by layout family, tagging the winner. */
 export function parseCibText(text: string, file: string): AccountLeg | null {
-  return parseCibInternet(text, file) ?? parseCibDigital(text, file) ?? parseCibGlued(text, file) ?? parseCibBranch(text, file);
+  const attempt = (mode: string, fn: (t: string, f: string) => AccountLeg | null): AccountLeg | null => {
+    const leg = fn(text, file);
+    if (leg) leg.mode = mode;
+    return leg;
+  };
+  return (
+    attempt("B-internet", parseCibInternet) ??
+    attempt("C-digital", parseCibDigital) ??
+    attempt("D-glued", parseCibGlued) ??
+    attempt("A-branch", parseCibBranch)
+  );
 }
 
 /**

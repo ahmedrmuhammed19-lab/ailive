@@ -89,3 +89,7 @@ scripts/*
 !scripts/cleanup_probe.mjs
 !scripts/cib_extract.py
 !scripts/fx_rate.json
+
+# self-improvement telemetry — may contain statement excerpts, never commit
+parser_samples/
+!scripts/learn_log.py
