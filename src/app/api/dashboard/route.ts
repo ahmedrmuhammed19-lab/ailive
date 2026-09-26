@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
-import { sessionUser } from "@/lib/session";
+import { sessionAccount } from "@/lib/session";
+import { isOperator, ownedScope } from "@/lib/authz";
 
 function dayKey(d: Date): string {
   // Local (server) date key YYYY-MM-DD
@@ -12,13 +13,14 @@ function dayKey(d: Date): string {
 
 /**
  * GET /api/dashboard?month=YYYY-MM   (requires a signed-in account)
- * Returns operator stats: today counters, totals by status, and per-day
+ * Returns stats: today counters, totals by status, and per-day
  * uploaded/analyzed counts for the requested month (calendar heatmap).
+ * Operators see platform-wide numbers; clients only their own cases.
  */
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
-  const user = await sessionUser(req);
-  if (!user) {
+  const account = await sessionAccount(req);
+  if (!account) {
     return NextResponse.json(
       { ok: false, error: "Sign in required." },
       { status: 401 }
@@ -26,6 +28,7 @@ export async function GET(req: Request) {
   }
 
   const all = await db.submission.findMany({
+    where: isOperator(account) ? undefined : ownedScope(account.username),
     select: { status: true, createdAt: true, analyzedAt: true },
   });
 

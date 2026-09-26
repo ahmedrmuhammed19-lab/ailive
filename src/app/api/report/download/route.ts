@@ -3,18 +3,21 @@ import { readFile } from "fs/promises";
 import path from "path";
 import { db } from "@/lib/db";
 import { REPORTS_DIR } from "@/lib/portal";
-import { sessionUser } from "@/lib/session";
+import { sessionAccount } from "@/lib/session";
+import { isOperator, ownedScope } from "@/lib/authz";
 
 /**
  * GET /api/report/download?file=... — stream one report (traversal-safe).
  * Resolution order: published ReportFile (blob URL, production) → local
- * reports directory (dev / self-hosted). Requires a signed-in account.
+ * reports directory (dev / self-hosted). Operators can fetch any report;
+ * client accounts only reports published on their own submissions.
  */
 export async function GET(req: Request) {
-  const user = await sessionUser(req);
-  if (!user) {
+  const account = await sessionAccount(req);
+  if (!account) {
     return NextResponse.json({ ok: false, error: "Sign in required." }, { status: 401 });
   }
+  const operator = isOperator(account);
 
   const name = searchParams(req).get("file") ?? "";
   const ext = path.extname(name).toLowerCase();
@@ -28,10 +31,22 @@ export async function GET(req: Request) {
       where: { name },
       orderBy: { createdAt: "desc" },
     });
+    if (row && !operator) {
+      // ownership check: the report must sit on a submission this client owns
+      const owned = row.submissionId
+        ? await db.submission.findFirst({
+            where: { id: row.submissionId, ...ownedScope(account.username) },
+            select: { id: true },
+          })
+        : null;
+      if (!owned) {
+        return NextResponse.json({ ok: false, error: "Not your report." }, { status: 403 });
+      }
+    }
     if (row?.data) {
       return reportResponse(name, ext, Buffer.from(row.data));
     }
-    if (row?.url) {
+    if (row?.url && operator) {
       const upstream = await fetch(row.url);
       if (!upstream.ok) {
         return NextResponse.json(
@@ -42,11 +57,24 @@ export async function GET(req: Request) {
       const data = Buffer.from(await upstream.arrayBuffer());
       return reportResponse(name, ext, data);
     }
+    if (row && !operator && (row.data || row.url)) {
+      // client-owned row whose bytes live only on the blob URL
+      if (row.url) {
+        const upstream = await fetch(row.url);
+        if (upstream.ok) {
+          const data = Buffer.from(await upstream.arrayBuffer());
+          return reportResponse(name, ext, data);
+        }
+      }
+    }
   } catch {
     // db hiccup — fall through to local file mode
   }
 
-  // 2) Local file mode (dev / self-hosted) — resolved inside REPORTS_DIR only
+  // 2) Local file mode (dev / self-hosted) — operators only
+  if (!operator) {
+    return NextResponse.json({ ok: false, error: "Report not found." }, { status: 404 });
+  }
   const base = path.resolve(REPORTS_DIR);
   const target = path.resolve(base, name);
   if (!target.startsWith(base + path.sep)) {

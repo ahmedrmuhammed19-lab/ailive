@@ -1,16 +1,18 @@
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { getStoredObject } from "@/lib/storage";
-import { sessionUser } from "@/lib/session";
+import { sessionAccount } from "@/lib/session";
+import { isOperator, ownedScope } from "@/lib/authz";
 
 /**
  * GET /api/statement?id=... — stream one uploaded statement back to a
  * signed-in account. Resolves the file record, then proxies bytes from
  * blob storage (production) or the local filesystem (dev).
+ * Operators can fetch any statement; client accounts only their own.
  */
 export async function GET(req: Request) {
-  const user = await sessionUser(req);
-  if (!user) {
+  const account = await sessionAccount(req);
+  if (!account) {
     return NextResponse.json({ ok: false, error: "Sign in required." }, { status: 401 });
   }
 
@@ -19,9 +21,21 @@ export async function GET(req: Request) {
     return NextResponse.json({ ok: false, error: "File id is required." }, { status: 400 });
   }
 
-  const row = await db.statementFile.findUnique({ where: { id } });
+  const row = await db.statementFile.findUnique({
+    where: { id },
+    include: { submission: { select: { submittedBy: true, userId: true } } },
+  });
   if (!row) {
     return NextResponse.json({ ok: false, error: "File not found." }, { status: 404 });
+  }
+
+  if (!isOperator(account)) {
+    const owns =
+      row.submission.submittedBy === account.username ||
+      row.submission.userId === account.username;
+    if (!owns) {
+      return NextResponse.json({ ok: false, error: "Not your statement." }, { status: 403 });
+    }
   }
 
   // DB storage mode: bytes live on the row itself; otherwise blob/fs lookup.

@@ -1,11 +1,12 @@
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
-import { sessionUser } from "@/lib/session";
+import { sessionAccount } from "@/lib/session";
+import { isOperator, ownedScope } from "@/lib/authz";
 
-/** GET /api/queue — full queue list (requires a signed-in account). */
+/** GET /api/queue — queue list (operators see all; clients only their own cases). */
 export async function GET(req: Request) {
-  const user = await sessionUser(req);
-  if (!user) {
+  const account = await sessionAccount(req);
+  if (!account) {
     return NextResponse.json(
       { ok: false, error: "Sign in required." },
       { status: 401 }
@@ -13,6 +14,7 @@ export async function GET(req: Request) {
   }
 
   const rows = await db.submission.findMany({
+    where: isOperator(account) ? undefined : ownedScope(account.username),
     orderBy: { createdAt: "desc" },
     include: { files: { select: { id: true, originalName: true } } },
   });

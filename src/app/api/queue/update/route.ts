@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { sendCompletionMails } from "@/lib/notify";
-import { sessionUser } from "@/lib/session";
+import { sessionAccount } from "@/lib/session";
+import { isOperator } from "@/lib/authz";
 
 /**
  * POST /api/queue/update — operator actions on a queue item:
@@ -9,6 +10,7 @@ import { sessionUser } from "@/lib/session";
  * Moving to DONE stamps analyzedAt and emails the "report ready" notice
  * (client if their email is on file, operator always gets a copy).
  * Email delivery is HTML-only: the .html report is attached, PDF is not sent.
+ * Operator-only — client accounts are read-only by design.
  */
 export async function POST(req: Request) {
   let body: {
@@ -28,9 +30,15 @@ export async function POST(req: Request) {
     return NextResponse.json({ ok: false, error: "Invalid JSON body." }, { status: 400 });
   }
 
-  const user = await sessionUser(req);
-  if (!user) {
+  const account = await sessionAccount(req);
+  if (!account) {
     return NextResponse.json({ ok: false, error: "Sign in required." }, { status: 401 });
+  }
+  if (!isOperator(account)) {
+    return NextResponse.json(
+      { ok: false, error: "Operator account required — client accounts are read-only." },
+      { status: 403 }
+    );
   }
   if (!body.id) {
     return NextResponse.json({ ok: false, error: "Submission id is required." }, { status: 400 });

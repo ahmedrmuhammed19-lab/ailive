@@ -354,7 +354,7 @@ export default function PortalPage() {
               <UploadPanel />
             </TabsContent>
             <TabsContent value="queue" className="mt-2">
-              <QueuePanel refreshKey={refreshKey} />
+              <QueuePanel refreshKey={refreshKey} isOperator={user.role === "operator"} />
             </TabsContent>
             <TabsContent value="dashboard" className="mt-2">
               <DashboardPanel refreshKey={refreshKey} />

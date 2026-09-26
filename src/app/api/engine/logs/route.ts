@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
-import { sessionUser } from "@/lib/session";
+import { sessionAccount } from "@/lib/session";
+import { isOperator } from "@/lib/authz";
 
 /**
  * GET /api/engine/logs — self-improvement telemetry (requires a signed-in account).
@@ -11,9 +12,15 @@ import { sessionUser } from "@/lib/session";
  * full row including the raw PDF text sample captured for unrecognized layouts.
  */
 export async function GET(req: Request) {
-  const user = await sessionUser(req);
-  if (!user) {
+  const account = await sessionAccount(req);
+  if (!account) {
     return NextResponse.json({ ok: false, error: "Sign in required." }, { status: 401 });
+  }
+  if (!isOperator(account)) {
+    return NextResponse.json(
+      { ok: false, error: "Operator account required — engine telemetry is internal." },
+      { status: 403 }
+    );
   }
 
   const id = new URL(req.url).searchParams.get("id");

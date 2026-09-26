@@ -10,6 +10,7 @@ import {
   Loader2,
   PlayCircle,
   CheckCircle2,
+  CheckCheck,
   RotateCcw,
   RefreshCw,
   Save,
@@ -37,7 +38,7 @@ interface QueueItem {
 
 const FILTERS = ["ALL", "WAITING", "ANALYZING", "DONE"] as const;
 
-export function QueuePanel({ refreshKey }: { refreshKey: number }) {
+export function QueuePanel({ refreshKey, isOperator }: { refreshKey: number; isOperator?: boolean }) {
   const [items, setItems] = useState<QueueItem[] | null>(null);
   const [busy, setBusy] = useState(false);
   const [filter, setFilter] = useState<(typeof FILTERS)[number]>("ALL");
@@ -88,6 +89,47 @@ export function QueuePanel({ refreshKey }: { refreshKey: number }) {
 
   const visible = (items ?? []).filter((i) => filter === "ALL" || i.status === filter);
 
+  const greenAll = useCallback(async () => {
+    const pending = counts.WAITING + counts.ANALYZING;
+    if (pending === 0) return;
+    if (
+      !window.confirm(
+        `Flip ${pending} remaining case${pending > 1 ? "s" : ""} to DONE?\n\n` +
+          `• Cases WITHOUT a client email: marked DONE silently (no emails).\n` +
+          `• Cases WITH a client email + published report: the client receives the report-ready email.\n` +
+          `• Cases WITH a client email but NO report: skipped (finish those first).`
+      )
+    )
+      return;
+    setBusy(true);
+    try {
+      const res = await fetch(`/api/queue/complete-all`, { method: "POST" });
+      const data = (await res.json()) as {
+        ok: boolean;
+        flipped?: number;
+        delivered?: number;
+        silent?: number;
+        skipped?: Array<{ id?: string; queueId: string | null; reason: string }>;
+        error?: string;
+      };
+      if (!data.ok) {
+        window.alert(data.error ?? "Could not complete the queue.");
+        return;
+      }
+      const skipped = data.skipped?.length
+        ? `\n\nSkipped:\n${data.skipped.map((s) => `• ${s.queueId ?? s.id}: ${s.reason}`).join("\n")}`
+        : "";
+      window.alert(
+        `Queue completed: ${data.flipped ?? 0} case(s) marked DONE (${data.delivered ?? 0} emailed to clients, ${data.silent ?? 0} silent).${skipped}`
+      );
+      await load();
+    } catch {
+      window.alert("Network error while completing the queue.");
+    } finally {
+      setBusy(false);
+    }
+  }, [counts.WAITING, counts.ANALYZING, load]);
+
   return (
     <div className="space-y-3">
       {/* Toolbar */}
@@ -111,10 +153,24 @@ export function QueuePanel({ refreshKey }: { refreshKey: number }) {
             </button>
           ))}
         </div>
-        <Button variant="outline" size="sm" onClick={load} disabled={busy} className="gap-1.5 border-[#d0d7de] text-[#1f2328] hover:bg-[#f6f8fa]">
-          {busy ? <Loader2 className="h-3.5 w-3.5 animate-spin" aria-hidden="true" /> : <RefreshCw className="h-3.5 w-3.5" aria-hidden="true" />}
-          Refresh
-        </Button>
+        <div className="flex items-center gap-2">
+          {isOperator && counts.WAITING + counts.ANALYZING > 0 && (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={greenAll}
+              disabled={busy}
+              className="gap-1.5 border-[#1a7f37] text-[#1a7f37] hover:bg-[#dafbe1] dark:border-[#2ea043] dark:text-[#3fb950] dark:hover:bg-[#12261e]"
+            >
+              {busy ? <Loader2 className="h-3.5 w-3.5 animate-spin" aria-hidden="true" /> : <CheckCheck className="h-3.5 w-3.5" aria-hidden="true" />}
+              Green all ({counts.WAITING + counts.ANALYZING})
+            </Button>
+          )}
+          <Button variant="outline" size="sm" onClick={load} disabled={busy} className="gap-1.5 border-[#d0d7de] text-[#1f2328] hover:bg-[#f6f8fa]">
+            {busy ? <Loader2 className="h-3.5 w-3.5 animate-spin" aria-hidden="true" /> : <RefreshCw className="h-3.5 w-3.5" aria-hidden="true" />}
+            Refresh
+          </Button>
+        </div>
       </div>
 
       {/* List */}
