@@ -144,38 +144,38 @@ export default function PortalPage() {
   }, []);
 
   return (
-    <div className="flex min-h-screen flex-col bg-white" style={{ color: GH.fg }}>
+    <div className="flex min-h-screen flex-col bg-[var(--eis-canvas)]" style={{ color: GH.fg }}>
       {/* Header — GitHub-style slim bar */}
-      <header className="border-b border-[#d0d7de] bg-[#f6f8fa]">
+      <header className="border-b border-[var(--eis-border)] bg-[var(--eis-canvas-subtle)]">
         <div className="mx-auto flex max-w-5xl flex-wrap items-center gap-3 px-4 py-3 sm:px-6">
-          <div className="flex h-8 w-8 items-center justify-center rounded-md bg-[#1f2328] font-mono text-sm font-bold text-white" aria-hidden="true">
+          <div className="flex h-8 w-8 items-center justify-center rounded-md bg-[var(--eis-fg)] font-mono text-sm font-bold text-white" aria-hidden="true">
             GE
           </div>
           <div className="min-w-0">
             <h1 className="text-sm font-semibold leading-tight">Global EIS</h1>
-            <p className="truncate text-xs text-[#59636e]">Statement intake queue · Financial Intelligence Services</p>
+            <p className="truncate text-xs text-[var(--eis-muted)]">Statement intake queue · Financial Intelligence Services</p>
           </div>
-          <div className="ml-auto flex items-center gap-2 text-xs text-[#59636e]">
+          <div className="ml-auto flex items-center gap-2 text-xs text-[var(--eis-muted)]">
             <ThemeToggle />
-            <span className="hidden rounded-full border border-[#d0d7de] bg-white px-2.5 py-0.5 font-mono sm:inline">
+            <span className="hidden rounded-full border border-[var(--eis-border)] bg-[var(--eis-canvas)] px-2.5 py-0.5 font-mono sm:inline">
               ahmedr.muhammed19@gmail.com
             </span>
             {user ? (
               <>
-                <span className="flex items-center gap-1.5 rounded-full border border-[#d0d7de] bg-[#dafbe1] px-2.5 py-0.5 font-medium text-[#1a7f37]">
+                <span className="flex items-center gap-1.5 rounded-full border border-[var(--eis-border)] bg-[var(--eis-success-subtle)] px-2.5 py-0.5 font-medium text-[var(--eis-btn-green-hover)]">
                   <User className="h-3.5 w-3.5" aria-hidden="true" /> {user.username}
                 </span>
                 <Button
                   variant="outline"
                   size="sm"
                   onClick={signOut}
-                  className="h-7 gap-1.5 border-[#d0d7de] px-2.5 text-xs text-[#59636e] hover:bg-[#f6f8fa] hover:text-[#cf222e]"
+                  className="h-7 gap-1.5 border-[var(--eis-border)] px-2.5 text-xs text-[var(--eis-muted)] hover:bg-[var(--eis-canvas-subtle)] hover:text-[var(--eis-danger)]"
                 >
                   <LogOut className="h-3.5 w-3.5" aria-hidden="true" /> Sign out
                 </Button>
               </>
             ) : (
-              <span className="flex items-center gap-1.5 rounded-full border border-[#d0d7de] bg-white px-2.5 py-0.5 font-medium">
+              <span className="flex items-center gap-1.5 rounded-full border border-[var(--eis-border)] bg-[var(--eis-canvas)] px-2.5 py-0.5 font-medium">
                 <Lock className="h-3.5 w-3.5" aria-hidden="true" /> Locked
               </span>
             )}
@@ -189,7 +189,7 @@ export default function PortalPage() {
           <div className="mx-auto mt-10 max-w-md">
             {setupStatus && setupStatus.users === 0 && !setupStatus.available && (
               <p
-                className="mb-4 rounded-md border border-[#d4a72c66] bg-[#fff8c5] px-3 py-2 text-sm text-[#4d2d00]"
+                className="mb-4 rounded-md border border-[#d4a72c66] bg-[var(--eis-attention-subtle)] px-3 py-2 text-sm text-[#4d2d00]"
                 role="status"
               >
                 This deployment has no accounts yet. Add a <code className="font-mono">SETUP_KEY</code>{" "}
@@ -198,8 +198,8 @@ export default function PortalPage() {
                 {setupStatus.reason ? ` (${setupStatus.reason})` : null}
               </p>
             )}
-            <div className="rounded-md border border-[#d0d7de] bg-white">
-              <div className="flex items-center justify-between border-b border-[#d8dee4] bg-[#f6f8fa] px-4 py-2.5 text-sm font-semibold">
+            <div className="rounded-md border border-[var(--eis-border)] bg-[var(--eis-canvas)]">
+              <div className="flex items-center justify-between border-b border-[var(--eis-border-muted)] bg-[var(--eis-canvas-subtle)] px-4 py-2.5 text-sm font-semibold">
                 {setupMode ? "First-time setup" : "Sign in"}
                 {setupStatus?.available && (
                   <button
@@ -209,7 +209,7 @@ export default function PortalPage() {
                       setGateError(null);
                       setSetupError(null);
                     }}
-                    className="text-xs font-normal text-[#0969da] hover:underline"
+                    className="text-xs font-normal text-[var(--eis-accent)] hover:underline"
                   >
                     {setupMode ? "Sign in instead" : "Create the first account"}
                   </button>
@@ -217,7 +217,7 @@ export default function PortalPage() {
               </div>
               {setupMode ? (
                 <div className="space-y-3 p-4">
-                  <p className="text-sm text-[#59636e]">
+                  <p className="text-sm text-[var(--eis-muted)]">
                     Create the first operator account for this portal. This form disappears once an
                     account exists.
                   </p>
@@ -257,7 +257,7 @@ export default function PortalPage() {
                   <Button
                     onClick={runSetup}
                     disabled={gateBusy}
-                    className="w-full bg-[#1f883d] text-white hover:bg-[#1a7f37] sm:w-auto"
+                    className="w-full bg-[var(--eis-btn-green)] text-white hover:bg-[var(--eis-btn-green-hover)] sm:w-auto"
                   >
                     {gateBusy ? (
                       <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
@@ -267,14 +267,14 @@ export default function PortalPage() {
                     Create account &amp; sign in
                   </Button>
                   {setupError && (
-                    <p className="rounded-md border border-[#d0d7de] bg-[#ffebe9] px-3 py-2 text-sm" style={{ color: GH.danger }} role="alert">
+                    <p className="rounded-md border border-[var(--eis-border)] bg-[var(--eis-danger-subtle)] px-3 py-2 text-sm" style={{ color: GH.danger }} role="alert">
                       {setupError}
                     </p>
                   )}
                 </div>
               ) : (
                 <div className="space-y-3 p-4">
-                  <p className="text-sm text-[#59636e]">
+                  <p className="text-sm text-[var(--eis-muted)]">
                     Enter the ID and password provided by Global EIS.
                   </p>
                   <div className="space-y-2">
@@ -300,7 +300,7 @@ export default function PortalPage() {
                   <Button
                     onClick={signIn}
                     disabled={gateBusy}
-                    className="w-full bg-[#1f883d] text-white hover:bg-[#1a7f37] sm:w-auto"
+                    className="w-full bg-[var(--eis-btn-green)] text-white hover:bg-[var(--eis-btn-green-hover)] sm:w-auto"
                   >
                     {gateBusy ? (
                       <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
@@ -310,7 +310,7 @@ export default function PortalPage() {
                     Sign in
                   </Button>
                   {gateError && (
-                    <p className="rounded-md border border-[#d0d7de] bg-[#ffebe9] px-3 py-2 text-sm" style={{ color: GH.danger }} role="alert">
+                    <p className="rounded-md border border-[var(--eis-border)] bg-[var(--eis-danger-subtle)] px-3 py-2 text-sm" style={{ color: GH.danger }} role="alert">
                       {gateError}
                     </p>
                   )}
@@ -321,7 +321,7 @@ export default function PortalPage() {
         )}
 
         {checking && (
-          <div className="flex items-center justify-center gap-2 py-16 text-sm text-[#59636e]">
+          <div className="flex items-center justify-center gap-2 py-16 text-sm text-[var(--eis-muted)]">
             <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" /> Checking session…
           </div>
         )}
@@ -329,7 +329,7 @@ export default function PortalPage() {
         {/* Workspace */}
         {user && (
           <Tabs defaultValue="upload" onValueChange={() => setRefreshKey((k) => k + 1)}>
-            <TabsList className="mb-4 flex h-auto w-full justify-start gap-1 rounded-none border-b border-[#d0d7de] bg-transparent p-0">
+            <TabsList className="mb-4 flex h-auto w-full justify-start gap-1 rounded-none border-b border-[var(--eis-border)] bg-transparent p-0">
               {[
                 { value: "upload", label: "Upload", icon: UploadCloud },
                 { value: "queue", label: "Queue", icon: ListOrdered },
@@ -342,7 +342,7 @@ export default function PortalPage() {
                 <TabsTrigger
                   key={t.value}
                   value={t.value}
-                  className="mb-[-1px] gap-1.5 rounded-none border-b-2 border-transparent bg-transparent px-3 py-2 text-sm text-[#59636e] shadow-none transition-none data-[state=active]:border-[#fd8c73] data-[state=active]:bg-transparent data-[state=active]:font-semibold data-[state=active]:text-[#1f2328] data-[state=active]:shadow-none"
+                  className="mb-[-1px] gap-1.5 rounded-none border-b-2 border-transparent bg-transparent px-3 py-2 text-sm text-[var(--eis-muted)] shadow-none transition-none data-[state=active]:border-[#fd8c73] data-[state=active]:bg-transparent data-[state=active]:font-semibold data-[state=active]:text-[var(--eis-fg)] data-[state=active]:shadow-none"
                 >
                   <t.icon className="h-4 w-4" aria-hidden="true" />
                   {t.label}
@@ -372,14 +372,14 @@ export default function PortalPage() {
       </main>
 
       {/* Sticky footer */}
-      <footer className="mt-auto border-t border-[#d0d7de] bg-[#f6f8fa] py-4">
-        <div className="mx-auto max-w-5xl px-4 text-center text-xs text-[#59636e] sm:px-6">
+      <footer className="mt-auto border-t border-[var(--eis-border)] bg-[var(--eis-canvas-subtle)] py-4">
+        <div className="mx-auto max-w-5xl px-4 text-center text-xs text-[var(--eis-muted)] sm:px-6">
           <p className="font-semibold" style={{ color: GH.fg }}>
             Global EIS — Financial Intelligence Services
           </p>
           <p className="mt-0.5">
             Confidential · statements are hash-locked on arrival and never altered · contact &amp; replies:{" "}
-            <a href="mailto:ahmedr.muhammed19@gmail.com" className="text-[#0969da] hover:underline">
+            <a href="mailto:ahmedr.muhammed19@gmail.com" className="text-[var(--eis-accent)] hover:underline">
               ahmedr.muhammed19@gmail.com
             </a>
           </p>
