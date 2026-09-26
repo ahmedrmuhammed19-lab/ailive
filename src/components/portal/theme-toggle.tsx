@@ -20,7 +20,7 @@ export function ThemeToggle() {
       aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
       title={isDark ? "Switch to light mode" : "Switch to dark mode"}
       onClick={() => setTheme(isDark ? "light" : "dark")}
-      className="h-7 w-7 shrink-0 border-[#d0d7de] text-[#59636e] hover:bg-[#f6f8fa] hover:text-[#1f2328]"
+      className="h-7 w-7 shrink-0 border-[var(--eis-border)] text-[var(--eis-muted)] hover:bg-[var(--eis-canvas-subtle)] hover:text-[var(--eis-fg)]"
     >
       <Sun className="hidden h-3.5 w-3.5 dark:block" aria-hidden="true" />
       <Moon className="h-3.5 w-3.5 dark:hidden" aria-hidden="true" />

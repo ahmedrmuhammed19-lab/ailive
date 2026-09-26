@@ -96,34 +96,34 @@ export function AccountsPanel({ refreshKey }: { refreshKey?: number }) {
 
   return (
     <div className="space-y-5">
-      <div className="rounded-md border border-[#d0d7de] bg-white">
-        <div className="flex items-center justify-between border-b border-[#d8dee4] bg-[#f6f8fa] px-4 py-2.5">
+      <div className="rounded-md border border-[var(--eis-border)] bg-[var(--eis-canvas)]">
+        <div className="flex items-center justify-between border-b border-[var(--eis-border-muted)] bg-[var(--eis-canvas-subtle)] px-4 py-2.5">
           <span className="text-sm font-semibold">Accounts</span>
-          <Button variant="ghost" size="sm" onClick={load} disabled={busy} className="h-7 gap-1.5 px-2 text-xs text-[#59636e]">
+          <Button variant="ghost" size="sm" onClick={load} disabled={busy} className="h-7 gap-1.5 px-2 text-xs text-[var(--eis-muted)]">
             {busy ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <RefreshCw className="h-3.5 w-3.5" />} Refresh
           </Button>
         </div>
-        <div className="divide-y divide-[#eaeef2]">
+        <div className="divide-y divide-[var(--eis-divide)]">
           {rows === null && (
-            <div className="flex items-center gap-2 px-4 py-6 text-sm text-[#59636e]">
+            <div className="flex items-center gap-2 px-4 py-6 text-sm text-[var(--eis-muted)]">
               <Loader2 className="h-4 w-4 animate-spin" /> Loading accounts…
             </div>
           )}
           {rows?.length === 0 && (
-            <div className="px-4 py-6 text-sm text-[#59636e]">No accounts found.</div>
+            <div className="px-4 py-6 text-sm text-[var(--eis-muted)]">No accounts found.</div>
           )}
           {rows?.map((u) => (
             <div key={u.username} className="flex flex-wrap items-center gap-x-4 gap-y-2 px-4 py-3">
               <Circle
-                className={`h-2.5 w-2.5 fill-current ${u.active ? "text-[#1a7f37]" : "text-[#d1242f]"}`}
+                className={`h-2.5 w-2.5 fill-current ${u.active ? "text-[var(--eis-btn-green-hover)]" : "text-[#d1242f]"}`}
                 aria-hidden="true"
               />
               <div className="min-w-0">
                 <p className="text-sm font-semibold leading-tight">
                   {u.username}
-                  {u.username === self && <span className="ml-1.5 text-xs font-normal text-[#59636e]">(you)</span>}
+                  {u.username === self && <span className="ml-1.5 text-xs font-normal text-[var(--eis-muted)]">(you)</span>}
                 </p>
-                <p className="text-xs text-[#59636e]">
+                <p className="text-xs text-[var(--eis-muted)]">
                   {u.label ?? "—"} · {u.role} · last login{" "}
                   {u.lastLoginAt ? new Date(u.lastLoginAt).toLocaleString() : "never"}
                 </p>
@@ -140,7 +140,7 @@ export function AccountsPanel({ refreshKey }: { refreshKey?: number }) {
                         setResetPw("");
                         setMsg(null);
                       }}
-                      className="h-7 gap-1 border-[#d0d7de] px-2 text-xs text-[#59636e]"
+                      className="h-7 gap-1 border-[var(--eis-border)] px-2 text-xs text-[var(--eis-muted)]"
                     >
                       <KeyRound className="h-3.5 w-3.5" /> Reset
                     </Button>
@@ -154,7 +154,7 @@ export function AccountsPanel({ refreshKey }: { refreshKey?: number }) {
                           `Account "${u.username}" ${u.active ? "deactivated" : "activated"}.`
                         )
                       }
-                      className="h-7 gap-1 border-[#d0d7de] px-2 text-xs text-[#59636e]"
+                      className="h-7 gap-1 border-[var(--eis-border)] px-2 text-xs text-[var(--eis-muted)]"
                     >
                       {u.active ? (
                         <>
@@ -170,7 +170,7 @@ export function AccountsPanel({ refreshKey }: { refreshKey?: number }) {
                 )}
               </div>
               {resetFor === u.username && (
-                <div className="flex w-full flex-wrap items-center gap-2 rounded-md border border-[#d0d7de] bg-[#f6f8fa] p-2">
+                <div className="flex w-full flex-wrap items-center gap-2 rounded-md border border-[var(--eis-border)] bg-[var(--eis-canvas-subtle)] p-2">
                   <Input
                     type="password"
                     placeholder="New password (min 8 chars)"
@@ -189,7 +189,7 @@ export function AccountsPanel({ refreshKey }: { refreshKey?: number }) {
                       setResetFor(null);
                       setResetPw("");
                     }}
-                    className="h-8 bg-[#1f883d] text-xs text-white hover:bg-[#1a7f37]"
+                    className="h-8 bg-[var(--eis-btn-green)] text-xs text-white hover:bg-[var(--eis-btn-green-hover)]"
                   >
                     Save password
                   </Button>
@@ -197,7 +197,7 @@ export function AccountsPanel({ refreshKey }: { refreshKey?: number }) {
                     variant="ghost"
                     size="sm"
                     onClick={() => setResetFor(null)}
-                    className="h-8 text-xs text-[#59636e]"
+                    className="h-8 text-xs text-[var(--eis-muted)]"
                   >
                     Cancel
                   </Button>
@@ -208,8 +208,8 @@ export function AccountsPanel({ refreshKey }: { refreshKey?: number }) {
         </div>
       </div>
 
-      <div className="rounded-md border border-[#d0d7de] bg-white">
-        <div className="border-b border-[#d8dee4] bg-[#f6f8fa] px-4 py-2.5 text-sm font-semibold">
+      <div className="rounded-md border border-[var(--eis-border)] bg-[var(--eis-canvas)]">
+        <div className="border-b border-[var(--eis-border-muted)] bg-[var(--eis-canvas-subtle)] px-4 py-2.5 text-sm font-semibold">
           Add a new account
         </div>
         <div className="space-y-3 p-4">
@@ -239,16 +239,16 @@ export function AccountsPanel({ refreshKey }: { refreshKey?: number }) {
               value={nRole}
               onChange={(e) => setNRole(e.target.value)}
               aria-label="Role"
-              className="h-9 rounded-md border border-[#d0d7de] bg-white px-2 text-sm"
+              className="h-9 rounded-md border border-[var(--eis-border)] bg-[var(--eis-canvas)] px-2 text-sm"
             >
               <option value="client">client — upload + see own reports</option>
               <option value="operator">operator — full queue + accounts</option>
             </select>
           </div>
-          <Button onClick={addAccount} disabled={busy} className="gap-1.5 bg-[#1f883d] text-white hover:bg-[#1a7f37]">
+          <Button onClick={addAccount} disabled={busy} className="gap-1.5 bg-[var(--eis-btn-green)] text-white hover:bg-[var(--eis-btn-green-hover)]">
             <UserPlus className="h-4 w-4" /> Create account
           </Button>
-          <p className="text-xs text-[#59636e]">
+          <p className="text-xs text-[var(--eis-muted)]">
             The new account can sign in immediately with the ID and password you set. Share the
             credentials with the client through a secure channel — never email the password.
           </p>
@@ -260,8 +260,8 @@ export function AccountsPanel({ refreshKey }: { refreshKey?: number }) {
           role="status"
           className={`rounded-md border px-3 py-2 text-sm ${
             msg.kind === "ok"
-              ? "border-[#d0d7de] bg-[#dafbe1] text-[#1a7f37]"
-              : "border-[#d0d7de] bg-[#ffebe9] text-[#cf222e]"
+              ? "border-[var(--eis-border)] bg-[var(--eis-success-subtle)] text-[var(--eis-btn-green-hover)]"
+              : "border-[var(--eis-border)] bg-[var(--eis-danger-subtle)] text-[var(--eis-danger)]"
           }`}
         >
           {msg.text}

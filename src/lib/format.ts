@@ -52,4 +52,7 @@ export const STATUS_META: Record<
   WAITING: { label: "Waiting", bg: GH.canvasSubtle, fg: GH.muted, dot: "#afb8c1" },
   ANALYZING: { label: "Analyzing", bg: GH.attentionSubtle, fg: GH.attention, dot: "#d4a72c" },
   DONE: { label: "Done", bg: GH.successSubtle, fg: GH.success, dot: "#1a7f37" },
+  // Not a DB status — display-only override for ANALYZING rows whose latest
+  // engine attempt ended in unrecognized/no-files (see /api/queue needsManual).
+  NEEDS_MANUAL: { label: "Needs manual", bg: GH.dangerSubtle, fg: GH.danger, dot: "#cf222e" },
 };

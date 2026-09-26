@@ -90,21 +90,21 @@ export function DashboardPanel({ refreshKey }: { refreshKey: number }) {
       {/* Stat cards */}
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
         {stats.map((s) => (
-          <div key={s.label} className="rounded-md border border-[#d0d7de] bg-white p-4">
+          <div key={s.label} className="rounded-md border border-[var(--eis-border)] bg-[var(--eis-canvas)] p-4">
             <div className="font-mono text-3xl font-semibold tabular-nums" style={{ color: s.fg }}>
               {busy && data === null ? "—" : s.value}
             </div>
             <div className="mt-1 text-xs font-semibold" style={{ color: GH.fg }}>{s.label}</div>
-            <div className="text-[11px] text-[#59636e]">{s.sub}</div>
+            <div className="text-[11px] text-[var(--eis-muted)]">{s.sub}</div>
           </div>
         ))}
       </div>
 
       {/* Calendar */}
-      <div className="rounded-md border border-[#d0d7de] bg-white">
-        <div className="flex flex-wrap items-center justify-between gap-2 border-b border-[#d8dee4] bg-[#f6f8fa] px-4 py-2.5">
+      <div className="rounded-md border border-[var(--eis-border)] bg-[var(--eis-canvas)]">
+        <div className="flex flex-wrap items-center justify-between gap-2 border-b border-[var(--eis-border-muted)] bg-[var(--eis-canvas-subtle)] px-4 py-2.5">
           <div className="flex items-center gap-2 text-sm font-semibold" style={{ color: GH.fg }}>
-            <CalendarDays className="h-4 w-4 text-[#59636e]" aria-hidden="true" />
+            <CalendarDays className="h-4 w-4 text-[var(--eis-muted)]" aria-hidden="true" />
             {data?.month.label ?? "Calendar"}
           </div>
           <div className="flex items-center gap-1">
@@ -112,7 +112,7 @@ export function DashboardPanel({ refreshKey }: { refreshKey: number }) {
               variant="outline"
               size="sm"
               aria-label="Previous month"
-              className="h-7 border-[#d0d7de] px-2 text-[#59636e] hover:bg-white"
+              className="h-7 border-[var(--eis-border)] px-2 text-[var(--eis-muted)] hover:bg-[var(--eis-canvas)]"
               onClick={() => {
                 const mk = shiftMonth(data?.month.key ?? todayKey.slice(0, 7), -1);
                 setMonthKey(mk);
@@ -124,7 +124,7 @@ export function DashboardPanel({ refreshKey }: { refreshKey: number }) {
             <Button
               variant="outline"
               size="sm"
-              className="h-7 border-[#d0d7de] px-2.5 text-xs text-[#1f2328] hover:bg-white"
+              className="h-7 border-[var(--eis-border)] px-2.5 text-xs text-[var(--eis-fg)] hover:bg-[var(--eis-canvas)]"
               onClick={() => {
                 setMonthKey(null);
                 load(null);
@@ -136,7 +136,7 @@ export function DashboardPanel({ refreshKey }: { refreshKey: number }) {
               variant="outline"
               size="sm"
               aria-label="Next month"
-              className="h-7 border-[#d0d7de] px-2 text-[#59636e] hover:bg-white"
+              className="h-7 border-[var(--eis-border)] px-2 text-[var(--eis-muted)] hover:bg-[var(--eis-canvas)]"
               onClick={() => {
                 const mk = shiftMonth(data?.month.key ?? todayKey.slice(0, 7), 1);
                 setMonthKey(mk);
@@ -150,14 +150,14 @@ export function DashboardPanel({ refreshKey }: { refreshKey: number }) {
 
         <div className="p-4">
           {busy && data === null ? (
-            <div className="flex items-center justify-center gap-2 py-10 text-sm text-[#59636e]">
+            <div className="flex items-center justify-center gap-2 py-10 text-sm text-[var(--eis-muted)]">
               <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" /> Loading calendar…
             </div>
           ) : (
             <>
               <div className="grid grid-cols-7 gap-1.5" role="grid" aria-label="Analysis calendar">
                 {WEEKDAYS.map((w) => (
-                  <div key={w} className="pb-1 text-center text-[10px] font-semibold uppercase tracking-wide text-[#818b98]">
+                  <div key={w} className="pb-1 text-center text-[10px] font-semibold uppercase tracking-wide text-[var(--eis-neutral)]">
                     {w.slice(0, 2)}
                   </div>
                 ))}
@@ -171,14 +171,14 @@ export function DashboardPanel({ refreshKey }: { refreshKey: number }) {
                       aria-label={`${c.date}: ${c.uploaded} uploaded, ${c.analyzed} analyzed`}
                       title={`${c.date} · ${c.uploaded} uploaded · ${c.analyzed} analyzed`}
                       className={`relative flex aspect-square items-center justify-center rounded-[4px] border text-xs font-medium transition-transform hover:scale-105 ${
-                        c.date === todayKey ? "border-[#1f2328] ring-1 ring-[#1f2328]" : "border-black/5"
+                        c.date === todayKey ? "border-[var(--eis-fg)] ring-1 ring-[var(--eis-fg)]" : "border-black/5"
                       }`}
                       style={{ backgroundColor: cellColor(c.analyzed), color: c.analyzed > 2 ? "#ffffff" : GH.fg }}
                     >
                       {c.day}
                       {c.uploaded > 0 && (
                         <span
-                          className="absolute right-0.5 top-0.5 h-1.5 w-1.5 rounded-full bg-[#0969da]"
+                          className="absolute right-0.5 top-0.5 h-1.5 w-1.5 rounded-full bg-[var(--eis-accent)]"
                           aria-hidden="true"
                         />
                       )}
@@ -187,7 +187,7 @@ export function DashboardPanel({ refreshKey }: { refreshKey: number }) {
                 )}
               </div>
 
-              <div className="mt-4 flex flex-wrap items-center gap-4 text-[11px] text-[#59636e]">
+              <div className="mt-4 flex flex-wrap items-center gap-4 text-[11px] text-[var(--eis-muted)]">
                 <span className="flex items-center gap-1.5">
                   <span className="inline-block h-3 w-3 rounded-[3px]" style={{ backgroundColor: GH.cellEmpty }} />
                   <span className="inline-block h-3 w-3 rounded-[3px]" style={{ backgroundColor: "var(--eis-scale-1)" }} />
@@ -197,10 +197,10 @@ export function DashboardPanel({ refreshKey }: { refreshKey: number }) {
                   analyses completed
                 </span>
                 <span className="flex items-center gap-1.5">
-                  <span className="inline-block h-2 w-2 rounded-full bg-[#0969da]" /> statement uploaded that day
+                  <span className="inline-block h-2 w-2 rounded-full bg-[var(--eis-accent)]" /> statement uploaded that day
                 </span>
                 <span className="flex items-center gap-1.5">
-                  <span className="inline-block h-3 w-3 rounded-[3px] border border-[#1f2328]" /> today
+                  <span className="inline-block h-3 w-3 rounded-[3px] border border-[var(--eis-fg)]" /> today
                 </span>
               </div>
             </>

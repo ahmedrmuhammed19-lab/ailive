@@ -90,8 +90,8 @@ export function UploadPanel() {
   return (
     <div className="mx-auto max-w-2xl space-y-4">
       {/* Step 1 — Queue ID */}
-      <div className="rounded-md border border-[#d0d7de] bg-white">
-        <div className="border-b border-[#d8dee4] bg-[#f6f8fa] px-4 py-2.5 text-sm font-semibold" style={{ color: GH.fg }}>
+      <div className="rounded-md border border-[var(--eis-border)] bg-[var(--eis-canvas)]">
+        <div className="border-b border-[var(--eis-border-muted)] bg-[var(--eis-canvas-subtle)] px-4 py-2.5 text-sm font-semibold" style={{ color: GH.fg }}>
           1 · Queue ID
         </div>
         <div className="space-y-2 p-4">
@@ -100,9 +100,9 @@ export function UploadPanel() {
             onChange={(e) => setQueueId(e.target.value.toUpperCase())}
             placeholder="e.g. 1024 or AHMED-01"
             aria-label="Queue or user ID"
-            className="max-w-xs font-mono text-sm uppercase placeholder:normal-case placeholder:font-sans placeholder:text-[#818b98]"
+            className="max-w-xs font-mono text-sm uppercase placeholder:normal-case placeholder:font-sans placeholder:text-[var(--eis-neutral)]"
           />
-          <p className="text-xs text-[#59636e]">
+          <p className="text-xs text-[var(--eis-muted)]">
             Leave blank and we&apos;ll assign one automatically (EIS-XXXXX). The customer name and case
             details are attached later by Global EIS from the queue.
           </p>
@@ -118,7 +118,7 @@ export function UploadPanel() {
                 list="country-options"
                 placeholder="e.g. United Kingdom"
                 aria-label="Destination country"
-                className="text-sm placeholder:text-[#818b98]"
+                className="text-sm placeholder:text-[var(--eis-neutral)]"
               />
               <datalist id="country-options">
                 <option value="United Kingdom" />
@@ -139,7 +139,7 @@ export function UploadPanel() {
                 list="visa-options"
                 placeholder="e.g. Standard Visitor"
                 aria-label="Visa type"
-                className="text-sm placeholder:text-[#818b98]"
+                className="text-sm placeholder:text-[var(--eis-neutral)]"
               />
               <datalist id="visa-options">
                 <option value="Standard Visitor (Tourism)" />
@@ -158,7 +158,7 @@ export function UploadPanel() {
                 value={travelers}
                 onChange={(e) => setTravelers(Number(e.target.value))}
                 aria-label="Joint applicants sharing this statement"
-                className="h-9 w-full rounded-md border border-[#d0d7de] bg-white px-2 text-sm"
+                className="h-9 w-full rounded-md border border-[var(--eis-border)] bg-[var(--eis-canvas)] px-2 text-sm"
                 style={{ color: GH.fg }}
               >
                 {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((n) => (
@@ -169,7 +169,7 @@ export function UploadPanel() {
               </select>
             </div>
           </div>
-          <p className="text-xs text-[#59636e]">
+          <p className="text-xs text-[var(--eis-muted)]">
             Joint applicants = how many people are using this same bank statement for their visa
             applications — the required balance is multiplied accordingly.
           </p>
@@ -184,9 +184,9 @@ export function UploadPanel() {
               onChange={(e) => setClientEmail(e.target.value)}
               placeholder="client@example.com"
               aria-label="Client email for report delivery"
-              className="max-w-xs text-sm placeholder:text-[#818b98]"
+              className="max-w-xs text-sm placeholder:text-[var(--eis-neutral)]"
             />
-            <p className="mt-1 flex items-center gap-1 text-xs text-[#59636e]">
+            <p className="mt-1 flex items-center gap-1 text-xs text-[var(--eis-muted)]">
               <Mail className="h-3 w-3" aria-hidden="true" />
               When the analysis is finished, the report is emailed here.
             </p>
@@ -195,8 +195,8 @@ export function UploadPanel() {
       </div>
 
       {/* Step 2 — Statement */}
-      <div className="rounded-md border border-[#d0d7de] bg-white">
-        <div className="border-b border-[#d8dee4] bg-[#f6f8fa] px-4 py-2.5 text-sm font-semibold" style={{ color: GH.fg }}>
+      <div className="rounded-md border border-[var(--eis-border)] bg-[var(--eis-canvas)]">
+        <div className="border-b border-[var(--eis-border-muted)] bg-[var(--eis-canvas-subtle)] px-4 py-2.5 text-sm font-semibold" style={{ color: GH.fg }}>
           2 · Bank statement
         </div>
         <div className="space-y-3 p-4">
@@ -217,14 +217,14 @@ export function UploadPanel() {
               addFiles(e.dataTransfer.files);
             }}
             className={`flex min-h-28 cursor-pointer flex-col items-center justify-center gap-1.5 rounded-md border-2 border-dashed p-6 text-center transition-colors ${
-              dragOver ? "border-[#0969da] bg-[#ddf4ff]" : "border-[#d0d7de] bg-[#f6f8fa] hover:border-[#0969da]"
+              dragOver ? "border-[var(--eis-accent)] bg-[var(--eis-accent-subtle)]" : "border-[var(--eis-border)] bg-[var(--eis-canvas-subtle)] hover:border-[var(--eis-accent)]"
             }`}
           >
-            <UploadCloud className="h-7 w-7 text-[#59636e]" aria-hidden="true" />
+            <UploadCloud className="h-7 w-7 text-[var(--eis-muted)]" aria-hidden="true" />
             <p className="text-sm font-medium" style={{ color: GH.fg }}>
-              Drop the statement here or <span className="text-[#0969da] underline">browse</span>
+              Drop the statement here or <span className="text-[var(--eis-accent)] underline">browse</span>
             </p>
-            <p className="text-xs text-[#59636e]">PDF, PNG, JPG · hash-locked (MD5) on arrival</p>
+            <p className="text-xs text-[var(--eis-muted)]">PDF, PNG, JPG · hash-locked (MD5) on arrival</p>
             <input
               ref={inputRef}
               type="file"
@@ -243,18 +243,18 @@ export function UploadPanel() {
               {files.map((f, i) => (
                 <li
                   key={`${f.name}-${i}`}
-                  className="flex items-center justify-between gap-2 rounded-md border border-[#d0d7de] px-3 py-2"
+                  className="flex items-center justify-between gap-2 rounded-md border border-[var(--eis-border)] px-3 py-2"
                 >
                   <div className="flex min-w-0 items-center gap-2">
-                    <FileText className="h-4 w-4 shrink-0 text-[#59636e]" aria-hidden="true" />
+                    <FileText className="h-4 w-4 shrink-0 text-[var(--eis-muted)]" aria-hidden="true" />
                     <span className="truncate text-sm" style={{ color: GH.fg }}>{f.name}</span>
-                    <span className="shrink-0 text-xs text-[#59636e]">{humanSize(f.size)}</span>
+                    <span className="shrink-0 text-xs text-[var(--eis-muted)]">{humanSize(f.size)}</span>
                   </div>
                   <Button
                     variant="ghost"
                     size="sm"
                     aria-label={`Remove ${f.name}`}
-                    className="h-7 px-2 text-[#59636e] hover:text-[#cf222e]"
+                    className="h-7 px-2 text-[var(--eis-muted)] hover:text-[var(--eis-danger)]"
                     onClick={() => setFiles((prev) => prev.filter((_, j) => j !== i))}
                   >
                     <X className="h-4 w-4" aria-hidden="true" />
@@ -265,7 +265,7 @@ export function UploadPanel() {
           )}
 
           {error && (
-            <p className="rounded-md border border-[#d0d7de] bg-[#ffebe9] px-3 py-2 text-sm" style={{ color: GH.danger }} role="alert">
+            <p className="rounded-md border border-[var(--eis-border)] bg-[var(--eis-danger-subtle)] px-3 py-2 text-sm" style={{ color: GH.danger }} role="alert">
               {error}
             </p>
           )}
@@ -273,7 +273,7 @@ export function UploadPanel() {
           <Button
             onClick={submit}
             disabled={uploading}
-            className="w-full bg-[#1f883d] text-white hover:bg-[#1a7f37] sm:w-auto"
+            className="w-full bg-[var(--eis-btn-green)] text-white hover:bg-[var(--eis-btn-green-hover)] sm:w-auto"
           >
             {uploading ? <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" /> : <UploadCloud className="h-4 w-4" aria-hidden="true" />}
             {uploading ? "Adding to queue…" : "Add to queue"}
@@ -283,32 +283,32 @@ export function UploadPanel() {
 
       {/* Success card */}
       {result?.ok && result.handshake && (
-        <div className="rounded-md border border-[#d0d7de] bg-white">
-          <div className="flex items-center gap-2 border-b border-[#d8dee4] bg-[#dafbe1] px-4 py-2.5 text-sm font-semibold text-[#1a7f37]">
+        <div className="rounded-md border border-[var(--eis-border)] bg-[var(--eis-canvas)]">
+          <div className="flex items-center gap-2 border-b border-[var(--eis-border-muted)] bg-[var(--eis-success-subtle)] px-4 py-2.5 text-sm font-semibold text-[var(--eis-btn-green-hover)]">
             <CheckCircle2 className="h-4 w-4" aria-hidden="true" />
             Statement received — added to the queue
           </div>
           <div className="space-y-3 p-4">
             <div className="flex flex-wrap items-center gap-3">
-              <div className="flex items-center gap-2 rounded-md border border-[#d0d7de] bg-[#f6f8fa] px-3 py-2">
-                <Hash className="h-4 w-4 text-[#59636e]" aria-hidden="true" />
+              <div className="flex items-center gap-2 rounded-md border border-[var(--eis-border)] bg-[var(--eis-canvas-subtle)] px-3 py-2">
+                <Hash className="h-4 w-4 text-[var(--eis-muted)]" aria-hidden="true" />
                 <span className="font-mono text-lg font-semibold tracking-wide" style={{ color: GH.fg }}>
                   {result.userId}
                 </span>
               </div>
-              <span className="text-sm text-[#59636e]">
+              <span className="text-sm text-[var(--eis-muted)]">
                 queue position #{result.queuePosition} · {result.handshake.length} file(s) verified byte-perfect
               </span>
             </div>
             <div className="space-y-1.5">
               {result.handshake.map((h) => (
-                <div key={h.storedAs} className="rounded-md border border-[#d0d7de] px-3 py-2 text-xs">
+                <div key={h.storedAs} className="rounded-md border border-[var(--eis-border)] px-3 py-2 text-xs">
                   <div className="font-medium" style={{ color: GH.fg }}>{h.name}</div>
-                  <div className="mt-0.5 break-all font-mono text-[#59636e]">MD5 {h.md5}</div>
+                  <div className="mt-0.5 break-all font-mono text-[var(--eis-muted)]">MD5 {h.md5}</div>
                 </div>
               ))}
             </div>
-            <p className="flex items-center gap-1.5 text-xs text-[#59636e]">
+            <p className="flex items-center gap-1.5 text-xs text-[var(--eis-muted)]">
               <Mail className="h-3.5 w-3.5" aria-hidden="true" />
               Arrival alert sent to <span className="font-medium">ahmedr.muhammed19@gmail.com</span> — the analysis
               starts when Global EIS says &quot;start&quot;.

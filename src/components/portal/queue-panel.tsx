@@ -30,6 +30,7 @@ interface QueueItem {
   email: string | null;
   notes: string | null;
   submittedBy: string | null;
+  needsManual?: boolean;
   analyzedAt: string | null;
   fileCount: number;
   files: Array<{ id: string; name: string }>;
@@ -141,8 +142,8 @@ export function QueuePanel({ refreshKey, isOperator }: { refreshKey: number; isO
               onClick={() => setFilter(f)}
               className={`rounded-full px-3 py-1 text-xs font-medium transition-colors ${
                 filter === f
-                  ? "bg-[#1f2328] text-white"
-                  : "border border-[#d0d7de] bg-[#f6f8fa] text-[#59636e] hover:bg-[#eef1f4]"
+                  ? "bg-[var(--eis-fg)] text-white"
+                  : "border border-[var(--eis-border)] bg-[var(--eis-canvas-subtle)] text-[var(--eis-muted)] hover:bg-[var(--eis-hover)]"
               }`}
               aria-pressed={filter === f}
             >
@@ -160,13 +161,13 @@ export function QueuePanel({ refreshKey, isOperator }: { refreshKey: number; isO
               size="sm"
               onClick={greenAll}
               disabled={busy}
-              className="gap-1.5 border-[#1a7f37] text-[#1a7f37] hover:bg-[#dafbe1] dark:border-[#2ea043] dark:text-[#3fb950] dark:hover:bg-[#12261e]"
+              className="gap-1.5 border-[var(--eis-btn-green-hover)] text-[var(--eis-btn-green-hover)] hover:bg-[var(--eis-success-subtle)] dark:border-[#2ea043] dark:text-[#3fb950] dark:hover:bg-[#12261e]"
             >
               {busy ? <Loader2 className="h-3.5 w-3.5 animate-spin" aria-hidden="true" /> : <CheckCheck className="h-3.5 w-3.5" aria-hidden="true" />}
               Green all ({counts.WAITING + counts.ANALYZING})
             </Button>
           )}
-          <Button variant="outline" size="sm" onClick={load} disabled={busy} className="gap-1.5 border-[#d0d7de] text-[#1f2328] hover:bg-[#f6f8fa]">
+          <Button variant="outline" size="sm" onClick={load} disabled={busy} className="gap-1.5 border-[var(--eis-border)] text-[var(--eis-fg)] hover:bg-[var(--eis-canvas-subtle)]">
             {busy ? <Loader2 className="h-3.5 w-3.5 animate-spin" aria-hidden="true" /> : <RefreshCw className="h-3.5 w-3.5" aria-hidden="true" />}
             Refresh
           </Button>
@@ -174,26 +175,31 @@ export function QueuePanel({ refreshKey, isOperator }: { refreshKey: number; isO
       </div>
 
       {/* List */}
-      <div className="overflow-hidden rounded-md border border-[#d0d7de] bg-white">
+      <div className="overflow-hidden rounded-md border border-[var(--eis-border)] bg-[var(--eis-canvas)]">
         {items === null ? (
-          <div className="flex items-center justify-center gap-2 py-12 text-sm text-[#59636e]">
+          <div className="flex items-center justify-center gap-2 py-12 text-sm text-[var(--eis-muted)]">
             <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" /> Loading queue…
           </div>
         ) : visible.length === 0 ? (
           <div className="flex flex-col items-center gap-2 py-12 text-center">
-            <Inbox className="h-8 w-8 text-[#818b98]" aria-hidden="true" />
-            <p className="text-sm text-[#59636e]">
+            <Inbox className="h-8 w-8 text-[var(--eis-neutral)]" aria-hidden="true" />
+            <p className="text-sm text-[var(--eis-muted)]">
               {filter === "ALL" ? "Queue is empty — statements you upload will appear here." : `No ${STATUS_META[filter]?.label.toLowerCase()} items.`}
             </p>
           </div>
         ) : (
-          <ul className="divide-y divide-[#d8dee4]">
+          <ul className="divide-y divide-[var(--eis-border-muted)]">
             {visible.map((item) => {
-              const meta = STATUS_META[item.status] ?? STATUS_META.WAITING;
+              // Traffic-light: green DONE · yellow ANALYZING · red = engine gave
+              // up on this case (unrecognized/no-files) and it needs a human.
+              const meta =
+                item.status === "ANALYZING" && item.needsManual
+                  ? STATUS_META.NEEDS_MANUAL
+                  : STATUS_META[item.status] ?? STATUS_META.WAITING;
               const open = expanded === item.id;
               return (
                 <li key={item.id} className="group">
-                  <div className="flex cursor-pointer items-center gap-3 px-4 py-3 transition-colors hover:bg-[#f6f8fa]"
+                  <div className="flex cursor-pointer items-center gap-3 px-4 py-3 transition-colors hover:bg-[var(--eis-canvas-subtle)]"
                     onClick={() => {
                       setExpanded(open ? null : item.id);
                       setDraft({
@@ -211,9 +217,9 @@ export function QueuePanel({ refreshKey, isOperator }: { refreshKey: number; isO
                     aria-expanded={open}
                   >
                     {open ? (
-                      <ChevronDown className="h-4 w-4 shrink-0 text-[#818b98]" aria-hidden="true" />
+                      <ChevronDown className="h-4 w-4 shrink-0 text-[var(--eis-neutral)]" aria-hidden="true" />
                     ) : (
-                      <ChevronRight className="h-4 w-4 shrink-0 text-[#818b98]" aria-hidden="true" />
+                      <ChevronRight className="h-4 w-4 shrink-0 text-[var(--eis-neutral)]" aria-hidden="true" />
                     )}
                     <span
                       className="flex shrink-0 items-center gap-1.5 rounded-full border px-2 py-0.5 text-[11px] font-semibold"
@@ -225,16 +231,16 @@ export function QueuePanel({ refreshKey, isOperator }: { refreshKey: number; isO
                     <span className="shrink-0 font-mono text-sm font-semibold" style={{ color: GH.fg }}>
                       {item.userId}
                     </span>
-                    <span className="hidden min-w-0 flex-1 truncate text-sm text-[#59636e] sm:block">
+                    <span className="hidden min-w-0 flex-1 truncate text-sm text-[var(--eis-muted)] sm:block">
                       {item.clientName ?? "details pending"}
                       {item.country ? ` · ${item.country}` : ""}
                       {item.travelers > 1 && (
-                        <span className="ml-1.5 rounded-full border border-[#d0d7de] bg-white px-1.5 py-px text-[10px] font-semibold text-[#9a6700]">
+                        <span className="ml-1.5 rounded-full border border-[var(--eis-border)] bg-[var(--eis-canvas)] px-1.5 py-px text-[10px] font-semibold text-[var(--eis-attention)]">
                           ×{item.travelers} joint
                         </span>
                       )}
                     </span>
-                    <span className="ml-auto flex shrink-0 items-center gap-3 text-xs text-[#59636e]">
+                    <span className="ml-auto flex shrink-0 items-center gap-3 text-xs text-[var(--eis-muted)]">
                       <span className="flex items-center gap-1">
                         <FileText className="h-3.5 w-3.5" aria-hidden="true" />
                         {item.fileCount}
@@ -245,10 +251,10 @@ export function QueuePanel({ refreshKey, isOperator }: { refreshKey: number; isO
 
                   {/* Expanded detail / editor */}
                   {open && (
-                    <div className="space-y-4 border-t border-[#d8dee4] bg-[#f6f8fa] px-4 py-4 sm:px-10">
+                    <div className="space-y-4 border-t border-[var(--eis-border-muted)] bg-[var(--eis-canvas-subtle)] px-4 py-4 sm:px-10">
                       {item.files.length > 0 && (
-                        <div className="rounded-md border border-[#d0d7de] bg-white px-3 py-2">
-                          <p className="text-xs font-semibold text-[#59636e]">
+                        <div className="rounded-md border border-[var(--eis-border)] bg-[var(--eis-canvas)] px-3 py-2">
+                          <p className="text-xs font-semibold text-[var(--eis-muted)]">
                             Statements ({item.files.length}) — click to download
                           </p>
                           <ul className="mt-1.5 space-y-1">
@@ -257,7 +263,7 @@ export function QueuePanel({ refreshKey, isOperator }: { refreshKey: number; isO
                                 <a
                                   href={`/api/statement?id=${encodeURIComponent(f.id)}`}
                                   download={f.name}
-                                  className="flex items-center gap-1.5 text-sm text-[#0969da] hover:underline"
+                                  className="flex items-center gap-1.5 text-sm text-[var(--eis-accent)] hover:underline"
                                 >
                                   <FileText className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
                                   <span className="truncate">{f.name}</span>
@@ -269,49 +275,49 @@ export function QueuePanel({ refreshKey, isOperator }: { refreshKey: number; isO
                       )}
                       <div className="grid gap-3 sm:grid-cols-2">
                         <div className="space-y-1">
-                          <Label className="text-xs text-[#59636e]">Customer name</Label>
+                          <Label className="text-xs text-[var(--eis-muted)]">Customer name</Label>
                           <Input
                             value={draft.clientName ?? ""}
                             onChange={(e) => setDraft((d) => ({ ...d, clientName: e.target.value }))}
                             placeholder="Attach later — e.g. Client Full Name"
-                            className="h-8 border-[#d0d7de] bg-white text-sm"
+                            className="h-8 border-[var(--eis-border)] bg-[var(--eis-canvas)] text-sm"
                           />
                         </div>
                         <div className="space-y-1">
-                          <Label className="text-xs text-[#59636e]">Client email (report delivery)</Label>
+                          <Label className="text-xs text-[var(--eis-muted)]">Client email (report delivery)</Label>
                           <Input
                             type="email"
                             value={draft.email ?? ""}
                             onChange={(e) => setDraft((d) => ({ ...d, email: e.target.value }))}
                             placeholder="client@example.com"
-                            className="h-8 border-[#d0d7de] bg-white text-sm"
+                            className="h-8 border-[var(--eis-border)] bg-[var(--eis-canvas)] text-sm"
                           />
                         </div>
                         <div className="space-y-1">
-                          <Label className="text-xs text-[#59636e]">Destination country</Label>
+                          <Label className="text-xs text-[var(--eis-muted)]">Destination country</Label>
                           <Input
                             value={draft.country ?? ""}
                             onChange={(e) => setDraft((d) => ({ ...d, country: e.target.value }))}
                             placeholder="e.g. United Kingdom"
-                            className="h-8 border-[#d0d7de] bg-white text-sm"
+                            className="h-8 border-[var(--eis-border)] bg-[var(--eis-canvas)] text-sm"
                           />
                         </div>
                         <div className="space-y-1">
-                          <Label className="text-xs text-[#59636e]">Visa type</Label>
+                          <Label className="text-xs text-[var(--eis-muted)]">Visa type</Label>
                           <Input
                             value={draft.visaType ?? ""}
                             onChange={(e) => setDraft((d) => ({ ...d, visaType: e.target.value }))}
                             placeholder="e.g. Standard Visitor (Tourism)"
-                            className="h-8 border-[#d0d7de] bg-white text-sm"
+                            className="h-8 border-[var(--eis-border)] bg-[var(--eis-canvas)] text-sm"
                           />
                         </div>
                         <div className="space-y-1">
-                          <Label className="text-xs text-[#59636e]">Joint applicants (sharing this statement)</Label>
+                          <Label className="text-xs text-[var(--eis-muted)]">Joint applicants (sharing this statement)</Label>
                           <select
                             value={draft.travelers ?? 1}
                             onChange={(e) => setDraft((d) => ({ ...d, travelers: Number(e.target.value) }))}
                             aria-label="Joint applicants"
-                            className="h-8 w-full rounded-md border border-[#d0d7de] bg-white px-2 text-sm"
+                            className="h-8 w-full rounded-md border border-[var(--eis-border)] bg-[var(--eis-canvas)] px-2 text-sm"
                             style={{ color: GH.fg }}
                           >
                             {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((n) => (
@@ -322,12 +328,12 @@ export function QueuePanel({ refreshKey, isOperator }: { refreshKey: number; isO
                           </select>
                         </div>
                         <div className="space-y-1 sm:col-span-2">
-                          <Label className="text-xs text-[#59636e]">Notes</Label>
+                          <Label className="text-xs text-[var(--eis-muted)]">Notes</Label>
                           <Input
                             value={draft.notes ?? ""}
                             onChange={(e) => setDraft((d) => ({ ...d, notes: e.target.value }))}
                             placeholder="Anything relevant — joint applicants, currency, special instructions…"
-                            className="h-8 border-[#d0d7de] bg-white text-sm"
+                            className="h-8 border-[var(--eis-border)] bg-[var(--eis-canvas)] text-sm"
                           />
                         </div>
                       </div>
@@ -337,7 +343,7 @@ export function QueuePanel({ refreshKey, isOperator }: { refreshKey: number; isO
                           size="sm"
                           disabled={savingId === item.id}
                           onClick={() => update(item.id, draft)}
-                          className="h-8 gap-1.5 bg-[#1f883d] text-white hover:bg-[#1a7f37]"
+                          className="h-8 gap-1.5 bg-[var(--eis-btn-green)] text-white hover:bg-[var(--eis-btn-green-hover)]"
                         >
                           {savingId === item.id ? <Loader2 className="h-3.5 w-3.5 animate-spin" aria-hidden="true" /> : <Save className="h-3.5 w-3.5" aria-hidden="true" />}
                           Save details
@@ -349,7 +355,7 @@ export function QueuePanel({ refreshKey, isOperator }: { refreshKey: number; isO
                             variant="outline"
                             disabled={savingId === item.id}
                             onClick={() => update(item.id, { status: "ANALYZING" })}
-                            className="h-8 gap-1.5 border-[#d0d7de] bg-white text-[#9a6700] hover:bg-[#fff8c5]"
+                            className="h-8 gap-1.5 border-[var(--eis-border)] bg-[var(--eis-canvas)] text-[var(--eis-attention)] hover:bg-[var(--eis-attention-subtle)]"
                           >
                             <PlayCircle className="h-3.5 w-3.5" aria-hidden="true" /> Start analysis
                           </Button>
@@ -359,7 +365,7 @@ export function QueuePanel({ refreshKey, isOperator }: { refreshKey: number; isO
                             size="sm"
                             disabled={savingId === item.id}
                             onClick={() => update(item.id, { status: "DONE" })}
-                            className="h-8 gap-1.5 bg-[#1f883d] text-white hover:bg-[#1a7f37]"
+                            className="h-8 gap-1.5 bg-[var(--eis-btn-green)] text-white hover:bg-[var(--eis-btn-green-hover)]"
                           >
                             <CheckCircle2 className="h-3.5 w-3.5" aria-hidden="true" /> Mark done · email report
                           </Button>
@@ -370,14 +376,14 @@ export function QueuePanel({ refreshKey, isOperator }: { refreshKey: number; isO
                             variant="outline"
                             disabled={savingId === item.id}
                             onClick={() => update(item.id, { status: "WAITING" })}
-                            className="h-8 gap-1.5 border-[#d0d7de] bg-white text-[#59636e] hover:bg-[#eef1f4]"
+                            className="h-8 gap-1.5 border-[var(--eis-border)] bg-[var(--eis-canvas)] text-[var(--eis-muted)] hover:bg-[var(--eis-hover)]"
                           >
                             <RotateCcw className="h-3.5 w-3.5" aria-hidden="true" /> Reopen
                           </Button>
                         )}
 
                         {item.analyzedAt && (
-                          <span className="text-xs text-[#59636e]">
+                          <span className="text-xs text-[var(--eis-muted)]">
                             analyzed {timeAgo(item.analyzedAt)}
                           </span>
                         )}
