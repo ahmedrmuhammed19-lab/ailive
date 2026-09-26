@@ -15,6 +15,7 @@ export interface QueuedMail {
   replyTo?: string;
   subject: string;
   body: string;
+  html?: string; // optional rich-HTML part (buttons, layout) — live SMTP only
   kind: "operator_alert" | "client_receipt" | "report_ready";
   submissionId?: string;
   attachments?: Array<{ filename: string; path?: string; content?: Buffer; contentType?: string }>; // live SMTP only
@@ -92,6 +93,8 @@ async function writeOutbox(mail: QueuedMail, status: "QUEUED" | "SENT", error?: 
       JSON.stringify(
         {
           ...mail,
+          html: undefined, // keep outbox lean — store a flag instead
+          hasHtml: Boolean(mail.html),
           attachments: mail.attachments?.map((a) => path.basename(a.path ?? a.filename)) ?? [],
           status,
           error: error ?? null,
@@ -140,6 +143,7 @@ export async function sendOrQueue(mail: QueuedMail): Promise<MailResult> {
       replyTo: mail.replyTo ?? OPERATOR_EMAIL,
       subject: mail.subject,
       text: mail.body,
+      ...(mail.html ? { html: mail.html } : {}),
       attachments: mail.attachments,
     });
     await writeOutbox(mail, "SENT");

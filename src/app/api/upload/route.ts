@@ -10,6 +10,7 @@ import {
 } from "@/lib/portal";
 import { DB_STORAGE, putStatement } from "@/lib/storage";
 import { loadMailCreds, operatorAddress, sendOrQueue } from "@/lib/mail";
+import { PORTAL_BASE_URL, actionUrl } from "@/lib/actions";
 import { sessionUser } from "@/lib/session";
 import path from "path";
 
@@ -161,21 +162,61 @@ export async function POST(req: Request) {
     .map((h) => `  • ${h.name} → ${h.storedAs} (${h.sizeBytes} bytes)\n    MD5 ${h.md5}`)
     .join("\n");
 
+  const startUrl = actionUrl(submission.id, "start");
+  const mailBody =
+    `A new bank statement was uploaded to the Global EIS queue.\n\n` +
+    `Queue ID        : ${userId}\n` +
+    `Submission      : ${submission.id}\n` +
+    `Queue length    : ${waitingAhead} waiting (including this one)\n` +
+    `Destination     : ${country ?? "—"}${visaType ? ` · ${visaType}` : ""}\n` +
+    `Joint applicants: ${travelers} ${travelers > 1 ? "(benchmark ×" + travelers + ")" : ""}\n` +
+    `Client email    : ${clientEmail ?? "not provided — report will go to this mailbox"}\n\n` +
+    `Files (${handshake.length}) — MD5 hash-locked on arrival:\n${fileList}\n\n` +
+    `Tap "Start Analysis" (or the same case on the portal queue) to begin the process.\n\n` +
+    `— Global EIS automated intake`;
+
+  // Rich-HTML twin of the alert — email-client-safe tables + inline styles.
+  const fileRows = handshake
+    .map(
+      (h) =>
+        `<tr>` +
+        `<td style="padding:5px 8px;border-bottom:1px solid #eaeef2;font-family:monospace;font-size:12px;color:#24292f;">${h.name}</td>` +
+        `<td style="padding:5px 8px;border-bottom:1px solid #eaeef2;text-align:right;font-size:12px;color:#59636e;white-space:nowrap;">${h.sizeBytes.toLocaleString("en-US")} B</td>` +
+        `<td style="padding:5px 8px;border-bottom:1px solid #eaeef2;font-family:monospace;font-size:11px;color:#8b949e;">${h.md5}</td>` +
+        `</tr>`
+    )
+    .join("");
+  const mailHtml =
+    `<div style="margin:0;background:#f6f8fa;padding:20px 12px;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;">` +
+    `<div style="max-width:560px;margin:0 auto;background:#ffffff;border:1px solid #d0d7de;border-radius:8px;overflow:hidden;">` +
+    `<div style="background:#0d1117;padding:12px 18px;"><span style="color:#ffffff;font-weight:700;font-size:15px;">Global EIS</span>` +
+    `<span style="color:#8b949e;font-size:12px;margin-left:8px;">new bank statement in the queue</span></div>` +
+    `<div style="padding:18px;">` +
+    `<p style="margin:0 0 14px;color:#24292f;font-size:14px;line-height:1.55;">A new bank statement was uploaded. Review the files below, then start the process with one tap.</p>` +
+    `<table style="width:100%;border-collapse:collapse;background:#f6f8fa;border:1px solid #d0d7de;border-radius:6px;">` +
+    `<tr><td style="padding:7px 12px;color:#59636e;font-size:12px;width:130px;">Queue ID</td><td style="padding:7px 12px;color:#24292f;font-size:13px;font-weight:700;">${userId}</td></tr>` +
+    `<tr><td style="padding:7px 12px;color:#59636e;font-size:12px;">Destination</td><td style="padding:7px 12px;color:#24292f;font-size:13px;">${country ?? "—"}${visaType ? ` · ${visaType}` : ""}</td></tr>` +
+    `<tr><td style="padding:7px 12px;color:#59636e;font-size:12px;">Joint applicants</td><td style="padding:7px 12px;color:#24292f;font-size:13px;">${travelers}${travelers > 1 ? ` (benchmark ×${travelers})` : ""}</td></tr>` +
+    `<tr><td style="padding:7px 12px;color:#59636e;font-size:12px;">Client email</td><td style="padding:7px 12px;color:#24292f;font-size:13px;">${clientEmail ?? "not provided"}</td></tr>` +
+    `<tr><td style="padding:7px 12px;color:#59636e;font-size:12px;">Queue position</td><td style="padding:7px 12px;color:#24292f;font-size:13px;">${waitingAhead} waiting (including this one)</td></tr>` +
+    `</table>` +
+    `<p style="margin:16px 0 6px;color:#24292f;font-size:13px;font-weight:700;">Files (${handshake.length}) — MD5 hash-locked on arrival</p>` +
+    `<table style="width:100%;border-collapse:collapse;">` +
+    `<tr><th style="padding:5px 8px;border-bottom:2px solid #d0d7de;text-align:left;font-size:11px;color:#59636e;">File</th><th style="padding:5px 8px;border-bottom:2px solid #d0d7de;text-align:right;font-size:11px;color:#59636e;">Size</th><th style="padding:5px 8px;border-bottom:2px solid #d0d7de;text-align:left;font-size:11px;color:#59636e;">MD5</th></tr>` +
+    fileRows +
+    `</table>` +
+    `<div style="text-align:center;margin:22px 0 10px;">` +
+    `<a href="${startUrl}" style="display:inline-block;background:#1a7f37;color:#ffffff;text-decoration:none;font-weight:700;font-size:15px;padding:13px 34px;border-radius:6px;">&#9654; Start Analysis</a>` +
+    `</div>` +
+    `<p style="text-align:center;margin:0 0 14px;"><a href="${PORTAL_BASE_URL}/" style="color:#0969da;font-size:12px;">or open the portal queue</a></p>` +
+    `<p style="margin:0;color:#8b949e;font-size:11px;line-height:1.5;">Starting flips this case to ANALYZING on the portal. The client is emailed automatically when the report is delivered.</p>` +
+    `</div></div></div>`;
+
   await sendOrQueue({
     to: operatorAddress(await loadMailCreds()),
     subject: `📥 New bank statement uploaded — Queue ${userId}`,
-    body:
-      `A new bank statement was uploaded to the Global EIS queue.\n\n` +
-      `Queue ID        : ${userId}\n` +
-      `Submission      : ${submission.id}\n` +
-      `Queue length    : ${waitingAhead} waiting (including this one)\n` +
-      `Destination     : ${country ?? "—"}${visaType ? ` · ${visaType}` : ""}\n` +
-      `Joint applicants: ${travelers} ${travelers > 1 ? "(benchmark ×" + travelers + ")" : ""}\n` +
-      `Client email    : ${clientEmail ?? "not provided — report will go to this mailbox"}\n\n` +
-      `Files (${handshake.length}) — MD5 hash-locked on arrival:\n${fileList}\n\n` +
-      `Customer name & details are not collected at upload — attach them from the Queue tab when ready.\n` +
-      `Say "start" in the workspace chat to begin the analysis.\n\n` +
-      `— Global EIS automated intake`,
+    body: mailBody,
+    html: mailHtml,
     kind: "operator_alert",
     submissionId: submission.id,
   });
