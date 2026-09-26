@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Global EIS Standard v1.3 — Financial Intelligence Report Template</title>
+<!--
+  ============================================================================
+  GLOBAL EIS — OFFICIAL REPORT DESIGN STANDARD v1.3  (ratified 26/09/2026)
+  ============================================================================
+  Design lineage (client-mandated):
+    - "Bank Statement Analyzer" frontend (CIB Blue) chosen by client
+    - Client instruction: "keep this frontend design for all after reports"
+    - Client correction:   "i wanna same colors and design like the previous html"
+                           -> CIB Blue confirmed as THE standard palette
+    - Content structure:   12-section comprehensive Master (v1.2 section set)
+  Single source of truth:
+    - All report generators MUST load the CSS style block from THIS file.
+    - No generator may embed its own palette. Teal 0e7490 is retired.
+  Palette:  --primary #005677 (CIB Blue) | --secondary #008DCB
+            success #28a745 | danger #dc3545 | warning #ffc107
+  Shell:    gradient header + Download PDF button + ref-line
+            footer: Prepared By Global EIS + full legal disclaimer
+  ============================================================================
+-->
+<style>
+        :root {
+            --primary: #005677;
+            --secondary: #008DCB;
+            --success: #28a745;
+            --danger: #dc3545;
+            --warning: #ffc107;
+            --light: #f8f9fa;
+            --dark: #343a40;
+            --white: #ffffff;
+        }
+        * { box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #eef2f5;
+            color: var(--dark);
+            margin: 0;
+            padding: 20px;
+            line-height: 1.55;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: var(--white);
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* ===== HEADER (standard gradient shell) ===== */
+        .header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: var(--white);
+            padding: 40px 30px;
+            text-align: center;
+            position: relative;
+        }
+        .header h1 { margin: 0; font-size: 2.2em; text-transform: uppercase; letter-spacing: 1px; }
+        .header p { margin: 5px 0 0; opacity: 0.92; font-size: 1.02em; }
+        .header p b, .header p strong { color: var(--white); }
+        .header .ref-line { margin-top: 12px; font-size: 0.85em; opacity: 0.85; }
+        .download-btn {
+            position: absolute;
+            top: 30px;
+            right: 30px;
+            background: var(--white);
+            color: var(--primary);
+            border: none;
+            padding: 10px 20px;
+            font-size: 14px;
+            font-weight: bold;
+            border-radius: 5px;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            transition: 0.2s;
+        }
+        .download-btn:hover { background: #f0f0f0; transform: translateY(-2px); }
+
+        .content { padding: 40px; }
+
+        /* ===== VERDICT BADGE ===== */
+        .verdict-block { display: flex; justify-content: space-between; align-items: flex-start; gap: 20px; flex-wrap: wrap; margin-bottom: 20px; }
+        .verdict-badge { border-radius: 10px; padding: 14px 20px; text-align: center; min-width: 220px; font-weight: bold; }
+        .verdict-badge.pass { background: #e6f4ea; border: 1px solid var(--success); color: #1e7e34; }
+        .verdict-badge.fail { background: #fdecea; border: 1px solid var(--danger); color: #a71d2a; }
+        .verdict-badge .big { font-size: 1.05em; display: block; }
+        .verdict-badge .small { font-size: 0.75em; font-weight: normal; display: block; margin-top: 4px; }
+
+        /* ===== SECTION TITLES (canonical + generator h2.sec) ===== */
+        .section-title {
+            font-size: 1.45em;
+            color: var(--primary);
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+            margin: 44px 0 20px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+        }
+        .section-title::before {
+            content: ''; display: inline-block; width: 8px; height: 22px;
+            background: var(--secondary); margin-right: 12px; border-radius: 2px;
+        }
+        h2.sec {
+            font-size: 1.3em;
+            color: var(--primary);
+            background: none;
+            border-bottom: 2px solid #eee;
+            padding: 0 0 10px 0;
+            margin: 40px 0 16px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+        }
+        h2.sec::before {
+            content: ''; display: inline-block; width: 8px; height: 20px;
+            background: var(--secondary); margin-right: 12px; border-radius: 2px;
+        }
+        h3 { color: var(--primary); font-size: 1.05em; margin: 18px 0 8px; }
+
+        /* ===== TABLES (canonical .data-table + bare generator tables) ===== */
+        table { width: 100%; border-collapse: collapse; font-size: 0.92em; margin: 12px 0 22px; }
+        th {
+            background: var(--light);
+            color: var(--primary);
+            text-align: left;
+            padding: 10px 12px;
+            font-weight: 600;
+            border-bottom: 2px solid #ddd;
+        }
+        td { padding: 9px 12px; border-bottom: 1px solid #eee; vertical-align: top; }
+        tr:nth-child(even) td { background: #fafbfc; }
+        .data-table { margin-bottom: 30px; }
+        .text-right { text-align: right; }
+        .text-center { text-align: center; }
+        .text-success { color: var(--success); font-weight: bold; }
+        .text-danger { color: var(--danger); font-weight: bold; }
+        .num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+        tr.hl td { background: #e7f3fe !important; }
+
+        /* ===== KPI CARDS (canonical .kpi-card + compact .kpi) ===== */
+        .kpi-grid { display: flex; gap: 14px; flex-wrap: wrap; margin: 16px 0 26px; }
+        .kpi-card, .kpi {
+            background: var(--white);
+            border-radius: 10px;
+            padding: 16px 18px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            border: 1px solid #e1e4e8;
+            border-left: 5px solid var(--secondary);
+            flex: 1; min-width: 190px;
+            transition: transform 0.2s;
+        }
+        .kpi-card:hover, .kpi:hover { transform: translateY(-3px); }
+        .kpi-card h3, .kpi .l { margin: 0 0 8px; color: #666; font-size: 0.92em; text-transform: uppercase; letter-spacing: 0.4px; font-weight: 600; }
+        .kpi-card .value, .kpi .v { font-size: 1.5em; font-weight: bold; color: var(--primary); }
+        .kpi-card.success { border-left-color: var(--success); } .kpi-card.success .value { color: var(--success); }
+        .kpi-card.danger { border-left-color: var(--danger); } .kpi-card.danger .value { color: var(--danger); }
+        .kpi-card.warning { border-left-color: var(--warning); } .kpi-card.warning .value { color: #b8860b; }
+
+        /* ===== TAGS / BADGES ===== */
+        .tag { background: #e9ecef; padding: 3px 10px; border-radius: 12px; font-size: 0.85em; color: #495057; margin-right: 5px; display: inline-block; margin-bottom: 5px; }
+        .tag.in { background: #e6f4ea; color: var(--success); }
+        .tag.out { background: #fce8e6; color: var(--danger); }
+        .tag.credit { background: #e6f4ea; color: var(--success); }
+        .tag.debit { background: #fce8e6; color: var(--danger); }
+        .tag.pass { background: #e6f4ea; color: var(--success); font-weight: bold; }
+        .tag.fail { background: #fee2e2; color: var(--danger); font-weight: bold; }
+        .tag.warn { background: #fff3cd; color: #856404; font-weight: bold; }
+        .tag.low { background: #e0f7fa; color: var(--primary); font-weight: bold; }
+        .badge { display: inline-block; padding: 3px 12px; border-radius: 14px; font-weight: 700; font-size: 0.85em; }
+        .badge.pass, .pass { background: #e6f4ea; color: #1e7e34; }
+        .badge.caution, .caution { background: #fff3cd; color: #856404; }
+        .badge.fail, .fail { background: #fdecea; color: #a71d2a; }
+        .badge.info, .info { background: #e7f3fe; color: var(--primary); }
+
+        /* ===== ALERT / NOTE BOXES (canonical .alert-box + generator .note/.warn/.danger) ===== */
+        .alert-box { padding: 18px 20px; border-radius: 8px; margin: 15px 0; border-left: 5px solid; }
+        .alert-box.blue { background: #e7f3fe; border-color: var(--secondary); }
+        .alert-box.green { background: #e6f4ea; border-color: var(--success); }
+        .alert-box.red { background: #fff3cd; border-color: var(--warning); }
+        .alert-box.danger { background: #fef2f2; border-color: var(--danger); }
+        .alert-box h4 { margin: 0 0 10px; color: var(--dark); }
+        .alert-box ul { margin: 10px 0 0 20px; padding: 0; }
+        .alert-box li { margin-bottom: 8px; }
+        .note { background: #e7f3fe; border-left: 4px solid var(--secondary); padding: 12px 16px; font-size: 0.95em; margin: 12px 0; border-radius: 0 7px 7px 0; }
+        .note.warn, .warn { background: #fffbeb; border-left: 4px solid #d97706; }
+        .note.danger, .danger { background: #fef2f2; border-left: 4px solid var(--danger); }
+
+        /* ===== VERDICT BOX (generator) ===== */
+        .verdict-box { border: 2.5px solid var(--primary); border-radius: 11px; padding: 18px 22px; background: #e7f3fe; margin: 16px 0; }
+
+        /* ===== ANALYSIS CARDS ===== */
+        .analysis-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-bottom: 40px; }
+        @media (max-width: 768px) {
+            .analysis-grid { grid-template-columns: 1fr; }
+            .download-btn { position: static; margin-top: 20px; display: inline-block; }
+        }
+        .analysis-card { background: var(--white); border: 1px solid #e1e4e8; border-radius: 10px; padding: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.03); }
+        .analysis-card.full-width { grid-column: span 2; }
+        .analysis-card h3 { margin-top: 0; color: var(--primary); display: flex; align-items: center; font-size: 1.2em; }
+        .analysis-card h3::before { content: ''; display: inline-block; width: 10px; height: 10px; background: var(--secondary); border-radius: 50%; margin-right: 10px; }
+
+        /* ===== ANNEX BANNER ===== */
+        .annex-banner { background: var(--primary); color: var(--white); padding: 10px 20px; border-radius: 8px 8px 0 0; font-weight: bold; font-size: 0.9em; letter-spacing: 0.5px; }
+        .annex-body { border: 1px solid #e1e4e8; border-top: none; border-radius: 0 0 8px 8px; padding: 20px; margin-bottom: 30px; }
+
+        /* ===== SIGNOFF ===== */
+        .signoff { display: flex; justify-content: space-between; align-items: flex-end; margin-top: 40px; padding-top: 20px; border-top: 1px dashed #ccc; flex-wrap: wrap; gap: 20px; }
+        .signoff .sig-line { border-top: 1px solid var(--dark); padding-top: 6px; font-size: 0.85em; min-width: 220px; }
+
+        /* ===== FOOTER ===== */
+        .footer { text-align: center; padding: 20px; color: #777; font-size: 0.85em; background: #f8f9fa; border-top: 1px solid #eee; }
+        .footer .legal { max-width: 900px; margin: 6px auto 0; line-height: 1.5; }
+        .footer strong { color: var(--primary); }
+
+        /* ===== PRINT ===== */
+        @page { size: A4; margin: 16mm 12mm; }
+        @media print {
+            body { background: none; padding: 0; }
+            .container { box-shadow: none; border-radius: 0; max-width: none; }
+            .download-btn { display: none; }
+            .section-title, h2.sec, .analysis-card, .kpi-card, .kpi, .annex-body, .verdict-box { page-break-inside: avoid; }
+            table tr, .data-table tr { page-break-inside: avoid; }
+            thead { display: table-header-group; }
+            .header { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+        }
+</style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <button class="download-btn" onclick="window.print()">⬇ Download PDF Report</button>
+        <h1>Financial Intelligence Report</h1>
+        <p><strong>Account Holder:</strong> [Client Name] &nbsp;|&nbsp; <strong>Bank:</strong> [Bank Name] / [Branch]</p>
+        <p><strong>Account:</strong> [Account Number / Currency] &nbsp;|&nbsp; <strong>Period:</strong> [Start Date] - [End Date] &nbsp;|&nbsp; <strong>Classification:</strong> Confidential</p>
+        <p class="ref-line">Ref: [Statement Reference] &nbsp;|&nbsp; Report Generated: [Generation Date] &nbsp;|&nbsp; Global EIS Standard v1.3</p>
+    </div>
+
+    <div class="content">
+        <!-- [REPORT SECTIONS — 12-section Master structure] -->
+        <!-- 1. Executive Dashboard & Verdict        7. Utilization of Funds (Outflows)   -->
+        <!-- 2. Account & Holder Identification      8. Key Associated Parties & Exposure -->
+        <!-- 3. Mathematical Reconciliation          9. Linked Account Annex              -->
+        <!-- 4. Monthly Trajectory & Gap Analysis   10. Risk & Compliance Indicators     -->
+        <!-- 5. Significant Financial Events        11. Visa & Financial Assessment      -->
+        <!-- 6. Source of Funds (Inflows)           12. Analyst Conclusion               -->
+        <p style="color:#777;font-style:italic;">[Report content is generated into this container by the pipeline generators.]</p>
+    </div>
+
+    <div class="footer">
+        <p><strong>Prepared By:</strong> Global EIS — Financial Intelligence Services</p>
+        <p class="legal">Disclaimer: This report is prepared by Global EIS based solely on the bank statement document supplied by the client. Global EIS does not independently verify the authenticity of the underlying bank statement and makes no representation as to the applicant's eligibility for any visa or immigration outcome. All mathematical reconciliations are verified against the stated bank totals. This report is intended solely to support the client's own submission, should be read together with all other required supporting documentation, and does not constitute legal advice.</p>
+    </div>
+</div>
+
+</body>
+</html>

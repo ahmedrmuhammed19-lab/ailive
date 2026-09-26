@@ -1,0 +1,91 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+node_modules
+/.pnp
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
+
+# testing
+/coverage
+
+# next.js
+/.next/
+/out/
+
+# production
+/build
+
+# misc
+.DS_Store
+*.pem
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# env files (can opt-in for committing if needed)
+.env*
+
+# vercel
+.vercel
+
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
+local-*
+.claude
+.z-ai-config
+*.log
+dev.log
+dev.out.log
+test
+prompt
+
+server.log
+# Skills directory
+/skills/
+# email credentials (Stage 2 / email-in) — never commit
+config/mail_credentials.json
+
+# client data & runtime state — NEVER push to any remote
+db/
+upload/
+download/
+.env
+config/mail_credentials.json
+*.db
+
+# internal tooling artifacts
+tool-results/
+scripts/__pycache__/
+__pycache__/
+*.pyc
+.zscripts/dev.pid
+
+# ---- internal agent logs & client-specific analysis (never publish) ----
+worklog.md
+chat_history*.md
+lessons.md
+SELF_IMPROVEMENT.md
+RESTORE_BRIDGE.md
+
+# ---- scripts/: publish ONLY the generic engine (whitelist) ----
+scripts/*
+!scripts/start_case.py
+!scripts/qa_v13_check.py
+!scripts/statement_fetcher.py
+!scripts/test_email.py
+!scripts/flush_outbox.py
+!scripts/backup_data.py
+!scripts/cleanup_probe.py
+!scripts/cleanup_probe.mjs
+!scripts/cib_extract.py
+!scripts/fx_rate.json

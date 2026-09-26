@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Global EIS - Financial Intelligence Report</title>
+    <style>
+        :root {
+            --primary: #005677;
+            --secondary: #008DCB;
+            --success: #28a745;
+            --danger: #dc3545;
+            --warning: #ffc107;
+            --light: #f8f9fa;
+            --dark: #343a40;
+            --white: #ffffff;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #eef2f5;
+            color: var(--dark);
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: var(--white);
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            overflow: hidden;
+            position: relative;
+        }
+        .header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: var(--white);
+            padding: 40px 30px;
+            text-align: center;
+            position: relative;
+        }
+        .header h1 { margin: 0; font-size: 2.5em; text-transform: uppercase; letter-spacing: 1px; }
+        .header p { margin: 5px 0 0; opacity: 0.9; font-size: 1.1em; }
+        .header .ref-line { margin-top: 12px; font-size: 0.85em; opacity: 0.85; }
+
+        .download-btn {
+            position: absolute;
+            top: 30px;
+            right: 30px;
+            background: var(--white);
+            color: var(--primary);
+            border: none;
+            padding: 10px 20px;
+            font-size: 14px;
+            font-weight: bold;
+            border-radius: 5px;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            transition: 0.2s;
+        }
+        .download-btn:hover { background: #f0f0f0; transform: translateY(-2px); }
+
+        .content { padding: 40px; }
+
+        /* --- Verdict badge (top-right of the report header block) --- */
+        .verdict-block {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+        .verdict-badge {
+            border-radius: 10px;
+            padding: 14px 20px;
+            text-align: center;
+            min-width: 220px;
+            font-weight: bold;
+        }
+        .verdict-badge.pass { background: #e6f4ea; border: 1px solid var(--success); color: #1e7e34; }
+        .verdict-badge.fail { background: #fdecea; border: 1px solid var(--danger); color: #a71d2a; }
+        .verdict-badge .big { font-size: 1.05em; display: block; }
+        .verdict-badge .small { font-size: 0.75em; font-weight: normal; display: block; margin-top: 4px; }
+
+        /* --- Authenticity / document-integrity alert (from deep-analysis report) --- */
+        .authenticity-alert {
+            background: #7a1220;
+            color: var(--white);
+            border-radius: 10px;
+            padding: 22px 26px;
+            margin-bottom: 30px;
+        }
+        .authenticity-alert h3 { margin: 0 0 12px; font-size: 1.2em; }
+        .authenticity-alert .watermark-box {
+            background: rgba(255,255,255,0.12);
+            border: 1px dashed rgba(255,255,255,0.5);
+            padding: 10px 14px;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85em;
+            margin: 12px 0;
+        }
+        .authenticity-alert p { margin: 8px 0; line-height: 1.5; font-size: 0.95em; }
+
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        .kpi-card {
+            background: var(--white);
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            border-left: 5px solid var(--secondary);
+            transition: transform 0.2s;
+        }
+        .kpi-card:hover { transform: translateY(-5px); }
+        .kpi-card h3 { margin: 0 0 10px; color: #666; font-size: 1.0em; text-transform: uppercase; }
+        .kpi-card .value { font-size: 1.7em; font-weight: bold; color: var(--primary); }
+        .kpi-card.success { border-left-color: var(--success); }
+        .kpi-card.success .value { color: var(--success); }
+        .kpi-card.danger { border-left-color: var(--danger); }
+        .kpi-card.danger .value { color: var(--danger); }
+        .kpi-card.warning { border-left-color: var(--warning); }
+        .kpi-card.warning .value { color: #b8860b; }
+
+        .section-title {
+            font-size: 1.7em;
+            color: var(--primary);
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            margin-top: 44px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+        }
+        .section-title::before {
+            content: ''; display: inline-block; width: 8px; height: 22px;
+            background: var(--secondary); margin-right: 12px; border-radius: 2px;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+            font-size: 0.92em;
+        }
+        .data-table th {
+            background: var(--light);
+            color: var(--primary);
+            text-align: left;
+            padding: 12px;
+            border-bottom: 2px solid #ddd;
+        }
+        .data-table td {
+            padding: 11px 12px;
+            border-bottom: 1px solid #eee;
+        }
+        .data-table tr:nth-child(even) td { background: #fafbfc; }
+        .text-right { text-align: right; }
+        .text-center { text-align: center; }
+        .text-success { color: var(--success); font-weight: bold; }
+        .text-danger { color: var(--danger); font-weight: bold; }
+
+        .analysis-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        @media (max-width: 768px) {
+            .analysis-grid { grid-template-columns: 1fr; }
+            .download-btn { position: static; margin-top: 20px; display: inline-block; }
+        }
+        .analysis-card {
+            background: var(--white);
+            border: 1px solid #e1e4e8;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.03);
+        }
+        .analysis-card.full-width { grid-column: span 2; }
+        .analysis-card h3 {
+            margin-top: 0;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            font-size: 1.3em;
+        }
+        .analysis-card h3::before {
+            content: '';
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            background: var(--secondary);
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+        .tag {
+            background: #e9ecef;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 0.85em;
+            color: #495057;
+            margin-right: 5px;
+            display: inline-block;
+            margin-bottom: 5px;
+        }
+        .tag.in { background: #e6f4ea; color: var(--success); }
+        .tag.out { background: #fce8e6; color: var(--danger); }
+        .tag.pass { background: #e6f4ea; color: var(--success); font-weight: bold; }
+        .tag.fail { background: #fee2e2; color: var(--danger); font-weight: bold; }
+        .tag.warn { background: #fff3cd; color: #856404; font-weight: bold; }
+        .tag.low { background: #e0f7fa; color: var(--primary); font-weight: bold; }
+
+        .alert-box {
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 15px;
+            margin-bottom: 15px;
+            border-left: 5px solid;
+        }
+        .alert-box.blue { background: #e7f3fe; border-color: var(--secondary); }
+        .alert-box.red { background: #fff3cd; border-color: var(--warning); }
+        .alert-box.green { background: #e6f4ea; border-color: var(--success); }
+        .alert-box.danger { background: #fef2f2; border-color: var(--danger); }
+        .alert-box h4 { margin: 0 0 10px; color: var(--dark); }
+        .alert-box ul { margin: 10px 0 0 20px; padding: 0; }
+        .alert-box li { margin-bottom: 8px; }
+
+        /* --- Annex / linked-account section (from Annex-style report) --- */
+        .annex-banner {
+            background: var(--primary);
+            color: var(--white);
+            padding: 10px 20px;
+            border-radius: 8px 8px 0 0;
+            font-weight: bold;
+            font-size: 0.9em;
+            letter-spacing: 0.5px;
+        }
+        .annex-body {
+            border: 1px solid #e1e4e8;
+            border-top: none;
+            border-radius: 0 0 8px 8px;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+
+        /* --- Signature / sign-off block --- */
+        .signoff {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px dashed #ccc;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .signoff .sig-line {
+            border-top: 1px solid var(--dark);
+            padding-top: 6px;
+            font-size: 0.85em;
+            min-width: 220px;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: #777;
+            font-size: 0.85em;
+            background: #f8f9fa;
+            border-top: 1px solid #eee;
+        }
+        .footer .legal { max-width: 900px; margin: 6px auto 0; line-height: 1.5; }
+
+        @page {
+            size: A4;
+            margin: 16mm 12mm;
+        }
+        @media print {
+            body { background: none; padding: 0; }
+            .container { box-shadow: none; border-radius: 0; max-width: none; }
+            .download-btn { display: none; }
+            .section-title, .analysis-card, .kpi-card, .annex-body { page-break-inside: avoid; }
+            .data-table tr { page-break-inside: avoid; }
+            .data-table thead { display: table-header-group; }
+            .header { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <button class="download-btn" onclick="window.print()">⬇ Download PDF Report</button>
+        <h1>Financial Intelligence Report</h1>
+        <p><strong>Account Holder:</strong> [Client Name] | <strong>Bank:</strong> [Bank Name] / [Branch]</p>
+        <p><strong>Period:</strong> [Start Date] - [End Date] | <strong>Classification:</strong> Confidential</p>
+        <p class="ref-line">Ref: [Statement Reference] &nbsp;|&nbsp; Report Generated: [Generation Date]</p>
+    </div>
+
+    <div class="content">
+
+        <!-- 0. DOCUMENT AUTHENTICITY ALERT (only rendered when the analyzer flags the source as non-genuine / test data) -->
+        <!-- Remove this entire block for statements that pass authenticity checks. -->
+        <div class="authenticity-alert">
+            <h3>⛔ DOCUMENT AUTHENTICITY ALERT — READ FIRST</h3>
+            <p>The source file carries the following marking on [every page / page X]:</p>
+            <div class="watermark-box">"[Exact watermark / disclaimer text found in source]"</div>
+            <p>[Explain what this means: e.g. "This document is a synthetic / generated statement, not a genuine bank record." State plainly that it must never be submitted to an embassy, consular section, or official authority.]</p>
+            <p>The analysis below is issued as a <strong>[technical validation exercise / standard analysis]</strong> accordingly.</p>
+        </div>
+
+        <!-- 1. Executive Dashboard -->
+        <h2 class="section-title">1. Executive Dashboard & Verdict</h2>
+        <div class="verdict-block">
+            <div class="alert-box green" style="flex: 1; min-width: 260px;">
+                <h4>✅ OVERVIEW: [Brief Summary of Financial Health]</h4>
+                <p>[Paragraph explaining the trajectory, closing balance, and main advisory flags].</p>
+            </div>
+            <div class="verdict-badge fail">
+                <span class="big">VERDICT: [SUBMITTABLE / NOT SUBMITTABLE]</span>
+                <span class="small">[One-line reason, e.g. "TEST DOCUMENT DETECTED" or "BELOW REQUIRED THRESHOLD"]</span>
+            </div>
+        </div>
+        <div class="kpi-grid">
+            <div class="kpi-card">
+                <h3>Opening Balance</h3>
+                <div class="value">[Amount] [Currency]</div>
+                <div style="font-size: 0.8em; color: #666;">[Start Date]</div>
+            </div>
+            <div class="kpi-card success">
+                <h3>Total Inflows</h3>
+                <div class="value">[Amount] [Currency]</div>
+                <div style="font-size: 0.8em; color: #666;">[N] transactions / [X] months</div>
+            </div>
+            <div class="kpi-card danger">
+                <h3>Total Outflows</h3>
+                <div class="value">[Amount] [Currency]</div>
+                <div style="font-size: 0.8em; color: #666;">Avg [Amount] / month</div>
+            </div>
+            <div class="kpi-card success">
+                <h3>Closing Balance</h3>
+                <div class="value">[Amount] [Currency]</div>
+                <div style="font-size: 0.8em; color: #666;">[End Date] · [+/-X% growth]</div>
+            </div>
+            <div class="kpi-card warning">
+                <h3>Net Cash Flow</h3>
+                <div class="value">[+/- Amount] [Currency]</div>
+                <div style="font-size: 0.8em; color: #666;">[Positive all N months / Negative trajectory]</div>
+            </div>
+            <div class="kpi-card warning">
+                <h3>Income Concentration</h3>
+                <div class="value">[X]%</div>
+                <div style="font-size: 0.8em; color: #666;">Single source: "[Payer Name]"</div>
+            </div>
+        </div>
+
+        <!-- 2. Account ID -->
+        <h2 class="section-title">2. Account & Holder Identification</h2>
+        <table class="data-table">
+            <tr><td style="width: 30%; font-weight: bold;">Account Holder Name:</td><td>[Client Name]</td></tr>
+            <tr><td style="font-weight: bold;">Mailing Address:</td><td>[Address on file]</td></tr>
+            <tr><td style="font-weight: bold;">Bank Name / Branch:</td><td>[Bank Name] / [Branch Name]</td></tr>
+            <tr><td style="font-weight: bold;">Account Number / IBAN:</td><td>[Number] / [IBAN]</td></tr>
+            <tr><td style="font-weight: bold;">SWIFT / BIC:</td><td>[SWIFT Code]</td></tr>
+            <tr><td style="font-weight: bold;">Account Type / Currency:</td><td>[Type, e.g. Current/Savings/Corporate] — [Currency]</td></tr>
+            <tr><td style="font-weight: bold;">Statement Period:</td><td>[Start Date] to [End Date] ([X] Months)</td></tr>
+            <tr><td style="font-weight: bold;">Transaction Count:</td><td>[N] transactions (verified: [N] extracted)</td></tr>
+        </table>
+
+        <!-- 3. Reconciliation & Adjusted Cash Flow Analysis -->
+        <h2 class="section-title">3. Mathematical Reconciliation & Adjusted Cash Flow</h2>
+        <p>A strict line-by-line mathematical reconciliation was performed across the full period. In addition, a full running-balance audit was executed on all [N] transactions: the calculated balance after every single row matches the stated running balance [with zero discrepancies / with X discrepancies noted below].</p>
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Metric ([Currency])</th>
+                    <th class="text-right">As Reported</th>
+                    <th class="text-right">Adjusted (External Only)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td>Opening Balance</td><td class="text-right">[Amount]</td><td class="text-right">[Amount]</td></tr>
+                <tr><td>Add: Total Credits (Inflows)</td><td class="text-right text-success">+ [Amount]</td><td class="text-right text-success">+ [Amount]</td></tr>
+                <tr><td>Less: Total Debits (Outflows)</td><td class="text-right text-danger">- [Amount]</td><td class="text-right text-danger">- [Amount]</td></tr>
+                <tr style="background: #f0fdf4;"><td><strong>Calculated Closing Balance</strong></td><td class="text-right"><strong>[Amount]</strong></td><td class="text-right"><strong>[Amount]</strong></td></tr>
+                <tr><td><strong>Net Cash Flow ([X]-Month Profit/Loss)</strong></td><td class="text-right"><strong>[+/- Amount]</strong></td><td class="text-right"><strong>[+/- Amount]</strong></td></tr>
+            </tbody>
+        </table>
+        <div class="alert-box blue">
+            <h4>🔍 Reconciliation Formula</h4>
+            <p>[Opening] + [Inflows] − [Outflows] = [Closing] — the equation [holds exactly / shows a discrepancy of X]. [One line on what the Adjusted view proves once internal transfers are stripped out.]</p>
+        </div>
+
+        <!-- 4. Monthly Financial Trajectory & Gap Analysis -->
+        <h2 class="section-title">4. Monthly Financial Trajectory & Gap Analysis</h2>
+        <p>[Paragraph describing the account trajectory, spikes, and dips].</p>
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Month</th>
+                    <th class="text-right">Total Credits ([Currency])</th>
+                    <th class="text-right">Total Debits ([Currency])</th>
+                    <th class="text-right">Net Flow ([Currency])</th>
+                    <th class="text-right">Closing Balance ([Currency])</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td><strong>[Month Year]</strong></td><td class="text-right text-success">[Amount]</td><td class="text-right text-danger">[Amount]</td><td class="text-right">[+/- Amount]</td><td class="text-right"><strong>[Amount]</strong></td></tr>
+                <!-- repeat one row per month -->
+            </tbody>
+        </table>
+        <div class="alert-box red">
+            <h4>⚠ Trajectory Notes & Gap Analysis (Agent Action Required)</h4>
+            <ul>
+                <li><strong>[Gap/Flag Name, e.g., Unverified Cash Deposit / Heaviest Spend Month]:</strong> [Description of the transaction or trend and why it stands out].
+                    <br><em>Agent Action:</em> [Required action, e.g. "Provide source-of-funds declaration" or "Not a concern, but worth a one-line explanation if requested"].</li>
+                <li><strong>[Second Gap/Flag Name]:</strong> [Description].
+                    <br><em>Agent Action:</em> [Required action].</li>
+            </ul>
+            <p style="margin-top: 12px;"><strong>Pattern-Consistency Check:</strong> [Note whether the account shows natural variation (fee hits, timing gaps, irregular spikes — a positive authenticity signal) or unnatural smoothness (near-identical repeating amounts, zero fees, zero noise — a synthetic-data signature that should be flagged in Section 8).]</p>
+        </div>
+
+        <!-- 5. Significant Financial Events -->
+        <h2 class="section-title">5. Significant Financial Events</h2>
+        <p>Every transaction materially shaping the account's profile is listed below.</p>
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Description</th>
+                    <th>Counterparty / Reference</th>
+                    <th class="text-right">Amount ([Currency])</th>
+                    <th>Type</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td>[Date]</td><td>[Description as it appears in the statement — note if narrative is garbled/unclear]</td><td>[Counterparty]</td><td class="text-right">[Amount]</td><td>[CREDIT/DEBIT]</td></tr>
+                <!-- repeat one row per significant event: largest debit, largest credit, largest ATM withdrawal, recurring standing orders, etc. -->
+            </tbody>
+        </table>
+
+        <!-- 6. Source of Funds & Utilization -->
+        <h2 class="section-title">6. Source of Funds (Inflows Analysis)</h2>
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Income Source</th>
+                    <th>Pattern</th>
+                    <th class="text-center">Count</th>
+                    <th class="text-right">Amount ([Currency])</th>
+                    <th class="text-right">Share</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td>[Source 1, e.g. Employer transfer]</td><td>[Frequency / regularity description]</td><td class="text-center">[N]</td><td class="text-right">[Amount]</td><td class="text-right">[X%]</td></tr>
+            </tbody>
+        </table>
+        <div class="alert-box blue">
+            <h4>Analyst Notes on the Income Source</h4>
+            <ul>
+                <li><strong>[Documentation check, e.g. No payroll identification]:</strong> [Detail].</li>
+                <li><strong>[Uniformity check]:</strong> [Note the spread/variance of repeating amounts — tight bands with no natural variation are a flag].</li>
+                <li><strong>[Narrative quality check]:</strong> [Note whether payer descriptions are clean or garbled/corrupted].</li>
+            </ul>
+        </div>
+
+        <h2 class="section-title">7. Utilization of Funds (Outflows Analysis)</h2>
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Expenditure Category</th>
+                    <th>Detail</th>
+                    <th class="text-right">Amount ([Currency])</th>
+                    <th class="text-right">Share</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td>[Category, e.g. Rent]</td><td>[Detail, e.g. Standing monthly transfer]</td><td class="text-right">[Amount]</td><td class="text-right">[X%]</td></tr>
+                <tr style="background:#f0fdf4;"><td colspan="2"><strong>Total Debits</strong></td><td class="text-right"><strong>[Amount]</strong></td><td class="text-right"><strong>100%</strong></td></tr>
+            </tbody>
+        </table>
+        <div class="analysis-grid">
+            <div class="analysis-card">
+                <h3>Spending Profile Observations</h3>
+                <ul style="padding-left: 20px; margin: 10px 0;">
+                    <li>[Observation, e.g. "Housing consumes X% of all spending"].</li>
+                    <li>[Observation on credit discipline, e.g. card settled in full each cycle].</li>
+                    <li>[Observation on cash dependency — % of outflows that are ATM/cash].</li>
+                </ul>
+            </div>
+            <div class="analysis-card">
+                <h3>Major Expenditure Character Patterns</h3>
+                <table class="data-table" style="margin-bottom: 0;">
+                    <thead><tr><th>Category</th><th>Pattern</th></tr></thead>
+                    <tbody>
+                        <tr><td>[Category]</td><td><span class="tag warn">[Pattern, e.g. Recurring, ~monthly]</span></td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- 8. Key Associated Parties -->
+        <h2 class="section-title">8. Key Associated Parties & Net Exposure</h2>
+        <p>Counterparty analysis reveals the account's financial graph. "Net Exposure" is the total in minus total out for each party over the period.</p>
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Party / Name</th>
+                    <th>Role</th>
+                    <th class="text-right">Total In ([Currency])</th>
+                    <th class="text-right">Total Out ([Currency])</th>
+                    <th class="text-right">Net Exposure ([Currency])</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>[Party Name]</strong></td>
+                    <td>[Role, e.g. Sole income source / Landlord / Linked account]</td>
+                    <td class="text-right text-success">[Amount]</td>
+                    <td class="text-right text-danger">[Amount]</td>
+                    <td class="text-right"><strong>[+/- Amount]</strong></td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="alert-box red">
+            <h4>Dependency Warning</h4>
+            <p>[If income concentration is high: note there is no secondary income stream, business revenue, family support, or remittance flow to fall back on if the primary payer is questioned.]</p>
+        </div>
+
+        <!-- 8b. Same-Name / Self-Transfer Summary — include ONLY when the applicant appears as counterparty of his own transfers (self-sent remittances, self-to-self moves) -->
+        <div class="alert-box blue">
+            <h4>🔁 Same-Name Transfer Summary ([Client Name])</h4>
+            <p>[Intro line: e.g. "Four incoming international transfers list the applicant himself as the ordering customer — this is self-funded replenishment, not third-party income, and is treated as an internal source in the Adjusted view."]</p>
+            <table class="data-table" style="margin-bottom: 0;">
+                <thead>
+                    <tr><th>Date</th><th>Direction</th><th class="text-right">Amount ([Currency])</th><th>Memo / Reference</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>[Date]</td><td><span class="tag in">IN</span> / <span class="tag out">OUT</span></td><td class="text-right">[Amount]</td><td>[Ordering customer / purpose memo, e.g. "SALARY"]</td></tr>
+                    <tr style="background:#f8f9fa;"><td colspan="2"><strong>TOTAL</strong></td><td class="text-right"><strong>[Amount]</strong></td><td>[Characterization: self-transfer — excluded from external income in Adjusted view]</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- 9. Linked / Related Accounts (Annex) — include only when the client has more than one account -->
+        <h2 class="section-title">9. Linked Account Annex — [Account Nickname / Currency] (Same Client)</h2>
+        <div class="annex-banner">ANNEX [A] — [ACCOUNT TYPE] (SAME CLIENT) · CONFIDENTIAL</div>
+        <div class="annex-body">
+            <table class="data-table" style="margin-bottom: 16px;">
+                <tr><td style="font-weight:bold; width:30%;">Account Number:</td><td>[Number]</td></tr>
+                <tr><td style="font-weight:bold;">Account Type / Currency:</td><td>[Type] / [Currency]</td></tr>
+                <tr><td style="font-weight:bold;">Statement Period:</td><td>[Start] – [End]</td></tr>
+            </table>
+            <table class="data-table">
+                <thead>
+                    <tr><th>Opening Balance</th><th>Total Credits</th><th>Total Debits</th><th>Closing Balance</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>[Amount]</td><td class="text-success">[Amount]</td><td class="text-danger">[Amount]</td><td>[Amount]</td></tr>
+                </tbody>
+            </table>
+            <p>[Note any cross-references to the main account — e.g. a linked reference account appearing in both statements, or self-to-self transfers between the two accounts, with net exposure calculated between them.]</p>
+        </div>
+
+        <!-- 10. Risk & Compliance -->
+        <h2 class="section-title">10. Risk & Compliance Indicators (Agent Action Items)</h2>
+        <div class="analysis-grid">
+            <div class="analysis-card">
+                <h3>Advisory Flags (Requires Agent Attention)</h3>
+                <ul style="padding-left: 20px; margin: 10px 0;">
+                    <li style="margin-bottom: 10px; color: var(--danger);"><strong>[Flag Name, e.g. Document authenticity / Unverified cash / Single-source income]:</strong> [Description]. <strong>Action:</strong> [Required action].</li>
+                    <li style="margin-bottom: 10px;"><strong>[Flag Name]:</strong> [Description]. <strong>Action:</strong> [Required action].</li>
+                </ul>
+            </div>
+            <div class="analysis-card">
+                <h3>Positive Indicators (Strengthens Profile)</h3>
+                <ul style="padding-left: 20px; margin: 10px 0;">
+                    <li style="margin-bottom: 10px;"><strong>[Indicator Name, e.g. Perfect reconciliation]:</strong> [Description].</li>
+                    <li style="margin-bottom: 10px;"><strong>[Indicator Name]:</strong> [Description].</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 11. Visa & Financial Assessment (Readiness Matrix) -->
+        <h2 class="section-title">11. Visa & Financial Assessment (Readiness Matrix)</h2>
+        <p>The closing balance of [Amount] [Currency] is tested below against the standard thresholds applied in visa financial screening.</p>
+        <table class="data-table">
+            <thead>
+                <tr><th>Assessment Criterion</th><th>Status</th><th>Analysis & Detail</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>Document Authenticity</td><td><span class="tag [pass/fail]">[PASS/FAIL]</span></td><td>[Detail]</td></tr>
+                <tr><td>[Destination] Minimum Threshold</td><td><span class="tag [pass/fail]">[PASS/FAIL]</span></td><td>[X% of requirement]</td></tr>
+                <tr><td>Account Activity & History</td><td><span class="tag [pass/fail]">[PASS/FAIL]</span></td><td>[Detail]</td></tr>
+                <tr><td>Source of Funds Clarity</td><td><span class="tag [pass/fail]">[PASS/FAIL]</span></td><td>[Detail]</td></tr>
+                <tr><td>Overdraft / Debt Risk</td><td><span class="tag low">[LOW/MED/HIGH]</span></td><td>[Detail]</td></tr>
+                <tr style="background:#f8f9fa;"><td><strong>Overall Readiness</strong></td><td><strong>[SUBMITTABLE / NOT SUBMITTABLE]</strong></td><td>[Summary reason]</td></tr>
+            </tbody>
+        </table>
+
+        <!-- 12. Conclusion -->
+        <h2 class="section-title">12. Analyst Conclusion & Recommendations</h2>
+        <div class="analysis-card full-width">
+            <p><strong>Executive Summary:</strong> [Paragraph summarizing the analysis, reconciliation, and overall profile.]</p>
+            <p><strong>Financial Strength:</strong> [Paragraph detailing profitability, adjusted cash flow, and liquidity.]</p>
+
+            <div class="alert-box danger" style="margin-top: 20px;">
+                <h4>⚠ Critical Recommendation for Official Submission</h4>
+                <p>To preemptively address strict financial compliance checks, the agent is strongly advised to include the following supplementary documents:</p>
+                <ul>
+                    <li><strong>[Document Name]:</strong> [Description]</li>
+                    <li><strong>[Document Name]:</strong> [Description]</li>
+                </ul>
+            </div>
+
+            <p><strong>Final Assessment:</strong> [Final paragraph stating if the profile is suitable for visa submission, and any conditions attached.]</p>
+        </div>
+
+        <!-- Sign-off block -->
+        <div class="signoff">
+            <div class="sig-line">Authorized Signature — Global EIS</div>
+            <div class="sig-line">Date Issued: [Date]</div>
+        </div>
+
+    </div>
+
+    <div class="footer">
+        <p><strong>Prepared By:</strong> Global EIS — Financial Intelligence Services</p>
+        <p class="legal">Disclaimer: This report is prepared by Global EIS based solely on the bank statement document supplied by the client. Global EIS does not independently verify the authenticity of the underlying bank statement and makes no representation as to the applicant's eligibility for any visa or immigration outcome. All mathematical reconciliations are verified against the stated bank totals. This report is intended solely to support the client's own submission, should be read together with all other required supporting documentation, and does not constitute legal advice.</p>
+    </div>
+</div>
+
+</body>
+</html>

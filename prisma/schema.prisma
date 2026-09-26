@@ -1,0 +1,35 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Submission {
+  id         String          @id @default(cuid())
+  userId     String? // short human queue ID shown in the queue (e.g. 1024 / AHMED-01)
+  status     String          @default("WAITING") // WAITING | ANALYZING | DONE
+  clientName String? // customer name — attached later by operator
+  caseRef    String?
+  country    String?
+  visaType   String?
+  travelers  Int     @default(1) // joint applicants sharing this bank statement
+  email      String?
+  notes      String? // free-form case notes
+  analyzedAt DateTime? // set when status -> DONE (dashboard "analyzed today")
+  files      StatementFile[]
+  createdAt  DateTime        @default(now())
+}
+
+model StatementFile {
+  id           String     @id @default(cuid())
+  submissionId String
+  submission   Submission @relation(fields: [submissionId], references: [id])
+  originalName String
+  storedPath   String
+  sizeBytes    Int
+  md5          String
+  createdAt    DateTime   @default(now())
+}
