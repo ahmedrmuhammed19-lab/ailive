@@ -1,6 +1,7 @@
 import { createTransport } from "nodemailer";
 import { mkdir, writeFile, readFile } from "fs/promises";
 import { existsSync } from "fs";
+import { randomBytes } from "crypto";
 import path from "path";
 import { WORKSPACE_ROOT, PORTAL_UPLOAD_DIR } from "@/lib/portal";
 
@@ -87,7 +88,10 @@ async function writeOutbox(mail: QueuedMail, status: "QUEUED" | "SENT", error?: 
     await mkdir(OUTBOX_DIR, { recursive: true });
     const ts = new Date().toISOString().replace(/[-:T]/g, "").slice(0, 14);
     const slug = mail.kind + "_" + (mail.submissionId ?? "x").slice(-8);
-    const file = path.join(OUTBOX_DIR, `${ts}_${slug}.json`);
+    // unique salt: two mails of the same kind for the same submission can fire
+    // within the same second (e.g. draft-ready + lesson-learned) — don't overwrite
+    const salt = randomBytes(3).toString("hex");
+    const file = path.join(OUTBOX_DIR, `${ts}_${slug}_${salt}.json`);
     await writeFile(
       file,
       JSON.stringify(
@@ -142,7 +146,7 @@ export async function sendOrQueue(mail: QueuedMail): Promise<MailResult> {
     await transport.sendMail({
       from: `Global EIS <${creds.email}>`,
       to: mail.to,
-      replyTo: mail.replyTo ?? OPERATOR_EMAIL,
+      replyTo: mail.replyTo ?? operatorAddress(creds),
       subject: mail.subject,
       text: mail.body,
       ...(mail.html ? { html: mail.html } : {}),
@@ -157,7 +161,7 @@ export async function sendOrQueue(mail: QueuedMail): Promise<MailResult> {
   }
 }
 
-/** Operator address = notify_to override from creds, else the default operator mailbox. */
+/** Operator address = env override, then notify_to override from creds, else the default operator mailbox. */
 export function operatorAddress(creds: MailCreds | null): string {
-  return creds?.notify_to?.trim() || OPERATOR_EMAIL;
+  return process.env.OPERATOR_EMAIL_OVERRIDE?.trim() || creds?.notify_to?.trim() || OPERATOR_EMAIL;
 }

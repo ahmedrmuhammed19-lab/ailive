@@ -1,5 +1,5 @@
 import { db } from "@/lib/db";
-import { loadMailCreds, OPERATOR_EMAIL, operatorAddress, sendOrQueue } from "@/lib/mail";
+import { loadMailCreds, operatorAddress, sendOrQueue } from "@/lib/mail";
 import { REPORTS_DIR } from "@/lib/portal";
 import { existsSync } from "fs";
 import path from "path";
@@ -101,7 +101,7 @@ export async function sendCompletionMails(
           }\n`
         : "") +
       `\nThe report is also available on the Global EIS portal under "Reports" (ID & password required), ` +
-      `and replies reach us directly at ${OPERATOR_EMAIL}.\n\n` +
+      `and replies reach us directly at ${operatorAddress(await loadMailCreds())}.\n\n` +
       `Kind regards,\nGlobal EIS — Financial Intelligence Services`,
     kind: "report_ready" as const,
     submissionId: submission.id,

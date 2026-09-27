@@ -34,6 +34,7 @@ npm run build >/dev/null 2>&1 || { echo "BUILD FAILED"; npx next build 2>&1 | ta
 
 echo "== 5. boot =="
 export OUTBOX_KEEP_HTML=1  # persist email HTML bodies for the preview page
+export OPERATOR_EMAIL_OVERRIDE=paulmero5@gmail.com  # operator copies follow the test target too
 nohup npm run start >/dev/null 2>&1 &
 for i in $(seq 1 60); do
   sleep 1
