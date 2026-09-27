@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev -p 3000 2>&1 | tee dev.log",
-    "build": "next build && cp -r .next/static .next/standalone/.next/ && cp -r public .next/standalone/",
+    "build": "next build && cp -r .next/static .next/standalone/.next/ && cp -r public .next/standalone/ && rm -rf .next/standalone/node_modules/tesseract.js .next/standalone/node_modules/tesseract.js-core && mkdir -p .next/standalone/node_modules && cp -r node_modules/tesseract.js node_modules/tesseract.js-core .next/standalone/node_modules/",
     "start": "NODE_ENV=production bun .next/standalone/server.js 2>&1 | tee server.log",
     "lint": "eslint .",
     "db:push": "prisma db push --accept-data-loss",
@@ -77,6 +77,7 @@
     "sonner": "^2.0.6",
     "tailwind-merge": "^3.3.1",
     "tailwindcss-animate": "^1.0.7",
+    "tesseract.js": "^7.0.0",
     "unpdf": "^1.8.1",
     "uuid": "^11.1.0",
     "vaul": "^1.1.2",

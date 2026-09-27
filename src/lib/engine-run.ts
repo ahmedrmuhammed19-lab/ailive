@@ -114,8 +114,10 @@ export async function runEngine(
       )
       .join("\n");
 
+    // Shadow rule: OCR-sourced legs are NEVER auto-delivered — scanned
+    // statements always park for analyst review, even at 100% integrity.
     const autoDeliver = process.env.AUTO_DELIVER !== "0"; // default on
-    if (autoDeliver && analysis.allVerified) {
+    if (autoDeliver && analysis.allVerified && !analysis.ocrUsed) {
       const reportName = await publishDraftReport(analysis.submission, legs, "engine");
       const done = await markDoneAndNotify(sub.id, [reportName], telemetryLine);
       await logOutcome("auto-delivered");
@@ -132,7 +134,9 @@ export async function runEngine(
     const reportName = await publishDraftReport(analysis.submission, legs, "review");
     const viewBlock = await statementViewBlock(sub.id);
     const deliverUrl = actionUrl(sub.id, "deliver");
-    const reason = analysis.allVerified
+    const reason = analysis.ocrUsed
+      ? `OCR shadow mode: this draft was recovered from a scanned image — auto-delivery is disabled for OCR sources; review and mark DONE.\n\n`
+      : analysis.allVerified
       ? `Auto-delivery is currently disabled (AUTO_DELIVER=0) — review and mark DONE.\n\n`
       : `Integrity below the ${autoDeliverMinPct()}% auto-delivery threshold on this layout (${integrity.join("% / ")}%).\n` +
         `Review the draft, complete the narrative, then mark DONE to deliver.\n\n`;
@@ -144,6 +148,7 @@ export async function runEngine(
         `Queue ID   : ${label}\n` +
         `Report     : ${reportName}\n\n` +
         `Accounts:\n${legLines}\n\n` +
+        (analysis.windowSummary ? `Period / 6-month window: ${analysis.windowSummary}\n\n` : "") +
         reason +
         `Approve the reviewed draft and deliver the report to the client now:\n${deliverUrl}\n\n` +
         `${viewBlock.text}\n\n` +
@@ -158,6 +163,9 @@ export async function runEngine(
         `<div style="padding:18px;">` +
         `<p style="margin:0 0 12px;color:#24292f;font-size:14px;line-height:1.55;">Queue <b>${esc(label)}</b> — chain integrity ` +
         `<b>${integrity.join("% / ")}%</b> (gate ${autoDeliverMinPct()}%). The draft is on the portal Reports tab; review it, then mark DONE to deliver.</p>` +
+        (analysis.windowSummary
+          ? `<p style="margin:0 0 12px;color:#59636e;font-size:12px;line-height:1.55;">Period &amp; 6-month window: ${esc(analysis.windowSummary)}</p>`
+          : "") +
         viewBlock.html +
         mailButton(deliverUrl, "&#10003; Approve &amp; Email Report", "#1a7f37") +
         mailButton(retryUrl, "&#8635; Re-run Engine", "#9a6700") +

@@ -1,5 +1,6 @@
 import { extractText, getDocumentProxy } from "unpdf";
 import { db } from "@/lib/db";
+import { ocrPdfText } from "@/lib/ocr";
 
 /**
  * Auto-analysis engine — first-pass statement analysis triggered by the
@@ -16,8 +17,11 @@ import { db } from "@/lib/db";
  * "pending analyst review"), published to the DB so the operator can review
  * and mark DONE — the DONE flow then delivers it to the client untouched.
  *
- * Honest limits: image-only scans and non-CIB layouts fall back to
- * "needs manual analysis" — the case stays ANALYZING for the workspace.
+ * Honest limits: image-only scans fall back to the SHADOW OCR stage
+ * (src/lib/ocr.ts) — recovered text runs through the same parsers and chain
+ * verification, but OCR-sourced drafts are NEVER auto-delivered: they always
+ * park for analyst review. Non-CIB layouts and failed OCR stay red
+ * ("needs manual analysis") — the case remains ANALYZING for the workspace.
  */
 
 // ---------- indicative FX (EGP per unit) — disclosed in report, refresh on submission day ----------
@@ -87,7 +91,7 @@ interface TxRow {
 
 interface AccountLeg {
   file: string;
-  mode?: string; // layout family that parsed it (B-internet / C-digital / D-glued / A-branch)
+  mode?: string; // layout family that parsed it (B-internet / C-digital / D-glued / A-branch; "OCR:" prefix = recovered from a scan)
   account: string | null;
   currency: string;
   period: string | null;
@@ -100,6 +104,18 @@ interface AccountLeg {
   largestCredit: { desc: string; amount: number } | null;
   largestDebit: { desc: string; amount: number } | null;
   salarySeen: boolean;
+  // --- 6-month analysis window (embassy lookback rule) ---
+  periodFrom?: Date | null;
+  periodTo?: Date | null;
+  monthsCovered?: number | null; // actual statement coverage in months (1 decimal)
+  windowFrom?: Date | null; // start of the last-6-months window (null = whole statement is the window)
+  windowExcluded?: number; // ledger rows before the window (still chain-verified, excluded from metrics)
+  windowInflow?: number;
+  windowOutflow?: number;
+  windowNotes?: string[]; // human-readable period observations for the report/analyst
+  // --- OCR provenance (shadow mode) ---
+  ocr?: boolean; // text recovered from a scanned image — never auto-delivered
+  ocrPages?: number;
   rows: TxRow[];
 }
 
@@ -108,7 +124,14 @@ export interface AutoAnalysisResult {
   mode: "cib-parsed" | "unrecognized" | "no-files";
   message: string;
   legs: Array<
-    Pick<AccountLeg, "account" | "currency" | "mode" | "opening" | "closing" | "inflow" | "outflow" | "txCount" | "matched">
+    Pick<AccountLeg, "account" | "currency" | "mode" | "opening" | "closing" | "inflow" | "outflow" | "txCount" | "matched"> & {
+      monthsCovered: number | null;
+      windowFrom: string | null; // ISO date (yyyy-mm-dd) of the 6-month window start
+      windowExcluded: number;
+      windowInflow: number;
+      windowOutflow: number;
+      ocr: boolean;
+    }
   >;
   fullLegs?: AccountLeg[]; // internal: for publishDraftReport (not JSON-serialised)
   submission?: {
@@ -121,6 +144,8 @@ export interface AutoAnalysisResult {
     travelers: number | null;
   };
   allVerified: boolean; // every leg ≥ AUTO_DELIVER_MIN chain integrity (default 100%)
+  ocrUsed: boolean; // any leg recovered through the shadow OCR stage (blocks auto-delivery)
+  windowSummary: string; // human-readable 6-month window observations across legs
   parserVersion: string;
   /** Self-improvement evidence: unmatched rows (below-threshold cases) and raw text preview (unrecognized cases). */
   evidence?: {
@@ -151,6 +176,8 @@ export async function analyzeSubmission(submissionId: string): Promise<AutoAnaly
 
   const legs: AccountLeg[] = [];
   const rawSamples: string[] = []; // first bytes of each PDF's text — failure evidence for ParseLog
+  let ocrUsed = false;
+  let scanDetected = false;
   for (const f of pdfFiles) {
     let buf: Buffer | null = null;
     if (f.data) buf = Buffer.from(f.data);
@@ -166,10 +193,42 @@ export async function analyzeSubmission(submissionId: string): Promise<AutoAnaly
     try {
       const pdf = await getDocumentProxy(new Uint8Array(buf));
       const { text } = await extractText(pdf, { mergePages: true });
-      const merged = Array.isArray(text) ? text.join("\n") : text;
+      let merged = Array.isArray(text) ? text.join("\n") : text;
       rawSamples.push(`===== ${f.originalName} =====\n${merged.slice(0, 8000)}`);
-      const leg = parseCibText(merged, f.originalName);
-      if (leg) legs.push(leg);
+      let leg = parseCibText(merged, f.originalName);
+      // Shadow OCR: image-only scans carry (almost) no text layer. When the
+      // digital text is too thin AND the layout parsers found nothing, pull
+      // the embedded page images and OCR them — the recovered text runs
+      // through the SAME parsers and chain verification, but the leg is
+      // marked OCR-sourced so the engine never auto-delivers it.
+      const textChars = merged.replace(/[^A-Za-z0-9]/g, "").length;
+      if (!leg && textChars < 240) {
+        scanDetected = true;
+        const ocr = await ocrPdfText(buf);
+        if (ocr) {
+          rawSamples.push(
+            `===== ${f.originalName} (OCR ${ocr.pages} page(s)${ocr.truncated ? ", page/time capped" : ""}) =====\n${ocr.text.slice(0, 8000)}`
+          );
+          // OCR text is fuzzy around header punctuation — try the raw text,
+          // then a colon-glued variant ("Number :" -> "Number:"), then a
+          // colon-stripped variant ("Number:" -> "Number "), so every layout
+          // family's header regexes get the punctuation shape they expect.
+          leg =
+            parseCibText(ocr.text, f.originalName) ??
+            parseCibText(ocr.text.replace(/([A-Za-z])\s+:/g, "$1: "), f.originalName) ??
+            parseCibText(ocr.text.replace(/([A-Za-z])\s*:\s*/g, "$1 "), f.originalName);
+          if (leg) {
+            leg.ocr = true;
+            leg.ocrPages = ocr.pages;
+            leg.mode = `OCR:${leg.mode ?? "unknown"}`;
+            ocrUsed = true;
+          }
+        }
+      }
+      if (leg) {
+        applySixMonthWindow(leg);
+        legs.push(leg);
+      }
     } catch {
       // unreadable PDF (scan/encrypted) — skip; handled below if nothing parsed
     }
@@ -179,10 +238,13 @@ export async function analyzeSubmission(submissionId: string): Promise<AutoAnaly
     return {
       ok: false,
       mode: "unrecognized",
-      message:
-        "Statement layout not recognised as a text-layer CIB statement (image scan or another bank). Manual analysis required.",
+      message: scanDetected
+        ? "Image-only scan detected — shadow OCR ran but no bank-statement structure could be recovered from the scan. Replace with a digital (text-based) PDF or route to manual analysis."
+        : "Statement layout not recognised as a text-layer CIB statement (image scan or another bank). Manual analysis required.",
       legs: [],
       allVerified: false,
+      ocrUsed: false,
+      windowSummary: "",
       parserVersion: PARSER_VERSION,
       evidence: { unmatched: [], textPreview: rawSamples.join("\n\n").slice(0, 16384) },
     };
@@ -210,6 +272,12 @@ export async function analyzeSubmission(submissionId: string): Promise<AutoAnaly
       outflow: l.outflow,
       txCount: l.txCount,
       matched: l.matched,
+      monthsCovered: l.monthsCovered ?? null,
+      windowFrom: l.windowFrom ? l.windowFrom.toISOString().slice(0, 10) : null,
+      windowExcluded: l.windowExcluded ?? 0,
+      windowInflow: l.windowInflow ?? l.inflow,
+      windowOutflow: l.windowOutflow ?? l.outflow,
+      ocr: Boolean(l.ocr),
     })),
     fullLegs: legs,
     submission: {
@@ -224,7 +292,14 @@ export async function analyzeSubmission(submissionId: string): Promise<AutoAnaly
     allVerified,
     parserVersion: PARSER_VERSION,
     evidence: { unmatched },
-    message: `Parsed ${legs.length} CIB account${legs.length > 1 ? "s" : ""}.`,
+    ocrUsed,
+    windowSummary: legs
+      .map((l) => (l.windowNotes ?? []).join(" "))
+      .filter(Boolean)
+      .join(" | "),
+    message:
+      `Parsed ${legs.length} CIB account${legs.length > 1 ? "s" : ""}.` +
+      (ocrUsed ? " OCR shadow mode — scanned source, analyst review required." : ""),
   };
 }
 
@@ -260,6 +335,141 @@ function toNum(tok: string): number {
 
 function money(n: number): string {
   return n.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+
+// ---------- 6-month analysis window (embassy lookback rule) ----------
+const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+/** TxRow dates come in three families: "dd/mm/yyyy", "DDMMMYY", "dd-Month-yyyy". */
+function parseTxDate(s: string): Date | null {
+  const t = s.trim();
+  let m = /^(\d{2})\/(\d{2})\/(20\d{2})$/.exec(t);
+  if (m) return new Date(Date.UTC(+m[3], +m[2] - 1, +m[1]));
+  m = /^(\d{2})([A-Z]{3})(\d{2})$/.exec(t.toUpperCase());
+  if (m) {
+    const mo = MONTHS.findIndex((x) => x.toUpperCase() === m![2]);
+    if (mo >= 0) return new Date(Date.UTC(2000 + +m[3], mo, +m[1]));
+  }
+  m = /^(\d{1,2})[-\s]([A-Za-z]{3,9})[-\s](\d{4})$/.exec(t);
+  if (m) {
+    const mo = MONTHS.findIndex((x) => m![2].toLowerCase().startsWith(x.toLowerCase()));
+    if (mo >= 0) return new Date(Date.UTC(+m[3], mo, +m[1]));
+  }
+  return null;
+}
+
+function fmtD(d: Date): string {
+  return `${String(d.getUTCDate()).padStart(2, "0")} ${MONTHS[d.getUTCMonth()]} ${d.getUTCFullYear()}`;
+}
+
+function addMonths(d: Date, n: number): Date {
+  return new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth() + n, d.getUTCDate()));
+}
+
+function monthsBetween(a: Date, b: Date): number {
+  const whole = (b.getUTCFullYear() - a.getUTCFullYear()) * 12 + (b.getUTCMonth() - a.getUTCMonth());
+  const dayFrac = (b.getUTCDate() - a.getUTCDate()) / 30.44;
+  return Math.round((whole + dayFrac) * 10) / 10;
+}
+
+/**
+ * Compute the last-6-months analysis window for a parsed leg and record every
+ * period observation the analyst (and the client report) should see:
+ * statements longer than 6 months are trimmed to the most recent 6 months
+ * (earlier rows stay chain-verified but leave the metrics), short statements
+ * are flagged, plus month gaps and data staleness.
+ */
+function applySixMonthWindow(leg: AccountLeg): void {
+  const parseLoose = (s: string): Date | null => {
+    const m = /(\d{1,2})[-\s]+([A-Za-z]{3,9})[-\s]+(\d{4})/.exec(s);
+    if (!m) return null;
+    const mo = MONTHS.findIndex((x) => m[2].toLowerCase().startsWith(x.toLowerCase()));
+    return mo >= 0 ? new Date(Date.UTC(+m[3], mo, +m[1])) : null;
+  };
+  const pm = leg.period
+    ? /(\d{1,2}[-\s]+[A-Za-z]{3,9}[-\s]+\d{4})\s*→\s*(\d{1,2}[-\s]+[A-Za-z]{3,9}[-\s]+\d{4})/.exec(leg.period)
+    : null;
+  let from = pm ? parseLoose(pm[1]) : null;
+  let to = pm ? parseLoose(pm[2]) : null;
+  const dates = leg.rows.map((r) => parseTxDate(r.date)).filter((d): d is Date => d !== null);
+  if (dates.length >= 2) {
+    const min = new Date(Math.min(...dates.map((d) => d.getTime())));
+    const max = new Date(Math.max(...dates.map((d) => d.getTime())));
+    if (!from) from = min;
+    if (!to) to = max;
+  }
+  if (!from || !to || !(to > from)) {
+    leg.windowNotes = [];
+    leg.monthsCovered = null;
+    return;
+  }
+  leg.periodFrom = from;
+  leg.periodTo = to;
+  const cov = monthsBetween(from, to);
+  leg.monthsCovered = cov;
+
+  const notes: string[] = [];
+  let windowFrom: Date | null = null;
+  if (cov > 6.05) {
+    windowFrom = addMonths(to, -6);
+    windowFrom = new Date(windowFrom.getTime() + 86_400_000); // day after the 6-months-ago mark
+    const excluded = leg.rows.filter((r) => {
+      const d = parseTxDate(r.date);
+      return d !== null && d < windowFrom!;
+    }).length;
+    leg.windowFrom = windowFrom;
+    leg.windowExcluded = excluded;
+    notes.push(
+      `Statement spans ${cov} months (${fmtD(from)} → ${fmtD(to)}). Per the standard 6-month lookback, metrics use the most recent 6 months (${fmtD(windowFrom)} → ${fmtD(to)}); ${excluded} earlier ledger row(s) are excluded from window metrics but remain chain-verified for integrity.`
+    );
+  } else if (cov >= 5.95) {
+    notes.push(`Statement covers ${cov} months (${fmtD(from)} → ${fmtD(to)}) — matches the standard 6-month lookback.`);
+  } else {
+    notes.push(
+      `Statement covers only ${cov} months (${fmtD(from)} → ${fmtD(to)}) — below the 6-month history most embassies require. Analyst: consider requesting older statements.`
+    );
+  }
+
+  // Months with zero recorded activity inside the statement period
+  if (cov > 1.5) {
+    const present = new Set(dates.map((d) => `${d.getUTCFullYear()}-${d.getUTCMonth()}`));
+    const gaps: string[] = [];
+    for (
+      let d = new Date(Date.UTC(from.getUTCFullYear(), from.getUTCMonth(), 1));
+      d <= to;
+      d = new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth() + 1, 1))
+    ) {
+      if (!present.has(`${d.getUTCFullYear()}-${d.getUTCMonth()}`)) gaps.push(`${MONTHS[d.getUTCMonth()]} ${d.getUTCFullYear()}`);
+    }
+    if (gaps.length) notes.push(`No ledger activity recorded in: ${gaps.join(", ")}.`);
+  }
+
+  // Staleness — embassies want recent statements
+  const age = monthsBetween(to, new Date());
+  if (age > 2) {
+    notes.push(
+      `Statement ends ${fmtD(to)} — the newest data is ~${Math.floor(age)} month(s) old; embassies typically require statements issued within the last 1–3 months.`
+    );
+  }
+
+  const wf = windowFrom;
+  const inW = (r: TxRow) => {
+    const d = parseTxDate(r.date);
+    return !wf || (d !== null && d >= wf);
+  };
+  leg.windowInflow = leg.rows.filter((r) => inW(r) && r.signed > 0).reduce((s, r) => s + r.signed, 0);
+  leg.windowOutflow = leg.rows.filter((r) => inW(r) && r.signed < 0).reduce((s, r) => s - r.signed, 0);
+  leg.windowNotes = notes;
+}
+
+/** Rows the analysis metrics see: the 6-month window when one applies, else everything. */
+function effectiveRows(l: AccountLeg): TxRow[] {
+  if (!l.windowFrom) return l.rows;
+  const wf = l.windowFrom;
+  return l.rows.filter((r) => {
+    const d = parseTxDate(r.date);
+    return d !== null && d >= wf;
+  });
 }
 
 /** Parse one PDF's text into a CIB account leg — dispatches by layout family, tagging the winner. */
@@ -771,7 +981,7 @@ interface Finding { label: string; detail: string; tone: "ok" | "warn" | "danger
 function legFindings(l: AccountLeg, requiredEgp: number): Finding[] {
   const f: Finding[] = [];
   const fxOf = (c: string) => FX_EGP[c] ?? 1;
-  const rows = l.rows;
+  const rows = effectiveRows(l); // window-aware: last 6 months only
   const sum = (pred: (r: TxRow) => boolean) => rows.filter(pred).reduce((s, r) => s + r.signed, 0);
 
   const ownIn = sum((r) => r.signed > 0 && /account to account transfer|self transfer/i.test(r.desc));
@@ -856,7 +1066,8 @@ function buildReportHtml(
   const legSections = legs
     .map((l) => {
       const integrity = l.txCount ? Math.round((l.matched / l.txCount) * 100) : 0;
-      const preview = l.rows.slice(0, 25);
+      const wrows = effectiveRows(l); // 6-month window rows when a window applies
+      const preview = wrows.slice(0, 25);
       const rowsHtml = preview
         .map(
           (r) =>
@@ -871,17 +1082,19 @@ function buildReportHtml(
 <div class="kpis">
 ${kpi("Opening", `${l.currency} ${money(l.opening)}`, esc(l.file))}
 ${kpi("Closing", `${l.currency} ${money(l.closing)}`, "end of period")}
-${kpi("Total inflows", `${l.currency} ${money(l.inflow)}`, `${l.txCount} transactions`, "ok")}
+${kpi("Total inflows", `${l.currency} ${money(l.inflow)}`, l.windowFrom ? `${wrows.length} rows in window (of ${l.txCount})` : `${l.txCount} transactions`, "ok")}
 ${kpi("Total outflows", `${l.currency} ${money(l.outflow)}`, integrity + "% chain integrity", "danger")}
 ${kpi("EGP-equivalent closing", "EGP " + money(l.closing * fxOf(l.currency)), "indicative FX " + fxOf(l.currency).toFixed(2))}
+${l.windowFrom ? kpi("Window flows", `+${money(l.windowInflow ?? l.inflow)} / −${money(l.windowOutflow ?? l.outflow)}`, "last 6 months", "ok") : ""}
 </div>
+${(l.windowNotes ?? []).length ? `<p class="small">${(l.windowNotes ?? []).map((n) => esc(n)).join("<br>")}</p>` : ""}
 <p class="small">Largest credit: <b>${l.largestCredit ? esc(l.largestCredit.desc) + " (" + money(l.largestCredit.amount) + ")" : "—"}</b>
  · Largest debit: <b>${l.largestDebit ? esc(l.largestDebit.desc) + " (" + money(-l.largestDebit.amount) + ")" : "—"}</b>
  · Salary/payroll credits detected: <b>${l.salarySeen ? "yes" : "none visible"}</b></p>
 ${findingsHtml(legFindings(l, required / Math.max(1, travelers)))}
 <table style="margin-top:12px"><thead><tr><th>Date</th><th>Description</th><th style="text-align:right">Movement</th><th style="text-align:right">Balance</th></tr></thead>
 <tbody>${rowsHtml}</tbody></table>
-<p class="small">Showing first ${preview.length} of ${l.txCount} ledger rows (chain-verified against stated balances). Full listing available on request.</p>`;
+<p class="small">Showing first ${preview.length} of ${wrows.length} in-window rows${l.windowFrom ? ` (6-month window — ${l.txCount} total rows all chain-verified)` : ` (chain-verified against stated balances)`}. Full listing available on request.</p>`;
     })
     .join("\n");
 
@@ -893,6 +1106,7 @@ ${findingsHtml(legFindings(l, required / Math.max(1, travelers)))}
 <div class="sub">Queue ${esc(userId)} · ${esc(country ?? "destination pending")} ${visaType ? "· " + esc(visaType) : ""} · generated ${now}</div></div>
 <div class="body">
 <div class="wm">${stamp}</div>
+${legs.some((l) => l.ocr) ? '<div class="wm" style="border-color:#0969da;color:#0969da;">OCR-SOURCE DRAFT (SHADOW MODE) — RECOVERED FROM A SCANNED STATEMENT · ANALYST REVIEW REQUIRED · AUTO-DELIVERY DISABLED</div>' : ""}
 
 <h2>Consolidated position</h2>
 <div class="kpis">
@@ -911,6 +1125,10 @@ ${legSections}
     style === "engine"
       ? "Figures reflect the bank's stated ledger without manual adjustment — contact Global EIS for the detailed analyst narrative."
       : "The Global EIS analyst reviews this draft, adds the pattern-level narrative (income origin, circulation analysis, payee clustering), confirms the benchmark, and only then is the final report delivered."
+  }${
+    legs.some((l) => l.ocr)
+      ? " Statement text was recovered by OCR from a scanned image (shadow mode): machine-read text, identical chain verification, mandatory analyst review before delivery."
+      : ""
   }</div>
 </div></div></body></html>`;
 }
