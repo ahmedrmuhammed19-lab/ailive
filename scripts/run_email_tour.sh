@@ -33,9 +33,10 @@ echo "== 4. build =="
 npm run build >/dev/null 2>&1 || { echo "BUILD FAILED"; npx next build 2>&1 | tail -30; exit 1; }
 
 echo "== 5. boot =="
+TOUR_EMAIL="${TOUR_EMAIL:-ahmedr.muhammed19@gmail.com}"  # default testing email (override: TOUR_EMAIL=x ./run_email_tour.sh)
 export OUTBOX_KEEP_HTML=1  # persist email HTML bodies for the preview page
-export OPERATOR_EMAIL_OVERRIDE=paulmero5@gmail.com  # operator copies follow the test target too
-export TEST_MAIL_TO=paulmero5@gmail.com  # TEST-MAIL LOCK: EVERY mail force-redirected here; no outsider can ever be mailed
+export OPERATOR_EMAIL_OVERRIDE="$TOUR_EMAIL"  # operator copies follow the test target too
+export TEST_MAIL_TO="$TOUR_EMAIL"  # TEST-MAIL LOCK: EVERY mail force-redirected here; no outsider can ever be mailed
 nohup npm run start >/dev/null 2>&1 &
 for i in $(seq 1 60); do
   sleep 1

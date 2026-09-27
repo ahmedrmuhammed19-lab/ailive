@@ -23,7 +23,7 @@ TOUR = f"{ROOT}/download/email_tour"
 REPORTS_DIR = f"{TOUR}/reports"
 OUT = f"{TOUR}/inbox_experience.html"
 
-MY_EMAIL = "paulmero5@gmail.com"
+MY_EMAIL = os.environ.get("TOUR_EMAIL", "ahmedr.muhammed19@gmail.com")
 
 esc = lambda s: html.escape(str(s), quote=True)
 
@@ -133,7 +133,7 @@ JOURNEYS = {
             "this is the guarantee that live-fire testing can never email an outsider, no matter what "
             "address a submission carries."
         ),
-        "verdict": "Redirected to paulmero5@gmail.com — intendedTo: real.client@example.com, zero outsider mail",
+        "verdict": f"Redirected to {MY_EMAIL} — intendedTo: real.client@example.com, zero outsider mail",
     },
 }
 

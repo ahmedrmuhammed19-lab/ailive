@@ -1,15 +1,16 @@
 #!/usr/bin/env python3
 """
-EMAIL TOUR — every client-experience email delivered to paulmero5@gmail.com.
+EMAIL TOUR — every client-experience email delivered to the default testing email
+ahmedr.muhammed19@gmail.com (override with TOUR_EMAIL env; previously paulmero5@gmail.com).
 
 Three paths through the real engine + real templates (local, outbox mode):
   GREEN  valid text statement  -> 100% chain -> auto-DONE -> receipt + report mail
   OCR    image-only scan       -> OCR shadow -> yellow draft -> draft mail w/ OCR banner
   RED    wrong document        -> needs-manual -> nudge tap -> re-upload request mail
 
-Asserts every outbox mail is addressed to paulmero5@gmail.com (client + operator
-copies via OPERATOR_EMAIL_OVERRIDE) and that NO mail references any other address
-(a.imam@beta.com.eg / ahmedr.muhammed19@gmail.com are retired for testing).
+Asserts every outbox mail is addressed to the tour target (client + operator copies
+via OPERATOR_EMAIL_OVERRIDE / TEST_MAIL_TO lock) and that NO mail references the
+retired REAL client address a.imam@beta.com.eg.
 Also copies the outbox to download/email_tour/ + builds a preview index.
 """
 import glob
@@ -34,8 +35,8 @@ DB = "/home/z/my-project/db/custom.db"
 OUTBOX = "/home/z/my-project/upload/portal/_outbox"
 TOUR_DIR = "/home/z/my-project/download/email_tour"
 
-MY_EMAIL = "paulmero5@gmail.com"
-FORBIDDEN = ["a.imam@beta.com.eg", "ahmedr.muhammed19@gmail.com"]  # retired as test targets
+MY_EMAIL = os.environ.get("TOUR_EMAIL", "ahmedr.muhammed19@gmail.com")
+FORBIDDEN = ["a.imam@beta.com.eg"]  # REAL client address — permanently retired from any testing
 ALT_EMAIL = "real.client@example.com"  # stand-in for a REAL customer address — must NEVER receive mail during testing
 
 GREEN_PDF = "/home/z/my-project/upload/Saving-1786448365999.pdf"
