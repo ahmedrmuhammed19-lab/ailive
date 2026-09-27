@@ -131,6 +131,7 @@ export async function runEngine(
 
     const reportName = await publishDraftReport(analysis.submission, legs, "review");
     const viewBlock = await statementViewBlock(sub.id);
+    const deliverUrl = actionUrl(sub.id, "deliver");
     const reason = analysis.allVerified
       ? `Auto-delivery is currently disabled (AUTO_DELIVER=0) — review and mark DONE.\n\n`
       : `Integrity below the ${autoDeliverMinPct()}% auto-delivery threshold on this layout (${integrity.join("% / ")}%).\n` +
@@ -144,6 +145,7 @@ export async function runEngine(
         `Report     : ${reportName}\n\n` +
         `Accounts:\n${legLines}\n\n` +
         reason +
+        `Approve the reviewed draft and deliver the report to the client now:\n${deliverUrl}\n\n` +
         `${viewBlock.text}\n\n` +
         `${telemetryLine}\n\n` +
         `Re-run the engine after replacing/fixing files (same link works repeatedly):\n${retryUrl}\n\n` +
@@ -157,9 +159,11 @@ export async function runEngine(
         `<p style="margin:0 0 12px;color:#24292f;font-size:14px;line-height:1.55;">Queue <b>${esc(label)}</b> — chain integrity ` +
         `<b>${integrity.join("% / ")}%</b> (gate ${autoDeliverMinPct()}%). The draft is on the portal Reports tab; review it, then mark DONE to deliver.</p>` +
         viewBlock.html +
+        mailButton(deliverUrl, "&#10003; Approve &amp; Email Report", "#1a7f37") +
         mailButton(retryUrl, "&#8635; Re-run Engine", "#9a6700") +
         `<p style="text-align:center;margin:0 0 10px;"><a href="${actionUrl(sub.id, "start")}" style="color:#8b949e;font-size:11px;">start link (first run)</a> · ` +
-        `<a href="${retryUrl}" style="color:#0969da;font-size:12px;">retry link — works any time</a></p>` +
+        `<a href="${retryUrl}" style="color:#0969da;font-size:12px;">retry link — works any time</a> · ` +
+        `<a href="${deliverUrl}" style="color:#1a7f37;font-size:12px;">approve &amp; deliver link</a></p>` +
         `<p style="margin:0;color:#8b949e;font-size:11px;line-height:1.5;">${esc(telemetryLine)}</p>` +
         `</div></div></div>`,
       kind: "operator_alert",

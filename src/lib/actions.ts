@@ -8,15 +8,19 @@ import { createHmac, timingSafeEqual } from "crypto";
  * SESSION_SECRET. Only the portal can mint valid URLs — anyone receiving the
  * email can click it, but nobody can forge links for other submissions.
  *
+ * Actions: start | retry (fire the engine), deliver (approve the reviewed
+ * draft -> DONE + report emailed to the client), workall (queue-wide pass,
+ * uses the WORK_ALL_ID pseudo-submission below).
+ *
  * BASE URL: production deployment is the default; override with PORTAL_BASE_URL
  * (e.g. preview deployments) without touching code.
  */
 
 export const PORTAL_BASE_URL = (process.env.PORTAL_BASE_URL || "https://ailive-three.vercel.app").replace(/\/+$/, "");
 
-export type QueueAction = "start" | "retry" | "workall";
+export type QueueAction = "start" | "retry" | "deliver" | "workall";
 
-const ACTIONS: ReadonlySet<string> = new Set(["start", "retry", "workall"]);
+const ACTIONS: ReadonlySet<string> = new Set(["start", "retry", "deliver", "workall"]);
 
 /**
  * Pseudo submission-id for the queue-wide "work the queue" link — the one

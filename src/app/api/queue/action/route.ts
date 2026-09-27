@@ -1,6 +1,7 @@
 import { db } from "@/lib/db";
 import { isQueueAction, verifyActionToken } from "@/lib/actions";
 import { runEngine } from "@/lib/engine-run";
+import { markDoneAndNotify } from "@/lib/notify";
 
 /**
  * GET /api/queue/action?id=<submissionId>&action=start|retry&token=<hmac>
@@ -18,6 +19,12 @@ import { runEngine } from "@/lib/engine-run";
  *        fresh draft / auto-delivery decision). This is the step-forward for
  *        cases that "Needs manual" (e.g. after the client sends a better PDF)
  *        or any yellow case that should be re-verified. DONE stays untouched.
+ * deliver  the approval step for yellow (draft-review) cases: stamps DONE and
+ *        emails the report to the client — exactly what the portal "Mark done
+ *        · email report" button does. Guarded by the same email safety rail as
+ *        Green all: a case without a published report is NEVER delivered, so
+ *        the link cannot send an empty report. Idempotent: on an already-DONE
+ *        case it just answers "Already completed".
  */
 export const dynamic = "force-dynamic";
 export const maxDuration = 120;
@@ -135,6 +142,50 @@ export async function GET(req: Request) {
       body:
         `${detail}<br>This case is already marked <b>ANALYZING</b> — nothing changed.` +
         `<br>To re-run the engine on it, use the <b>Retry</b> link from the operator email or the queue's “↻ Retry engine” button.`,
+    });
+  }
+
+  // deliver = approve the reviewed draft: DONE + report emailed to the client.
+  // Must NOT pass through the ANALYZING stamp / engine below.
+  if (action === "deliver") {
+    const reports = await db.reportFile.findMany({
+      where: { submissionId: sub.id },
+      select: { name: true },
+      orderBy: { createdAt: "asc" },
+    });
+    if (reports.length === 0) {
+      // Email safety rail (mirrors Green all): never deliver a case without a report.
+      return page({
+        tone: "warn",
+        title: "No report yet",
+        headline: "No report is ready to deliver",
+        body:
+          `${detail}<br>This case has <b>no published report</b> yet — nothing was sent.` +
+          `<br>Run the engine first (Start/Retry), review the draft on the portal Reports tab, then approve it for delivery.`,
+      });
+    }
+    const done = await markDoneAndNotify(
+      sub.id,
+      reports.map((r) => r.name),
+      "Delivered via the signed “Approve & Email Report” link in the operator email."
+    );
+    if (!done.ok) {
+      return page({
+        tone: "err",
+        status: 404,
+        title: "Delivery failed",
+        headline: "Could not deliver this case",
+        body: `${detail}<br>${esc2(done.error ?? "Unknown error")} — the queue on the portal is unchanged.`,
+      });
+    }
+    return page({
+      tone: "ok",
+      title: "Delivered",
+      headline: "✓ Report delivered to the client",
+      body:
+        `${detail}<br>Report(s): <b>${esc2(done.reportNames.join(", "))}</b>` +
+        `<br>Emailed to <b>${esc2(done.notified?.to ?? "the client")}</b>${done.notified?.queued ? " (mail queued — will go out shortly)" : ""}.` +
+        `<br>The case is now <b>DONE</b> — the portal queue and Reports tab are up to date.`,
     });
   }
 

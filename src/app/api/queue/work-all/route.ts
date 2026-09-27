@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { sessionAccount } from "@/lib/session";
 import { isOperator } from "@/lib/authz";
-import { verifyActionToken, WORK_ALL_ID, statementViewUrl } from "@/lib/actions";
+import { verifyActionToken, WORK_ALL_ID, statementViewUrl, actionUrl } from "@/lib/actions";
 import { workTheQueue, MAX_WORK_BATCH, type WorkRowResult } from "@/lib/queue-work";
 
 /**
@@ -36,7 +36,7 @@ function resultText(r: Awaited<ReturnType<typeof workTheQueue>>): string {
         x.outcome === "auto-delivered"
           ? `delivered to the client (integrity ${x.integrity.join("% / ")}%)`
           : x.outcome === "draft-review"
-            ? `draft ready for review (integrity ${x.integrity.join("% / ")}%) — mark DONE to deliver`
+            ? `draft ready for review (integrity ${x.integrity.join("% / ")}%) — approve below to deliver`
             : x.outcome === "no-files"
               ? "no files on the case — flagged red"
               : "could not parse — flagged red, fix-forward email sent"
@@ -122,24 +122,29 @@ function viewUrlsOf(x: WorkRowResult): { name: string; url: string }[] {
  * can be inspected straight from this page without signing in.
  */
 function viewBlockHtml(r: Awaited<ReturnType<typeof workTheQueue>>): string {
-  const withFiles = r.results.filter((x) => x.files.length > 0);
+  const withFiles = r.results.filter((x) => x.files.length > 0 || x.outcome === "draft-review");
   if (withFiles.length === 0) return "";
   const lines = withFiles
-    .map(
-      (x) =>
+    .map((x) => {
+      const parts = x.files.map(
+        (f) =>
+          `<a href="${statementViewUrl(f.id)}" style="color:#0969da;font-weight:600;text-decoration:none;">${esc(f.name)}</a>`
+      );
+      if (x.outcome === "draft-review") {
+        parts.push(
+          `<a href="${actionUrl(x.id, "deliver")}" style="color:#1a7f37;font-weight:700;text-decoration:none;">&#10003; Approve &amp; deliver report</a> <span style="color:#8b949e;font-size:11px;">(emails the client)</span>`
+        );
+      }
+      return (
         `<div style="margin:0 0 6px;"><span style="color:#1f2328;font-weight:700;">${esc(x.queueId)}</span> — ` +
-        viewUrlsOf(x)
-          .map(
-            (v) =>
-              `<a href="${v.url}" style="color:#0969da;font-weight:600;text-decoration:none;">${esc(v.name)}</a>`
-          )
-          .join(" · ") +
-        ` <span style="color:#8b949e;font-size:11px;">(view statement)</span></div>`
-    )
+        parts.join(" · ") +
+        `</div>`
+      );
+    })
     .join("");
   return (
     `<div style="margin:14px 0 0;padding-top:12px;border-top:1px solid #d0d7de;">` +
-    `<p style="margin:0 0 8px;color:#1f2328;font-weight:700;font-size:13px;">View the original statement(s):</p>` +
+    `<p style="margin:0 0 8px;color:#1f2328;font-weight:700;font-size:13px;">Case links — view statements, approve drafts:</p>` +
     lines +
     `</div>`
   );
