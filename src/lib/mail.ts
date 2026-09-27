@@ -93,7 +93,9 @@ async function writeOutbox(mail: QueuedMail, status: "QUEUED" | "SENT", error?: 
       JSON.stringify(
         {
           ...mail,
-          html: undefined, // keep outbox lean — store a flag instead
+          // keep outbox lean — store a flag instead; set OUTBOX_KEEP_HTML=1 to
+          // persist full HTML bodies (local email-preview runs only)
+          html: process.env.OUTBOX_KEEP_HTML ? mail.html : undefined,
           hasHtml: Boolean(mail.html),
           attachments: mail.attachments?.map((a) => path.basename(a.path ?? a.filename)) ?? [],
           status,
