@@ -161,7 +161,7 @@ export async function analyzeSubmission(submissionId: string): Promise<AutoAnaly
     include: { files: true },
   });
   if (!submission)
-    return { ok: false, mode: "no-files", message: "Submission not found.", legs: [], allVerified: false, parserVersion: PARSER_VERSION };
+    return { ok: false, mode: "no-files", message: "Submission not found.", legs: [], allVerified: false, ocrUsed: false, windowSummary: "", parserVersion: PARSER_VERSION };
   const pdfFiles = submission.files.filter((f) => f.originalName.toLowerCase().endsWith(".pdf"));
   if (pdfFiles.length === 0) {
     return {
@@ -170,6 +170,8 @@ export async function analyzeSubmission(submissionId: string): Promise<AutoAnaly
       message: "No PDF statements attached to this case.",
       legs: [],
       allVerified: false,
+      ocrUsed: false,
+      windowSummary: "",
       parserVersion: PARSER_VERSION,
     };
   }

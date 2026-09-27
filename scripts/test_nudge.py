@@ -164,7 +164,9 @@ def main():
     r = get(op, f"/api/queue/work-all?token={action_tok('__queue__', 'workall')}")
     page_html = r.read().decode()
     ck("N4 work-all page has Ask-client link", "Ask client to re-upload" in page_html)
-    m = re.search(r'href="([^"]+action=nudge[^"]*)"', page_html)
+    # anchor on THIS case's id — other red cases in the queue also mint nudge links
+    m = re.search(rf'href="([^"]+id={sid}[^"]+action=nudge[^"]*)"', page_html) or re.search(
+        rf'href="([^"]+action=nudge[^"]*id={sid}[^"]*)"', page_html)
     ck("N4b nudge href minted with token", bool(m) and "token=" in (m.group(1) if m else ""))
     nudge_url = strip_base(m.group(1)) if m else ""
 
