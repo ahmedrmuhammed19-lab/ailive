@@ -12,7 +12,9 @@ run this to deliver everything pending:
 """
 
 import json
+import os
 import smtplib
+import sqlite3
 import sys
 from email.message import EmailMessage
 from pathlib import Path
@@ -20,6 +22,24 @@ from pathlib import Path
 PROJECT = Path("/home/z/my-project")
 CREDS = PROJECT / "config" / "mail_credentials.json"
 OUTBOX = PROJECT / "upload" / "portal" / "_outbox"
+DB = PROJECT / "db" / "custom.db"
+
+
+def report_for(submission_id):
+    """(filename, bytes) of the newest published report for a submission, or None.
+    Lets the replay attach the real client-facing report to report_ready mails."""
+    if not submission_id or not DB.exists():
+        return None
+    try:
+        con = sqlite3.connect(DB)
+        row = con.execute(
+            "SELECT name, data FROM ReportFile WHERE submissionId=? ORDER BY id DESC LIMIT 1",
+            (submission_id,),
+        ).fetchone()
+        con.close()
+        return row
+    except Exception:
+        return None
 
 
 def smtp_target(d):
@@ -101,18 +121,37 @@ def main():
             print("Check 'email' and 'app_password' (SMTP key) in config/mail_credentials.json.")
             return 1
         for f, m in queue:
+            # TEST-MAIL LOCK: when TEST_MAIL_TO is set, refuse to deliver to
+            # anything else (same guarantee as the portal send path).
+            lock = os.environ.get("TEST_MAIL_TO", "").strip()
+            if lock and m["to"] != lock:
+                print(f"  SKIP -> {m['to']}: TEST_MAIL_TO guard (lock={lock})")
+                continue
             msg = EmailMessage()
             msg["From"] = f"Global EIS <{creds['email']}>"
             msg["To"] = m["to"]
             msg["Subject"] = m["subject"]
             msg.set_content(m.get("body") or "")
+            if m.get("html"):
+                # rich-HTML twin exactly as the live portal path sends it
+                msg.add_alternative(m["html"], subtype="html")
+            rep = report_for(m.get("submissionId"))
+            if rep and m.get("kind") in ("report_ready", "client_receipt"):
+                name, data = rep
+                try:
+                    msg.add_attachment(
+                        bytes(data), maintype="text", subtype="html", filename=name
+                    )
+                except Exception:
+                    pass
             try:
                 s.send_message(msg)
                 m["status"] = "SENT"
                 m["sentAt"] = __import__("datetime").datetime.now(__import__("datetime").UTC).isoformat()
                 f.write_text(json.dumps(m, indent=2))
                 sent += 1
-                print(f"  SENT -> {m['to']}")
+                extra = f" (+report {rep[0]})" if rep and m.get("kind") in ("report_ready", "client_receipt") else ""
+                print(f"  SENT -> {m['to']}{extra}")
             except Exception as e:
                 print(f"  FAIL -> {m['to']}: {e}")
     with (OUTBOX / "NOTIFICATIONS.log").open("a") as lg:
