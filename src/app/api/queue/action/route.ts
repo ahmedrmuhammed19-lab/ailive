@@ -1,22 +1,23 @@
 import { db } from "@/lib/db";
 import { isQueueAction, verifyActionToken } from "@/lib/actions";
-import { analyzeSubmission, autoDeliverMinPct, PARSER_VERSION, publishDraftReport } from "@/lib/analyze";
-import { markDoneAndNotify } from "@/lib/notify";
-import { loadMailCreds, operatorAddress, sendOrQueue } from "@/lib/mail";
-import { logAttemptAndTeach } from "@/lib/lessons";
+import { runEngine } from "@/lib/engine-run";
 
 /**
- * GET /api/queue/action?id=<submissionId>&action=start&token=<hmac>
+ * GET /api/queue/action?id=<submissionId>&action=start|retry&token=<hmac>
  *
  * One-tap operator actions from email links. The token is an HMAC of
  * (submissionId:action) keyed with SESSION_SECRET — the link cannot be forged,
  * and the endpoint is intentionally session-free so it works straight from a
  * mailbox click on any device.
  *
- * start (WAITING → ANALYZING) also fires the auto-analysis engine: the PDFs
- * are parsed, a chain-verified DRAFT report is published to the case, and the
- * operator is emailed the outcome. The analyst then reviews and marks DONE —
- * which delivers the report to the client automatically.
+ * start  (WAITING → ANALYZING) fires the auto-analysis engine: the PDFs are
+ *        parsed, a chain-verified DRAFT report is published to the case, and
+ *        the operator is emailed the outcome. The analyst then reviews and
+ *        marks DONE — which delivers the report to the client automatically.
+ * retry  re-runs the engine on a WAITING **or** ANALYZING case (fresh parse,
+ *        fresh draft / auto-delivery decision). This is the step-forward for
+ *        cases that "Needs manual" (e.g. after the client sends a better PDF)
+ *        or any yellow case that should be re-verified. DONE stays untouched.
  */
 export const dynamic = "force-dynamic";
 export const maxDuration = 120;
@@ -60,6 +61,10 @@ function page(opts: {
     status: opts.status ?? 200,
     headers: { "content-type": "text/html; charset=utf-8", "cache-control": "no-store" },
   });
+}
+
+function esc2(s: string): string {
+  return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 }
 
 export async function GET(req: Request) {
@@ -111,21 +116,25 @@ export async function GET(req: Request) {
     (sub.visaType ? ` — ${sub.visaType}` : "") +
     ((sub.travelers ?? 1) > 1 ? ` · ${sub.travelers} joint applicants` : "");
 
-  if (sub.status === "ANALYZING") {
-    return page({
-      tone: "warn",
-      title: "Already started",
-      headline: "Already running",
-      body: `${detail}<br>This case is already marked <b>ANALYZING</b> — nothing changed.`,
-    });
-  }
-
   if (sub.status === "DONE") {
     return page({
       tone: "warn",
       title: "Already completed",
       headline: "Already completed",
-      body: `${detail}<br>This case is <b>DONE</b> and the report has been delivered — nothing to start.`,
+      body: `${detail}<br>This case is <b>DONE</b> and the report has been delivered — nothing to ${action}.`,
+    });
+  }
+
+  // start is the FIRST run only; retry is the deliberate re-run (also rescues
+  // cases stuck in ANALYZING). Both end up in the same engine below.
+  if (action === "start" && sub.status === "ANALYZING") {
+    return page({
+      tone: "warn",
+      title: "Already started",
+      headline: "Already running",
+      body:
+        `${detail}<br>This case is already marked <b>ANALYZING</b> — nothing changed.` +
+        `<br>To re-run the engine on it, use the <b>Retry</b> link from the operator email or the queue's “↻ Retry engine” button.`,
     });
   }
 
@@ -134,116 +143,36 @@ export async function GET(req: Request) {
     data: { status: "ANALYZING", analyzedAt: null },
   });
 
-  // --- Auto-analysis: parse statements, chain-verify, publish & maybe deliver ---
-  const analysis = await analyzeSubmission(sub.id);
-  const mailCreds = await loadMailCreds();
+  const run = await runEngine(sub, label);
+  const integTxt = run.integrity.length ? `${run.integrity.join("% / ")}%` : "n/a";
 
-  // Self-improvement telemetry — one ParseLog row per attempt; must never break the flow.
-  const integ = analysis.legs.map((l) => (l.txCount ? Math.round((l.matched / l.txCount) * 100) : 0));
-  const legModes = analysis.legs.map((l) => l.mode ?? "unknown").join(",") || null;
-  const telemetryLine =
-    `Telemetry: v=${analysis.parserVersion} modes=${legModes ?? "—"} ` +
-    `integrity=${integ.length ? `${integ.join("/")}%` : "n/a"} gate=${autoDeliverMinPct()}%.`;
-  // Telemetry row + lesson-learned loop: every attempt is logged; the FIRST
-  // occurrence of a never-seen failure pattern emails the operator (see lessons.ts).
-  const logOutcome = (outcome: string) =>
-    logAttemptAndTeach({
-      submissionId: sub.id,
-      queueId: label,
-      outcome,
-      modes: legModes,
-      parserVersion: analysis.parserVersion || PARSER_VERSION,
-      legs: analysis.legs.length,
-      integrityMin: integ.length ? Math.min(...integ) : null,
-      integrityAvg: integ.length ? Math.round(integ.reduce((a, b) => a + b, 0) / integ.length) : null,
-      unmatched: analysis.evidence?.unmatched ?? [],
-      textPreview: analysis.evidence?.textPreview,
-    });
-
-  if (analysis.ok && analysis.fullLegs && analysis.submission) {
-    const legs = analysis.fullLegs;
-    const cov = legs.reduce((s, l) => s + l.closing, 0); // single-currency hint only
-    const integrity = legs.map((l) => (l.txCount ? Math.round((l.matched / l.txCount) * 100) : 0));
-    const legLines = legs
-      .map(
-        (l, i) =>
-          `  • Account ${l.account ?? "?"} (${l.currency}): opening ${l.opening.toLocaleString("en-US", { minimumFractionDigits: 2 })} → closing ${l.closing.toLocaleString("en-US", { minimumFractionDigits: 2 })}, in ${l.inflow.toLocaleString("en-US")} / out ${l.outflow.toLocaleString("en-US")}, ${l.matched}/${l.txCount} rows verified (${integrity[i]}%)`
-      )
-      .join("\n");
-
-    const autoDeliver = process.env.AUTO_DELIVER !== "0"; // default on
-    if (autoDeliver && analysis.allVerified) {
-      const reportName = await publishDraftReport(analysis.submission, legs, "engine");
-      const done = await markDoneAndNotify(sub.id, [reportName], telemetryLine);
-      await logOutcome("auto-delivered");
-      return page({
-        tone: "ok",
-        title: "Delivered",
-        headline: "✓ Analysis complete — report delivered",
-        body:
-          `${detail}<br>Chain integrity ${integrity.join("% / ")}% — every ledger row verified against the bank's own balances.` +
-          `<br>The report (${esc2(reportName)}) has been emailed to ${done.notified ? esc2(done.notified.to) : "the client"} automatically.`,
-      });
-    }
-
-    const reportName = await publishDraftReport(analysis.submission, legs, "review");
-    await sendOrQueue({
-      to: operatorAddress(mailCreds),
-      subject: `🤖 Auto-analysis complete — Queue ${label} (draft ready for review)`,
+  if (run.outcome === "auto-delivered") {
+    return page({
+      tone: "ok",
+      title: "Delivered",
+      headline: "✓ Analysis complete — report delivered",
       body:
-        `The Start button triggered automatic analysis and a draft report is ready.\n\n` +
-        `Queue ID   : ${label}\n` +
-        `Report     : ${reportName}\n\n` +
-        `Accounts:\n${legLines}\n\n` +
-        (analysis.allVerified
-          ? `Auto-delivery is currently disabled (AUTO_DELIVER=0) — review and mark DONE.\n\n`
-          : `Integrity below the ${autoDeliverMinPct()}% auto-delivery threshold on this layout (${integrity.join("% / ")}%).\n` +
-            `Review the draft, complete the narrative, then mark DONE to deliver.\n\n`) +
-        `${telemetryLine}\n\n` +
-        `— Global EIS automated intake`,
-      kind: "operator_alert",
-      submissionId: sub.id,
+        `${detail}<br>Chain integrity ${integTxt} — every ledger row verified against the bank's own balances.` +
+        `<br>The report (${esc2(run.reportName ?? "")}) has been emailed to ${esc2(run.notifiedTo ?? "the client")} automatically.`,
     });
-    await logOutcome("draft-review");
+  }
+
+  if (run.outcome === "draft-review") {
     return page({
       tone: "ok",
       title: "Analysis complete",
       headline: "✓ Analysis started — draft report ready",
       body:
-        `${detail}<br><b>${esc2(analysis.message)}</b> Chain integrity ${integrity.join("% / ")}%.` +
-        (cov ? "" : "") +
+        `${detail}<br><b>${esc2(run.message)}</b> Chain integrity ${integTxt}.` +
         `<br>The draft is on the portal Reports tab — review it, then mark DONE to deliver to the client.<br>A summary email is on its way to you with the per-account chain integrity.`,
     });
   }
 
-  const failMessage =
-    analysis.mode === "no-files"
-      ? analysis.message
-      : analysis.message + " The workspace analyst should take over manually.";
-  await logOutcome(analysis.mode); // "unrecognized" | "no-files"
-  await sendOrQueue({
-    to: operatorAddress(mailCreds),
-    subject: `⚠️ Auto-analysis needs manual work — Queue ${label}`,
-    body:
-      `The Start button marked the case ANALYZING, but automatic parsing could not\ncomplete a draft.\n\n` +
-      `Queue ID : ${label}\n` +
-      `Reason   : ${failMessage}\n\n` +
-      `${telemetryLine}\n\n` +
-      `The raw text evidence is stored in the engine log (/api/engine/logs) for the\n` +
-      `next parser iteration.\n\n` +
-      `The workspace analyst should take over this case manually (CIB-Blue engine\n` +
-      `or a different statement layout).`,
-    kind: "operator_alert",
-    submissionId: sub.id,
-  });
   return page({
     tone: "warn",
     title: "Needs manual analysis",
     headline: "⚙ Analysis started — manual work needed",
-    body: `${detail}<br>${esc2(failMessage)} The analyst has been notified by email.`,
+    body: `${detail}<br>${esc2(run.message)} The analyst has been notified by email.` +
+      `<br>After replacing the file with a better (digital) PDF, tap the <b>Retry</b> link in the email — or “↻ Retry engine” on the portal queue.`,
   });
-}
-
-function esc2(s: string): string {
-  return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 }

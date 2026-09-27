@@ -85,6 +85,27 @@ export function QueuePanel({ refreshKey, isOperator }: { refreshKey: number; isO
     [load]
   );
 
+  // Fire (or re-fire) the analysis engine on a pending case — same pipeline as
+  // the email links: parse → draft → auto-deliver at 100% / park for review.
+  // This is the step-forward for yellow “draft ready” and red “Needs manual”
+  // rows (e.g. after the client sends a better, digital PDF).
+  const runEngine = useCallback(
+    async (id: string) => {
+      setSavingId(id);
+      try {
+        await fetch("/api/queue/retry", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ id }),
+        });
+        await load();
+      } finally {
+        setSavingId(null);
+      }
+    },
+    [load]
+  );
+
   const counts = { ALL: items?.length ?? 0, WAITING: 0, ANALYZING: 0, DONE: 0 };
   for (const i of items ?? []) if (i.status in counts) counts[i.status as keyof typeof counts]++;
 
@@ -354,10 +375,15 @@ export function QueuePanel({ refreshKey, isOperator }: { refreshKey: number; isO
                             size="sm"
                             variant="outline"
                             disabled={savingId === item.id}
-                            onClick={() => update(item.id, { status: "ANALYZING" })}
+                            onClick={() => runEngine(item.id)}
                             className="h-8 gap-1.5 border-[var(--eis-border)] bg-[var(--eis-canvas)] text-[var(--eis-attention)] hover:bg-[var(--eis-attention-subtle)]"
                           >
-                            <PlayCircle className="h-3.5 w-3.5" aria-hidden="true" /> Start analysis
+                            {savingId === item.id ? (
+                              <Loader2 className="h-3.5 w-3.5 animate-spin" aria-hidden="true" />
+                            ) : (
+                              <PlayCircle className="h-3.5 w-3.5" aria-hidden="true" />
+                            )}
+                            Start analysis
                           </Button>
                         )}
                         {item.status === "ANALYZING" && (
@@ -368,6 +394,23 @@ export function QueuePanel({ refreshKey, isOperator }: { refreshKey: number; isO
                             className="h-8 gap-1.5 bg-[var(--eis-btn-green)] text-white hover:bg-[var(--eis-btn-green-hover)]"
                           >
                             <CheckCircle2 className="h-3.5 w-3.5" aria-hidden="true" /> Mark done · email report
+                          </Button>
+                        )}
+                        {item.status === "ANALYZING" && (
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            disabled={savingId === item.id}
+                            onClick={() => runEngine(item.id)}
+                            title="Re-run the engine on this case — fresh parse, fresh draft or auto-delivery (e.g. after the client sends a better PDF)"
+                            className="h-8 gap-1.5 border-[var(--eis-border)] bg-[var(--eis-canvas)] text-[var(--eis-attention)] hover:bg-[var(--eis-attention-subtle)]"
+                          >
+                            {savingId === item.id ? (
+                              <Loader2 className="h-3.5 w-3.5 animate-spin" aria-hidden="true" />
+                            ) : (
+                              <RefreshCw className="h-3.5 w-3.5" aria-hidden="true" />
+                            )}
+                            Retry engine
                           </Button>
                         )}
                         {item.status === "DONE" && (

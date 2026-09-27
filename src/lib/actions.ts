@@ -14,9 +14,9 @@ import { createHmac, timingSafeEqual } from "crypto";
 
 export const PORTAL_BASE_URL = (process.env.PORTAL_BASE_URL || "https://ailive-three.vercel.app").replace(/\/+$/, "");
 
-export type QueueAction = "start";
+export type QueueAction = "start" | "retry";
 
-const ACTIONS: ReadonlySet<string> = new Set(["start"]);
+const ACTIONS: ReadonlySet<string> = new Set(["start", "retry"]);
 
 export function isQueueAction(v: string): v is QueueAction {
   return ACTIONS.has(v);
