@@ -135,6 +135,11 @@ function viewBlockHtml(r: Awaited<ReturnType<typeof workTheQueue>>): string {
           `<a href="${actionUrl(x.id, "deliver")}" style="color:#1a7f37;font-weight:700;text-decoration:none;">&#10003; Approve &amp; deliver report</a> <span style="color:#8b949e;font-size:11px;">(emails the client)</span>`
         );
       }
+      if (x.outcome === "unrecognized" || x.outcome === "no-files") {
+        parts.push(
+          `<a href="${actionUrl(x.id, "nudge")}" style="color:#0969da;font-weight:700;text-decoration:none;">&#9993; Ask client to re-upload</a> <span style="color:#8b949e;font-size:11px;">(emails the client)</span>`
+        );
+      }
       return (
         `<div style="margin:0 0 6px;"><span style="color:#1f2328;font-weight:700;">${esc(x.queueId)}</span> — ` +
         parts.join(" · ") +

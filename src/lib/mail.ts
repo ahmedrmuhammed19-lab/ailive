@@ -16,7 +16,7 @@ export interface QueuedMail {
   subject: string;
   body: string;
   html?: string; // optional rich-HTML part (buttons, layout) — live SMTP only
-  kind: "operator_alert" | "client_receipt" | "report_ready";
+  kind: "operator_alert" | "client_receipt" | "report_ready" | "client_nudge";
   submissionId?: string;
   attachments?: Array<{ filename: string; path?: string; content?: Buffer; contentType?: string }>; // live SMTP only
 }

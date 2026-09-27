@@ -186,6 +186,7 @@ export async function runEngine(
       : analysis.message + " The workspace analyst should take over manually.";
   await logOutcome(analysis.mode); // "unrecognized" | "no-files"
   const failViewBlock = await statementViewBlock(sub.id);
+  const nudgeUrl = actionUrl(sub.id, "nudge");
   await sendOrQueue({
     to: operatorAddress(mailCreds),
     subject: `⚠️ Auto-analysis needs manual work — Queue ${label}`,
@@ -197,8 +198,11 @@ export async function runEngine(
       `The raw text evidence is stored in the engine log (/api/engine/logs) for the\n` +
       `next parser iteration.\n\n` +
       `${failViewBlock.text}\n\n` +
-      `Fix forward: replace the file with a digital (text-based) PDF on the portal,\n` +
+      `Fix forward: replace the file with a digital (text-based) PDF on the portal,
+` +
       `then re-run the engine with one tap — the retry link works any time:\n${retryUrl}\n\n` +
+      `If the uploaded file was simply the wrong document, ask the client to\n` +
+      `re-upload the real statement with one tap:\n${nudgeUrl}\n\n` +
       `— Global EIS automated intake`,
     html:
       `<div style="margin:0;background:#f6f8fa;padding:20px 12px;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;">` +
@@ -209,7 +213,8 @@ export async function runEngine(
       `<p style="margin:0 0 12px;color:#24292f;font-size:14px;line-height:1.55;">Queue <b>${esc(label)}</b> — automatic parsing could not complete a draft.</p>` +
       `<p style="margin:0 0 12px;color:#cf222e;font-size:13px;line-height:1.55;"><b>Reason:</b> ${esc(failMessage)}</p>` +
       failViewBlock.html +
-      `<p style="margin:12px 0 4px;color:#59636e;font-size:12px;line-height:1.55;">Fix forward: replace the file with a digital (text-based) PDF on the portal, then re-run the engine with one tap. Evidence is saved in the engine log for the next parser iteration.</p>` +
+      `<p style="margin:12px 0 4px;color:#59636e;font-size:12px;line-height:1.55;">Fix forward: replace the file with a digital (text-based) PDF on the portal, then re-run the engine with one tap. If the uploaded file was simply the wrong document, ask the client to re-upload the real statement with one tap. Evidence is saved in the engine log for the next parser iteration.</p>` +
+      mailButton(nudgeUrl, "&#9993; Ask Client to Re-upload", "#0969da") +
       mailButton(retryUrl, "&#8635; Retry Analysis", "#9a6700") +
       `<p style="margin:0;color:#8b949e;font-size:11px;line-height:1.5;">${esc(telemetryLine)}</p>` +
       `</div></div></div>`,

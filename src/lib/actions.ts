@@ -9,8 +9,9 @@ import { createHmac, timingSafeEqual } from "crypto";
  * email can click it, but nobody can forge links for other submissions.
  *
  * Actions: start | retry (fire the engine), deliver (approve the reviewed
- * draft -> DONE + report emailed to the client), workall (queue-wide pass,
- * uses the WORK_ALL_ID pseudo-submission below).
+ * draft -> DONE + report emailed to the client), nudge (email the client a
+ * re-upload request when the uploaded file is not a usable statement),
+ * workall (queue-wide pass, uses the WORK_ALL_ID pseudo-submission below).
  *
  * BASE URL: production deployment is the default; override with PORTAL_BASE_URL
  * (e.g. preview deployments) without touching code.
@@ -18,9 +19,9 @@ import { createHmac, timingSafeEqual } from "crypto";
 
 export const PORTAL_BASE_URL = (process.env.PORTAL_BASE_URL || "https://ailive-three.vercel.app").replace(/\/+$/, "");
 
-export type QueueAction = "start" | "retry" | "deliver" | "workall";
+export type QueueAction = "start" | "retry" | "deliver" | "nudge" | "workall";
 
-const ACTIONS: ReadonlySet<string> = new Set(["start", "retry", "deliver", "workall"]);
+const ACTIONS: ReadonlySet<string> = new Set(["start", "retry", "deliver", "nudge", "workall"]);
 
 /**
  * Pseudo submission-id for the queue-wide "work the queue" link — the one

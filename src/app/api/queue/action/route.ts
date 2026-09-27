@@ -2,6 +2,7 @@ import { db } from "@/lib/db";
 import { isQueueAction, verifyActionToken } from "@/lib/actions";
 import { runEngine } from "@/lib/engine-run";
 import { markDoneAndNotify } from "@/lib/notify";
+import { loadMailCreds, operatorAddress, sendOrQueue } from "@/lib/mail";
 
 /**
  * GET /api/queue/action?id=<submissionId>&action=start|retry&token=<hmac>
@@ -25,6 +26,10 @@ import { markDoneAndNotify } from "@/lib/notify";
  *        Green all: a case without a published report is NEVER delivered, so
  *        the link cannot send an empty report. Idempotent: on an already-DONE
  *        case it just answers "Already completed".
+ * nudge  emails the client a polite "please upload your actual bank statement"
+ *        request for cases where the uploaded file is not a usable statement
+ *        (red "Needs manual"). Each tap sends one reminder — reminder
+ *        semantics are intentional, unlike the idempotent deliver.
  */
 export const dynamic = "force-dynamic";
 export const maxDuration = 120;
@@ -99,6 +104,7 @@ export async function GET(req: Request) {
       userId: true,
       status: true,
       clientName: true,
+      email: true,
       country: true,
       visaType: true,
       travelers: true,
@@ -129,6 +135,93 @@ export async function GET(req: Request) {
       title: "Already completed",
       headline: "Already completed",
       body: `${detail}<br>This case is <b>DONE</b> and the report has been delivered — nothing to ${action}.`,
+    });
+  }
+
+  // nudge = email the client a re-upload request (red "not a statement" cases).
+  // Reminder semantics: every tap sends one more polite request. Must NOT
+  // touch status or pass through the engine below.
+  if (action === "nudge") {
+    const to = sub.email?.trim();
+    if (!to) {
+      return page({
+        tone: "warn",
+        title: "No client email",
+        headline: "No client email on file",
+        body:
+          `${detail}<br>This case has <b>no client email</b> — nothing was sent.` +
+          `<br>Add the client's email on the portal case, then tap this nudge link again.`,
+      });
+    }
+    const files = await db.statementFile.findMany({
+      where: { submissionId: sub.id },
+      select: { originalName: true },
+      orderBy: { createdAt: "asc" },
+    });
+    const fileNames = files.map((f) => f.originalName).join(", ") || "(no file name recorded)";
+    const greet = sub.clientName ? `Dear ${sub.clientName},` : "Hello,";
+    const creds = await loadMailCreds();
+    const result = await sendOrQueue({
+      to,
+      subject: `Global EIS — action required: bank statement needed (Queue ${label})`,
+      body:
+        `${greet}\n\n` +
+        `We started processing your financial readiness assessment (Queue ${label}),\n` +
+        `but the document uploaded for this case is not a bank statement.\n\n` +
+        `Received file : ${fileNames}\n` +
+        `What we need  : your actual bank statement, issued by your bank\n\n` +
+        `Please upload a bank statement PDF that:\n` +
+        `  • is the digital (text-based) statement from your bank — not a photo\n` +
+        `    or screenshot, and not another document type\n` +
+        `  • shows the full statement period, the account holder name and the\n` +
+        `    running balance\n` +
+        `  • is complete — all pages, nothing missing\n\n` +
+        `Upload it on the Global EIS portal (sign in with your case ID), or reply\n` +
+        `to this email and we will help you through it. As soon as the statement\n` +
+        `arrives, our analysis engine re-runs automatically and your report is\n` +
+        `delivered by email.\n\n` +
+        `Kind regards,\nGlobal EIS — Financial Intelligence Services`,
+      html:
+        `<div style="margin:0;background:#f6f8fa;padding:20px 12px;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;">` +
+        `<div style="max-width:560px;margin:0 auto;background:#ffffff;border:1px solid #d0d7de;border-radius:8px;overflow:hidden;">` +
+        `<div style="background:#0d1117;padding:12px 18px;"><span style="color:#ffffff;font-weight:700;font-size:15px;">Global EIS</span>` +
+        `<span style="color:#8b949e;font-size:12px;margin-left:8px;">action required</span></div>` +
+        `<div style="padding:18px;">` +
+        `<p style="margin:0 0 12px;color:#24292f;font-size:14px;line-height:1.55;">${esc2(greet)} For queue <b>${esc2(label)}</b>, the document uploaded for your ` +
+        `financial readiness assessment is <b>not a bank statement</b>, so our analysis engine cannot process it.</p>` +
+        `<p style="margin:0 0 12px;color:#59636e;font-size:13px;line-height:1.55;">Received file: <b>${esc2(fileNames)}</b></p>` +
+        `<div style="margin:0 0 12px;background:#fff8c5;border:1px solid #d4a72c66;border-radius:6px;padding:12px 14px;">` +
+        `<p style="margin:0 0 6px;color:#9a6700;font-weight:700;font-size:13px;">What we need from you</p>` +
+        `<p style="margin:0;color:#59636e;font-size:13px;line-height:1.6;">Please upload a bank statement PDF that is the ` +
+        `<b>digital (text-based) statement from your bank</b> — not a photo or screenshot, and not another document type — ` +
+        `showing the full statement period, the account holder name and the running balance, and complete (all pages).</p></div>` +
+        `<p style="margin:0;color:#24292f;font-size:13px;line-height:1.55;">Upload it on the Global EIS portal (sign in with your case ID), ` +
+        `or reply to this email and we will help you through it. As soon as the statement arrives, our engine re-runs automatically ` +
+        `and your report is delivered by email.</p>` +
+        `<p style="margin:16px 0 0;color:#8b949e;font-size:12px;">Kind regards,<br>Global EIS — Financial Intelligence Services</p>` +
+        `</div></div></div>`,
+      kind: "client_nudge",
+      submissionId: sub.id,
+    });
+    await sendOrQueue({
+      to: operatorAddress(creds),
+      subject: `✉️ Re-upload request sent — Queue ${label}`,
+      body:
+        `A "please upload your bank statement" request was emailed to the client.\n\n` +
+        `Queue ID : ${label}\n` +
+        `Sent to  : ${to}${result.queued ? " (mail queued — will go out shortly)" : ""}\n` +
+        `Trigger  : signed nudge link\n\n` +
+        `— Global EIS automated intake`,
+      kind: "operator_alert",
+      submissionId: sub.id,
+    });
+    return page({
+      tone: "ok",
+      title: "Client nudged",
+      headline: "✓ Re-upload request emailed to the client",
+      body:
+        `${detail}<br>A bank-statement request was emailed to <b>${esc2(to)}</b>${result.queued ? " (mail queued — will go out shortly)" : ""}.` +
+        `<br>When the client uploads the correct statement, use Retry / work-the-queue to re-fire the engine.`,
     });
   }
 
