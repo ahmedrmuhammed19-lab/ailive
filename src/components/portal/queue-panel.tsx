@@ -16,6 +16,8 @@ import {
   Save,
   FileText,
   Inbox,
+  Zap,
+  Link2,
 } from "lucide-react";
 import { GH, STATUS_META, timeAgo } from "@/lib/format";
 
@@ -111,6 +113,85 @@ export function QueuePanel({ refreshKey, isOperator }: { refreshKey: number; isO
 
   const visible = (items ?? []).filter((i) => filter === "ALL" || i.status === filter);
 
+  // One-keyword bulk pass: fire the engine on EVERY pending case (oldest
+  // first). 100% cases deliver themselves, the rest come back triaged with a
+  // precise reason — the true step-forward for "stuck on analyzing".
+  const workAll = useCallback(async () => {
+    const pending = counts.WAITING + counts.ANALYZING;
+    if (pending === 0) return;
+    if (
+      !window.confirm(
+        `Run the engine on every pending case (${pending})?\n\n` +
+          `• 100% chain integrity → report delivered to the client automatically.\n` +
+          `• Below the gate → draft ready for your review (then Mark done).\n` +
+          `• Unparseable / no files → flagged red with a fix-forward email.\n` +
+          `• Nothing is force-greened — Yellow/Red stays for your decision.\n\n` +
+          `Up to 8 cases per pass — press again to continue the rest.`
+      )
+    )
+      return;
+    setBusy(true);
+    try {
+      const res = await fetch(`/api/queue/work-all`, { method: "POST" });
+      const data = (await res.json()) as {
+        ok: boolean;
+        attempted?: number;
+        delivered?: number;
+        draftReview?: number;
+        needsManual?: number;
+        remaining?: number;
+        results?: Array<{ queueId: string; outcome: string; integrity: number[] }>;
+        error?: string;
+      };
+      if (!data.ok) {
+        window.alert(data.error ?? "Could not work the queue.");
+        return;
+      }
+      const perRow = (data.results ?? [])
+        .map((x) => {
+          const integ = x.integrity.length ? ` (${x.integrity.join("%/")}%)` : "";
+          if (x.outcome === "auto-delivered") return `• ${x.queueId}: delivered to client${integ}`;
+          if (x.outcome === "draft-review") return `• ${x.queueId}: draft ready${integ} — mark DONE to deliver`;
+          if (x.outcome === "no-files") return `• ${x.queueId}: no files — flagged red`;
+          return `• ${x.queueId}: needs manual work${integ}`;
+        })
+        .join("\n");
+      const cont = data.remaining ? `\n\n${data.remaining} still pending — press ⚡ again to work the next batch.` : "";
+      window.alert(
+        `Queue worked: ${data.attempted ?? 0} case(s) — ${data.delivered ?? 0} delivered, ${data.draftReview ?? 0} draft(s) ready, ${data.needsManual ?? 0} need manual work.${cont}${perRow ? `\n\n${perRow}` : ""}`
+      );
+      await load();
+    } catch {
+      window.alert("Network error while working the queue.");
+    } finally {
+      setBusy(false);
+    }
+  }, [counts.WAITING, counts.ANALYZING, load]);
+
+  // Copy the signed, session-free "one keyword" link — bookmark it or mail it
+  // to yourself; opening it later works the whole queue without signing in.
+  const copyWorkLink = useCallback(async () => {
+    try {
+      const res = await fetch(`/api/queue/work-link`);
+      const data = (await res.json()) as { ok: boolean; url?: string; error?: string };
+      if (!data.ok || !data.url) {
+        window.alert(data.error ?? "Could not mint the one-tap link.");
+        return;
+      }
+      try {
+        await navigator.clipboard.writeText(data.url);
+      } catch {
+        /* clipboard blocked (http / permissions) — the alert below still shows it */
+      }
+      window.alert(
+        `Your one-tap queue link (copied to clipboard):\n\n${data.url}\n\n` +
+          `Bookmark it or email it to yourself — opening it works the whole queue in one tap, no sign-in needed.`
+      );
+    } catch {
+      window.alert("Network error while minting the one-tap link.");
+    }
+  }, []);
+
   const greenAll = useCallback(async () => {
     const pending = counts.WAITING + counts.ANALYZING;
     if (pending === 0) return;
@@ -180,12 +261,38 @@ export function QueuePanel({ refreshKey, isOperator }: { refreshKey: number; isO
             <Button
               variant="outline"
               size="sm"
+              onClick={workAll}
+              disabled={busy}
+              title="Run the engine on every pending case — 100% cases deliver automatically, the rest come back triaged"
+              className="gap-1.5 border-[var(--eis-attention)] text-[var(--eis-attention)] hover:bg-[var(--eis-attention-subtle)] dark:border-[#d29922] dark:text-[#d29922] dark:hover:bg-[#2d2213]"
+            >
+              {busy ? <Loader2 className="h-3.5 w-3.5 animate-spin" aria-hidden="true" /> : <Zap className="h-3.5 w-3.5" aria-hidden="true" />}
+              Work the queue ({counts.WAITING + counts.ANALYZING})
+            </Button>
+          )}
+          {isOperator && counts.WAITING + counts.ANALYZING > 0 && (
+            <Button
+              variant="outline"
+              size="sm"
               onClick={greenAll}
               disabled={busy}
               className="gap-1.5 border-[var(--eis-btn-green-hover)] text-[var(--eis-btn-green-hover)] hover:bg-[var(--eis-success-subtle)] dark:border-[#2ea043] dark:text-[#3fb950] dark:hover:bg-[#12261e]"
             >
               {busy ? <Loader2 className="h-3.5 w-3.5 animate-spin" aria-hidden="true" /> : <CheckCheck className="h-3.5 w-3.5" aria-hidden="true" />}
               Green all ({counts.WAITING + counts.ANALYZING})
+            </Button>
+          )}
+          {isOperator && (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={copyWorkLink}
+              disabled={busy}
+              title="Copy your signed one-tap link — opening it later works the whole queue without signing in"
+              className="gap-1.5 border-[var(--eis-border)] text-[var(--eis-muted)] hover:bg-[var(--eis-hover)]"
+            >
+              <Link2 className="h-3.5 w-3.5" aria-hidden="true" />
+              <span className="hidden md:inline">One-tap link</span>
             </Button>
           )}
           <Button variant="outline" size="sm" onClick={load} disabled={busy} className="gap-1.5 border-[var(--eis-border)] text-[var(--eis-fg)] hover:bg-[var(--eis-canvas-subtle)]">

@@ -14,9 +14,15 @@ import { createHmac, timingSafeEqual } from "crypto";
 
 export const PORTAL_BASE_URL = (process.env.PORTAL_BASE_URL || "https://ailive-three.vercel.app").replace(/\/+$/, "");
 
-export type QueueAction = "start" | "retry";
+export type QueueAction = "start" | "retry" | "workall";
 
-const ACTIONS: ReadonlySet<string> = new Set(["start", "retry"]);
+const ACTIONS: ReadonlySet<string> = new Set(["start", "retry", "workall"]);
+
+/**
+ * Pseudo submission-id for the queue-wide "work the queue" link — the one
+ * keyword-style action that runs the engine on every pending case at once.
+ */
+export const WORK_ALL_ID = "__queue__";
 
 export function isQueueAction(v: string): v is QueueAction {
   return ACTIONS.has(v);
@@ -48,4 +54,9 @@ export function verifyActionToken(submissionId: string, action: QueueAction, tok
 /** Fully-qualified action URL to embed in emails. */
 export function actionUrl(submissionId: string, action: QueueAction): string {
   return `${PORTAL_BASE_URL}/api/queue/action?id=${encodeURIComponent(submissionId)}&action=${action}&token=${actionToken(submissionId, action)}`;
+}
+
+/** Signed session-free URL that works the whole queue in one tap. */
+export function workAllUrl(): string {
+  return `${PORTAL_BASE_URL}/api/queue/work-all?token=${actionToken(WORK_ALL_ID, "workall")}`;
 }
