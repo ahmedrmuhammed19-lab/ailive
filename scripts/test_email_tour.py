@@ -36,6 +36,7 @@ TOUR_DIR = "/home/z/my-project/download/email_tour"
 
 MY_EMAIL = "paulmero5@gmail.com"
 FORBIDDEN = ["a.imam@beta.com.eg", "ahmedr.muhammed19@gmail.com"]  # retired as test targets
+ALT_EMAIL = "real.client@example.com"  # stand-in for a REAL customer address — must NEVER receive mail during testing
 
 GREEN_PDF = "/home/z/my-project/upload/Saving-1786448365999.pdf"
 SCAN_PDF = "/tmp/Saving_scan.pdf"  # fabricated image-only scan of the Saving statement (proven OCR->yellow fixture)
@@ -104,10 +105,10 @@ def multipart(files, fields):
     return body, boundary
 
 
-def upload(op, queue_id, fpath):
+def upload(op, queue_id, fpath, email=None):
     body, boundary = multipart(
         [(os.path.basename(fpath), fpath)],
-        {"userId": queue_id, "email": MY_EMAIL},
+        {"userId": queue_id, "email": email or MY_EMAIL},
     )
     req = urllib.request.Request(
         BASE + "/api/upload",
@@ -256,6 +257,19 @@ def main():
     page = r.read().decode()
     ck("T5a nudge ok page", "Re-upload request emailed" in page, page[:200])
 
+    # T-LOCK: a case whose client email is a STAND-IN REAL CUSTOMER address.
+    # With TEST_MAIL_TO active, the client mail MUST be redirected to MY_EMAIL
+    # (intendedTo preserves the original) — proving no outsider can be mailed
+    # during testing, even when the submission carries a real client address.
+    up = upload(op, "EM-05", RED_PDF, email=ALT_EMAIL)
+    ck("TL1 stand-in client case uploaded", up.get("ok") is True, json.dumps(up)[:160])
+    sid5 = sid_for("EM-05")
+    page = start_case(op, sid5)
+    ck("TL2 stand-in case flags red", "Needs manual" in page, page[:200])
+    r = get(op, f"/api/queue/action?id={sid5}&action=nudge&token={action_tok(sid5, 'nudge')}")
+    page = r.read().decode()
+    ck("TL3 nudge ok for stand-in case", "Re-upload request emailed" in page, page[:200])
+
     # T6 outbox verification — every mail to MY_EMAIL, kinds complete
     mails = outbox_mails()
     kinds = [m.get("kind") for m in mails]
@@ -273,6 +287,17 @@ def main():
     ck("T6f re-upload nudge mail to my email", any(k == "client_nudge" and t == MY_EMAIL for k, t in zip(kinds, tos)))
     ck("T6g nudge operator copy", sum(1 for k in kinds if k == "operator_alert") >= 2, str(kinds))
     ck("T6h NO mail to any other address", not any(f in json.dumps(mails) for f in FORBIDDEN), str(FORBIDDEN))
+
+    # TEST-MAIL LOCK proof: the stand-in client's nudge landed in MY inbox instead
+    locked = [m for m in mails if m.get("kind") == "client_nudge" and m.get("intendedTo") == ALT_EMAIL]
+    ck("T6i stand-in nudge redirected to my inbox", any(
+        m.get("to") == MY_EMAIL and "TEST-MAIL LOCK" in m.get("body", "")
+        and m.get("subject", "").startswith("Global EIS — action required")
+        for m in locked), json.dumps(locked)[:200])
+    ck("T6j stand-in HTML twin carries lock banner", any(
+        "TEST-MAIL LOCK" in (m.get("html") or "") for m in locked), str(len(locked)))
+    ck("T6k stand-in client received NOTHING", not any(
+        m.get("to") == ALT_EMAIL for m in mails), str([m.get("to") for m in mails if m.get("intendedTo")]))
 
     # T7 export + preview index
     mails2 = export_outbox()

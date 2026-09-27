@@ -20,6 +20,42 @@ export interface QueuedMail {
   kind: "operator_alert" | "client_receipt" | "report_ready" | "client_nudge";
   submissionId?: string;
   attachments?: Array<{ filename: string; path?: string; content?: Buffer; contentType?: string }>; // live SMTP only
+  intendedTo?: string; // TEST_MAIL_TO lock: original recipient before redirect (audit trail)
+}
+
+/**
+ * TEST-MAIL LOCK — hard safety rail for live-fire testing.
+ * When TEST_MAIL_TO is set (local test runs ONLY), EVERY outgoing mail is
+ * force-redirected to exactly that address, whatever its intended recipient
+ * (client, operator, nudge copy). The original recipient is preserved in
+ * intendedTo and stamped at the top of the body, and a second guard below
+ * refuses to SMTP to anything but the lock address. Unset on production
+ * => zero behavior change.
+ */
+export function testMailLock(): string | null {
+  const v = process.env.TEST_MAIL_TO?.trim();
+  return v || null;
+}
+
+function applyTestLock(mail: QueuedMail): QueuedMail {
+  const lockTo = testMailLock();
+  if (!lockTo || mail.to === lockTo) return mail;
+  const stamp =
+    `[TEST-MAIL LOCK] This mail was originally addressed to ${mail.to} and was ` +
+    `redirected to ${lockTo} during testing — nothing was sent to any other address.\n\n`;
+  const banner =
+    `<div style="background:#fff4ce;border:1px solid #f0c36d;color:#7a5b00;` +
+    `border-radius:8px;padding:10px 14px;font:13px/1.5 Arial,sans-serif;margin:0 0 14px;">` +
+    `<strong>TEST-MAIL LOCK</strong> — originally addressed to <strong>${mail.to}</strong>; ` +
+    `redirected to ${lockTo} during testing. Nothing was sent to any other address.</div>`;
+  return {
+    ...mail,
+    intendedTo: mail.to,
+    to: lockTo,
+    replyTo: lockTo,
+    body: stamp + mail.body,
+    html: mail.html ? banner + mail.html : mail.html,
+  };
 }
 
 interface MailCreds {
@@ -129,11 +165,19 @@ async function writeOutbox(mail: QueuedMail, status: "QUEUED" | "SENT", error?: 
  * upload/portal/_outbox/ so scripts/flush_outbox.py can replay it later.
  * Never throws — mail failure must not fail the upload handshake.
  */
-export async function sendOrQueue(mail: QueuedMail): Promise<MailResult> {
+export async function sendOrQueue(input: QueuedMail): Promise<MailResult> {
+  const mail = applyTestLock(input);
   const creds = await loadCreds();
   if (!creds) {
     await writeOutbox(mail, "QUEUED", "no SMTP credentials (config/mail_credentials.json missing)");
     return { sent: false, queued: true, to: mail.to };
+  }
+  // Defense in depth: while the lock is active, refuse to SMTP to anything
+  // except the lock address, even if a future code path bypasses applyTestLock.
+  const lockTo = testMailLock();
+  if (lockTo && mail.to !== lockTo) {
+    await writeOutbox(mail, "QUEUED", "TEST_MAIL_TO guard: recipient did not resolve to the lock address — send blocked");
+    return { sent: false, queued: true, to: mail.to, error: "TEST_MAIL_TO guard blocked send" };
   }
   try {
     const { host, port, secure } = smtpTarget(creds);
