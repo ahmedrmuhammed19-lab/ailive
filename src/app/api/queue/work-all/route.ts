@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
 import { sessionAccount } from "@/lib/session";
 import { isOperator } from "@/lib/authz";
-import { verifyActionToken, WORK_ALL_ID } from "@/lib/actions";
-import { workTheQueue, MAX_WORK_BATCH } from "@/lib/queue-work";
+import { verifyActionToken, WORK_ALL_ID, statementViewUrl } from "@/lib/actions";
+import { workTheQueue, MAX_WORK_BATCH, type WorkRowResult } from "@/lib/queue-work";
 
 /**
  * /api/queue/work-all — the one-keyword "work the queue" action.
@@ -58,7 +58,12 @@ export async function POST(req: Request) {
   }
 
   const r = await workTheQueue();
-  return NextResponse.json({ ok: true, batchLimit: MAX_WORK_BATCH, ...r });
+  return NextResponse.json({
+    ok: true,
+    batchLimit: MAX_WORK_BATCH,
+    ...r,
+    results: r.results.map((x) => ({ ...x, viewUrls: viewUrlsOf(x) })),
+  });
 }
 
 function page(opts: {
@@ -106,6 +111,40 @@ function esc(s: string): string {
   return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 }
 
+/** Signed view URLs for one case's statements (same scheme as the operator emails). */
+function viewUrlsOf(x: WorkRowResult): { name: string; url: string }[] {
+  return x.files.map((f) => ({ name: f.name, url: statementViewUrl(f.id) }));
+}
+
+/**
+ * Per-case "view the original statement" block for the magic-link result page —
+ * the same signed session-free viewer the operator emails use, so a red case
+ * can be inspected straight from this page without signing in.
+ */
+function viewBlockHtml(r: Awaited<ReturnType<typeof workTheQueue>>): string {
+  const withFiles = r.results.filter((x) => x.files.length > 0);
+  if (withFiles.length === 0) return "";
+  const lines = withFiles
+    .map(
+      (x) =>
+        `<div style="margin:0 0 6px;"><span style="color:#1f2328;font-weight:700;">${esc(x.queueId)}</span> — ` +
+        viewUrlsOf(x)
+          .map(
+            (v) =>
+              `<a href="${v.url}" style="color:#0969da;font-weight:600;text-decoration:none;">${esc(v.name)}</a>`
+          )
+          .join(" · ") +
+        ` <span style="color:#8b949e;font-size:11px;">(view statement)</span></div>`
+    )
+    .join("");
+  return (
+    `<div style="margin:14px 0 0;padding-top:12px;border-top:1px solid #d0d7de;">` +
+    `<p style="margin:0 0 8px;color:#1f2328;font-weight:700;font-size:13px;">View the original statement(s):</p>` +
+    lines +
+    `</div>`
+  );
+}
+
 export async function GET(req: Request) {
   const token = new URL(req.url).searchParams.get("token") ?? "";
   if (!verifyActionToken(WORK_ALL_ID, "workall", token)) {
@@ -141,6 +180,7 @@ export async function GET(req: Request) {
     headline: `⚡ Worked ${r.attempted} case(s): ${r.delivered} delivered · ${r.draftReview} draft(s) ready · ${r.needsManual} need manual work`,
     bodyHtml:
       `<pre style="margin:0;white-space:pre-wrap;font:12px/1.6 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:#59636e;">${esc(resultText(r))}</pre>` +
+      viewBlockHtml(r) +
       remainingNote,
   });
 }

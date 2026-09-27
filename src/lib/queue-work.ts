@@ -32,6 +32,8 @@ export type WorkRowResult = {
   outcome: WorkRowOutcome;
   integrity: number[];
   message: string;
+  /** Uploaded statements on this case — lets callers mint signed view links. */
+  files: { id: string; name: string }[];
 };
 
 export type WorkAllResult = {
@@ -42,6 +44,20 @@ export type WorkAllResult = {
   remaining: number;
   results: WorkRowResult[];
 };
+
+/** Statement files on a case — best-effort so reporting never breaks the pass. */
+async function filesFor(submissionId: string): Promise<{ id: string; name: string }[]> {
+  try {
+    const rows = await db.statementFile.findMany({
+      where: { submissionId },
+      select: { id: true, originalName: true },
+      orderBy: { createdAt: "asc" },
+    });
+    return rows.map((f) => ({ id: f.id, name: f.originalName }));
+  } catch {
+    return [];
+  }
+}
 
 export async function workTheQueue(): Promise<WorkAllResult> {
   const batch = await db.submission.findMany({
@@ -55,6 +71,7 @@ export async function workTheQueue(): Promise<WorkAllResult> {
 
   for (const sub of batch) {
     const label = sub.userId || sub.id.slice(-8);
+    const files = await filesFor(sub.id);
     // Same stamping contract as the per-row action/retry routes.
     await db.submission.update({
       where: { id: sub.id },
@@ -68,6 +85,7 @@ export async function workTheQueue(): Promise<WorkAllResult> {
         outcome: run.outcome,
         integrity: run.integrity,
         message: run.message,
+        files,
       });
     } catch (err) {
       // One broken case must not stop the pass — record it as needing a human.
@@ -77,6 +95,7 @@ export async function workTheQueue(): Promise<WorkAllResult> {
         outcome: "unrecognized",
         integrity: [],
         message: `Engine error: ${err instanceof Error ? err.message : String(err)}`,
+        files,
       });
     }
   }
