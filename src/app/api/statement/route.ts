@@ -56,11 +56,16 @@ export async function GET(req: Request) {
           ? "image/jpeg"
           : "application/octet-stream";
 
+  // disp=inline renders the statement in the browser tab (portal "view" UX);
+  // default stays attachment (plain download) so existing links behave as before.
+  const inline = new URL(req.url).searchParams.get("disp") === "inline";
+  const safeName = row.originalName.replace(/"/g, "");
+
   return new NextResponse(new Uint8Array(data), {
     status: 200,
     headers: {
       "Content-Type": type,
-      "Content-Disposition": `attachment; filename="${row.originalName.replace(/"/g, "")}"`,
+      "Content-Disposition": `${inline ? "inline" : "attachment"}; filename="${safeName}"`,
       "Content-Length": String(data.length),
     },
   });

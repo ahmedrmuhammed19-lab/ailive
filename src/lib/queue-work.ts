@@ -22,7 +22,7 @@ import { runEngine } from "@/lib/engine-run";
  * are still pending — the caller (or the operator) simply runs another pass.
  */
 
-export const MAX_WORK_BATCH = 8;
+export const MAX_WORK_BATCH = 5;
 
 export type WorkRowOutcome = "auto-delivered" | "draft-review" | "unrecognized" | "no-files";
 

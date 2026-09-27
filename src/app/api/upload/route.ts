@@ -10,7 +10,7 @@ import {
 } from "@/lib/portal";
 import { DB_STORAGE, putStatement } from "@/lib/storage";
 import { loadMailCreds, operatorAddress, sendOrQueue } from "@/lib/mail";
-import { PORTAL_BASE_URL, actionUrl } from "@/lib/actions";
+import { PORTAL_BASE_URL, actionUrl, statementViewUrl } from "@/lib/actions";
 import { sessionUser } from "@/lib/session";
 import path from "path";
 
@@ -163,6 +163,9 @@ export async function POST(req: Request) {
     .join("\n");
 
   const startUrl = actionUrl(submission.id, "start");
+  // Signed session-free "view the statement" links — the operator can eyeball
+  // the actual files straight from this mail before starting the analysis.
+  const viewLinks = handshake.map((h) => `  • ${h.name}: ${statementViewUrl(h.fileId)}`).join("\n");
   const mailBody =
     `A new bank statement was uploaded to the Global EIS queue.\n\n` +
     `Queue ID        : ${userId}\n` +
@@ -172,6 +175,7 @@ export async function POST(req: Request) {
     `Joint applicants: ${travelers} ${travelers > 1 ? "(benchmark ×" + travelers + ")" : ""}\n` +
     `Client email    : ${clientEmail ?? "not provided — report will go to this mailbox"}\n\n` +
     `Files (${handshake.length}) — MD5 hash-locked on arrival:\n${fileList}\n\n` +
+    `View the statement(s) in your browser:\n${viewLinks}\n\n` +
     `Tap "Start Analysis" (or the same case on the portal queue) to begin the process.\n\n` +
     `— Global EIS automated intake`;
 
@@ -180,7 +184,7 @@ export async function POST(req: Request) {
     .map(
       (h) =>
         `<tr>` +
-        `<td style="padding:5px 8px;border-bottom:1px solid #eaeef2;font-family:monospace;font-size:12px;color:#24292f;">${h.name}</td>` +
+        `<td style="padding:5px 8px;border-bottom:1px solid #eaeef2;font-size:12px;color:#24292f;"><a href="${statementViewUrl(h.fileId)}" style="color:#0969da;text-decoration:none;">${h.name}</a></td>` +
         `<td style="padding:5px 8px;border-bottom:1px solid #eaeef2;text-align:right;font-size:12px;color:#59636e;white-space:nowrap;">${h.sizeBytes.toLocaleString("en-US")} B</td>` +
         `<td style="padding:5px 8px;border-bottom:1px solid #eaeef2;font-family:monospace;font-size:11px;color:#8b949e;">${h.md5}</td>` +
         `</tr>`
@@ -200,7 +204,7 @@ export async function POST(req: Request) {
     `<tr><td style="padding:7px 12px;color:#59636e;font-size:12px;">Client email</td><td style="padding:7px 12px;color:#24292f;font-size:13px;">${clientEmail ?? "not provided"}</td></tr>` +
     `<tr><td style="padding:7px 12px;color:#59636e;font-size:12px;">Queue position</td><td style="padding:7px 12px;color:#24292f;font-size:13px;">${waitingAhead} waiting (including this one)</td></tr>` +
     `</table>` +
-    `<p style="margin:16px 0 6px;color:#24292f;font-size:13px;font-weight:700;">Files (${handshake.length}) — MD5 hash-locked on arrival</p>` +
+    `<p style="margin:16px 0 6px;color:#24292f;font-size:13px;font-weight:700;">Files (${handshake.length}) — MD5 hash-locked on arrival <span style="font-weight:400;color:#8b949e;">(tap a file name to view it)</span></p>` +
     `<table style="width:100%;border-collapse:collapse;">` +
     `<tr><th style="padding:5px 8px;border-bottom:2px solid #d0d7de;text-align:left;font-size:11px;color:#59636e;">File</th><th style="padding:5px 8px;border-bottom:2px solid #d0d7de;text-align:right;font-size:11px;color:#59636e;">Size</th><th style="padding:5px 8px;border-bottom:2px solid #d0d7de;text-align:left;font-size:11px;color:#59636e;">MD5</th></tr>` +
     fileRows +
@@ -208,7 +212,7 @@ export async function POST(req: Request) {
     `<div style="text-align:center;margin:22px 0 10px;">` +
     `<a href="${startUrl}" style="display:inline-block;background:#1a7f37;color:#ffffff;text-decoration:none;font-weight:700;font-size:15px;padding:13px 34px;border-radius:6px;">&#9654; Start Analysis</a>` +
     `</div>` +
-    `<p style="text-align:center;margin:0 0 14px;"><a href="${PORTAL_BASE_URL}/" style="color:#0969da;font-size:12px;">or open the portal queue</a></p>` +
+    `<p style="text-align:center;margin:0 0 14px;"><a href="${PORTAL_BASE_URL}/" style="color:#0969da;font-size:12px;">or open the portal queue</a> · <span style="color:#8b949e;font-size:12px;">every file name above is a view link</span></p>` +
     `<p style="margin:0;color:#8b949e;font-size:11px;line-height:1.5;">Starting flips this case to ANALYZING on the portal. The client is emailed automatically when the report is delivered.</p>` +
     `</div></div></div>`;
 

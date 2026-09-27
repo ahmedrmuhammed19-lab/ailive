@@ -3,7 +3,7 @@ import { autoDeliverMinPct, analyzeSubmission, PARSER_VERSION, publishDraftRepor
 import { markDoneAndNotify } from "@/lib/notify";
 import { loadMailCreds, operatorAddress, sendOrQueue } from "@/lib/mail";
 import { logAttemptAndTeach } from "@/lib/lessons";
-import { actionUrl } from "@/lib/actions";
+import { actionUrl, statementViewUrl } from "@/lib/actions";
 
 /**
  * Shared engine runner — fires the full auto-analysis pipeline for one
@@ -34,6 +34,36 @@ export type EngineRun = {
 
 function esc(s: string): string {
   return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
+
+/**
+ * Signed session-free "view the uploaded statement" links for one submission —
+ * included in operator mails so the analyst can eyeball the ORIGINAL file
+ * (not just the draft) straight from the mailbox.
+ */
+async function statementViewBlock(submissionId: string): Promise<{ text: string; html: string }> {
+  const files = await db.statementFile.findMany({
+    where: { submissionId },
+    select: { id: true, originalName: true },
+    orderBy: { createdAt: "asc" },
+  });
+  if (files.length === 0) {
+    return { text: "(no uploaded statements on this case)", html: "<i>no uploaded statements on this case</i>" };
+  }
+  const text =
+    `View the uploaded statement(s) in your browser:\n` +
+    files.map((f) => `  • ${f.originalName}: ${statementViewUrl(f.id)}`).join("\n");
+  const html =
+    `<p style="margin:12px 0 4px;color:#24292f;font-size:12px;font-weight:700;">Uploaded statement(s) — tap to view:</p>` +
+    `<ul style="margin:0;padding-left:18px;">` +
+    files
+      .map(
+        (f) =>
+          `<li style="margin:2px 0;"><a href="${statementViewUrl(f.id)}" style="color:#0969da;font-size:12px;">${esc(f.originalName)}</a></li>`
+      )
+      .join("") +
+    `</ul>`;
+  return { text, html };
 }
 
 /** Email-client-safe amber button (email tables + inline styles only). */
@@ -100,6 +130,7 @@ export async function runEngine(
     }
 
     const reportName = await publishDraftReport(analysis.submission, legs, "review");
+    const viewBlock = await statementViewBlock(sub.id);
     const reason = analysis.allVerified
       ? `Auto-delivery is currently disabled (AUTO_DELIVER=0) — review and mark DONE.\n\n`
       : `Integrity below the ${autoDeliverMinPct()}% auto-delivery threshold on this layout (${integrity.join("% / ")}%).\n` +
@@ -113,6 +144,7 @@ export async function runEngine(
         `Report     : ${reportName}\n\n` +
         `Accounts:\n${legLines}\n\n` +
         reason +
+        `${viewBlock.text}\n\n` +
         `${telemetryLine}\n\n` +
         `Re-run the engine after replacing/fixing files (same link works repeatedly):\n${retryUrl}\n\n` +
         `— Global EIS automated intake`,
@@ -124,6 +156,7 @@ export async function runEngine(
         `<div style="padding:18px;">` +
         `<p style="margin:0 0 12px;color:#24292f;font-size:14px;line-height:1.55;">Queue <b>${esc(label)}</b> — chain integrity ` +
         `<b>${integrity.join("% / ")}%</b> (gate ${autoDeliverMinPct()}%). The draft is on the portal Reports tab; review it, then mark DONE to deliver.</p>` +
+        viewBlock.html +
         mailButton(retryUrl, "&#8635; Re-run Engine", "#9a6700") +
         `<p style="text-align:center;margin:0 0 10px;"><a href="${actionUrl(sub.id, "start")}" style="color:#8b949e;font-size:11px;">start link (first run)</a> · ` +
         `<a href="${retryUrl}" style="color:#0969da;font-size:12px;">retry link — works any time</a></p>` +
@@ -148,6 +181,7 @@ export async function runEngine(
       ? analysis.message
       : analysis.message + " The workspace analyst should take over manually.";
   await logOutcome(analysis.mode); // "unrecognized" | "no-files"
+  const failViewBlock = await statementViewBlock(sub.id);
   await sendOrQueue({
     to: operatorAddress(mailCreds),
     subject: `⚠️ Auto-analysis needs manual work — Queue ${label}`,
@@ -158,6 +192,7 @@ export async function runEngine(
       `${telemetryLine}\n\n` +
       `The raw text evidence is stored in the engine log (/api/engine/logs) for the\n` +
       `next parser iteration.\n\n` +
+      `${failViewBlock.text}\n\n` +
       `Fix forward: replace the file with a digital (text-based) PDF on the portal,\n` +
       `then re-run the engine with one tap — the retry link works any time:\n${retryUrl}\n\n` +
       `— Global EIS automated intake`,
@@ -169,7 +204,8 @@ export async function runEngine(
       `<div style="padding:18px;">` +
       `<p style="margin:0 0 12px;color:#24292f;font-size:14px;line-height:1.55;">Queue <b>${esc(label)}</b> — automatic parsing could not complete a draft.</p>` +
       `<p style="margin:0 0 12px;color:#cf222e;font-size:13px;line-height:1.55;"><b>Reason:</b> ${esc(failMessage)}</p>` +
-      `<p style="margin:0 0 4px;color:#59636e;font-size:12px;line-height:1.55;">Fix forward: replace the file with a digital (text-based) PDF on the portal, then re-run the engine with one tap. Evidence is saved in the engine log for the next parser iteration.</p>` +
+      failViewBlock.html +
+      `<p style="margin:12px 0 4px;color:#59636e;font-size:12px;line-height:1.55;">Fix forward: replace the file with a digital (text-based) PDF on the portal, then re-run the engine with one tap. Evidence is saved in the engine log for the next parser iteration.</p>` +
       mailButton(retryUrl, "&#8635; Retry Analysis", "#9a6700") +
       `<p style="margin:0;color:#8b949e;font-size:11px;line-height:1.5;">${esc(telemetryLine)}</p>` +
       `</div></div></div>`,

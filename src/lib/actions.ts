@@ -60,3 +60,28 @@ export function actionUrl(submissionId: string, action: QueueAction): string {
 export function workAllUrl(): string {
   return `${PORTAL_BASE_URL}/api/queue/work-all?token=${actionToken(WORK_ALL_ID, "workall")}`;
 }
+
+/**
+ * Signed token for viewing one uploaded statement ("<fileId>:view"). Kept
+ * OUTSIDE the queue-action namespace on purpose: /api/queue/action must never
+ * accept a statement-view token and vice-versa, even though both are HMACs
+ * keyed with SESSION_SECRET.
+ */
+export function statementViewToken(statementFileId: string): string {
+  return createHmac("sha256", actionSecret())
+    .update(`${statementFileId}:view`)
+    .digest("hex")
+    .slice(0, 32);
+}
+
+/** Constant-time statement-view token check (accepts any casing). */
+export function verifyStatementViewToken(statementFileId: string, token: string): boolean {
+  const expected = Buffer.from(statementViewToken(statementFileId));
+  const given = Buffer.from((token ?? "").toLowerCase());
+  return given.length === expected.length && timingSafeEqual(given, expected);
+}
+
+/** Signed, session-free URL that opens one uploaded statement in the browser. */
+export function statementViewUrl(statementFileId: string): string {
+  return `${PORTAL_BASE_URL}/api/statement/view?id=${encodeURIComponent(statementFileId)}&token=${statementViewToken(statementFileId)}`;
+}

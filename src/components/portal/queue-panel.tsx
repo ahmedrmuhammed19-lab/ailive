@@ -126,7 +126,7 @@ export function QueuePanel({ refreshKey, isOperator }: { refreshKey: number; isO
           `• Below the gate → draft ready for your review (then Mark done).\n` +
           `• Unparseable / no files → flagged red with a fix-forward email.\n` +
           `• Nothing is force-greened — Yellow/Red stays for your decision.\n\n` +
-          `Up to 8 cases per pass — press again to continue the rest.`
+          `Up to 5 cases per pass — press again to continue the rest.`
       )
     )
       return;
@@ -383,18 +383,21 @@ export function QueuePanel({ refreshKey, isOperator }: { refreshKey: number; isO
                       {item.files.length > 0 && (
                         <div className="rounded-md border border-[var(--eis-border)] bg-[var(--eis-canvas)] px-3 py-2">
                           <p className="text-xs font-semibold text-[var(--eis-muted)]">
-                            Statements ({item.files.length}) — click to download
+                            Statements ({item.files.length}) — click to view in a new tab
                           </p>
                           <ul className="mt-1.5 space-y-1">
                             {item.files.map((f) => (
                               <li key={f.id}>
                                 <a
-                                  href={`/api/statement?id=${encodeURIComponent(f.id)}`}
-                                  download={f.name}
+                                  href={`/api/statement?id=${encodeURIComponent(f.id)}&disp=inline`}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  title="View this statement in a new tab"
                                   className="flex items-center gap-1.5 text-sm text-[var(--eis-accent)] hover:underline"
                                 >
                                   <FileText className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
                                   <span className="truncate">{f.name}</span>
+                                  <span className="shrink-0 text-[10px] text-[var(--eis-muted)]">view ↗</span>
                                 </a>
                               </li>
                             ))}
