@@ -1,6 +1,6 @@
 import { extractText, getDocumentProxy } from "unpdf";
 import { db } from "@/lib/db";
-import { ocrImageText, ocrPdfText } from "@/lib/ocr";
+import { ocrImageText, ocrPdfText, reocrPages } from "@/lib/ocr";
 
 /**
  * Auto-analysis engine — first-pass statement analysis triggered by the
@@ -63,7 +63,7 @@ export function autoDeliverMinPct(): number {
 }
 
 /** Parser identity — bumped when layout handling improves; recorded in ParseLog telemetry. */
-export const PARSER_VERSION = "eis-ts/2.1";
+export const PARSER_VERSION = "eis-ts/3.0";
 
 // ---------- CIB text-layer patterns ----------
 const RE_ACCT = /Account\s*Number:\s*(\d{6,})/i;
@@ -87,6 +87,8 @@ interface TxRow {
   balance: number | null; // stated running balance
   signed: number; // +credit / -debit after chain classification
   chainOk: boolean;
+  /** Source line index in the parsed text (OCR rows) — maps unverified rows back to their page for targeted re-OCR. */
+  srcLine?: number;
 }
 
 interface AccountLeg {
@@ -283,6 +285,7 @@ export async function analyzeSubmission(submissionId: string): Promise<AutoAnaly
           const poor = (ls: AccountLeg[]) => score(ls) < 5 || score(ls) < txTotal(ls) * 0.85;
           let bestLegs = parseOcr(ocr.text);
           let bestPages = ocr.pages;
+          let bestPageTexts: string[] | null = ocr.pageTexts ?? null; // winning document's per-page text (for re-OCR targeting)
           if (poor(bestLegs)) {
             for (const altOpts of [{ preferGray: true }, { preferGray: true, forceWasm: true }]) {
               const alt = await ocrPdfText(buf, altOpts);
@@ -294,11 +297,21 @@ export async function analyzeSubmission(submissionId: string): Promise<AutoAnaly
               if (score(altLegs) > score(bestLegs)) {
                 bestLegs = altLegs;
                 bestPages = alt.pages;
+                bestPageTexts = alt.pageTexts ?? null;
               }
               if (!poor(bestLegs)) break;
             }
           }
           legsFound = bestLegs;
+          // CHAIN-GAP TARGETED RE-OCR — see ocrChainGapRetry below.
+          if (bestLegs.length > 0 && bestPageTexts && score(bestLegs) < txTotal(bestLegs)) {
+            const retry = await ocrChainGapRetry(buf, bestLegs, bestPageTexts, f.originalName);
+            if (retry.legs.length > 0) {
+              bestLegs = retry.legs;
+              bestPageTexts = retry.pageTexts;
+              legsFound = bestLegs;
+            }
+          }
           if (legsFound.length > 0) {
             ocrUsed = true;
             for (const leg of legsFound) {
@@ -933,6 +946,81 @@ function parseOcrLedger(text: string, file: string): AccountLeg | null {
 }
 
 /**
+ * CHAIN-GAP TARGETED RE-OCR (vision campaign lesson): rows the chain could
+ * not verify sit on a few physically damaged pages (stamps, watermarks,
+ * skew). Map unverified rows back via srcLine → page, re-OCR ONLY those
+ * pages at higher DPI / extra page-segmentation modes (reocrPages), splice
+ * each replacement into the per-page text, and let the parsers re-judge the
+ * spliced document. The chain decides — a replacement page is kept only
+ * when it verifies MORE rows without inflating the row set with junk.
+ * Shared by the engine path and the offline grind tooling so both behave
+ * identically.
+ */
+export interface ChainGapRetryResult {
+  legs: AccountLeg[];
+  pageTexts: string[];
+  retriedPages: number[];
+  improvedPages: number[];
+}
+
+export async function ocrChainGapRetry(
+  buf: Buffer,
+  legs: AccountLeg[],
+  pageTexts: string[],
+  file: string,
+  opts?: { dpi?: number; maxPages?: number }
+): Promise<ChainGapRetryResult> {
+  const parseOcr = (t: string) => {
+    let ls = parseCibTextMulti(t, file, true) ?? [];
+    if (ls.length === 0) ls = parseCibTextMulti(t.replace(/([A-Za-z])\s+:/g, "$1: "), file, true);
+    if (ls.length === 0) ls = parseCibTextMulti(t.replace(/([A-Za-z])\s*:\s*/g, "$1 "), file, true);
+    return ls;
+  };
+  const score = (ls: AccountLeg[]) => ls.reduce((s, l) => s + l.matched, 0);
+  const txTotal = (ls: AccountLeg[]) => ls.reduce((s, l) => s + l.txCount, 0);
+  const pageLines = pageTexts.map((t) => t.split(/\r?\n/).length);
+  const totalLines = pageLines.reduce((a, b) => a + b, 0);
+  const pageOfLine = (line: number): number | null => {
+    let acc = 0;
+    for (let i = 0; i < pageLines.length; i++) {
+      if (line < acc + pageLines[i]) return i;
+      acc += pageLines[i];
+    }
+    return null;
+  };
+  const damaged = new Map<number, number>();
+  for (const leg of legs)
+    for (const r of leg.rows)
+      if (!r.chainOk && r.srcLine !== undefined && r.srcLine < totalLines) {
+        const pg = pageOfLine(r.srcLine);
+        if (pg !== null) damaged.set(pg, (damaged.get(pg) ?? 0) + 1);
+      }
+  const targets = [...damaged.entries()]
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, opts?.maxPages ?? 10)
+    .map(([p]) => p);
+  if (targets.length === 0) return { legs, pageTexts, retriedPages: [], improvedPages: [] };
+  const retry = await reocrPages(buf, targets, { dpi: opts?.dpi ?? 500, psms: [3, 6] });
+  let curPages = [...pageTexts];
+  const origTx = txTotal(legs);
+  const improved: number[] = [];
+  for (const [idx, newText] of [...retry.entries()].sort((a, b) => a[0] - b[0])) {
+    if (!newText) continue;
+    if (newText === curPages[idx]) continue; // identical re-read — nothing to judge
+    const cand = [...curPages];
+    cand[idx] = newText;
+    const ls = parseOcr(cand.join("\n"));
+    // accept: strictly more chain-verified rows, no junk inflation
+    if (score(ls) > score(legs) && txTotal(ls) <= origTx * 1.1 + 2) {
+      legs = ls;
+      curPages = cand;
+      improved.push(idx);
+    }
+  }
+  return { legs, pageTexts: curPages, retriedPages: targets, improvedPages: improved };
+}
+
+/**
  * OCR digit tolerance — chain-guided repair for scanned statements.
  * Two values "read the same" when their digit strings (in cents) are identical
  * up to one substituted digit or one transposed digit pair, ignoring leading
@@ -1212,6 +1300,51 @@ function solveRowsSearch(rows: TxRow[], opening: number | null, ocrLeg: boolean)
         }
       }
     }
+    // CHAIN-TRUST REPAIR (vision campaign lesson): both 1-digit repairs and
+    // the joint back-repair failed — the damage spans ≥2 digits of one token.
+    // The bank's balance sequence is the ground truth, but trusting it needs
+    // a DOUBLE LOCK: the repaired row must chain AND at least one downstream
+    // row must verify from the repair (lookahead-scored, threshold ≥ 2).
+    //   C1 — sane balance, damaged movement: movement := |Δ| (16/08 case:
+    //        "2»200.00" was really 2,202.20 — only the delta knew)
+    //   C2 — destroyed balance, intact movement: balance := prev ± mv
+    //        ("15,700.00 ae" rows where the scan ate the balance token)
+    //   C0 — movement token destroyed entirely (mv === null): same trust as
+    //        C1 when the stated balance is sane ("?-000,00" rows — the
+    //        balance sequence knows the movement even when the token is gone)
+    if (ocrLeg && r.balance !== null) {
+      const far = Math.abs(r.balance) < Math.abs(prev) * 0.25 || Math.abs(r.balance) > Math.abs(prev) * 4;
+      const delta = r.balance - prev;
+      const trust: Verdict[] = [];
+      if (!far && Math.abs(prev) > 0) {
+        // C1/C0 — keep the stated balance, adopt the chain movement
+        trust.push({ ok: true, balance: r.balance, movement: Math.abs(delta), signed: delta >= 0 ? Math.abs(delta) : -Math.abs(delta) });
+      }
+      if (far && mv !== null) {
+        // C2 — the balance token is factor-far from the position: rebuild
+        trust.push({ ok: true, balance: prev + mv, movement: mv, signed: mv });
+        trust.push({ ok: true, balance: prev - mv, movement: mv, signed: -mv });
+      }
+      let best: Verdict | null = null;
+      let bestScore = -1;
+      for (const alt of trust) {
+        const s = scoreBranch(i, prev, alt);
+        if (s > bestScore) {
+          bestScore = s;
+          best = alt;
+        }
+      }
+      if (best && bestScore >= 2) {
+        if (best.balance !== r.balance) r.balance = best.balance;
+        if (best.movement !== null && best.movement !== mv) r.movement = best.movement;
+        r.signed = best.signed;
+        r.chainOk = true;
+        matched++;
+        prev = best.balance;
+        lastVerifiedIdx = i;
+        continue;
+      }
+    }
     // No honest candidate: stay unverified, re-sync to the stated balance.
     r.signed = r.balance - prev;
     prev = r.balance;
@@ -1285,12 +1418,26 @@ const SCAN_NOISE_RE =
 function lineTableRows(text: string, anchorRe: RegExp): TxRow[] {
   const rows: TxRow[] = [];
   let prevDate: string | null = null;
-  for (const raw of text.split(/\r?\n/)) {
+  const lines = text.split(/\r?\n/);
+  for (let li = 0; li < lines.length; li++) {
+    const raw = lines[li];
     if (SCAN_NOISE_RE.test(raw)) continue;
     // Reference-fragment lines ("Contact CIB.151390.1401.01032026-142942",
     // "Trx ID: ...") carry DECIMAL-SHAPED pieces of reference numbers — they
     // must never become rows or they hijack balances from the real row above.
     if (/contact\s+cib|trx[\s_]*id|ref[\s.:]*no/i.test(raw)) continue;
+    // Card-receipt metadata continuations (AAIB Debit Card rows print
+    // "92102.08/25/2026, EGP 4000.00,Card 2082" under the real row — the OCR
+    // splits them onto their own lines): an amount GLUED to a slash-date or
+    // an amount followed by "Card" is receipt metadata, never a ledger row.
+    if (/\d\.\d{2}\/\d{1,2}\/\d{2,4}/.test(raw) || /\d[\d,]*\.\d{2}\s*[,.]?\s*card\b/i.test(raw)) continue;
+    // ATM-acquirer receipt tails ("818,APP 584263.623", "BI1BAPP 683508,623",
+    // "APP 386638.6242074" — an UNGROUPED 4+-digit head with a 3+-decimal
+    // serial tail; real ledger amounts print 2 decimals and thousands
+    // grouping, so this shape is always a split serial number like
+    // "6237191"). Wrapped REAL balances on the same metadata line
+    // ("NBE22040006 NBE A   73,007.45") end in .dd and survive.
+    if (/\d{4,}[.,]\d{3,}\s*$/.test(raw)) continue;
     const am = anchorRe.exec(raw);
     const amounts = [...raw.matchAll(RE_AMT)].map((m) => m[0]);
     if (am) {
@@ -1324,7 +1471,7 @@ function lineTableRows(text: string, anchorRe: RegExp): TxRow[] {
       .trim();
     const balance = toNum(amounts[amounts.length - 1]);
     const movement = amounts.length >= 2 ? Math.abs(toNum(amounts[amounts.length - 2])) : null;
-    rows.push({ date, desc, movement, balance, signed: 0, chainOk: false });
+    rows.push({ date, desc, movement, balance, signed: 0, chainOk: false, srcLine: li });
   }
   return rows;
 }

@@ -1,7 +1,8 @@
-# Global EIS — Statement Format Matrix (Parser Knowledge v3.1)
+# Global EIS — Statement Format Matrix (Parser Knowledge v3.0)
 
-Status after the full-format matrix campaign (2026-09-28) and the vision
-upgrade (OCR v3.1). This file is the single source of truth shared between
+Status after the full-format matrix campaign (2026-09-28), the vision
+upgrade (OCR v3.1) and the 100%-vision grind (OCR v3.2 / engine
+eis-ts/3.0). This file is the single source of truth shared between
 the PORTAL ENGINE (src/lib/analyze.ts) and the OPERATOR/AGENT — both must
 stay in sync. Every claim below is verified against the live corpus by
 `scripts/corpus_inventory.ts` (matrix JSON:
@@ -86,7 +87,50 @@ search — the bank's balance delta decides, keywords only order the search.
    "Trx ID: …") carry decimal-shaped pieces of reference numbers — filtered
    before pairing so they cannot hijack balances.
 
-## Verified corpus results (2026-09-28)
+## The 100% grind (v3.0 engine lessons — all three scans hit 100%)
+
+10. CHAIN-TRUST REPAIR (the big lever): when both 1-digit repairs AND the
+    joint back-repair fail, the damage spans ≥2 digits of one token — the
+    bank's balance sequence is the ground truth, double-locked by requiring
+    the repaired row to chain AND ≥1 downstream row to verify from the
+    repair (lookahead-scored, threshold ≥ 2). Three candidates:
+      C1  sane balance, damaged movement → movement := |Δ|
+          ("2»200.00" was really 2,202.20 — only the delta knew)
+      C2  destroyed balance, intact movement → balance := prev ± mv
+          ("15,700.00 ae" rows where the scan ate the balance token)
+      C0  movement token destroyed entirely (mv=null) → same trust as C1
+          ("?-000,00" rows — the chain knows the movement even when the
+          token is gone)
+11. METADATA FRAGMENT FILTERS: card/ATM receipts print continuations under
+    the real row that OCR splits onto their own lines — they must never
+    become rows: an amount GLUED to a slash-date ("92102.08/25/2026,EG"),
+    an amount + "Card" ("P 4000.00,Card 2082"), and ATM-acquirer serial
+    tails ("818,APP 584263.623" — ungrouped 4+-digit head with a 3+-decimal
+    tail; real amounts print 2 decimals + thousands grouping). Wrapped REAL
+    balances on metadata lines ("NBE22040006 NBE A   73,007.45") end in .dd
+    and survive the filter.
+12. CHAIN-GAP TARGETED RE-OCR: ocrPdfText now returns per-page texts and
+    lineTableRows stamps srcLine on every row — unverified rows map back to
+    their page, ONLY those pages re-OCR at 500 DPI with PSM 3+6 (color and
+    gray), the replacement splices into the page text, and the parsers
+    re-judge the spliced document (shared helper ocrChainGapRetry — engine
+    and grind tooling behave identically). A replacement page is kept only
+    when it verifies MORE rows without inflating the row set.
+13. NEW DAMAGE FORMS (normalizeOcrAmounts): hyphen-thousands + space-cents
+    "250-609 63" / "120-753 46" → 250,609.63 / 120,753.46; ink-separator
+    thousands "2»200.00" → 2,200.00; bare European cents "7,50" → 7.50
+    (runs LAST — grouped forms are already normalized so "50,000.00" and
+    friends can never reach it).
+14. OCR PAGE CACHE (env OCR_CACHE_DIR): keyed by pdf md5 + page + dpi +
+    variant + engine + PSM — the grind re-runs documents many times while
+    rules iterate; unchanged pages replay instantly. Off unless the env is
+    set; production unaffected.
+15. Lock-parity e2e methodology (repeatable): archive the outbox, set
+    TEST_MAIL_TO to the suite's sanctioned target, restart the dev server,
+    run, then restore the permanent lock and re-archive. The FORBIDDEN
+    address is never touched; the outbox mixes runs otherwise.
+
+## Verified corpus results (2026-09-28, engine eis-ts/3.0)
 
 | File | Kind | Mode | Integrity |
 |------|------|------|-----------|
@@ -101,9 +145,9 @@ search — the bank's balance delta decides, keywords only order the search.
 | drive_haytham/egp_l.txt, eur_l.txt, usd_l.txt | text | A-branch | 100% (190, 25, 52) |
 | GlobalEIS_Report_*.pdf (×2) | text | — | correctly REFUSED (not statements — negative control) |
 | Pasted Content_….txt | text | — | correctly REFUSED (AI-chat transcript — negative control) |
-| 1.pdf (24p) | scan | OCR:M-misr-historical | 67% verified — dense stamp damage, honest residual (shadow draft) |
-| CamScanner 15-09-2026….pdf (3p) | scan | OCR:M-misr-historical | 96% verified (47/49) (shadow draft) |
-| كشف الحساب.pdf (35p) | scan | OCR:A2-aaib | 93% verified (385/416) via WASM engine fallback (shadow draft) |
+| 1.pdf (24p) | scan | OCR:M-misr-historical | **100% (491/491)** — was 67% before the grind |
+| CamScanner 15-09-2026….pdf (3p) | scan | OCR:M-misr-historical | **100% (54/54)** (shadow draft) |
+| كشف الحساب.pdf (35p) | scan | OCR:A2-aaib | **100% (440/440)** via WASM engine fallback (shadow draft) |
 
 ## Engine outcome contract
 
@@ -116,14 +160,18 @@ search — the bank's balance delta decides, keywords only order the search.
 - No layout claims the document → red "needs manual" + re-upload nudge
   link; evidence stored in ParseLog for the next parser iteration.
 
-## E2E acceptance (2026-09-28)
+## E2E acceptance (2026-09-28, v3.0)
 
 - `scripts/test_matrix_e2e.py` — 29/29 PASS (live HTTP: F multi-leg green
-  auto-DONE, UK green auto-DONE, scan OCR draft, red case, mail-lock
-  safety).
-- `scripts/test_full_cycle.py` — 51/51 PASS (auth, signed tokens, upload
-  validation, engine lifecycle green/OCR-draft/red, reports, statement
-  views, queue, outbox parity, DB integrity).
+  auto-DONE, UK green auto-DONE, scan OCR draft at min/avg=100/100, red
+  case, mail-lock safety).
+- `scripts/test_full_cycle.py` — 51/51 PASS under the lock-parity
+  methodology (auth, signed tokens, upload validation, engine lifecycle
+  green/OCR-draft/red, reports, statement views, queue, outbox parity, DB
+  integrity).
+- Scan integrity summary: 1.pdf 491/491, CamScanner 54/54, AAIB 440/440 —
+  every corpus statement (text AND image) now verifies at 100% chain
+  integrity; the two negative controls still correctly refuse.
 
 ## Discipline reminders
 

@@ -17,6 +17,7 @@
  */
 
 import { execFile } from "child_process";
+import { createHash } from "crypto";
 import { mkdtemp, readdir, readFile, rm, writeFile } from "fs/promises";
 import { tmpdir } from "os";
 import path from "path";
@@ -38,6 +39,14 @@ export interface OcrOutcome {
   text: string;
   pages: number;
   truncated: boolean;
+  /**
+   * Per-page recovered text (parallel to the page images, after the same
+   * amount normalization). Enables CHAIN-GAP TARGETED RE-OCR: unverified
+   * rows map back to their page, only those pages are re-read at higher
+   * DPI / other page-segmentation modes, and the parsers judge whether the
+   * replacement text chain-verifies more rows.
+   */
+  pageTexts?: string[];
 }
 
 /**
@@ -62,7 +71,7 @@ async function hasTesseractCli(): Promise<boolean> {
   return cliAvailable;
 }
 
-async function ocrPageViaCli(img: Buffer): Promise<string | null> {
+async function ocrPageViaCli(img: Buffer, psm = 3): Promise<string | null> {
   const dir = await mkdtemp(path.join(tmpdir(), "eis-cli-"));
   const imgPath = path.join(dir, "pg.img");
   try {
@@ -70,7 +79,7 @@ async function ocrPageViaCli(img: Buffer): Promise<string | null> {
     const stdout = await new Promise<string>((resolve, reject) => {
       execFile(
         "tesseract",
-        [imgPath, "stdout", "--psm", "3", "-l", "eng"],
+        [imgPath, "stdout", "--psm", String(psm), "-l", "eng"],
         { timeout: 120_000, maxBuffer: 32 * 1024 * 1024 },
         (err, stdout) => (err ? reject(err) : resolve(stdout))
       );
@@ -81,6 +90,53 @@ async function ocrPageViaCli(img: Buffer): Promise<string | null> {
   } finally {
     await rm(dir, { recursive: true, force: true }).catch(() => {});
   }
+}
+
+/**
+ * Optional per-page OCR result cache (env OCR_CACHE_DIR) — the 100% grind
+ * re-runs the same document many times while parser/solver rules iterate;
+ * re-OCRing unchanged pages wastes the budget. Key covers EVERYTHING the
+ * result depends on: pdf bytes (md5), page index, dpi, raster variant,
+ * engine and page-segmentation mode. Tesseract is deterministic per input,
+ * so a hit reproduces the run byte-for-byte. Env-gated: production ignores
+ * the cache unless OCR_CACHE_DIR is set.
+ */
+type OcrEngineId = "cli" | "wasm";
+const pageCacheDir = process.env.OCR_CACHE_DIR ?? null;
+const pdfMd5Cache = new WeakMap<Buffer, string>();
+async function pdfMd5(buf: Buffer): Promise<string> {
+  const hit = pdfMd5Cache.get(buf);
+  if (hit) return hit;
+  const h = createHash("md5").update(buf).digest("hex");
+  pdfMd5Cache.set(buf, h);
+  return h;
+}
+async function ocrPageCached(
+  docKey: string,
+  pageIdx: number,
+  img: Buffer,
+  meta: { dpi: number; gray: boolean; engine: OcrEngineId; psm: number },
+  run: () => Promise<string | null>
+): Promise<string | null> {
+  if (!pageCacheDir) return run();
+  const file = path.join(
+    pageCacheDir,
+    `${docKey}-p${pageIdx}-r${meta.dpi}-${meta.gray ? "g" : "c"}-${meta.engine}-psm${meta.psm}.txt`
+  );
+  try {
+    return await readFile(file, "utf8");
+  } catch {
+    /* fall through to run */
+  }
+  const text = await run();
+  if (text !== null) {
+    try {
+      await writeFile(file, text);
+    } catch {
+      /* cache is best-effort */
+    }
+  }
+  return text;
 }
 
 /**
@@ -158,13 +214,17 @@ export function extractPageJpegs(buf: Buffer, max = MAX_OCR_PAGES): Buffer[] {
  * everywhere, so ocrPdfText OCRs color first and re-reads thin pages in
  * gray, picking the variant with more transaction-shaped lines per page.
  */
-async function rasterizePdf(buf: Buffer, max: number, gray: boolean): Promise<Buffer[] | null> {
+async function rasterizePdf(
+  buf: Buffer,
+  opts: { max: number; gray: boolean; dpi?: number; from?: number; to?: number }
+): Promise<Buffer[] | null> {
   if (process.env.PDF_RASTER !== "1") return null;
+  const { max, gray, dpi = 300, from = 1, to } = opts;
   const dir = await mkdtemp(path.join(tmpdir(), "eis-raster-"));
   const pdfPath = path.join(dir, "in.pdf");
   try {
     await writeFile(pdfPath, buf);
-    const args = ["-png", "-r", "300", "-f", "1", "-l", String(max), pdfPath, path.join(dir, "pg")];
+    const args = ["-png", "-r", String(dpi), "-f", String(from), "-l", String(to ?? max), pdfPath, path.join(dir, "pg")];
     if (gray) args.splice(1, 0, "-gray");
     await new Promise<void>((resolve, reject) => {
       execFile("pdftoppm", args, { timeout: 240_000 }, (err) => (err ? reject(err) : resolve()));
@@ -210,6 +270,13 @@ export function normalizeOcrAmounts(text: string): string {
     .replace(/\b(\d{1,3})\.(\d{3})(\d{2})\b/g, "$1,$2.$3")
     // space thousands + dot cents: "44 602.92" → "44,602.92"
     .replace(/\b(\d{1,3}) (\d{3})\.(\d{2})\b/g, "$1,$2.$3")
+    // hyphen-thousands + space cents: "250-609 63" → "250,609.63",
+    // "120-753 46" → "120,753.46" (the dash misread for the thousands comma,
+    // then the cents split off — distinct from dd-mm-yy date shapes)
+    .replace(/\b(\d{1,3})-(\d{3}) (\d{2})\b(?!\d)/g, "$1,$2.$3")
+    // ink separator inside the thousands group: "2»200.00" → "2,200.00"
+    // (guillemet/stamp mark misread for the comma; tail must be a full .cc)
+    .replace(/\b(\d{1,3})[»«](\d{3}\.\d{2})\b/g, "$1,$2")
     // double-dot irregular: "6.00.00" — tesseract dropped a zero inside the
     // thousands group; the chain's pow10 repair handles the value, here we
     // only make the token PARSEABLE as movement+balance shape: 6.00.00 → 600.00
@@ -236,7 +303,13 @@ export function normalizeOcrAmounts(text: string): string {
     // European dot-thousands + comma cents: "440.710,33" → "440,710.33"
     .replace(/\b(\d{1,3}(?:\.\d{3})+),(\d{2})\b/g, (_m, head, cc) => `${head.replace(/\./g, ",")}.${cc}`)
     // European comma-thousands + comma cents: "50,000,00" → "50,000.00"
-    .replace(/\b(\d{1,3}(?:,\d{3})+),(\d{2})\b/g, (_m, head, cc) => `${head}.${cc}`);
+    .replace(/\b(\d{1,3}(?:,\d{3})+),(\d{2})\b/g, (_m, head, cc) => `${head}.${cc}`)
+    // bare European cents: "7,50" → "7.50" — a 1-3 digit head with a 2-digit
+    // comma tail that NO grouped form matches (grouped forms are already
+    // normalized above, so "50,000.00"/"2,200.00"/"1,501.50" never reach
+    // this rule — their tails are followed by another digit). Runs late for
+    // exactly that reason; the chain judges the resulting value.
+    .replace(/\b(\d{1,3}),(\d{2})\b(?!\d)(?!\.\d)/g, "$1.$2");
 }
 
 /**
@@ -282,33 +355,40 @@ export async function ocrPdfText(
   let grayPages: Buffer[] | null = null;
   let pages: Buffer[] | null = null;
   if (process.env.PDF_RASTER === "1") {
-    if (!preferGray && variant !== "gray") colorPages = await rasterizePdf(buf, MAX_OCR_PAGES, false);
-    if (preferGray || variant !== "color") grayPages = await rasterizePdf(buf, MAX_OCR_PAGES, true);
+    if (!preferGray && variant !== "gray") colorPages = await rasterizePdf(buf, { max: MAX_OCR_PAGES, gray: false });
+    if (preferGray || variant !== "color") grayPages = await rasterizePdf(buf, { max: MAX_OCR_PAGES, gray: true });
     pages = preferGray ? grayPages : colorPages ?? grayPages;
   }
   if (!pages || pages.length === 0) pages = extractPageJpegs(buf);
   if (!pages || pages.length === 0) return null;
   const grayFor = colorPages && grayPages && !preferGray ? grayPages : null;
   const tryGrayEverywhere = grayFor !== null && variant === "both";
+  // true when the MAIN raster is the gray one (cache meta must reflect the
+  // actual image, else a preferGray pass would collide with the color pass)
+  const mainIsGray = preferGray || !colorPages;
 
   const useCli = !opts?.forceWasm && process.env.OCR_FORCE_WASM !== "1" && (await hasTesseractCli());
   let worker: Awaited<ReturnType<typeof import("tesseract.js").createWorker>> | null = null;
+  const docKey = await pdfMd5(buf);
   try {
-    const ocrOne = async (img: Buffer): Promise<string | null> => {
-      if (useCli) return ocrPageViaCli(img);
-      if (!worker) {
-        const { createWorker } = await import("tesseract.js");
-        // eng LSTM fast; lang data cached in /tmp (writable on Vercel),
-        // fetched from the tessdata CDN on first use (~15 MB, one-off).
-        // PSM 3 auto + preserved interword spacing reads statement tables best.
-        worker = await createWorker("eng", 1, { cachePath: "/tmp/eis-tess", gzip: true });
-        await worker.setParameters({ preserve_interword_spaces: "1" });
-      }
-      const { data } = await worker.recognize(img);
-      return data?.text ?? null;
+    const ocrOne = async (img: Buffer, i: number, gray: boolean): Promise<string | null> => {
+      const engine: OcrEngineId = useCli ? "cli" : "wasm";
+      return ocrPageCached(docKey, i, img, { dpi: 300, gray, engine, psm: 3 }, async () => {
+        if (useCli) return ocrPageViaCli(img);
+        if (!worker) {
+          const { createWorker } = await import("tesseract.js");
+          // eng LSTM fast; lang data cached in /tmp (writable on Vercel),
+          // fetched from the tessdata CDN on first use (~15 MB, one-off).
+          // PSM 3 auto + preserved interword spacing reads statement tables best.
+          worker = await createWorker("eng", 1, { cachePath: "/tmp/eis-tess", gzip: true });
+          await worker.setParameters({ preserve_interword_spaces: "1" });
+        }
+        const { data } = await worker.recognize(img);
+        return data?.text ?? null;
+      });
     };
 
-    const parts: string[] = [];
+    const pageTexts: string[] = [];
     let truncated = false;
     let grayWorkerAllowed = true; // budget guard for the second variant
     for (let i = 0; i < pages.length; i++) {
@@ -316,7 +396,7 @@ export async function ocrPdfText(
         truncated = true;
         break;
       }
-      const colorText = await ocrOne(pages[i]);
+      const colorText = await ocrOne(pages[i], i, mainIsGray);
       let best = colorText ?? "";
       if (
         grayFor &&
@@ -325,15 +405,17 @@ export async function ocrPdfText(
         (tryGrayEverywhere || txLineCount(best) < 3) &&
         Date.now() - started < MAX_OCR_SECONDS * 1000
       ) {
-        const grayText = await ocrOne(grayFor[i]);
+        const grayText = await ocrOne(grayFor[i], i, true);
         if (grayText && txLineCount(grayText) > txLineCount(best)) best = grayText;
         if (Date.now() - started > MAX_OCR_SECONDS * 1000) grayWorkerAllowed = false;
       }
-      if (best) parts.push(best);
+      // per-page text — indexed by ORIGINAL page number (missing pages keep
+      // their slot as "" so re-OCR targeting stays aligned)
+      pageTexts.push(normalizeOcrAmounts(best.replace(/\u0000/g, "")).trim());
     }
-    const text = normalizeOcrAmounts(parts.join("\n").replace(/\u0000/g, "")).trim();
+    const text = pageTexts.join("\n");
     if (text.replace(/[^A-Za-z0-9]/g, "").length < 100) return null;
-    return { text, pages: parts.length, truncated };
+    return { text, pages: pageTexts.filter((t) => t.length > 0).length, truncated, pageTexts };
   } catch {
     return null;
   } finally {
@@ -369,4 +451,108 @@ export async function ocrImageText(buf: Buffer): Promise<OcrOutcome | null> {
       /* ignore */
     }
   }
+}
+
+/**
+ * CHAIN-GAP TARGETED RE-OCR (vision campaign lesson): when the document-level
+ * parse leaves rows unverified, the damaged tokens are concentrated on a few
+ * pages (stamps, watermarks, skew). Re-reading EVERY page wastes budget —
+ * instead the caller maps unverified rows back to their pages and re-OCRs
+ * only those, at higher DPI and with additional page-segmentation modes.
+ *
+ * For each requested page this rasterizes the page in COLOR and GRAY at
+ * `dpi` (default 500 — dense scans need the extra pixels; 300 stays the
+ * proven document default) and OCRs each raster with every requested PSM
+ * (3 = auto layout, 6 = uniform text block that keeps table rows linear).
+ * Candidates are ranked by transaction-shaped-line count — a TEXT SHAPE
+ * heuristic is safe only for pre-ranking because the CALLER re-parses the
+ * spliced document and the chain judges the final result.
+ *
+ * Returns a Map keyed by the 0-based page index with the best replacement
+ * text per page ("" when nothing readable was recovered — the caller then
+ * keeps the original page text). Honors the shared OCR time budget.
+ */
+export async function reocrPages(
+  buf: Buffer,
+  pageIdxs: number[],
+  opts?: { dpi?: number; psms?: number[]; deadlineMs?: number }
+): Promise<Map<number, string>> {
+  const out = new Map<number, string>();
+  if (pageIdxs.length === 0) return out;
+  const dpi = opts?.dpi ?? 500;
+  const psms = opts?.psms ?? [3, 6];
+  const deadline = opts?.deadlineMs ?? Date.now() + MAX_OCR_SECONDS * 1000;
+  const useCli = process.env.OCR_FORCE_WASM !== "1" && (await hasTesseractCli());
+  let worker: Awaited<ReturnType<typeof import("tesseract.js").createWorker>> | null = null;
+  const docKey = await pdfMd5(buf);
+  try {
+    const ocrOne = async (img: Buffer, psm: number, gray: boolean, idx: number): Promise<string | null> => {
+      const engine: OcrEngineId = useCli ? "cli" : "wasm";
+      return ocrPageCached(docKey, idx, img, { dpi, gray, engine, psm }, async () => {
+        if (useCli) return ocrPageViaCli(img, psm);
+        if (!worker) {
+          const { createWorker } = await import("tesseract.js");
+          worker = await createWorker("eng", 1, { cachePath: "/tmp/eis-tess", gzip: true });
+          await worker.setParameters({ preserve_interword_spaces: "1" });
+        }
+        await worker.setParameters({ tessedit_pageseg_mode: String(psm) as never });
+        const { data } = await worker.recognize(img);
+        return data?.text ?? null;
+      });
+    };
+    for (const idx of pageIdxs) {
+      if (Date.now() > deadline) break;
+      // 1-based page number for pdftoppm; rasterize color + gray separately
+      const pageNo = idx + 1;
+      const colorRaster = await rasterizePdf(buf, {
+        max: 1,
+        gray: false,
+        dpi,
+        from: pageNo,
+        to: pageNo,
+      });
+      const grayRaster = await rasterizePdf(buf, {
+        max: 1,
+        gray: true,
+        dpi,
+        from: pageNo,
+        to: pageNo,
+      });
+      const rasters: Array<{ img: Buffer; gray: boolean }> = [];
+      if (colorRaster?.[0]) rasters.push({ img: colorRaster[0], gray: false });
+      if (grayRaster?.[0]) rasters.push({ img: grayRaster[0], gray: true });
+      // No rasterizer (Vercel serverless): fall back to the page's embedded
+      // JPEG so the retry still works there (page alignment best-effort).
+      if (rasters.length === 0) {
+        const embedded = extractPageJpegs(buf, idx + 1);
+        if (embedded[idx]) rasters.push({ img: embedded[idx], gray: false });
+      }
+      let best = "";
+      let bestScore = -1;
+      for (const { img, gray } of rasters) {
+        for (const psm of psms) {
+          if (Date.now() > deadline) break;
+          const text = await ocrOne(img, psm, gray, idx);
+          if (!text) continue;
+          const normalized = normalizeOcrAmounts(text.replace(/\u0000/g, "")).trim();
+          const score = txLineCount(normalized);
+          if (score > bestScore) {
+            bestScore = score;
+            best = normalized;
+          }
+        }
+      }
+      out.set(idx, best);
+    }
+  } catch {
+    /* best-effort — caller keeps original page texts */
+  } finally {
+    const w = worker as Awaited<ReturnType<typeof import("tesseract.js").createWorker>> | null;
+    try {
+      await w?.terminate();
+    } catch {
+      /* ignore */
+    }
+  }
+  return out;
 }
