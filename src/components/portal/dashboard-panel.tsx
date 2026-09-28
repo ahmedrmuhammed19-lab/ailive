@@ -78,7 +78,7 @@ export function DashboardPanel({ refreshKey }: { refreshKey: number }) {
   ];
 
   const stats = [
-    { label: "Analyzed today", value: data?.today.analyzed ?? 0, fg: GH.success, sub: "reports delivered" },
+    { label: "Analyzed today", value: data?.today.analyzed ?? 0, fg: "var(--eis-accent)", sub: "reports delivered" },
     { label: "Uploaded today", value: data?.today.uploaded ?? 0, fg: GH.accent, sub: "new statements" },
     { label: "Waiting", value: data?.totals.WAITING ?? 0, fg: GH.muted, sub: "in queue" },
     { label: "Analyzing", value: data?.totals.ANALYZING ?? 0, fg: GH.attention, sub: "in progress" },
@@ -87,11 +87,14 @@ export function DashboardPanel({ refreshKey }: { refreshKey: number }) {
 
   return (
     <div className="space-y-5">
-      {/* Stat cards */}
+      {/* Stat cards — bento row */}
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
         {stats.map((s) => (
-          <div key={s.label} className="rounded-md border border-[var(--eis-border)] bg-[var(--eis-canvas)] p-4">
-            <div className="font-mono text-3xl font-semibold tabular-nums" style={{ color: s.fg }}>
+          <div
+            key={s.label}
+            className="eis-glass group rounded-2xl p-4 transition-transform duration-200 hover:-translate-y-0.5"
+          >
+            <div className="font-mono text-3xl font-semibold tabular-nums tracking-tight" style={{ color: s.fg }}>
               {busy && data === null ? "—" : s.value}
             </div>
             <div className="mt-1 text-xs font-semibold" style={{ color: GH.fg }}>{s.label}</div>
@@ -101,8 +104,8 @@ export function DashboardPanel({ refreshKey }: { refreshKey: number }) {
       </div>
 
       {/* Calendar */}
-      <div className="rounded-md border border-[var(--eis-border)] bg-[var(--eis-canvas)]">
-        <div className="flex flex-wrap items-center justify-between gap-2 border-b border-[var(--eis-border-muted)] bg-[var(--eis-canvas-subtle)] px-4 py-2.5">
+      <div className="eis-glass rounded-2xl">
+        <div className="flex flex-wrap items-center justify-between gap-2 border-b border-[var(--eis-border-muted)] px-5 py-3">
           <div className="flex items-center gap-2 text-sm font-semibold" style={{ color: GH.fg }}>
             <CalendarDays className="h-4 w-4 text-[var(--eis-muted)]" aria-hidden="true" />
             {data?.month.label ?? "Calendar"}
@@ -170,7 +173,7 @@ export function DashboardPanel({ refreshKey }: { refreshKey: number }) {
                       role="gridcell"
                       aria-label={`${c.date}: ${c.uploaded} uploaded, ${c.analyzed} analyzed`}
                       title={`${c.date} · ${c.uploaded} uploaded · ${c.analyzed} analyzed`}
-                      className={`relative flex aspect-square items-center justify-center rounded-[4px] border text-xs font-medium transition-transform hover:scale-105 ${
+                      className={`relative flex aspect-square items-center justify-center rounded-lg border text-xs font-medium transition-all duration-150 hover:z-10 hover:scale-110 hover:shadow-[var(--eis-card-shadow)] ${
                         c.date === todayKey ? "border-[var(--eis-fg)] ring-1 ring-[var(--eis-fg)]" : "border-black/5"
                       }`}
                       style={{ backgroundColor: cellColor(c.analyzed), color: c.analyzed > 2 ? "#ffffff" : GH.fg }}

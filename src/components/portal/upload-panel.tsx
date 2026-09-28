@@ -321,17 +321,18 @@ export function UploadPanel() {
   return (
     <div className="mx-auto max-w-2xl space-y-4">
       {/* Step 1 — Queue ID */}
-      <div className="rounded-md border border-[var(--eis-border)] bg-[var(--eis-canvas)]">
-        <div className="border-b border-[var(--eis-border-muted)] bg-[var(--eis-canvas-subtle)] px-4 py-2.5 text-sm font-semibold" style={{ color: GH.fg }}>
-          1 · Queue ID
+      <div className="eis-glass rounded-2xl">
+        <div className="flex items-center gap-2.5 border-b border-[var(--eis-border-muted)] px-5 py-3 text-sm font-semibold" style={{ color: GH.fg }}>
+          <span className="eis-gradient-brand flex h-5 w-5 items-center justify-center rounded-md text-[10px] font-bold text-white">1</span>
+          Queue ID
         </div>
-        <div className="space-y-2 p-4">
+        <div className="space-y-2 p-5">
           <Input
             value={queueId}
             onChange={(e) => setQueueId(e.target.value.toUpperCase())}
             placeholder="e.g. 1024 or AHMED-01"
             aria-label="Queue or user ID"
-            className="max-w-xs font-mono text-sm uppercase placeholder:normal-case placeholder:font-sans placeholder:text-[var(--eis-neutral)]"
+            className="h-10 max-w-xs rounded-xl font-mono text-sm uppercase placeholder:normal-case placeholder:font-sans placeholder:text-[var(--eis-neutral)]"
           />
           <p className="text-xs text-[var(--eis-muted)]">
             Leave blank and we&apos;ll assign one automatically (EIS-XXXXX). The customer name and case
@@ -426,11 +427,12 @@ export function UploadPanel() {
       </div>
 
       {/* Step 2 — Statement */}
-      <div className="rounded-md border border-[var(--eis-border)] bg-[var(--eis-canvas)]">
-        <div className="border-b border-[var(--eis-border-muted)] bg-[var(--eis-canvas-subtle)] px-4 py-2.5 text-sm font-semibold" style={{ color: GH.fg }}>
-          2 · Bank statement
+      <div className="eis-glass rounded-2xl">
+        <div className="flex items-center gap-2.5 border-b border-[var(--eis-border-muted)] px-5 py-3 text-sm font-semibold" style={{ color: GH.fg }}>
+          <span className="eis-gradient-brand flex h-5 w-5 items-center justify-center rounded-md text-[10px] font-bold text-white">2</span>
+          Bank statement
         </div>
-        <div className="space-y-3 p-4">
+        <div className="space-y-3 p-5">
           <div
             role="button"
             tabIndex={0}
@@ -447,11 +449,15 @@ export function UploadPanel() {
               setDragOver(false);
               addFiles(e.dataTransfer.files);
             }}
-            className={`flex min-h-28 cursor-pointer flex-col items-center justify-center gap-1.5 rounded-md border-2 border-dashed p-6 text-center transition-colors ${
-              dragOver ? "border-[var(--eis-accent)] bg-[var(--eis-accent-subtle)]" : "border-[var(--eis-border)] bg-[var(--eis-canvas-subtle)] hover:border-[var(--eis-accent)]"
+            className={`flex min-h-32 cursor-pointer flex-col items-center justify-center gap-2 rounded-2xl border-2 border-dashed p-6 text-center backdrop-blur-sm transition-all duration-300 ${
+              dragOver
+                ? "scale-[1.01] border-[var(--eis-accent)] bg-[var(--eis-accent-subtle)] shadow-[var(--eis-glow)]"
+                : "border-[var(--eis-border)] bg-[var(--eis-canvas-subtle)] hover:-translate-y-0.5 hover:border-[var(--eis-accent)] hover:shadow-[var(--eis-card-shadow)]"
             }`}
           >
-            <UploadCloud className="h-7 w-7 text-[var(--eis-muted)]" aria-hidden="true" />
+            <span className={`flex h-11 w-11 items-center justify-center rounded-2xl transition-colors ${dragOver ? "eis-gradient-brand text-white" : "bg-[var(--eis-canvas)] text-[var(--eis-muted)]"}`} aria-hidden="true">
+              <UploadCloud className="h-5 w-5" />
+            </span>
             <p className="text-sm font-medium" style={{ color: GH.fg }}>
               Drop the statement here or <span className="text-[var(--eis-accent)] underline">browse</span>
             </p>
@@ -477,7 +483,7 @@ export function UploadPanel() {
               {files.map((f, i) => (
                 <li
                   key={`${f.name}-${i}`}
-                  className="flex items-center justify-between gap-2 rounded-md border border-[var(--eis-border)] px-3 py-2"
+                  className="flex items-center justify-between gap-2 rounded-xl border border-[var(--eis-border)] bg-[var(--eis-canvas)] px-3.5 py-2.5 shadow-[var(--eis-card-shadow)] transition-transform hover:-translate-y-0.5"
                 >
                   <div className="flex min-w-0 items-center gap-2">
                     <FileText className="h-4 w-4 shrink-0 text-[var(--eis-muted)]" aria-hidden="true" />
@@ -507,7 +513,7 @@ export function UploadPanel() {
           <Button
             onClick={submit}
             disabled={uploading}
-            className="w-full bg-[var(--eis-btn-green)] text-white hover:bg-[var(--eis-btn-green-hover)] sm:w-auto"
+            className="eis-cta h-10 w-full rounded-xl px-5 sm:w-auto"
           >
             {uploading ? <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" /> : <UploadCloud className="h-4 w-4" aria-hidden="true" />}
             {uploading ? progress || "Adding to queue…" : "Add to queue"}
@@ -517,12 +523,12 @@ export function UploadPanel() {
 
       {/* Success card */}
       {result?.ok && result.handshake && (
-        <div className="rounded-md border border-[var(--eis-border)] bg-[var(--eis-canvas)]">
-          <div className="flex items-center gap-2 border-b border-[var(--eis-border-muted)] bg-[var(--eis-success-subtle)] px-4 py-2.5 text-sm font-semibold text-[var(--eis-btn-green-hover)]">
+        <div className="eis-glass eis-sheen rounded-2xl">
+          <div className="flex items-center gap-2 border-b border-[var(--eis-border-muted)] bg-[var(--eis-success-subtle)] px-5 py-3 text-sm font-semibold text-[var(--eis-success)]">
             <CheckCircle2 className="h-4 w-4" aria-hidden="true" />
             Statement received — added to the queue
           </div>
-          <div className="space-y-3 p-4">
+          <div className="space-y-3 p-5">
             <div className="flex flex-wrap items-center gap-3">
               <div className="flex items-center gap-2 rounded-md border border-[var(--eis-border)] bg-[var(--eis-canvas-subtle)] px-3 py-2">
                 <Hash className="h-4 w-4 text-[var(--eis-muted)]" aria-hidden="true" />

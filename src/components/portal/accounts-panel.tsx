@@ -96,8 +96,8 @@ export function AccountsPanel({ refreshKey }: { refreshKey?: number }) {
 
   return (
     <div className="space-y-5">
-      <div className="rounded-md border border-[var(--eis-border)] bg-[var(--eis-canvas)]">
-        <div className="flex items-center justify-between border-b border-[var(--eis-border-muted)] bg-[var(--eis-canvas-subtle)] px-4 py-2.5">
+      <div className="eis-glass rounded-2xl">
+        <div className="flex items-center justify-between border-b border-[var(--eis-border-muted)] px-5 py-3">
           <span className="text-sm font-semibold">Accounts</span>
           <Button variant="ghost" size="sm" onClick={load} disabled={busy} className="h-7 gap-1.5 px-2 text-xs text-[var(--eis-muted)]">
             {busy ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <RefreshCw className="h-3.5 w-3.5" />} Refresh
@@ -208,8 +208,8 @@ export function AccountsPanel({ refreshKey }: { refreshKey?: number }) {
         </div>
       </div>
 
-      <div className="rounded-md border border-[var(--eis-border)] bg-[var(--eis-canvas)]">
-        <div className="border-b border-[var(--eis-border-muted)] bg-[var(--eis-canvas-subtle)] px-4 py-2.5 text-sm font-semibold">
+      <div className="eis-glass rounded-2xl">
+        <div className="border-b border-[var(--eis-border-muted)] px-5 py-3 text-sm font-semibold">
           Add a new account
         </div>
         <div className="space-y-3 p-4">

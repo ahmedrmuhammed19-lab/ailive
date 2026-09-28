@@ -69,7 +69,7 @@ export function ReportsPanel() {
           No reports available yet.
         </div>
       ) : (
-        <div className="overflow-hidden rounded-md border border-[var(--eis-border)] bg-[var(--eis-canvas)]">
+        <div className="eis-glass overflow-hidden rounded-2xl">
           <ScrollArea className="max-h-96">
             <Table>
               <TableHeader className="sticky top-0 bg-[var(--eis-canvas)] shadow-[0_1px_0_var(--eis-border-muted)]">

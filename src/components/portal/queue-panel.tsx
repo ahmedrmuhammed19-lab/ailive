@@ -242,10 +242,10 @@ export function QueuePanel({ refreshKey, isOperator }: { refreshKey: number; isO
             <button
               key={f}
               onClick={() => setFilter(f)}
-              className={`rounded-full px-3 py-1 text-xs font-medium transition-colors ${
+              className={`rounded-full px-3 py-1 text-xs font-medium transition-all duration-200 ${
                 filter === f
-                  ? "bg-[var(--eis-fg)] text-white"
-                  : "border border-[var(--eis-border)] bg-[var(--eis-canvas-subtle)] text-[var(--eis-muted)] hover:bg-[var(--eis-hover)]"
+                  ? "eis-gradient-brand text-white shadow-[var(--eis-glow)]"
+                  : "border border-[var(--eis-border)] bg-[var(--eis-canvas)] text-[var(--eis-muted)] hover:-translate-y-0.5 hover:bg-[var(--eis-hover)]"
               }`}
               aria-pressed={filter === f}
             >
@@ -303,7 +303,7 @@ export function QueuePanel({ refreshKey, isOperator }: { refreshKey: number; isO
       </div>
 
       {/* List */}
-      <div className="overflow-hidden rounded-md border border-[var(--eis-border)] bg-[var(--eis-canvas)]">
+      <div className="eis-glass overflow-hidden rounded-2xl">
         {items === null ? (
           <div className="flex items-center justify-center gap-2 py-12 text-sm text-[var(--eis-muted)]">
             <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" /> Loading queue…

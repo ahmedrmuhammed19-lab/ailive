@@ -1,11 +1,12 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
-  ShieldCheck, CheckCircle2, Loader2, Lock, ListOrdered, LayoutDashboard, FileText, UploadCloud, LogOut, User, UserCog,
+  ShieldCheck, CheckCircle2, Loader2, Lock, ListOrdered, LayoutDashboard, FileText, UploadCloud, LogOut, User, UserCog, Sparkles,
 } from "lucide-react";
 import { UploadPanel } from "@/components/portal/upload-panel";
 import { QueuePanel } from "@/components/portal/queue-panel";
@@ -18,6 +19,13 @@ import { GH } from "@/lib/format";
 type Account = { username: string; label: string | null; role: string };
 type SetupStatus = { users: number; available: boolean; reason?: string };
 
+const TABS = [
+  { value: "upload", label: "Upload", icon: UploadCloud },
+  { value: "queue", label: "Queue", icon: ListOrdered },
+  { value: "dashboard", label: "Dashboard", icon: LayoutDashboard },
+  { value: "reports", label: "Reports", icon: FileText },
+];
+
 export default function PortalPage() {
   const [user, setUser] = useState<Account | null>(null);
   const [checking, setChecking] = useState(true); // session restore on first load
@@ -26,6 +34,7 @@ export default function PortalPage() {
   const [gateBusy, setGateBusy] = useState(false);
   const [gateError, setGateError] = useState<string | null>(null);
   const [refreshKey, setRefreshKey] = useState(0);
+  const [activeTab, setActiveTab] = useState("upload");
 
   // First-run setup (only offered while the portal has zero accounts).
   const [setupStatus, setSetupStatus] = useState<SetupStatus | null>(null);
@@ -143,16 +152,23 @@ export default function PortalPage() {
     return () => clearInterval(t);
   }, []);
 
+  const tabs = [...TABS, ...(user?.role === "operator" ? [{ value: "accounts", label: "Accounts", icon: UserCog }] : [])];
+
   return (
     <div className="flex min-h-screen flex-col bg-[var(--eis-canvas)]" style={{ color: GH.fg }}>
-      {/* Header — GitHub-style slim bar */}
-      <header className="border-b border-[var(--eis-border)] bg-[var(--eis-canvas-subtle)]">
+      {/* Ambient aurora backdrop */}
+      <div className="eis-aurora" aria-hidden="true" />
+
+      {/* Header — floating glass bar */}
+      <header className="sticky top-0 z-40 border-b border-[var(--eis-border)] bg-[var(--eis-canvas-glass)] backdrop-blur-xl backdrop-saturate-150">
         <div className="mx-auto flex max-w-5xl flex-wrap items-center gap-3 px-4 py-3 sm:px-6">
-          <div className="flex h-8 w-8 items-center justify-center rounded-md bg-[var(--eis-fg)] font-mono text-sm font-bold text-white" aria-hidden="true">
+          <div className="eis-gradient-brand flex h-9 w-9 items-center justify-center rounded-xl text-sm font-bold text-white shadow-[var(--eis-glow)]" aria-hidden="true">
             GE
           </div>
           <div className="min-w-0">
-            <h1 className="text-sm font-semibold leading-tight">Global EIS</h1>
+            <h1 className="text-sm font-semibold leading-tight tracking-tight">
+              Global <span className="eis-gradient-text">EIS</span>
+            </h1>
             <p className="truncate text-xs text-[var(--eis-muted)]">Statement intake queue · Financial Intelligence Services</p>
           </div>
           <div className="ml-auto flex items-center gap-2 text-xs text-[var(--eis-muted)]">
@@ -162,14 +178,18 @@ export default function PortalPage() {
             </span>
             {user ? (
               <>
-                <span className="flex items-center gap-1.5 rounded-full border border-[var(--eis-border)] bg-[var(--eis-success-subtle)] px-2.5 py-0.5 font-medium text-[var(--eis-btn-green-hover)]">
-                  <User className="h-3.5 w-3.5" aria-hidden="true" /> {user.username}
+                <span className="flex items-center gap-1.5 rounded-full border border-[var(--eis-border)] bg-[var(--eis-success-subtle)] px-2.5 py-0.5 font-medium text-[var(--eis-success)]">
+                  <span className="relative flex h-1.5 w-1.5" aria-hidden="true">
+                    <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[var(--eis-success)] opacity-60" />
+                    <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-[var(--eis-success)]" />
+                  </span>
+                  {user.username}
                 </span>
                 <Button
                   variant="outline"
                   size="sm"
                   onClick={signOut}
-                  className="h-7 gap-1.5 border-[var(--eis-border)] px-2.5 text-xs text-[var(--eis-muted)] hover:bg-[var(--eis-canvas-subtle)] hover:text-[var(--eis-danger)]"
+                  className="h-7 gap-1.5 rounded-full border-[var(--eis-border)] px-2.5 text-xs text-[var(--eis-muted)] hover:bg-[var(--eis-hover)] hover:text-[var(--eis-danger)]"
                 >
                   <LogOut className="h-3.5 w-3.5" aria-hidden="true" /> Sign out
                 </Button>
@@ -186,10 +206,39 @@ export default function PortalPage() {
       <main className="mx-auto w-full max-w-5xl flex-1 px-4 py-6 sm:px-6">
         {/* Sign-in gate / first-run setup */}
         {!user && !checking && (
-          <div className="mx-auto mt-10 max-w-md">
+          <motion.div
+            initial={{ opacity: 0, y: 14 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+            className="mx-auto mt-8 max-w-md"
+          >
+            {/* Hero strip */}
+            <div className="mb-5 text-center">
+              <h2 className="text-2xl font-semibold tracking-tight" style={{ color: GH.fg }}>
+                Secure statement <span className="eis-gradient-text">intelligence</span>
+              </h2>
+              <p className="mt-1.5 text-sm text-[var(--eis-muted)]">
+                100% balance-chain verified reports — every format, text or scan.
+              </p>
+              <div className="mt-3 flex flex-wrap items-center justify-center gap-1.5">
+                {[
+                  { icon: ShieldCheck, label: "MD5 hash-locked" },
+                  { icon: Sparkles, label: "Any size" },
+                  { icon: CheckCircle2, label: "Chain-verified" },
+                ].map((f) => (
+                  <span
+                    key={f.label}
+                    className="flex items-center gap-1.5 rounded-full border border-[var(--eis-border)] bg-[var(--eis-canvas)] px-2.5 py-1 text-[11px] font-medium text-[var(--eis-muted)]"
+                  >
+                    <f.icon className="h-3 w-3 text-[var(--eis-accent)]" aria-hidden="true" /> {f.label}
+                  </span>
+                ))}
+              </div>
+            </div>
+
             {setupStatus && setupStatus.users === 0 && !setupStatus.available && (
               <p
-                className="mb-4 rounded-md border border-[#d4a72c66] bg-[var(--eis-attention-subtle)] px-3 py-2 text-sm text-[#4d2d00]"
+                className="mb-4 rounded-xl border border-[#d4a72c66] bg-[var(--eis-attention-subtle)] px-3 py-2 text-sm text-[#4d2d00]"
                 role="status"
               >
                 This deployment has no accounts yet. Add a <code className="font-mono">SETUP_KEY</code>{" "}
@@ -198,8 +247,8 @@ export default function PortalPage() {
                 {setupStatus.reason ? ` (${setupStatus.reason})` : null}
               </p>
             )}
-            <div className="rounded-md border border-[var(--eis-border)] bg-[var(--eis-canvas)]">
-              <div className="flex items-center justify-between border-b border-[var(--eis-border-muted)] bg-[var(--eis-canvas-subtle)] px-4 py-2.5 text-sm font-semibold">
+            <div className="eis-glass eis-sheen rounded-2xl">
+              <div className="flex items-center justify-between border-b border-[var(--eis-border-muted)] px-5 py-3.5 text-sm font-semibold" style={{ color: GH.fg }}>
                 {setupMode ? "First-time setup" : "Sign in"}
                 {setupStatus?.available && (
                   <button
@@ -216,7 +265,7 @@ export default function PortalPage() {
                 )}
               </div>
               {setupMode ? (
-                <div className="space-y-3 p-4">
+                <div className="space-y-3 p-5">
                   <p className="text-sm text-[var(--eis-muted)]">
                     Create the first operator account for this portal. This form disappears once an
                     account exists.
@@ -229,6 +278,7 @@ export default function PortalPage() {
                       onChange={(e) => setSetupKey(e.target.value)}
                       autoComplete="off"
                       aria-label="Setup key"
+                      className="h-10 rounded-xl"
                     />
                     <Input
                       type="text"
@@ -237,6 +287,7 @@ export default function PortalPage() {
                       onChange={(e) => setSetupId(e.target.value)}
                       autoComplete="username"
                       aria-label="New account ID"
+                      className="h-10 rounded-xl"
                     />
                     <Input
                       type="password"
@@ -245,6 +296,7 @@ export default function PortalPage() {
                       onChange={(e) => setSetupPw(e.target.value)}
                       autoComplete="new-password"
                       aria-label="New account password"
+                      className="h-10 rounded-xl"
                     />
                     <Input
                       type="text"
@@ -252,12 +304,13 @@ export default function PortalPage() {
                       value={setupLabel}
                       onChange={(e) => setSetupLabel(e.target.value)}
                       aria-label="Display name"
+                      className="h-10 rounded-xl"
                     />
                   </div>
                   <Button
                     onClick={runSetup}
                     disabled={gateBusy}
-                    className="w-full bg-[var(--eis-btn-green)] text-white hover:bg-[var(--eis-btn-green-hover)] sm:w-auto"
+                    className="eis-cta h-10 w-full rounded-xl sm:w-auto"
                   >
                     {gateBusy ? (
                       <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
@@ -267,13 +320,13 @@ export default function PortalPage() {
                     Create account &amp; sign in
                   </Button>
                   {setupError && (
-                    <p className="rounded-md border border-[var(--eis-border)] bg-[var(--eis-danger-subtle)] px-3 py-2 text-sm" style={{ color: GH.danger }} role="alert">
+                    <p className="rounded-xl border border-[var(--eis-border)] bg-[var(--eis-danger-subtle)] px-3 py-2 text-sm" style={{ color: GH.danger }} role="alert">
                       {setupError}
                     </p>
                   )}
                 </div>
               ) : (
-                <div className="space-y-3 p-4">
+                <div className="space-y-3 p-5">
                   <p className="text-sm text-[var(--eis-muted)]">
                     Enter the ID and password provided by Global EIS.
                   </p>
@@ -286,6 +339,7 @@ export default function PortalPage() {
                       onKeyDown={(e) => e.key === "Enter" && signIn()}
                       autoComplete="username"
                       aria-label="ID"
+                      className="h-10 rounded-xl"
                     />
                     <Input
                       type="password"
@@ -295,12 +349,13 @@ export default function PortalPage() {
                       onKeyDown={(e) => e.key === "Enter" && signIn()}
                       autoComplete="current-password"
                       aria-label="Password"
+                      className="h-10 rounded-xl"
                     />
                   </div>
                   <Button
                     onClick={signIn}
                     disabled={gateBusy}
-                    className="w-full bg-[var(--eis-btn-green)] text-white hover:bg-[var(--eis-btn-green-hover)] sm:w-auto"
+                    className="eis-cta h-10 w-full rounded-xl sm:w-auto"
                   >
                     {gateBusy ? (
                       <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
@@ -310,14 +365,14 @@ export default function PortalPage() {
                     Sign in
                   </Button>
                   {gateError && (
-                    <p className="rounded-md border border-[var(--eis-border)] bg-[var(--eis-danger-subtle)] px-3 py-2 text-sm" style={{ color: GH.danger }} role="alert">
+                    <p className="rounded-xl border border-[var(--eis-border)] bg-[var(--eis-danger-subtle)] px-3 py-2 text-sm" style={{ color: GH.danger }} role="alert">
                       {gateError}
                     </p>
                   )}
                 </div>
               )}
             </div>
-          </div>
+          </motion.div>
         )}
 
         {checking && (
@@ -328,24 +383,36 @@ export default function PortalPage() {
 
         {/* Workspace */}
         {user && (
-          <Tabs defaultValue="upload" onValueChange={() => setRefreshKey((k) => k + 1)}>
-            <TabsList className="mb-4 flex h-auto w-full justify-start gap-1 rounded-none border-b border-[var(--eis-border)] bg-transparent p-0">
-              {[
-                { value: "upload", label: "Upload", icon: UploadCloud },
-                { value: "queue", label: "Queue", icon: ListOrdered },
-                { value: "dashboard", label: "Dashboard", icon: LayoutDashboard },
-                { value: "reports", label: "Reports", icon: FileText },
-                ...(user.role === "operator"
-                  ? [{ value: "accounts", label: "Accounts", icon: UserCog }]
-                  : []),
-              ].map((t) => (
+          <Tabs
+            value={activeTab}
+            onValueChange={(v) => {
+              setActiveTab(v);
+              setRefreshKey((k) => k + 1);
+            }}
+          >
+            {/* Segmented glass tab bar with spring pill */}
+            <TabsList className="mb-5 flex h-11 w-fit items-center gap-1 rounded-2xl border border-[var(--eis-border)] bg-[var(--eis-canvas-glass)] p-1 backdrop-blur-xl">
+              {tabs.map((t) => (
                 <TabsTrigger
                   key={t.value}
                   value={t.value}
-                  className="mb-[-1px] gap-1.5 rounded-none border-b-2 border-transparent bg-transparent px-3 py-2 text-sm text-[var(--eis-muted)] shadow-none transition-none data-[state=active]:border-[#fd8c73] data-[state=active]:bg-transparent data-[state=active]:font-semibold data-[state=active]:text-[var(--eis-fg)] data-[state=active]:shadow-none"
+                  className="relative gap-1.5 rounded-xl px-3.5 py-1.5 text-sm text-[var(--eis-muted)] transition-colors data-[state=active]:bg-transparent data-[state=active]:shadow-none"
                 >
-                  <t.icon className="h-4 w-4" aria-hidden="true" />
-                  {t.label}
+                  {activeTab === t.value && (
+                    <motion.span
+                      layoutId="eis-tab-pill"
+                      transition={{ type: "spring", stiffness: 420, damping: 34 }}
+                      className="absolute inset-0 rounded-xl border border-[var(--eis-border)] bg-[var(--eis-canvas)] shadow-[var(--eis-card-shadow)]"
+                      aria-hidden="true"
+                    />
+                  )}
+                  <span
+                    className={`relative z-10 flex items-center gap-1.5 ${activeTab === t.value ? "font-medium" : ""}`}
+                    style={activeTab === t.value ? { color: GH.fg } : undefined}
+                  >
+                    <t.icon className="h-4 w-4" aria-hidden="true" />
+                    {t.label}
+                  </span>
                 </TabsTrigger>
               ))}
             </TabsList>
@@ -372,7 +439,7 @@ export default function PortalPage() {
       </main>
 
       {/* Sticky footer */}
-      <footer className="mt-auto border-t border-[var(--eis-border)] bg-[var(--eis-canvas-subtle)] py-4">
+      <footer className="mt-auto border-t border-[var(--eis-border)] bg-[var(--eis-canvas-glass)] py-4 backdrop-blur-xl">
         <div className="mx-auto max-w-5xl px-4 text-center text-xs text-[var(--eis-muted)] sm:px-6">
           <p className="font-semibold" style={{ color: GH.fg }}>
             Global EIS — Financial Intelligence Services
