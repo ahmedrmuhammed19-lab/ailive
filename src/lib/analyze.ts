@@ -63,7 +63,7 @@ export function autoDeliverMinPct(): number {
 }
 
 /** Parser identity — bumped when layout handling improves; recorded in ParseLog telemetry. */
-export const PARSER_VERSION = "eis-ts/2.0";
+export const PARSER_VERSION = "eis-ts/2.1";
 
 // ---------- CIB text-layer patterns ----------
 const RE_ACCT = /Account\s*Number:\s*(\d{6,})/i;
@@ -204,17 +204,25 @@ export async function analyzeSubmission(submissionId: string): Promise<AutoAnaly
         const ocr = await ocrImageText(buf);
         if (ocr) {
           rawSamples.push(`===== ${f.originalName} (image OCR) =====\n${ocr.text.slice(0, 8000)}`);
-          let leg =
-            parseCibText(ocr.text, f.originalName, true) ??
-            parseCibText(ocr.text.replace(/([A-Za-z])\s+:/g, "$1: "), f.originalName, true) ??
-            parseCibText(ocr.text.replace(/([A-Za-z])\s*:\s*/g, "$1 "), f.originalName, true);
-          if (leg) {
-            leg.ocr = true;
-            leg.ocrPages = 1;
-            leg.mode = `OCR:${leg.mode ?? "unknown"}`;
+          const legsFound =
+            parseCibTextMulti(ocr.text, f.originalName, true) ?? [];
+          if (legsFound.length === 0)
+            legsFound.push(
+              ...parseCibTextMulti(ocr.text.replace(/([A-Za-z])\s+:/g, "$1: "), f.originalName, true)
+            );
+          if (legsFound.length === 0)
+            legsFound.push(
+              ...parseCibTextMulti(ocr.text.replace(/([A-Za-z])\s*:\s*/g, "$1 "), f.originalName, true)
+            );
+          if (legsFound.length > 0) {
             ocrUsed = true;
-            applySixMonthWindow(leg);
-            legs.push(leg);
+            for (const leg of legsFound) {
+              leg.ocr = true;
+              leg.ocrPages = 1;
+              leg.mode = `OCR:${leg.mode ?? "unknown"}`;
+              applySixMonthWindow(leg);
+              legs.push(leg);
+            }
           }
         }
         continue;
@@ -223,14 +231,14 @@ export async function analyzeSubmission(submissionId: string): Promise<AutoAnaly
       const { text } = await extractText(pdf, { mergePages: true });
       let merged = Array.isArray(text) ? text.join("\n") : text;
       rawSamples.push(`===== ${f.originalName} =====\n${merged.slice(0, 8000)}`);
-      let leg = parseCibText(merged, f.originalName);
+      let legsFound = parseCibTextMulti(merged, f.originalName);
       // Shadow OCR: image-only scans carry (almost) no text layer. When the
       // digital text is too thin AND the layout parsers found nothing, pull
       // the embedded page images and OCR them — the recovered text runs
       // through the SAME parsers and chain verification, but the leg is
       // marked OCR-sourced so the engine never auto-delivers it.
       const textChars = merged.replace(/[^A-Za-z0-9]/g, "").length;
-      if (!leg && textChars < 240) {
+      if (legsFound.length === 0 && textChars < 240) {
         scanDetected = true;
         const ocr = await ocrPdfText(buf);
         if (ocr) {
@@ -241,19 +249,31 @@ export async function analyzeSubmission(submissionId: string): Promise<AutoAnaly
           // then a colon-glued variant ("Number :" -> "Number:"), then a
           // colon-stripped variant ("Number:" -> "Number "), so every layout
           // family's header regexes get the punctuation shape they expect.
-          leg =
-            parseCibText(ocr.text, f.originalName, true) ??
-            parseCibText(ocr.text.replace(/([A-Za-z])\s+:/g, "$1: "), f.originalName, true) ??
-            parseCibText(ocr.text.replace(/([A-Za-z])\s*:\s*/g, "$1 "), f.originalName, true);
-          if (leg) {
-            leg.ocr = true;
-            leg.ocrPages = ocr.pages;
-            leg.mode = `OCR:${leg.mode ?? "unknown"}`;
+          legsFound =
+            parseCibTextMulti(ocr.text, f.originalName, true) ?? [];
+          if (legsFound.length === 0)
+            legsFound = parseCibTextMulti(
+              ocr.text.replace(/([A-Za-z])\s+:/g, "$1: "),
+              f.originalName,
+              true
+            );
+          if (legsFound.length === 0)
+            legsFound = parseCibTextMulti(
+              ocr.text.replace(/([A-Za-z])\s*:\s*/g, "$1 "),
+              f.originalName,
+              true
+            );
+          if (legsFound.length > 0) {
             ocrUsed = true;
+            for (const leg of legsFound) {
+              leg.ocr = true;
+              leg.ocrPages = ocr.pages;
+              leg.mode = `OCR:${leg.mode ?? "unknown"}`;
+            }
           }
         }
       }
-      if (leg) {
+      for (const leg of legsFound) {
         applySixMonthWindow(leg);
         legs.push(leg);
       }
@@ -507,13 +527,313 @@ function effectiveRows(l: AccountLeg): TxRow[] {
   });
 }
 
-/** Parse one statement's text into an account leg — dispatches by layout family, tagging the winner. */
-export function parseCibText(text: string, file: string, ocr = false): AccountLeg | null {
-  const attempt = (mode: string, fn: (t: string, f: string) => AccountLeg | null): AccountLeg | null => {
-    const leg = fn(text, file);
-    if (leg) leg.mode = mode;
-    return leg;
+// ---------- Layout F — CIB e-statement web export (column-interleaved) ----------
+
+/**
+ * Rejoin amounts whose cents/thousands wrapped to the next text line.
+ * pdf.js splits "1,688,999.55" into "1,688,999. 55" and "2,127,\n461.49"
+ * whenever the amount column runs out of width; both shapes heal here.
+ * The cents rule only fires when the left fragment ends at the dot (no
+ * digits after it), so complete amounts separated by whitespace never merge.
+ */
+function healSplitAmounts(text: string): string {
+  return text
+    .replace(/(\d)\.[ \t]+(\d{2})\b(?!\d)/g, "$1.$2")
+    .replace(/(\d),[ \t]*\r?\n[ \t]*(\d{3})(?!\d)/g, "$1,$2");
+}
+
+/**
+ * Chain-guided alignment for one page's amount stream (layout F).
+ *
+ * The e-statement prints Withdrawal and Deposit as separate column runs that
+ * pdf.js merges in a varying order per page (alternating mov/bal, column-
+ * blocked, with junk related-refs and labels between). The solver keeps TWO
+ * movement queues (W = withdrawals, D = deposits) and walks the stream: every
+ * amount is either a balance pickup (must chain: |bal − prev| equals the head
+ * of one queue, consuming it), a push into one queue, or junk. Exact-equality
+ * pruning + memoization keep the search tiny; a path that consumes the whole
+ * stream with ≤2 leftovers wins. A fresh segment (prev = null) seeds its
+ * first balance row — row 0's sign is resolved afterwards by the opening
+ * heuristic in parseCibEStatement (the chain from the first stated balance
+ * onward is fully forced, so integrity is unaffected by that choice).
+ */
+export function solveInterleavedPage(amts: number[], prev: number | null): TxRow[] | null {
+  const n = amts.length;
+  if (n < 2 || n > 30) return null;
+  const junkLimit = Math.floor(n / 3) + 2;
+  const MEMO_CAP = 900_000; // graceful degradation on pathological pages
+  // Set-based best-of search over the page's amount tokens: some tokens are
+  // LEDGER BALANCES (picked in chain order), the rest back the movements
+  // (each pickup consumes one token whose |value| equals |bal − prev|).
+  // pdf.js merges the statement's column runs in a varying order per page —
+  // sometimes row 2 prints before row 1 — so token positions carry no
+  // ordering guarantee; the chain equality is the only honest aligner and
+  // the search maximizes the rows that reconcile.
+  const vals = amts.map((x) => Math.abs(x));
+  const popcount = (m: number) => {
+    let c = 0;
+    while (m) { m &= m - 1; c++; }
+    return c;
   };
+  // Memo value: best row list + the token index of its LAST picked balance.
+  // Tie-break on that index: equal-length alternate chains exist (a movement
+  // token standing in as the final "balance"), but the real running balance
+  // is the stream's last token — the tie-break keeps the true alignment and
+  // the cross-page carry alive.
+  const memo = new Map<string, { rows: TxRow[]; lastIdx: number } | null>();
+  const better = (
+    a: { rows: TxRow[]; lastIdx: number } | null,
+    b: { rows: TxRow[]; lastIdx: number } | null
+  ): { rows: TxRow[]; lastIdx: number } | null => {
+    if (a === null) return b;
+    if (b === null) return a;
+    if (b.rows.length !== a.rows.length) return b.rows.length > a.rows.length ? b : a;
+    return b.lastIdx > a.lastIdx ? b : a;
+  };
+
+  const dfs = (used: number, bal: number, last: number | null): { rows: TxRow[]; lastIdx: number } | null => {
+    // "stop and junk the rest" is always an option when the budget allows —
+    // best-of decides whether continuing chains more rows
+    let best: { rows: TxRow[]; lastIdx: number } | null =
+      n - popcount(used) <= junkLimit ? { rows: [], lastIdx: -1 } : null;
+    const key = `${used}|${bal}|${last}`;
+    if (memo.has(key)) return memo.get(key)!;
+    if (memo.size > MEMO_CAP) return null; // pathological page — degrade
+    const withRow = (row: TxRow, idx: number, rest: { rows: TxRow[]; lastIdx: number } | null) =>
+      rest === null
+        ? null
+        : {
+            rows: [row, ...rest.rows],
+            // keep the DEEPEST pick's index — the last balance of the chain
+            lastIdx: rest.rows.length > 0 ? rest.lastIdx : idx,
+          };
+    if (last === null) {
+      // seed: first balance token + any unconsumed movement token (the
+      // seed row's sign is resolved later by the opening heuristic)
+      for (let b = 0; b < n; b++) {
+        if (used & (1 << b)) continue;
+        for (let m = 0; m < n; m++) {
+          if (m === b || used & (1 << m)) continue;
+          best = better(
+            best,
+            withRow(
+              { date: "", desc: "", movement: vals[m], balance: vals[b], signed: 0, chainOk: true },
+              b,
+              dfs(used | (1 << b) | (1 << m), bal | (1 << b), vals[b])
+            )
+          );
+        }
+      }
+    } else {
+      for (let t = 0; t < n; t++) {
+        if (used & (1 << t)) continue;
+        const need = Math.abs(vals[t] - last);
+        for (let m = 0; m < n; m++) {
+          if (m === t || used & (1 << m)) continue;
+          if (Math.abs(vals[m] - need) >= 0.015) continue;
+          const delta = vals[t] - last;
+          best = better(
+            best,
+            withRow(
+              { date: "", desc: "", movement: need, balance: vals[t], signed: delta >= 0 ? need : -need, chainOk: true },
+              t,
+              dfs(used | (1 << t) | (1 << m), bal | (1 << t), vals[t])
+            )
+          );
+        }
+      }
+    }
+    memo.set(key, best);
+    return best;
+  };
+
+  const sol = dfs(0, 0, prev);
+  return sol && sol.rows.length > 0 ? sol.rows : null;
+}
+
+function solvePage(amts: number[], prev: number | null): TxRow[] | null {
+  const sol = solveInterleavedPage(amts, prev);
+  return sol && sol.length > 0 ? sol : null; // an empty solution = nothing chained = failure
+}
+
+/** Expand a truncated "dd/mm/20" token to its true year using the
+ *  sub-statement period (the year prints SPLIT as "20"+wrapped "26"). */
+function expandFDate(token: string, years: number[], from: Date | null, to: Date | null): string {
+  const dd = token.slice(0, 2);
+  const mm = Number(token.slice(3, 5));
+  for (const y of years) {
+    const d = new Date(Date.UTC(y, mm - 1, Number(dd)));
+    const lo = from ? new Date(from.getTime() - 45 * 86_400_000) : null;
+    const hi = to ? new Date(to.getTime() + 45 * 86_400_000) : null;
+    if ((!lo || d >= lo) && (!hi || d <= hi)) return `${dd}/${token.slice(3, 5)}/${y}`;
+  }
+  return `${dd}/${token.slice(3, 5)}/${years[0] ?? "20" + token.slice(6)}`;
+}
+
+/** First value matching valueRe within `span` chars after labelRe's match —
+ *  the e-statement header prints label and value in SEPARATE text runs. */
+function valueAfterLabel(text: string, labelRe: RegExp, valueRe: RegExp, span = 200): string | null {
+  const m = labelRe.exec(text);
+  if (!m) return null;
+  const tail = text.slice(m.index + m[0].length, m.index + m[0].length + span);
+  const v = valueRe.exec(tail);
+  return v ? v[1] : null;
+}
+
+/**
+ * Layout F — CIB e-statement web export ("Account Details / Movement Details
+ * / BackOffice Reference" family, e.g. the haytham Drive statements). The
+ * pdf.js text layer is column-interleaved and defeats every line-shape
+ * parser; pages are solved by the W/D chain-guided alignment instead.
+ *
+ * One PDF may concatenate several sub-statements ("Account Details - From:"
+ * restarts, e.g. Apr–Jun then Jul–Aug) whose balance chains do NOT continue
+ * across the boundary — the parser segments them into one leg per
+ * sub-statement so every leg verifies at full chain integrity. Dates are
+ * dd/mm/yy on this family and are expanded to dd/mm/yyyy (the shared
+ * parseTxDate would misread day≥20 as yy/mm/dd).
+ */
+export function parseCibEStatement(text: string, file: string, debug = false): AccountLeg[] {
+  if (
+    !/Account Statement/i.test(text) ||
+    !/Movement Details/i.test(text) ||
+    !/BackOffice/i.test(text) ||
+    !/Related/i.test(text)
+  )
+    return [];
+  const healed = healSplitAmounts(text);
+  // Page split: pdf text layers may carry form feeds (poppler-style
+  // extractions) or none at all (unpdf mergePages glues pages) — fall back
+  // to splitting before each "Account Statement" running header.
+  let rawPages = healed.split(/\x0c/);
+  if (rawPages.length === 1) rawPages = healed.split(/(?=Account Statement\b)/i);
+
+  // segment pages at explicit sub-statement header restarts
+  const segments: string[][] = [];
+  for (const pg of rawPages) {
+    if (/Account Details\s*-\s*From/i.test(pg) || segments.length === 0) segments.push([]);
+    segments[segments.length - 1].push(pg);
+  }
+
+  const legs: AccountLeg[] = [];
+  for (const segPages of segments) {
+    const segText = segPages.join("\n");
+    const account = valueAfterLabel(segText, /Account Number/i, /(\d{9,20})/);
+    const currency = valueAfterLabel(segText, /Account Currency/i, /\b([A-Z]{3})\b/) ?? "EGP";
+    const periods = [...segText.matchAll(/Movement Details\s*-\s*From:\s*(\d{1,2}\s+\w{3}\s+\d{4})\s*To:\s*(\d{1,2}\s+\w{3}\s+\d{4})/gi)];
+    const period =
+      periods.length > 0 ? `${periods[0][1]} → ${periods[periods.length - 1][2]}` : null;
+    const MON_IDX: Record<string, number> = { Jan: 0, Feb: 1, Mar: 2, Apr: 3, May: 4, Jun: 5, Jul: 6, Aug: 7, Sep: 8, Oct: 9, Nov: 10, Dec: 11 };
+    const segYears = [...new Set(periods.flatMap((p) => [Number(p[1].slice(-4)), Number(p[2].slice(-4))]))];
+    const segFrom = periods.length
+      ? new Date(Date.UTC(Number(periods[0][1].slice(-4)), MON_IDX[periods[0][1].slice(3, 6)] ?? 0, Number(periods[0][1].slice(0, 2))))
+      : null;
+    const segTo = periods.length
+      ? new Date(Date.UTC(Number(periods[periods.length - 1][2].slice(-4)), MON_IDX[periods[periods.length - 1][2].slice(3, 6)] ?? 0, Number(periods[periods.length - 1][2].slice(0, 2))))
+      : null;
+
+    const rows: TxRow[] = [];
+    let prev: number | null = null;
+    let carryDate: string | null = null;
+    let boundary = 0; // in-segment chain resets (kept as separate legs below)
+
+    for (const pg of segPages) {
+      const a = pg.lastIndexOf("Related");
+      if (a < 0) continue;
+      const region = pg.slice(a);
+      const amts = [...region.matchAll(RE_AMT)].map((m) => toNum(m[0]));
+      if (amts.length < 2) continue;
+      const dateTokens = [...pg.slice(0, a).matchAll(/\b(\d{2}\/\d{2}\/)\d{2}\b(?!\d)/g)].map(
+        (m) => expandFDate(m[1] + "00", segYears.length ? segYears : [Number(new Date().getFullYear())], segFrom, segTo)
+      );
+      let sol = prev !== null ? solvePage(amts, prev) : null;
+      if (!sol) {
+        // chain does not continue into this page — solve it fresh, then try
+        // to RE-LINK: when the fresh solution's first row chains from the
+        // carried balance, the page continues the same leg (no split) and
+        // row 0 re-verifies against the real previous position.
+        sol = solvePage(amts, null);
+        if (!sol) continue;
+        const carried = rows.length > 0 ? rows[rows.length - 1].balance : null;
+        const r0 = sol[0];
+        const relinked =
+          carried !== null && r0.movement !== null && Math.abs(Math.abs(r0.balance - carried) - r0.movement) < 0.015;
+        if (relinked && prev !== null) {
+          r0.signed = r0.balance - carried >= 0 ? r0.movement! : -r0.movement!;
+          prev = null; // stay on the same leg — no boundary push below
+          if (debug) console.error(`[F-debug] re-linked fresh page to carried balance ${carried}`);
+        } else if (rows.length >= 5) {
+          legs.push(legFromFRows(file, rows.splice(0), { account, currency, period }, carryDate));
+          carryDate = null;
+          boundary++;
+        }
+      }
+      for (let k = 0; k < sol.length; k++) {
+        const r = sol[k];
+        const d = dateTokens[2 * k] ?? dateTokens[2 * k - 1] ?? carryDate ?? "?";
+        r.date = d;
+        rows.push(r);
+      }
+      if (debug)
+        console.error(
+          `[F-debug] page solved: rows=${sol.length} first=${sol[0].balance} last=${sol[sol.length - 1].balance} amts=${amts.length}\n` +
+            sol.map((r) => `   ${r.movement === null ? "  checkpoint " : (r.signed >= 0 ? "+" : "-") + Math.abs(r.movement!).toLocaleString("en-US").padStart(14)} -> ${r.balance.toLocaleString("en-US").padStart(14)} chainOk=${r.chainOk}`).join("\n")
+        );
+      carryDate = sol.length && sol[sol.length - 1].date !== "?" ? sol[sol.length - 1].date : carryDate;
+      prev = sol[sol.length - 1].balance;
+    }
+    if (rows.length >= 5) {
+      legs.push(legFromFRows(file, rows, { account, currency, period }, carryDate));
+    } else if (debug && rows.length > 0) {
+      console.error(`[F-debug] segment tail dropped: ${rows.length} rows`);
+    }
+  }
+  if (debug)
+    legs.forEach((l, i) =>
+      console.error(
+        `[F-debug] leg ${i}: tx=${l.txCount} matched=${l.matched} opening=${l.opening} closing=${l.closing} period=${l.period ?? "—"}`
+      )
+    );
+  return legs;
+}
+
+/** Assemble one AccountLeg from solved F rows (fixes the seed row's sign). */
+function legFromFRows(
+  file: string,
+  rows: TxRow[],
+  meta: { account: string | null; currency: string; period: string | null },
+  _carryDate: string | null
+): AccountLeg {
+  // opening heuristic: row 0's sign is the only unforced choice — prefer a
+  // non-negative opening; when both signs give one, take the larger position.
+  const r0 = rows[0];
+  if (r0.signed === 0 && r0.movement !== null) {
+    const credit = r0.balance! - r0.movement;
+    const debit = r0.balance! + r0.movement;
+    const openCredit = credit >= 0;
+    const openDebit = debit >= 0;
+    const useCredit = openCredit && (!openDebit || credit >= debit);
+    r0.signed = useCredit ? r0.movement : -r0.movement;
+  }
+  return summarizeLeg(file, rows, {
+    account: meta.account,
+    currency: meta.currency,
+    period: meta.period,
+    opening: r0.balance! - r0.signed,
+    closing: rows[rows.length - 1].balance ?? 0,
+    matched: rows.filter((r) => r.chainOk).length,
+  });
+}
+
+/** Parse one statement's text into account legs — dispatches by layout family. */
+export function parseCibTextMulti(text: string, file: string, ocr = false): AccountLeg[] {
+  const attempt = (mode: string, fn: (t: string, f: string) => AccountLeg | null): AccountLeg[] | null => {
+    const leg = fn(text, file);
+    if (!leg) return null;
+    leg.mode = mode;
+    return [leg];
+  };
+  const fLegs = parseCibEStatement(text, file);
   return (
     attempt("B-internet", parseCibInternet) ??
     attempt("C-digital", parseCibDigital) ??
@@ -522,9 +842,13 @@ export function parseCibText(text: string, file: string, ocr = false): AccountLe
     attempt("M-misr-historical", parseMisrHistorical) ??
     attempt("A2-aaib", parseAaibStatement) ??
     attempt("A-branch", parseCibBranch) ??
+    (fLegs.length > 0
+      ? fLegs.map((l) => ({ ...l, mode: ocr ? `OCR:${l.mode ?? "unknown"}` : "F-cib-estatement", ocr: ocr || l.ocr }))
+      : null) ??
     // last resort: OCR-recovered text only — a generic chain-guided ledger
     // walk that must reconcile EVERY row, else it refuses the document
-    (ocr ? attempt("Z-ocr-ledger", parseOcrLedger) : null)
+    (ocr ? attempt("Z-ocr-ledger", parseOcrLedger) : null) ??
+    []
   );
 }
 
@@ -873,9 +1197,11 @@ function parseMisrHistorical(text: string, file: string): AccountLeg | null {
  * Balance columns, opening from "Balance at Period Start". OCR-tolerant chain.
  */
 function parseAaibStatement(text: string, file: string): AccountLeg | null {
+  // Structural markers decide: a mere MENTION of the bank's name (client
+  // notes, chat transcripts, analyst summaries) must not claim the document.
   const isAaib =
-    /arab\s+af?rica[nl]\s+international bank/i.test(text) ||
-    (/Booking Date/i.test(text) && /Closing Balance/i.test(text) && /Value Date/i.test(text));
+    (/Booking Date/i.test(text) && /Closing Balance/i.test(text) && /Value Date/i.test(text)) ||
+    (/arab\s+af?rica[nl]\s+international bank/i.test(text) && /Booking Date|Value Date/i.test(text));
   if (!isAaib) return null;
   const openM = /Balance\s+at\s+Period/i.exec(text);
   let statedOpening: number | null = null;
@@ -984,69 +1310,77 @@ function parseCibGlued(text: string, file: string): AccountLeg | null {
     if (rows[j].balance === null) continue;
     const base = segStart === -1 ? opening : rows[segStart].balance!;
     const net = rows[j].balance! - base;
-    const unknowns: number[] = [];
-    let fixed = 0;
-    for (let k = segStart + 1; k <= j; k++) {
-      if (rows[k].movement === null) continue; // balance checkpoint anchor — no movement to sign
-      const mv = rows[k].movement ?? 0;
-      if (STRONG_CREDIT_RE.test(rows[k].desc)) {
-        rows[k].signed = mv;
-        fixed += mv;
-      } else if (STRONG_DEBIT_RE.test(rows[k].desc)) {
-        rows[k].signed = -mv;
-        fixed -= mv;
-      } else {
-        unknowns.push(k);
-      }
-    }
-    const residual = net - fixed;
-    const sumU = unknowns.reduce((s, k) => s + (rows[k].movement ?? 0), 0);
-    if (unknowns.length === 0) {
-      if (Math.abs(residual) < 0.015) {
-        for (let k = segStart + 1; k <= j; k++) {
-          rows[k].chainOk = true;
-          matched++;
+
+    // Two-pass segment solve. Pass 1 trusts the strong keyword signs (IPN
+    // Inward / interest / refund credits, POS-ATM debits) and brute-forces
+    // the remaining rows. Some families print loan interest charges that
+    // LOOK like credit keywords ("Reimbursement of Interest" charged as a
+    // debit on a loan account) — when pass 1 cannot reconcile the segment,
+    // pass 2 demotes every keyword row back into the sign search: the
+    // bank's own balance delta decides, keywords only order the search.
+    let solved = false;
+    for (const softKeywords of [false, true]) {
+      const unknowns: number[] = [];
+      let fixed = 0;
+      const kwWants: boolean[] = []; // preferred sign per unknown (true = credit)
+      for (let k = segStart + 1; k <= j; k++) {
+        if (rows[k].movement === null) continue; // balance checkpoint anchor — no movement to sign
+        const mv = rows[k].movement ?? 0;
+        const kwCredit = STRONG_CREDIT_RE.test(rows[k].desc);
+        const kwDebit = STRONG_DEBIT_RE.test(rows[k].desc);
+        if (!softKeywords && kwCredit) {
+          rows[k].signed = mv;
+          fixed += mv;
+        } else if (!softKeywords && kwDebit) {
+          rows[k].signed = -mv;
+          fixed -= mv;
+        } else {
+          unknowns.push(k);
+          kwWants.push(kwCredit || !kwDebit);
         }
       }
-    } else if (unknowns.length <= 18) {
-      // brute-force sign combinations — segments are short (≤ ~18 unknowns)
-      const n = unknowns.length;
-      const kwMask = unknowns.reduce((mask, k, b) => mask | (rows[k].signed > 0 ? 1 << b : 0), 0);
-      const target = net;
-      let found = -1;
-      const test = (mask: number): boolean => {
-        let s = fixed;
-        for (let b = 0; b < n; b++)
-          s += mask & (1 << b) ? rows[unknowns[b]].movement ?? 0 : -(rows[unknowns[b]].movement ?? 0);
-        return Math.abs(s - target) < 0.015;
-      };
-      if (Math.abs(residual) < 0.015 && test(kwMask)) found = kwMask;
-      else {
+      const residual = net - fixed;
+      const solveWith = (n: number, test: (mask: number) => boolean, kwMask: number): number => {
+        if (Math.abs(residual) < 0.015 && test(kwMask)) return kwMask;
         for (let mask = 0; mask < 1 << n; mask++) {
-          if (test(mask)) {
-            found = mask;
-            break;
+          if (test(mask)) return mask;
+        }
+        return -1;
+      };
+      const n = unknowns.length;
+      if (n === 0) {
+        if (Math.abs(residual) < 0.015) {
+          solved = true;
+        }
+      } else if (n <= 18) {
+        // brute-force sign combinations — segments are short (≤ ~18 unknowns)
+        const kwMask = unknowns.reduce((mask, _k, b) => mask | (kwWants[b] ? 1 << b : 0), 0);
+        const test = (mask: number): boolean => {
+          let s = fixed;
+          for (let b = 0; b < n; b++)
+            s += mask & (1 << b) ? rows[unknowns[b]].movement ?? 0 : -(rows[unknowns[b]].movement ?? 0);
+          return Math.abs(s - net) < 0.015;
+        };
+        const found = solveWith(n, test, kwMask);
+        if (found >= 0) {
+          for (let b = 0; b < n; b++) {
+            const k = unknowns[b];
+            rows[k].signed = found & (1 << b) ? rows[k].movement ?? 0 : -(rows[k].movement ?? 0);
           }
+          solved = true;
         }
       }
-      if (found >= 0) {
-        for (let b = 0; b < n; b++) {
-          const k = unknowns[b];
-          rows[k].signed = found & (1 << b) ? rows[k].movement ?? 0 : -(rows[k].movement ?? 0);
-        }
+      if (solved) {
         // the whole segment reconciles: keyword-signed rows, solved unknowns
         // and balance checkpoints all verify together
         for (let k = segStart + 1; k <= j; k++) {
           rows[k].chainOk = true;
           matched++;
         }
+        break;
       }
-      // else: keyword signs kept, segment marked unverified (low confidence)
-    } else if (Math.abs(residual) < 0.015) {
-      for (const k of unknowns) {
-        rows[k].chainOk = true;
-        matched++;
-      }
+      // else: next pass relaxes the keyword signs; after the last pass the
+      // segment stays unverified (low confidence) with pass-1 keyword signs
     }
     segStart = j;
   }
@@ -1395,6 +1729,12 @@ function parseCibBranch(text: string, file: string): AccountLeg | null {
     salarySeen: withBal.some((r) => SALARY_RE.test(r.desc)),
     rows: withBal,
   };
+}
+
+/** Compat single-leg wrapper — first leg of the multi dispatcher. */
+export function parseCibText(text: string, file: string, ocr = false): AccountLeg | null {
+  const found = parseCibTextMulti(text, file, ocr);
+  return found.length > 0 ? found[0] : null;
 }
 
 function appendContinuation(row: TxRow | null, line: string): void {

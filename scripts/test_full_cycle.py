@@ -37,7 +37,7 @@ OUTBOX = "/home/z/my-project/upload/portal/_outbox"
 MY_EMAIL = "paulmero5@gmail.com"
 GREEN_PDF = "/home/z/my-project/upload/Saving-1786448365999.pdf"
 SCAN_PDF = "/tmp/Saving_scan.pdf"
-RED_PDF = "/home/z/my-project/download/Online_Insurance_Conditions.pdf"
+RED_PDF = "/home/z/my-project/upload/GlobalEIS_Report_HaythamElsayed_USD.pdf"
 BAD_TXT = "/tmp/FC_not_a_statement.txt"
 
 results = []
