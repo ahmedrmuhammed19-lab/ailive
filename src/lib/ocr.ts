@@ -16,8 +16,19 @@
  * JPEG per resource set wins — small stamps/logos are skipped by area).
  */
 
-export const MAX_OCR_PAGES = 6;
-export const MAX_OCR_SECONDS = 95;
+import { execFile } from "child_process";
+import { mkdtemp, readdir, readFile, rm, writeFile } from "fs/promises";
+import { tmpdir } from "os";
+import path from "path";
+
+export const MAX_OCR_PAGES = (() => {
+  const v = parseInt(process.env.OCR_MAX_PAGES ?? "", 10);
+  return Number.isFinite(v) && v > 0 ? v : 6; // serverless default; raise locally via env
+})();
+export const MAX_OCR_SECONDS = (() => {
+  const v = parseInt(process.env.OCR_MAX_SECONDS ?? "", 10);
+  return Number.isFinite(v) && v > 0 ? v : 95;
+})();
 const MIN_PAGE_JPEG_BYTES = 8 * 1024; // stamps/logos are far smaller than statement pages
 
 export interface OcrOutcome {
@@ -88,13 +99,49 @@ export function extractPageJpegs(buf: Buffer, max = MAX_OCR_PAGES): Buffer[] {
 }
 
 /**
+ * Rasterize PDF pages with poppler (pdftoppm) when available — covers encodings
+ * the byte-level JPEG extractor cannot touch (JBIG2, JPX, masks). Env-gated:
+ * PDF_RASTER=1 turns it on (workspace/local installs have poppler; Vercel
+ * serverless does not, so production keeps the embedded-JPEG fast path).
+ * Returns JPEG buffers in page order.
+ */
+async function rasterizePdf(buf: Buffer, max: number): Promise<Buffer[] | null> {
+  if (process.env.PDF_RASTER !== "1") return null;
+  const dir = await mkdtemp(path.join(tmpdir(), "eis-raster-"));
+  const pdfPath = path.join(dir, "in.pdf");
+  try {
+    await writeFile(pdfPath, buf);
+    await new Promise<void>((resolve, reject) => {
+      execFile(
+        "pdftoppm",
+        ["-png", "-gray", "-r", "300", "-f", "1", "-l", String(max), pdfPath, path.join(dir, "pg")],
+        { timeout: 240_000 },
+        (err) => (err ? reject(err) : resolve())
+      );
+    });
+    const files = (await readdir(dir)).filter((f) => f.startsWith("pg") && f.endsWith(".png")).sort();
+    const out: Buffer[] = [];
+    for (const f of files) out.push(await readFile(path.join(dir, f)));
+    return out.length ? out : null;
+  } catch {
+    return null;
+  } finally {
+    await rm(dir, { recursive: true, force: true }).catch(() => {});
+  }
+}
+
+/**
  * OCR image-only PDF bytes into text. Returns null when the PDF carries a
- * usable text layer handled elsewhere, has no embedded page JPEGs, or OCR
+ * usable text layer handled elsewhere, has no OCR-able page images, or OCR
  * recovers too little text to be worth parsing.
  */
 export async function ocrPdfText(buf: Buffer): Promise<OcrOutcome | null> {
-  const jpegs = extractPageJpegs(buf);
-  if (jpegs.length === 0) return null;
+  // Raster-first when poppler is available (deterministic full-page coverage
+  // for every encoding — JBIG2, JPX, masks); embedded-JPEG extraction stays
+  // as the fallback (and the only path on serverless without poppler).
+  let jpegs: Buffer[] | null = await rasterizePdf(buf, MAX_OCR_PAGES);
+  if (!jpegs || jpegs.length === 0) jpegs = extractPageJpegs(buf);
+  if (!jpegs || jpegs.length === 0) return null;
 
   const started = Date.now();
   let worker: Awaited<ReturnType<typeof import("tesseract.js").createWorker>> | null = null;
@@ -102,10 +149,12 @@ export async function ocrPdfText(buf: Buffer): Promise<OcrOutcome | null> {
     const { createWorker } = await import("tesseract.js");
     // eng LSTM fast; lang data cached in /tmp (writable on Vercel), fetched
     // from the tessdata CDN on first use (~15 MB, one-off per warm instance).
+    // PSM 3 auto + preserved interword spacing reads statement tables best.
     worker = await createWorker("eng", 1, {
       cachePath: "/tmp/eis-tess",
       gzip: true,
     });
+    await worker.setParameters({ preserve_interword_spaces: "1" });
     const parts: string[] = [];
     let truncated = false;
     for (let i = 0; i < jpegs.length; i++) {
@@ -119,6 +168,31 @@ export async function ocrPdfText(buf: Buffer): Promise<OcrOutcome | null> {
     const text = parts.join("\n").replace(/\u0000/g, "").trim();
     if (text.replace(/[^A-Za-z0-9]/g, "").length < 100) return null;
     return { text, pages: parts.length, truncated };
+  } catch {
+    return null;
+  } finally {
+    try {
+      await worker?.terminate();
+    } catch {
+      /* ignore */
+    }
+  }
+}
+
+/**
+ * OCR a direct image upload (JPG/PNG bytes) — single-image variant of the
+ * shadow stage. Returns null when the image yields too little text.
+ */
+export async function ocrImageText(buf: Buffer): Promise<OcrOutcome | null> {
+  const started = Date.now();
+  let worker: Awaited<ReturnType<typeof import("tesseract.js").createWorker>> | null = null;
+  try {
+    const { createWorker } = await import("tesseract.js");
+    worker = await createWorker("eng", 1, { cachePath: "/tmp/eis-tess", gzip: true });
+    const { data } = await worker.recognize(buf);
+    const text = (data?.text ?? "").replace(/\u0000/g, "").trim();
+    if (text.replace(/[^A-Za-z0-9]/g, "").length < 100) return null;
+    return { text, pages: 1, truncated: Date.now() - started > MAX_OCR_SECONDS * 1000 };
   } catch {
     return null;
   } finally {
