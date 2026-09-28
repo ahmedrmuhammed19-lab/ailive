@@ -175,10 +175,15 @@ def main():
     nudge_html = r.read().decode()
     ck("N5 nudge -> ok page", "Re-upload request emailed to the client" in nudge_html, nudge_html[:300])
 
-    # N6 client_nudge mail in outbox
+    # N6 client_nudge mail in outbox (lock-parity aware: with TEST_MAIL_TO
+    # active every mail's `to` is the lock target — the original recipient
+    # is preserved in the `intendedTo` audit field, so accept either)
     time.sleep(1)
     nudges = outbox_mails("client_nudge")
-    ok_mail = next((m for m in nudges if m.get("to") == CLIENT_EMAIL), None)
+    ok_mail = next(
+        (m for m in nudges if m.get("to") == CLIENT_EMAIL or m.get("intendedTo") == CLIENT_EMAIL),
+        None,
+    )
     ck("N6 client_nudge mail in outbox", ok_mail is not None, f"count={len(nudges)}")
     if ok_mail:
         ck("N6b subject mentions bank statement", "bank statement needed" in ok_mail.get("subject", ""))

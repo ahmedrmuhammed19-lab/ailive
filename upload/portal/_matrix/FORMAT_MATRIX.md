@@ -6,7 +6,16 @@ eis-ts/3.0). This file is the single source of truth shared between
 the PORTAL ENGINE (src/lib/analyze.ts) and the OPERATOR/AGENT — both must
 stay in sync. Every claim below is verified against the live corpus by
 `scripts/corpus_inventory.ts` (matrix JSON:
-`upload/portal/_matrix/inventory.json`).
+`upload/portal/_matrix/inventory.json`). The tool runs the text-layer
+dispatcher on every PDF/TXT and, for scans, the SAME OCR path the engine
+uses (`ocrPdfText` → `parseCibTextMulti(ocr=true)`) — one command produces
+the complete verified matrix:
+
+    PDF_RASTER=1 OCR_MAX_PAGES=36 OCR_MAX_SECONDS=580 \
+      OCR_CACHE_DIR=/tmp/eis-cache bun scripts/corpus_inventory.ts
+
+Last full run (2026-09-29, engine eis-ts/3.0): 19/19 statements at 100%
+integrity (16 text/txt + 3 scans), 3 negative controls correctly refused.
 
 ## Layout families (dispatch order matters)
 
