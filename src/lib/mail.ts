@@ -186,6 +186,12 @@ export async function sendOrQueue(input: QueuedMail): Promise<MailResult> {
       port,
       secure,
       auth: { user: creds.email, pass: creds.app_password },
+      // Bounded SMTP wait: the caller (e.g. the upload route) responds over HTTP,
+      // so a hung Gmail connection must fail fast — the mail queues to the
+      // outbox and scripts/flush_outbox.py replays it later.
+      connectionTimeout: 10_000,
+      greetingTimeout: 8_000,
+      socketTimeout: 20_000,
     });
     await transport.sendMail({
       from: `Global EIS <${creds.email}>`,

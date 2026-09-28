@@ -23,6 +23,171 @@ interface UploadResponse {
   handshake?: HandshakeFile[];
 }
 
+/**
+ * Vercel serverless functions hard-reject request bodies above 4.5 MB with a
+ * plain-text 413 (FUNCTION_PAYLOAD_TOO_LARGE). res.json() then throws and the
+ * user only saw "Network error during upload." — so we now gate and compress
+ * client-side, below the platform ceiling, and surface precise errors.
+ */
+const MAX_FILE_BYTES = 4.4 * 1024 * 1024;
+const MAX_TOTAL_BYTES = 4.4 * 1024 * 1024;
+const COMPRESS_TARGET = 3.4 * 1024 * 1024;
+const MAX_DIMENSION = 2600; // keep OCR/vision readable
+const UPLOAD_TIMEOUT_MS = 120_000;
+
+async function canvasBlob(canvas: HTMLCanvasElement, quality: number): Promise<Blob | null> {
+  return new Promise((resolve) => canvas.toBlob(resolve, "image/jpeg", quality));
+}
+
+/** Re-encode an oversized photo/scan as JPEG until it fits the upload ceiling. */
+async function compressImage(file: File): Promise<File> {
+  const bitmap = await createImageBitmap(file);
+  try {
+    let w = bitmap.width;
+    let h = bitmap.height;
+    const baseName = file.name.replace(/\.(png|jpe?g)$/i, "");
+    const build = async (
+      width: number,
+      height: number,
+      qualities: number[]
+    ): Promise<File | null> => {
+      const canvas = document.createElement("canvas");
+      canvas.width = width;
+      canvas.height = height;
+      const ctx = canvas.getContext("2d");
+      if (!ctx) return null;
+      ctx.drawImage(bitmap, 0, 0, width, height);
+      for (const q of qualities) {
+        const blob = await canvasBlob(canvas, q);
+        if (blob && blob.size <= COMPRESS_TARGET) {
+          return new File([blob], `${baseName}.jpg`, {
+            type: "image/jpeg",
+            lastModified: Date.now(),
+          });
+        }
+      }
+      return null;
+    };
+    const scale = Math.min(1, MAX_DIMENSION / Math.max(bitmap.width, bitmap.height));
+    w = Math.round(w * scale);
+    h = Math.round(h * scale);
+    const first = await build(w, h, [0.9, 0.8, 0.7, 0.6]);
+    if (first) return first;
+    // Still too heavy at q=0.6 → shrink dimensions by 35% and try once more.
+    const second = await build(Math.round(w * 0.65), Math.round(h * 0.65), [0.75, 0.65, 0.55]);
+    if (second) return second;
+    throw new Error("compression could not reach the size limit");
+  } finally {
+    bitmap.close?.();
+  }
+}
+
+interface PreparedUpload {
+  ready: File[];
+  blocked: string[];
+}
+
+/** Size gate + auto-compression, run before any bytes leave the browser. */
+async function prepareFiles(files: File[]): Promise<PreparedUpload> {
+  const ready: File[] = [];
+  const blocked: string[] = [];
+  for (const f of files) {
+    if (f.size <= MAX_FILE_BYTES) {
+      ready.push(f);
+      continue;
+    }
+    if (/\.pdf$/i.test(f.name)) {
+      blocked.push(
+        `"${f.name}" is ${humanSize(f.size)} — over the 4.5 MB direct-upload limit. ` +
+          `Re-save or export the PDF at lower scan quality (or split the pages), ` +
+          `or upload the pages as JPG/PNG photos — those are compressed automatically.`
+      );
+      continue;
+    }
+    try {
+      const smaller = await compressImage(f);
+      ready.push(smaller);
+    } catch {
+      blocked.push(
+        `"${f.name}" (${humanSize(f.size)}) could not be compressed under the upload limit — ` +
+          `re-shoot or re-save the photo at a smaller size.`
+      );
+    }
+  }
+  // Multi-file batches share one request body — enforce the ceiling on the total too.
+  let total = 0;
+  const finalReady: File[] = [];
+  for (const f of ready) {
+    if (total + f.size > MAX_TOTAL_BYTES) {
+      blocked.push(
+        `"${f.name}" pushes the batch over the 4.5 MB single-upload limit ` +
+          `(earlier files in this batch: ${humanSize(total)}). Upload it in a second batch.`
+      );
+      continue;
+    }
+    total += f.size;
+    finalReady.push(f);
+  }
+  return { ready: finalReady, blocked };
+}
+
+interface SendOutcome {
+  ok: boolean;
+  message: string;
+  data?: UploadResponse;
+}
+
+/** One upload attempt with hard timeout; maps every failure to a precise message. */
+async function sendUpload(fd: FormData): Promise<SendOutcome> {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), UPLOAD_TIMEOUT_MS);
+  try {
+    const res = await fetch("/api/upload", {
+      method: "POST",
+      body: fd,
+      signal: controller.signal,
+    });
+    const raw = await res.text();
+    let data: UploadResponse | null = null;
+    try {
+      data = JSON.parse(raw) as UploadResponse;
+    } catch {
+      data = null;
+    }
+    if (data?.ok) return { ok: true, message: "uploaded", data };
+    if (data && !data.ok) return { ok: false, message: data.error ?? "Upload rejected." };
+    // Non-JSON body → a proxy/edge layer answered, not the portal API.
+    if (res.status === 413) {
+      return {
+        ok: false,
+        message:
+          "The server rejected the files as too large. Large photos are compressed automatically — " +
+          "if this still happens, re-save the PDF at lower scan quality or upload smaller batches.",
+      };
+    }
+    if (res.status === 401) {
+      return {
+        ok: false,
+        message: "Your session has expired — sign in again, then retry the upload.",
+      };
+    }
+    if (res.status >= 500) {
+      return { ok: false, message: `Portal server error (HTTP ${res.status}) — please try again.` };
+    }
+    return { ok: false, message: `Upload failed (HTTP ${res.status}).` };
+  } catch (err) {
+    const aborted = err instanceof DOMException && err.name === "AbortError";
+    return {
+      ok: false,
+      message: aborted
+        ? "The upload timed out — check the connection and try again."
+        : "Could not reach the portal — check the internet connection (the server may be restarting), then try again.",
+    };
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
 export function UploadPanel() {
   const [queueId, setQueueId] = useState("");
   const [clientEmail, setClientEmail] = useState("");
@@ -60,17 +225,26 @@ export function UploadPanel() {
     setError(null);
     setResult(null);
     try {
+      const { ready, blocked } = await prepareFiles(files);
+      if (ready.length === 0) {
+        setError(blocked.join(" "));
+        return;
+      }
       const fd = new FormData();
       fd.set("userId", queueId);
       fd.set("email", clientEmail.trim());
       fd.set("country", country.trim());
       fd.set("visaType", visaType.trim());
       fd.set("travelers", String(travelers));
-      for (const f of files) fd.append("files", f);
-      const res = await fetch("/api/upload", { method: "POST", body: fd });
-      const data = (await res.json()) as UploadResponse;
-      if (data.ok) {
-        setResult(data);
+      for (const f of ready) fd.append("files", f);
+      let outcome = await sendUpload(fd);
+      if (!outcome.ok && /reach the portal|timed out/i.test(outcome.message)) {
+        // One silent retry for transient connection drops — real user networks blip.
+        await new Promise((r) => setTimeout(r, 1500));
+        outcome = await sendUpload(fd);
+      }
+      if (outcome.ok && outcome.data) {
+        setResult(outcome.data);
         setFiles([]);
         setQueueId("");
         setClientEmail("");
@@ -78,10 +252,8 @@ export function UploadPanel() {
         setVisaType("");
         setTravelers(1);
       } else {
-        setError(data.error ?? "Upload rejected.");
+        setError(blocked.length > 0 ? `${blocked.join(" ")} ${outcome.message}` : outcome.message);
       }
-    } catch {
-      setError("Network error during upload.");
     } finally {
       setUploading(false);
     }
@@ -224,7 +396,10 @@ export function UploadPanel() {
             <p className="text-sm font-medium" style={{ color: GH.fg }}>
               Drop the statement here or <span className="text-[var(--eis-accent)] underline">browse</span>
             </p>
-            <p className="text-xs text-[var(--eis-muted)]">PDF, PNG, JPG · hash-locked (MD5) on arrival</p>
+            <p className="text-xs text-[var(--eis-muted)]">
+              PDF, PNG, JPG · hash-locked (MD5) on arrival · large photos are compressed automatically ·
+              single files up to 4.5 MB
+            </p>
             <input
               ref={inputRef}
               type="file"
