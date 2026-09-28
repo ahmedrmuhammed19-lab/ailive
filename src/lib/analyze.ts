@@ -1029,6 +1029,23 @@ function solveRows(rows: TxRow[], opening: number | null, ocrLeg: boolean): numb
 }
 
 /**
+ * Two-digit OCR tolerance — used ONLY by the joint back-repair where BOTH
+ * rows must independently agree (movement chain + this tolerance), so the
+ * extra freedom is double-locked by the chain.
+ */
+function ocrClose2(a: number, b: number): boolean {
+  const A = Math.round(Math.abs(a) * 100).toString();
+  const B = Math.round(Math.abs(b) * 100).toString();
+  const pad = Math.max(A.length, B.length);
+  const x = A.padStart(pad, "0");
+  const y = B.padStart(pad, "0");
+  if (x === y) return true;
+  let diffs = 0;
+  for (let i = 0; i < pad; i++) if (x[i] !== y[i]) diffs++;
+  return diffs <= 2;
+}
+
+/**
  * Chain solver with BRANCHING REPAIR SEARCH (matrix campaign #2 lesson).
  *
  * The greedy version corrected the FIRST plausible OCR damage — but damaged
@@ -1100,6 +1117,7 @@ function solveRowsSearch(rows: TxRow[], opening: number | null, ocrLeg: boolean)
 
   let matched = 0;
   let prev: number | null = opening;
+  let lastVerifiedIdx = -1;
   for (let i = 0; i < rows.length; i++) {
     const r = rows[i];
     if (r.balance === null) continue;
@@ -1124,6 +1142,7 @@ function solveRowsSearch(rows: TxRow[], opening: number | null, ocrLeg: boolean)
       r.chainOk = true;
       matched++;
       prev = base.balance;
+      lastVerifiedIdx = i;
       continue;
     }
     // The row failed the greedy first-fit — is this an AMBIGUOUS damage zone?
@@ -1158,6 +1177,38 @@ function solveRowsSearch(rows: TxRow[], opening: number | null, ocrLeg: boolean)
           matched++;
           prev = best.balance;
           continue;
+        }
+      }
+    }
+    // No single-row candidate: try a JOINT BACK-REPAIR — the previous
+    // verified row's BALANCE may carry the two-digit damage instead. The fix
+    // is double-locked: (a) the revised previous balance must still satisfy
+    // the previous row's own movement chain, and (b) it must sit within
+    // 2-digit tolerance of its stated value. Real case (AAIB): fees of
+    // 600.60/700.70 verified against a damaged neighbour balance.
+    if (ocrLeg && mv !== null && lastVerifiedIdx >= 0 && lastVerifiedIdx === i - 1) {
+      const delta = r.balance - prev;
+      const prevRow = rows[lastVerifiedIdx];
+      if (prevRow.balance !== null && prev === prevRow.balance) {
+        const impliedPrev = r.balance - (delta >= 0 ? mv : -mv);
+        const prev2 = lastVerifiedIdx > 0 ? rows[lastVerifiedIdx - 1].balance : opening;
+        if (prev2 !== null) {
+          const deltaPrev = impliedPrev - prev2;
+          const mvPrev = prevRow.movement;
+          const prevChains =
+            mvPrev !== null
+              ? Math.abs(Math.abs(deltaPrev) - mvPrev) < 0.015 || ocrClose(deltaPrev, mvPrev)
+              : Math.abs(deltaPrev) < 0.015;
+          if (prevChains && ocrClose2(impliedPrev, prevRow.balance)) {
+            prevRow.balance = impliedPrev;
+            if (mvPrev !== null) prevRow.signed = deltaPrev >= 0 ? mvPrev : -mvPrev;
+            r.signed = delta >= 0 ? mv : -mv;
+            r.chainOk = true;
+            matched++;
+            prev = r.balance;
+            lastVerifiedIdx = i;
+            continue;
+          }
         }
       }
     }
@@ -1236,8 +1287,23 @@ function lineTableRows(text: string, anchorRe: RegExp): TxRow[] {
   let prevDate: string | null = null;
   for (const raw of text.split(/\r?\n/)) {
     if (SCAN_NOISE_RE.test(raw)) continue;
+    // Reference-fragment lines ("Contact CIB.151390.1401.01032026-142942",
+    // "Trx ID: ...") carry DECIMAL-SHAPED pieces of reference numbers — they
+    // must never become rows or they hijack balances from the real row above.
+    if (/contact\s+cib|trx[\s_]*id|ref[\s.:]*no/i.test(raw)) continue;
     const am = anchorRe.exec(raw);
     const amounts = [...raw.matchAll(RE_AMT)].map((m) => m[0]);
+    if (am) {
+      // Balance with ALL separators eaten by the scan: "…2,002.00 13473192"
+      // (true value 134,731.92). A date-anchored row ending in a bare 6-9
+      // digit integer contributes its /100 reading as the balance candidate —
+      // the chain verifies or rejects it like any other token. (10+-digit
+      // tails are account/reference numbers and never match.)
+      const bare = /(\d{6,9})\s*$/.exec(raw);
+      if (bare && amounts.length >= 1 && !/\.\d{2}\s*$/.test(raw)) {
+        amounts.push((parseInt(bare[1], 10) / 100).toFixed(2));
+      }
+    }
     if (amounts.length === 0) {
       // No amounts — only a real transaction-ish line re-seeds the carried
       // date (header/footer dates like "Statement from 01-03-2026 To ..."

@@ -199,6 +199,17 @@ export function normalizeOcrAmounts(text: string): string {
     .replace(/(\d)§(?=\d)/g, "$1") // stamp ink swallowed a digit position
     // letter misread as the leading digit: "A50,047.36" → "450,047.36"
     .replace(/\b([A-Z])(\d{1,3},\d{3}\.\d{2})\b/g, (_m, _l, rest) => rest)
+    // bare balance split by a space: "122274 11" → "122274.11"
+    // (comma-grouped or 4+ digit head — never touches short date/time fragments)
+    .replace(/\b(\d{1,3}(?:,\d{3})+|\d{4,9}) (\d{2})\b(?!\d)/g, "$1.$2")
+    // fully space-grouped balance: "100 622 51" → "100,622.51"
+    // (middle groups MUST be 3 digits so times like "10 30 45" never match)
+    .replace(/\b(\d{1,3}) (\d{3}) (\d{2})\b(?!\d)/g, "$1,$2.$3")
+    .replace(/\b(\d{1,3}) (\d{3}) (\d{3}) (\d{2})\b(?!\d)/g, "$1,$2,$3.$4")
+    // missing thousands comma before a long decimal tail: "71.27935" → "71,279.35"
+    .replace(/\b(\d{1,3})\.(\d{3})(\d{2})\b/g, "$1,$2.$3")
+    // space thousands + dot cents: "44 602.92" → "44,602.92"
+    .replace(/\b(\d{1,3}) (\d{3})\.(\d{2})\b/g, "$1,$2.$3")
     // double-dot irregular: "6.00.00" — tesseract dropped a zero inside the
     // thousands group; the chain's pow10 repair handles the value, here we
     // only make the token PARSEABLE as movement+balance shape: 6.00.00 → 600.00
@@ -206,14 +217,16 @@ export function normalizeOcrAmounts(text: string): string {
     .replace(/\b(\d{1,3})\.(\d{2})\.(\d{2})\b/g, "$1$2.$3")
     // dot-thousands (one or more 3-digit dot groups) followed by .cc
     .replace(/(?<=\d)(\.\d{3})+(?=\.\d{2}\b)/g, (m) => m.replace(/\./g, ","))
-    // dot-thousands + hyphen cents: "33.029-86" → "33,029.86"
-    .replace(/\b(\d{1,3}(?:\.\d{3})+)-(\d{2})\b/g, (_m, head, cc) => `${head.replace(/\./g, ",")}.${cc}`)
-    // dot-thousands split before the cents: "245.609 63" / "5.634 00"
-    .replace(/\b(\d{1,3}(?:,\d{3})+|\d{1,3}(?:\.\d{3})+) (\d{2})\b/g, (m, head, cc) =>
-      /\.\d{3}/.test(head) ? `${head.replace(/\./g, ",")}.${cc}` : m
-    )
+    // dot-thousands + loosely-separated cents — "33.029-86", "245.609 63",
+    // "132.229. 43" — one flexible-separator rule (dot/dash/space run):
+    .replace(/\b(\d{1,3}(?:\.\d{3})+)[\s.\-]+(\d{2})\b(?!\d)/g, (_m, head, cc) => `${head.replace(/\./g, ",")}.${cc}`)
+    .replace(/\b(\d{1,3}(?:,\d{3})+)[\s.\-]+(\d{2})\b(?!\d)/g, (_m, head, cc) => `${head}.${cc}`)
     // colon or hyphen as the thousands separator, anchored by a .cc tail
     .replace(/\b(\d{1,3})[:-](\d{3})(?=\.\d{2}\b)/g, "$1,$2")
+    // hyphen-joined cents with a 3-4 digit head: "3630-00" → "3,630.00"
+    // (head must be 3+ digits and NOT followed by more hyphen-digits, so
+    // dd-mm-yy dates never match)
+    .replace(/\b(\d{3,4})-(\d{2})\b(?!\d)(?![-\d])/g, "$1.$2")
     // stray dot after the thousands comma: "508,.637,33"
     .replace(/,\.(?=\d{3}\b)/g, ",")
     // hyphen-thousands with comma cents: "50-000,00"
@@ -278,7 +291,7 @@ export async function ocrPdfText(
   const grayFor = colorPages && grayPages && !preferGray ? grayPages : null;
   const tryGrayEverywhere = grayFor !== null && variant === "both";
 
-  const useCli = !opts?.forceWasm && (await hasTesseractCli());
+  const useCli = !opts?.forceWasm && process.env.OCR_FORCE_WASM !== "1" && (await hasTesseractCli());
   let worker: Awaited<ReturnType<typeof import("tesseract.js").createWorker>> | null = null;
   try {
     const ocrOne = async (img: Buffer): Promise<string | null> => {
