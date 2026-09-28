@@ -16,6 +16,7 @@ interface HandshakeFile {
 
 interface UploadResponse {
   ok: boolean;
+  staged?: boolean;
   error?: string;
   submissionId?: string;
   userId?: string;
@@ -30,10 +31,11 @@ interface UploadResponse {
  * client-side, below the platform ceiling, and surface precise errors.
  */
 const MAX_FILE_BYTES = 4.4 * 1024 * 1024;
-const MAX_TOTAL_BYTES = 4.4 * 1024 * 1024;
 const COMPRESS_TARGET = 3.4 * 1024 * 1024;
 const MAX_DIMENSION = 2600; // keep OCR/vision readable
 const UPLOAD_TIMEOUT_MS = 120_000;
+const CHUNK_SIZE = 4.0 * 1024 * 1024; // per-request size for chunked uploads
+const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
 async function canvasBlob(canvas: HTMLCanvasElement, quality: number): Promise<Blob | null> {
   return new Promise((resolve) => canvas.toBlob(resolve, "image/jpeg", quality));
@@ -87,48 +89,28 @@ interface PreparedUpload {
   blocked: string[];
 }
 
-/** Size gate + auto-compression, run before any bytes leave the browser. */
+/**
+ * Size gate + auto-compression, run before any bytes leave the browser.
+ * Oversized photos are re-encoded as JPEG; oversized PDFs no longer block —
+ * sendBatch() streams any file in <4.5 MB chunks automatically.
+ */
 async function prepareFiles(files: File[]): Promise<PreparedUpload> {
   const ready: File[] = [];
   const blocked: string[] = [];
   for (const f of files) {
-    if (f.size <= MAX_FILE_BYTES) {
+    if (f.size <= MAX_FILE_BYTES || /\.pdf$/i.test(f.name)) {
       ready.push(f);
       continue;
     }
-    if (/\.pdf$/i.test(f.name)) {
-      blocked.push(
-        `"${f.name}" is ${humanSize(f.size)} — over the 4.5 MB direct-upload limit. ` +
-          `Re-save or export the PDF at lower scan quality (or split the pages), ` +
-          `or upload the pages as JPG/PNG photos — those are compressed automatically.`
-      );
-      continue;
-    }
     try {
-      const smaller = await compressImage(f);
-      ready.push(smaller);
+      ready.push(await compressImage(f));
     } catch {
       blocked.push(
-        `"${f.name}" (${humanSize(f.size)}) could not be compressed under the upload limit — ` +
-          `re-shoot or re-save the photo at a smaller size.`
+        `"${f.name}" (${humanSize(f.size)}) could not be compressed — try re-saving the photo at a smaller size.`
       );
     }
   }
-  // Multi-file batches share one request body — enforce the ceiling on the total too.
-  let total = 0;
-  const finalReady: File[] = [];
-  for (const f of ready) {
-    if (total + f.size > MAX_TOTAL_BYTES) {
-      blocked.push(
-        `"${f.name}" pushes the batch over the 4.5 MB single-upload limit ` +
-          `(earlier files in this batch: ${humanSize(total)}). Upload it in a second batch.`
-      );
-      continue;
-    }
-    total += f.size;
-    finalReady.push(f);
-  }
-  return { ready: finalReady, blocked };
+  return { ready, blocked };
 }
 
 interface SendOutcome {
@@ -188,6 +170,85 @@ async function sendUpload(fd: FormData): Promise<SendOutcome> {
   }
 }
 
+interface BatchResult {
+  ok: boolean;
+  message: string;
+  data?: UploadResponse;
+}
+
+/**
+ * Send a batch of files: one single request when small enough; otherwise a
+ * chunked session (each file split into <4.5 MB parts staged server-side,
+ * reassembled on the final request with the manifest + intake fields).
+ */
+async function sendBatch(
+  ready: File[],
+  fields: Record<string, string>,
+  onProgress: (s: string) => void
+): Promise<BatchResult> {
+  const total = ready.reduce((a, f) => a + f.size, 0);
+  if (total <= CHUNK_SIZE) {
+    const fd = new FormData();
+    for (const [k, v] of Object.entries(fields)) fd.set(k, v);
+    for (const f of ready) fd.append("files", f);
+    let out = await sendUpload(fd);
+    if (!out.ok && /reach the portal|timed out/i.test(out.message)) {
+      // One silent retry for transient connection drops — real user networks blip.
+      await sleep(1500);
+      out = await sendUpload(fd);
+    }
+    return out;
+  }
+
+  const uploadId = crypto.randomUUID();
+  const manifest = ready.map((f, i) => ({
+    fileIdx: i,
+    chunksTotal: Math.max(1, Math.ceil(f.size / CHUNK_SIZE)),
+    fileName: f.name,
+  }));
+  let finalOut: BatchResult | null = null;
+  let doneFiles = 0;
+  for (let i = 0; i < ready.length; i++) {
+    const f = ready[i];
+    const chunksTotal = manifest[i].chunksTotal;
+    for (let c = 0; c < chunksTotal; c++) {
+      const slice = f.slice(c * CHUNK_SIZE, Math.min(f.size, (c + 1) * CHUNK_SIZE));
+      const fd = new FormData();
+      fd.set("uploadId", uploadId);
+      fd.set("fileIdx", String(i));
+      fd.set("chunkIndex", String(c));
+      fd.set("chunksTotal", String(chunksTotal));
+      fd.set("fileName", f.name);
+      fd.set("fileChunk", slice, `${f.name}.part${c}`);
+      const isFinal = i === ready.length - 1 && c === chunksTotal - 1;
+      if (isFinal) {
+        fd.set("final", "1");
+        fd.set("manifest", JSON.stringify(manifest));
+        for (const [k, v] of Object.entries(fields)) fd.set(k, v);
+      }
+      let out = await sendUpload(fd);
+      if (!out.ok && /reach the portal|timed out/i.test(out.message)) {
+        await sleep(1500);
+        out = await sendUpload(fd);
+      }
+      if (!out.ok) {
+        return {
+          ok: false,
+          message: `File ${i + 1}/${ready.length} (part ${c + 1}/${chunksTotal}): ${out.message}`,
+        };
+      }
+      if (isFinal) finalOut = out;
+      onProgress(
+        `Uploading file ${i + 1}/${ready.length} — ${Math.round(
+          ((doneFiles + (c + 1) / chunksTotal) / ready.length) * 100
+        )}%`
+      );
+    }
+    doneFiles += 1;
+  }
+  return finalOut ?? { ok: false, message: "Upload session ended unexpectedly — retry." };
+}
+
 export function UploadPanel() {
   const [queueId, setQueueId] = useState("");
   const [clientEmail, setClientEmail] = useState("");
@@ -197,6 +258,7 @@ export function UploadPanel() {
   const [files, setFiles] = useState<File[]>([]);
   const [dragOver, setDragOver] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [progress, setProgress] = useState("");
   const [result, setResult] = useState<UploadResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -224,25 +286,21 @@ export function UploadPanel() {
     setUploading(true);
     setError(null);
     setResult(null);
+    setProgress("");
     try {
       const { ready, blocked } = await prepareFiles(files);
       if (ready.length === 0) {
         setError(blocked.join(" "));
         return;
       }
-      const fd = new FormData();
-      fd.set("userId", queueId);
-      fd.set("email", clientEmail.trim());
-      fd.set("country", country.trim());
-      fd.set("visaType", visaType.trim());
-      fd.set("travelers", String(travelers));
-      for (const f of ready) fd.append("files", f);
-      let outcome = await sendUpload(fd);
-      if (!outcome.ok && /reach the portal|timed out/i.test(outcome.message)) {
-        // One silent retry for transient connection drops — real user networks blip.
-        await new Promise((r) => setTimeout(r, 1500));
-        outcome = await sendUpload(fd);
-      }
+      const fields: Record<string, string> = {
+        userId: queueId,
+        email: clientEmail.trim(),
+        country: country.trim(),
+        visaType: visaType.trim(),
+        travelers: String(travelers),
+      };
+      const outcome = await sendBatch(ready, fields, setProgress);
       if (outcome.ok && outcome.data) {
         setResult(outcome.data);
         setFiles([]);
@@ -255,6 +313,7 @@ export function UploadPanel() {
         setError(blocked.length > 0 ? `${blocked.join(" ")} ${outcome.message}` : outcome.message);
       }
     } finally {
+      setProgress("");
       setUploading(false);
     }
   }, [queueId, clientEmail, country, visaType, travelers, files]);
@@ -397,8 +456,8 @@ export function UploadPanel() {
               Drop the statement here or <span className="text-[var(--eis-accent)] underline">browse</span>
             </p>
             <p className="text-xs text-[var(--eis-muted)]">
-              PDF, PNG, JPG · hash-locked (MD5) on arrival · large photos are compressed automatically ·
-              single files up to 4.5 MB
+              PDF, PNG, JPG · hash-locked (MD5) on arrival · any size — large files upload in chunks
+              automatically · big photos are compressed on the way
             </p>
             <input
               ref={inputRef}
@@ -451,7 +510,7 @@ export function UploadPanel() {
             className="w-full bg-[var(--eis-btn-green)] text-white hover:bg-[var(--eis-btn-green-hover)] sm:w-auto"
           >
             {uploading ? <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" /> : <UploadCloud className="h-4 w-4" aria-hidden="true" />}
-            {uploading ? "Adding to queue…" : "Add to queue"}
+            {uploading ? progress || "Adding to queue…" : "Add to queue"}
           </Button>
         </div>
       </div>

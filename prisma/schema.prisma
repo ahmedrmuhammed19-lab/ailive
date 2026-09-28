@@ -61,6 +61,24 @@ model StatementFile {
   createdAt    DateTime   @default(now())
 }
 
+/**
+ * Chunked-upload staging — lets the browser send statements of ANY size as a
+ * sequence of <4.5 MB requests (Vercel serverless body limit), reassembled
+ * server-side on the final chunk. Rows are deleted after successful assembly;
+ * abandoned sessions are swept when they age past 2 hours.
+ */
+model UploadChunk {
+  id         String   @id @default(cuid())
+  uploadId   String // client-generated batch session id (uuid)
+  fileIdx    Int // position of the file within the batch
+  chunkIndex Int // position of this chunk within the file
+  name       String // original file name (informational; manifest is authoritative)
+  data       Bytes
+  createdAt  DateTime @default(now())
+
+  @@unique([uploadId, fileIdx, chunkIndex])
+}
+
 /** Self-improvement telemetry — one row per auto-analysis attempt (see /api/engine/logs). */
 model ParseLog {
   id            String   @id @default(cuid())

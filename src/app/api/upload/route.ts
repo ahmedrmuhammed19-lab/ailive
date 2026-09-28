@@ -16,69 +16,65 @@ import path from "path";
 
 export const maxDuration = 120;
 
-export async function POST(req: Request) {
-  let form: FormData;
-  try {
-    form = await req.formData();
-  } catch {
-    return NextResponse.json(
-      { ok: false, error: "Invalid form submission." },
-      { status: 400 }
-    );
-  }
+interface Intake {
+  userId: string;
+  clientEmail: string | null;
+  country: string | null;
+  visaType: string | null;
+  travelers: number;
+}
 
-  // --- Gate: signed-in portal account ---
-  const account = await sessionUser(req);
-  if (!account) {
-    return NextResponse.json(
-      { ok: false, error: "Sign in required." },
-      { status: 401 }
-    );
-  }
-
-  // --- Simplified intake: Queue/User ID + client email + statements only ---
-  // Customer name & case details are attached later from the operator queue.
+/** Shared intake-field parsing for the simple and chunked upload paths. */
+function parseIntake(form: FormData): Intake | { error: string } {
   const userId = normalizeQueueId(String(form.get("userId") ?? ""));
   const rawEmail = String(form.get("email") ?? "").trim();
   let clientEmail: string | null = null;
   if (rawEmail) {
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(rawEmail) || rawEmail.length > 254) {
-      return NextResponse.json(
-        { ok: false, error: "The email address looks invalid — check it and try again." },
-        { status: 400 }
-      );
+      return { error: "The email address looks invalid — check it and try again." };
     }
     clientEmail = rawEmail.toLowerCase();
   }
-  const files = form.getAll("files").filter((f): f is File => f instanceof File);
-
-  // Case context captured at intake (all optional — operator can correct later)
   const country = String(form.get("country") ?? "").trim().slice(0, 80) || null;
   const visaType = String(form.get("visaType") ?? "").trim().slice(0, 80) || null;
   const travelersRaw = Number(form.get("travelers"));
   const travelers =
     Number.isInteger(travelersRaw) && travelersRaw >= 1 && travelersRaw <= 20 ? travelersRaw : 1;
+  return { userId, clientEmail, country, visaType, travelers };
+}
 
-  if (files.length === 0) {
-    return NextResponse.json(
-      { ok: false, error: "No files attached — attach at least one bank statement PDF." },
-      { status: 400 }
-    );
-  }
-  for (const f of files) {
-    if (!extAllowed(f.name)) {
+/**
+ * Persist a fully-received batch: queue row + files + handshake data + operator
+ * alert. `items` carries the complete file bytes — from the simple single-request
+ * path OR reassembled from UploadChunk staging on the chunked path.
+ */
+async function finalizeUpload(
+  account: string,
+  intake: Intake,
+  items: Array<{ name: string; buf: Buffer<ArrayBuffer> }>
+): Promise<NextResponse> {
+  const { userId, clientEmail, country, visaType, travelers } = intake;
+
+  for (const item of items) {
+    if (!extAllowed(item.name)) {
       return NextResponse.json(
         {
           ok: false,
-          error: `Unsupported file type: ${f.name} — allowed: PDF, PNG, JPG.`,
+          error: `Unsupported file type: ${item.name} — allowed: PDF, PNG, JPG.`,
         },
         { status: 400 }
       );
     }
   }
+  if (items.length === 0) {
+    return NextResponse.json(
+      { ok: false, error: "No files attached — attach at least one bank statement PDF." },
+      { status: 400 }
+    );
+  }
 
   // --- Persist: queue row + files + handshake data ---
-  let submission;
+  let submission: Awaited<ReturnType<typeof db.submission.create>>;
   try {
     submission = await db.submission.create({
       data: {
@@ -116,15 +112,15 @@ export async function POST(req: Request) {
   }> = [];
 
   try {
-    for (const f of files) {
-      const buf = Buffer.from(await f.arrayBuffer());
+    for (const item of items) {
+      const buf = item.buf;
       const digest = md5(buf);
-      const safeName = sanitizeName(f.name);
+      const safeName = sanitizeName(item.name);
       const stored = await putStatement(subdir, safeName, buf);
       const record = await db.statementFile.create({
         data: {
           submissionId: submission.id,
-          originalName: f.name,
+          originalName: item.name,
           storedPath: stored.key,
           storedUrl: stored.url || null,
           ...(DB_STORAGE ? { data: buf } : {}),
@@ -134,7 +130,7 @@ export async function POST(req: Request) {
       });
       handshake.push({
         fileId: record.id,
-        name: f.name,
+        name: item.name,
         storedAs: path.basename(stored.key),
         sizeBytes: buf.length,
         md5: digest,
@@ -233,4 +229,163 @@ export async function POST(req: Request) {
     queuePosition: waitingAhead,
     handshake,
   });
+}
+
+/**
+ * Chunked-upload path — the browser sends each file as a sequence of <4.5 MB
+ * requests (Vercel serverless body limit), staged in the UploadChunk table.
+ * The final request carries the intake fields + a manifest; the server verifies
+ * every chunk is present, reassembles the exact original bytes, and runs the
+ * normal finalize pipeline. Result: statements of ANY size upload cleanly.
+ */
+async function handleChunked(
+  form: FormData,
+  account: string
+): Promise<NextResponse> {
+  const uploadId = String(form.get("uploadId") ?? "").slice(0, 80);
+  if (!/^[\w-]{8,80}$/.test(uploadId)) {
+    return NextResponse.json(
+      { ok: false, error: "Malformed upload session id." },
+      { status: 400 }
+    );
+  }
+  const fileIdxRaw = Number(form.get("fileIdx"));
+  const chunkIndexRaw = Number(form.get("chunkIndex"));
+  if (!Number.isInteger(fileIdxRaw) || fileIdxRaw < 0 || fileIdxRaw > 99) {
+    return NextResponse.json({ ok: false, error: "Malformed chunk file index." }, { status: 400 });
+  }
+  if (!Number.isInteger(chunkIndexRaw) || chunkIndexRaw < 0 || chunkIndexRaw > 9999) {
+    return NextResponse.json({ ok: false, error: "Malformed chunk index." }, { status: 400 });
+  }
+  const chunk = form.get("fileChunk");
+  if (!(chunk instanceof File)) {
+    return NextResponse.json({ ok: false, error: "Missing chunk payload." }, { status: 400 });
+  }
+  const chunkBuf = Buffer.from(await chunk.arrayBuffer());
+
+  // Housekeeping: sweep abandoned staging sessions older than 2 hours.
+  if (fileIdxRaw === 0 && chunkIndexRaw === 0) {
+    try {
+      await db.uploadChunk.deleteMany({
+        where: { createdAt: { lt: new Date(Date.now() - 2 * 3600_000) } },
+      });
+    } catch {
+      // sweep is best-effort — never block the upload
+    }
+  }
+
+  const fileName = sanitizeName(String(form.get("fileName") ?? `file-${fileIdxRaw}`)) || `file-${fileIdxRaw}`;
+  await db.uploadChunk.upsert({
+    where: {
+      uploadId_fileIdx_chunkIndex: {
+        uploadId,
+        fileIdx: fileIdxRaw,
+        chunkIndex: chunkIndexRaw,
+      },
+    },
+    create: { uploadId, fileIdx: fileIdxRaw, chunkIndex: chunkIndexRaw, name: fileName, data: chunkBuf },
+    update: { name: fileName, data: chunkBuf },
+  });
+
+  const isFinal = String(form.get("final") ?? "") === "1";
+  if (!isFinal) {
+    return NextResponse.json({ ok: true, staged: true, received: chunkIndexRaw });
+  }
+
+  // --- Final chunk: verify completeness, reassemble, finalize ---
+  let manifest: Array<{ fileIdx: number; chunksTotal: number; fileName: string }>;
+  try {
+    manifest = JSON.parse(String(form.get("manifest") ?? "[]"));
+  } catch {
+    manifest = [];
+  }
+  if (!Array.isArray(manifest) || manifest.length === 0) {
+    return NextResponse.json(
+      { ok: false, error: "Missing upload manifest — retry the upload." },
+      { status: 400 }
+    );
+  }
+  const rows = await db.uploadChunk.findMany({ where: { uploadId } });
+  const byKey = new Map(rows.map((r) => [`${r.fileIdx}:${r.chunkIndex}`, r]));
+  for (const m of manifest) {
+    for (let i = 0; i < m.chunksTotal; i++) {
+      if (!byKey.has(`${m.fileIdx}:${i}`)) {
+        return NextResponse.json(
+          {
+            ok: false,
+            error: `Upload incomplete — missing part ${i + 1}/${m.chunksTotal} of "${m.fileName}". Retry the upload.`,
+          },
+          { status: 400 }
+        );
+      }
+    }
+  }
+  const items = manifest.map((m) => {
+    const parts: Buffer<ArrayBuffer>[] = [];
+    for (let i = 0; i < m.chunksTotal; i++) {
+      parts.push(Buffer.from(byKey.get(`${m.fileIdx}:${i}`)!.data));
+    }
+    return { name: m.fileName, buf: Buffer.concat(parts) };
+  });
+
+  const intake = parseIntake(form);
+  if ("error" in intake) {
+    return NextResponse.json({ ok: false, error: intake.error }, { status: 400 });
+  }
+
+  const response = await finalizeUpload(account, intake, items);
+  if (response.status === 200) {
+    // Assembly succeeded — drop the staging rows for this session.
+    try {
+      await db.uploadChunk.deleteMany({ where: { uploadId } });
+    } catch {
+      // cleanup is best-effort; the 2h sweep is the backstop
+    }
+  }
+  return response;
+}
+
+export async function POST(req: Request) {
+  let form: FormData;
+  try {
+    form = await req.formData();
+  } catch {
+    return NextResponse.json(
+      { ok: false, error: "Invalid form submission." },
+      { status: 400 }
+    );
+  }
+
+  // --- Gate: signed-in portal account ---
+  const account = await sessionUser(req);
+  if (!account) {
+    return NextResponse.json(
+      { ok: false, error: "Sign in required." },
+      { status: 401 }
+    );
+  }
+
+  // --- Chunked upload session (any file size) ---
+  const uploadId = String(form.get("uploadId") ?? "");
+  if (uploadId) {
+    return handleChunked(form, account);
+  }
+
+  // --- Simple path: one request, small batch ---
+  const intake = parseIntake(form);
+  if ("error" in intake) {
+    return NextResponse.json({ ok: false, error: intake.error }, { status: 400 });
+  }
+  const files = form.getAll("files").filter((f): f is File => f instanceof File);
+  if (files.length === 0) {
+    return NextResponse.json(
+      { ok: false, error: "No files attached — attach at least one bank statement PDF." },
+      { status: 400 }
+    );
+  }
+  const items: Array<{ name: string; buf: Buffer<ArrayBuffer> }> = [];
+  for (const f of files) {
+    items.push({ name: f.name, buf: Buffer.from(await f.arrayBuffer()) });
+  }
+  return finalizeUpload(account, intake, items);
 }
