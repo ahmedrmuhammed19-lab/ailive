@@ -263,11 +263,47 @@ export async function analyzeSubmission(submissionId: string): Promise<AutoAnaly
               f.originalName,
               true
             );
+          // Document-level engine/variant fallbacks — LESSON (campaign #2):
+          // different OCR engines read the same scan differently (native CLI
+          // models vs tesseract.js WASM; color vs gray rasters). The CLI reads
+          // some scans column-scrambled where WASM read them row-wise and
+          // vice-versa. So when the first OCR pass parses poorly, try the
+          // other engines and keep whichever recovers more chain-verified
+          // rows — the parsers and the chain judge, not a text heuristic.
+          const parseOcr = (t: string) => {
+            let ls = parseCibTextMulti(t, f.originalName, true) ?? [];
+            if (ls.length === 0)
+              ls = parseCibTextMulti(t.replace(/([A-Za-z])\s+:/g, "$1: "), f.originalName, true);
+            if (ls.length === 0)
+              ls = parseCibTextMulti(t.replace(/([A-Za-z])\s*:\s*/g, "$1 "), f.originalName, true);
+            return ls;
+          };
+          const score = (ls: AccountLeg[]) => ls.reduce((s, l) => s + l.matched, 0);
+          const txTotal = (ls: AccountLeg[]) => ls.reduce((s, l) => s + l.txCount, 0);
+          const poor = (ls: AccountLeg[]) => score(ls) < 5 || score(ls) < txTotal(ls) * 0.85;
+          let bestLegs = parseOcr(ocr.text);
+          let bestPages = ocr.pages;
+          if (poor(bestLegs)) {
+            for (const altOpts of [{ preferGray: true }, { preferGray: true, forceWasm: true }]) {
+              const alt = await ocrPdfText(buf, altOpts);
+              if (!alt) continue;
+              rawSamples.push(
+                `===== ${f.originalName} (OCR alt ${alt.pages}p ${JSON.stringify(altOpts)}) =====\n${alt.text.slice(0, 4000)}`
+              );
+              const altLegs = parseOcr(alt.text);
+              if (score(altLegs) > score(bestLegs)) {
+                bestLegs = altLegs;
+                bestPages = alt.pages;
+              }
+              if (!poor(bestLegs)) break;
+            }
+          }
+          legsFound = bestLegs;
           if (legsFound.length > 0) {
             ocrUsed = true;
             for (const leg of legsFound) {
               leg.ocr = true;
-              leg.ocrPages = ocr.pages;
+              leg.ocrPages = bestPages;
               leg.mode = `OCR:${leg.mode ?? "unknown"}`;
             }
           }
@@ -833,14 +869,27 @@ export function parseCibTextMulti(text: string, file: string, ocr = false): Acco
     leg.mode = mode;
     return [leg];
   };
+  // OCR-fed dispatch: the ocr flag flows INTO the parser so chain-guided
+  // repair (digit tolerance) is active for scan-recovered text — and the leg
+  // carries the provenance itself, not just the "OCR:" mode prefix.
+  const attemptOcr = (
+    mode: string,
+    fn: (t: string, f: string, ocr: boolean) => AccountLeg | null
+  ): AccountLeg[] | null => {
+    const leg = fn(text, file, ocr);
+    if (!leg) return null;
+    leg.mode = mode;
+    leg.ocr = ocr;
+    return [leg];
+  };
   const fLegs = parseCibEStatement(text, file);
   return (
     attempt("B-internet", parseCibInternet) ??
     attempt("C-digital", parseCibDigital) ??
     attempt("D-glued", parseCibGlued) ??
     attempt("E-intl-bilingual", parseIntlBilingual) ??
-    attempt("M-misr-historical", parseMisrHistorical) ??
-    attempt("A2-aaib", parseAaibStatement) ??
+    attemptOcr("M-misr-historical", parseMisrHistorical) ??
+    attemptOcr("A2-aaib", parseAaibStatement) ??
     attempt("A-branch", parseCibBranch) ??
     (fLegs.length > 0
       ? fLegs.map((l) => ({ ...l, mode: ocr ? `OCR:${l.mode ?? "unknown"}` : "F-cib-estatement", ocr: ocr || l.ocr }))
@@ -908,16 +957,156 @@ function ocrClose(a: number, b: number): boolean {
 }
 
 /**
+ * Fragment-row drop (OCR tables): a row that FAILED the chain and whose
+ * balance sits orders of magnitude off the running position is a misread
+ * fragment (tesseract ate digits/digit-groups of the balance token), not a
+ * transaction — e.g. "440.71" for 440,710.33, or "8.63" with no thousands
+ * at all. It contributes no trustworthy data, so it is dropped: txCount and
+ * closing stay honest instead of poisoned. A legitimate wild movement row
+ * always chain-verifies via its own amounts — only damaged rows reach this
+ * filter, and dropped rows are counted as engine-lost, not silently
+ * "verified".
+ */
+function dropOcrFragments(rows: TxRow[]): TxRow[] {
+  const out: TxRow[] = [];
+  let anchor: number | null = null;
+  for (const r of rows) {
+    if (r.chainOk || r.balance === null) {
+      if (r.chainOk) anchor = r.balance;
+      out.push(r);
+      continue;
+    }
+    const far =
+      anchor !== null &&
+      (Math.abs(r.balance) < Math.abs(anchor) * 0.25 || Math.abs(r.balance) > Math.abs(anchor) * 4);
+    if (far) continue; // fragment — balance token destroyed by the scan
+    out.push(r);
+  }
+  return out;
+}
+
+/**
+ * Solve → drop fragments → re-solve until the row set is stable.
+ *
+ * One stable-pass subtlety this fixes: a FAILED fragment row re-syncs the
+ * running balance to its own garbage (prev = r.balance), which can make the
+ * NEXT fragment row verify as a tiny "position row" against the poisoned
+ * context (real case: 602.48 → 602.46 chaining off a 603,783.83 position).
+ * Dropping the failed fragment and re-running the chain with a clean context
+ * exposes both; iterating until stable (≤4 passes) reaches a fixed point.
+ */
+function solveDropStable(rows: TxRow[], opening: number | null, ocr: boolean): TxRow[] {
+  let cur = rows;
+  for (let i = 0; i < 4; i++) {
+    solveRows(cur, opening, ocr);
+    const next = dropOcrFragments(cur);
+    if (process.env.EIS_DEBUG_OCR) {
+      const last = cur[cur.length - 1];
+      const prevRow = cur[cur.length - 2];
+      console.error(
+        `[ocr-debug stable] pass=${i} in=${cur.length} out=${next.length} lastOk=${last?.chainOk} lastBal=${last?.balance} lastMv=${last?.movement} prevBal=${prevRow?.balance} prevOk=${prevRow?.chainOk}`
+      );
+    }
+    if (next.length === cur.length) return next;
+    cur = next;
+  }
+  return cur;
+}
+
+/**
  * Shared chain solver for the intl families (E/M/A2): chronological rows,
  * direction from the stated-balance delta, strict cents equality — with a
  * chain-guided repair pass for OCR-sourced legs (one bad digit proven wrong
  * by two agreeing tokens is corrected, not failed).
  */
 function solveIntlChain(rows: TxRow[], opening: number | null, ocrLeg: boolean): number {
+  return solveRows(rows, opening, ocrLeg);
+}
+
+/** solveIntlChain body, exposed for call sites that post-filter the rows. */
+function solveRows(rows: TxRow[], opening: number | null, ocrLeg: boolean): number {
+  return solveRowsSearch(rows, opening, ocrLeg);
+}
+
+/**
+ * Chain solver with BRANCHING REPAIR SEARCH (matrix campaign #2 lesson).
+ *
+ * The greedy version corrected the FIRST plausible OCR damage — but damaged
+ * scan zones often offer TWO equally-plausible single-digit repairs:
+ *   28,528.86 → [4,000.00] → 27,528.86   (movement fix: 4,000 → 1,000)
+ *   28,528.86 → [4,000.00] → 24,528.86   (balance fix: 27,528.86 misread)
+ * Only the DOWNSTREAM chain decides which was real (here the next rows
+ * reconcile exactly only from 24,528.86). So at every ambiguous row the
+ * solver branches over the candidate repairs and scores each branch by how
+ * many following rows chain-verify — the chain itself picks the truth.
+ * Candidates, in preference order:
+ *   mvfix     — |Δ| equals the movement (strict, then 1-digit ocrClose)
+ *   trix      — balance rebuild from prev ± movement (1-digit ocrClose)
+ *   pow10     — movement/balance dropped or added a zero run (×10^k, k≤3);
+ *               only for OCR legs where a small/large factor mismatch with a
+ *               transaction-shaped desc is the classic tesseract zero-drop
+ *   skip      — no candidate fits: row stays unverified, prev re-syncs to the
+ *               stated balance (a lost row never poisons its neighbours)
+ */
+function solveRowsSearch(rows: TxRow[], opening: number | null, ocrLeg: boolean): number {
+  const LOOKAHEAD = 6;
+
+  type Verdict = { ok: boolean; balance: number; movement: number | null; signed: number };
+  /** First-fit verdict for one row against a running position (no branching). */
+  const judge = (r: TxRow, prev: number): Verdict => {
+    const bal = r.balance ?? 0;
+    const delta = bal - prev;
+    const mv = r.movement;
+    if (mv === null) {
+      const ratio = Math.abs(delta) / Math.max(1, Math.abs(prev));
+      if (ratio <= 0.1) return { ok: true, balance: bal, movement: null, signed: delta };
+      return { ok: false, balance: bal, movement: null, signed: delta };
+    }
+    if (Math.abs(Math.abs(delta) - mv) < 0.015)
+      return { ok: true, balance: bal, movement: mv, signed: delta >= 0 ? mv : -mv };
+    if (ocrLeg && ocrClose(delta, mv))
+      return { ok: true, balance: bal, movement: Math.abs(delta), signed: delta >= 0 ? mv : -mv };
+    if (ocrLeg) {
+      const implied = prev + (delta >= 0 ? mv : -mv);
+      if (ocrClose(implied, bal))
+        return { ok: true, balance: implied, movement: mv, signed: delta >= 0 ? mv : -mv };
+      // Zero-run repair (tesseract drops/adds zeros inside long numbers):
+      // |Δ| and the movement differ by a clean power of ten. Never applied to
+      // fee/charge rows — a 6.00 fee must not become a 6,000 transfer.
+      if (!/\bfee\b|\bcharge/i.test(r.desc)) {
+        for (const k of [1, 2, 3]) {
+          const pow = Math.pow(10, k);
+          if (Math.abs(Math.abs(delta) - mv * pow) < 0.015 && Math.abs(delta) > 1)
+            return { ok: true, balance: bal, movement: Math.abs(delta), signed: delta >= 0 ? mv : -mv };
+          if (Math.abs(Math.abs(delta) * pow - mv) < 0.015 && Math.abs(mv) > 1)
+            return { ok: true, balance: bal, movement: Math.abs(delta), signed: delta >= 0 ? mv : -mv };
+        }
+      }
+    }
+    return { ok: false, balance: bal, movement: mv, signed: delta };
+  };
+
+  /** Greedy forward score of a candidate applied at i (lookahead rows). */
+  const scoreBranch = (startIdx: number, startPrev: number, first: Verdict): number => {
+    let score = first.ok ? 1 : 0;
+    let prev = first.balance;
+    for (let j = startIdx + 1; j < Math.min(rows.length, startIdx + 1 + LOOKAHEAD); j++) {
+      const v = judge(rows[j], prev);
+      if (v.ok) score++;
+      prev = v.balance;
+    }
+    return score;
+  };
+
   let matched = 0;
   let prev: number | null = opening;
-  for (const r of rows) {
+  for (let i = 0; i < rows.length; i++) {
+    const r = rows[i];
     if (r.balance === null) continue;
+    // Fresh verdict every pass — re-solves (solveDropStable) must not inherit
+    // chainOk from a previous pass whose running context was poisoned by a
+    // fragment row that has since been dropped.
+    r.chainOk = false;
     if (prev === null) {
       // No stated opening: the first balance row becomes the base position.
       r.signed = r.movement ?? 0;
@@ -926,38 +1115,54 @@ function solveIntlChain(rows: TxRow[], opening: number | null, ocrLeg: boolean):
       prev = r.balance;
       continue;
     }
-    const delta = r.balance - prev;
-    if (r.movement === null) {
-      r.signed = delta;
+    const mv = r.movement;
+    const base = judge(r, prev);
+    if (base.ok) {
+      if (mv !== null && base.movement !== null && base.movement !== mv) r.movement = base.movement;
+      if (base.balance !== r.balance) r.balance = base.balance;
+      r.signed = base.signed;
       r.chainOk = true;
       matched++;
-      prev = r.balance;
+      prev = base.balance;
       continue;
     }
-    if (Math.abs(Math.abs(delta) - r.movement) < 0.015) {
-      r.signed = delta >= 0 ? r.movement : -r.movement;
-      r.chainOk = true;
-      matched++;
-    } else if (ocrLeg && ocrClose(delta, r.movement)) {
-      // movement token carries one OCR digit error — the chain proves it
-      r.signed = delta >= 0 ? r.movement : -r.movement;
-      r.movement = Math.abs(delta);
-      r.chainOk = true;
-      matched++;
-    } else if (ocrLeg) {
-      // balance token carries OCR noise — rebuild it from prev ± movement
-      const implied = prev + (delta >= 0 ? r.movement : -r.movement);
-      if (ocrClose(implied, r.balance)) {
-        r.balance = implied;
-        r.signed = delta >= 0 ? r.movement : -r.movement;
-        r.chainOk = true;
-        matched++;
-      } else {
-        r.signed = delta;
+    // The row failed the greedy first-fit — is this an AMBIGUOUS damage zone?
+    // Enumerate alternative repairs and let the downstream chain decide.
+    if (ocrLeg && mv !== null) {
+      const delta = r.balance - prev;
+      const alternatives: Verdict[] = [];
+      // balance-fix candidate (even when the movement-fix also looked close,
+      // judge() may have preferred wrongly — explore both when both are valid)
+      const implied = prev + (delta >= 0 ? mv : -mv);
+      if (ocrClose(implied, r.balance))
+        alternatives.push({ ok: true, balance: implied, movement: mv, signed: delta >= 0 ? mv : -mv });
+      // movement-fix candidate (1-digit) — judge() already tried it first, but
+      // re-add it here so the search can compare it against the balance-fix
+      if (ocrClose(delta, mv))
+        alternatives.push({ ok: true, balance: r.balance, movement: Math.abs(delta), signed: delta >= 0 ? mv : -mv });
+      if (alternatives.length >= 1) {
+        let best: Verdict | null = null;
+        let bestScore = -1;
+        for (const alt of alternatives) {
+          const s = scoreBranch(i, prev, alt);
+          if (s > bestScore) {
+            bestScore = s;
+            best = alt;
+          }
+        }
+        if (best && bestScore > 0) {
+          if (best.movement !== null && best.movement !== mv) r.movement = best.movement;
+          if (best.balance !== r.balance) r.balance = best.balance;
+          r.signed = best.signed;
+          r.chainOk = true;
+          matched++;
+          prev = best.balance;
+          continue;
+        }
       }
-    } else {
-      r.signed = delta;
     }
+    // No honest candidate: stay unverified, re-sync to the stated balance.
+    r.signed = r.balance - prev;
     prev = r.balance;
   }
   return matched;
@@ -1001,6 +1206,61 @@ function anchorBlocks(text: string, anchorRe: RegExp): Array<{ date: string; tex
     else if (blocks.length) blocks[blocks.length - 1].text += " " + raw;
   }
   return blocks;
+}
+
+/** Page furniture on scans — never carries transaction data, always poisons pairing. */
+const SCAN_NOISE_RE =
+  /page\s+\d+\s+of\s+\d+|rep\.?\s+name|scanned\s+(with|by)|camscanner|genius\s+scan|adobe\s+scan/i;
+
+/**
+ * Line-paired table extraction for OCR-recovered bank statements (M + A2).
+ *
+ * LESSON (matrix campaign #2): statement tables print ONE transaction per
+ * line — "<date> <ref/desc junk> [movement] balance" — and the balance is
+ * the LAST decimal amount on the line. Two trapdoors the older strategies
+ * fell into:
+ *   1. anchorBlocks merged every date-less continuation row into the previous
+ *      date's block, then blockAmounts' last-two pairing silently DROPPED all
+ *      but the final transaction of the block (whole fee/transfer rows
+ *      vanished from the ledger);
+ *   2. the flattened amount walk crossed line boundaries, so one junk token
+ *      cascaded mis-pairings down the chain.
+ * Here every line yields its OWN candidate row: date-less amount lines are
+ * continuation rows under the carried date (their date cell was eaten by a
+ * stamp/watermark), movement-less lines are position rows the chain
+ * reconstructs from the delta. solveIntlChain then verifies/repairs each row
+ * independently — a single lost row never poisons its neighbours.
+ */
+function lineTableRows(text: string, anchorRe: RegExp): TxRow[] {
+  const rows: TxRow[] = [];
+  let prevDate: string | null = null;
+  for (const raw of text.split(/\r?\n/)) {
+    if (SCAN_NOISE_RE.test(raw)) continue;
+    const am = anchorRe.exec(raw);
+    const amounts = [...raw.matchAll(RE_AMT)].map((m) => m[0]);
+    if (amounts.length === 0) {
+      // No amounts — only a real transaction-ish line re-seeds the carried
+      // date (header/footer dates like "Statement from 01-03-2026 To ..."
+      // carry the period, not a row position, but re-seeding them is safe:
+      // the next amount line determines the row anyway).
+      if (am) prevDate = am[1];
+      continue;
+    }
+    const date = (am ? am[1] : prevDate) ?? "—";
+    if (am) prevDate = am[1];
+    let desc = raw.replace(am ? am[0] : /$^/, " ");
+    for (const a of amounts) desc = desc.replace(a, " ");
+    desc = desc
+      .replace(/\d{1,2}[\/-]\d{1,2}[\/-]\d{2,4}/g, " ")
+      .replace(/\d{1,2}\s+[A-Z]{3}\s+\d{2,4}/g, " ")
+      .replace(/\((?:EGP|USD|EUR|GBP|SAR|AED)\)/gi, " ")
+      .replace(/\s+/g, " ")
+      .trim();
+    const balance = toNum(amounts[amounts.length - 1]);
+    const movement = amounts.length >= 2 ? Math.abs(toNum(amounts[amounts.length - 2])) : null;
+    rows.push({ date, desc, movement, balance, signed: 0, chainOk: false });
+  }
+  return rows;
 }
 
 /** Amounts out of one block: balance = last token, movement = the one before it. */
@@ -1151,7 +1411,7 @@ function parseIntlBilingual(text: string, file: string): AccountLeg | null {
  * dd/mm/yyyy anchors, Debit|Credit|Balance-after-Transaction columns, opening
  * from "Previous Balance". Chain runs with OCR digit tolerance.
  */
-function parseMisrHistorical(text: string, file: string): AccountLeg | null {
+function parseMisrHistorical(text: string, file: string, ocr = false): AccountLeg | null {
   if (
     !/Historical Statement from/i.test(text) &&
     !/TXT_TXN_DESC/i.test(text) &&
@@ -1163,14 +1423,25 @@ function parseMisrHistorical(text: string, file: string): AccountLeg | null {
   const periodM = /Historical Statement from\s*(\d{2}[\/-]\d{2}[\/-]\d{4})\s*To\s*(\d{2}[\/-]\d{2}[\/-]\d{4})/i.exec(text);
   const meta = {
     account: /Account\s*Number\s*:?\s*(\d{10,})/i.exec(text)?.[1] ?? null,
-    currency: /Account\s*Currency\s*:?\s*([A-Z]{3})/i.exec(text)?.[1] ?? "EGP",
+    currency: /\b(EGP|USD|EUR|GBP|SAR|AED)\b/.exec(text)?.[1] ?? "EGP",
     period: periodM ? `${periodM[1]} → ${periodM[2]}` : null,
   };
 
+  // Strategy 0 — line-paired rows (primary: one transaction per OCR line,
+  // date-less continuation rows stay their OWN row instead of being merged
+  // into the previous date's block and dropped by last-two pairing)
+  const lrowsCand = lineTableRows(text, /(\d{2}[\/-]\d{2}[\/-]\d{4})/);
+  const lrows = solveDropStable(lrowsCand, statedOpening, ocr);
+  const lleg =
+    lrows.length >= 3
+      ? summarizeLeg(file, lrows, { ...meta, opening: statedOpening ?? lrows[0].balance ?? 0, closing: lrows[lrows.length - 1].balance ?? 0, matched: lrows.filter((r) => r.chainOk).length })
+      : null;
+
   // Strategy 1 — chain-guided walk over the whole amount sequence
   const seq = scanAmountSequence(text, /(\d{2}[\/-]\d{2}[\/-]\d{4})/);
-  const walked =
-    walkLedgerAmounts(seq, statedOpening, true) ?? walkLedgerAmounts(seq, null, true);
+  const walkedRaw =
+    walkLedgerAmounts(seq, statedOpening, ocr) ?? walkLedgerAmounts(seq, null, ocr);
+  const walked = walkedRaw ? solveDropStable(walkedRaw, statedOpening, ocr) : null;
 
   // Strategy 2 — date-anchored blocks (amounts = last two in block)
   const blocks = anchorBlocks(text, /(\d{2}[\/-]\d{2}[\/-]\d{4})/);
@@ -1180,14 +1451,24 @@ function parseMisrHistorical(text: string, file: string): AccountLeg | null {
     if (a.balance === null) continue;
     brows.push({ date: b.date.replace(/-/g, "/"), desc: a.desc, movement: a.movement, balance: a.balance, signed: 0, chainOk: false });
   }
-  solveIntlChain(brows, statedOpening, true);
+  solveIntlChain(brows, statedOpening, ocr);
   const bleg = brows.length >= 3 ? summarizeLeg(file, brows, { ...meta, opening: statedOpening ?? brows[0].balance ?? 0, closing: brows[brows.length - 1].balance ?? 0, matched: brows.filter((r) => r.chainOk).length }) : null;
-  const wleg = walked && walked.length >= 3 ? summarizeLeg(file, walked, { ...meta, opening: statedOpening ?? walked[0].balance ?? 0, closing: walked[walked.length - 1].balance ?? 0, matched: walked.length }) : null;
+  const wleg = walked && walked.length >= 3 ? summarizeLeg(file, walked, { ...meta, opening: statedOpening ?? walked[0].balance ?? 0, closing: walked[walked.length - 1].balance ?? 0, matched: walked.filter((r) => r.chainOk).length }) : null;
 
-  // best-of: the variant that chain-verified more rows wins
-  const pick = [bleg, wleg]
-    .filter((x): x is AccountLeg => x !== null)
-    .sort((a, b) => b.matched - a.matched)[0];
+  // best-of: the variant that chain-verified more rows wins; on ties the
+  // line-paired table (lleg) is preferred over block/walk reconstructions
+  const cands = [lleg, bleg, wleg].filter((x): x is AccountLeg => x !== null);
+  if (process.env.EIS_DEBUG_OCR) {
+    const names = ["lineTable", "blocks", "walk"] as const;
+    [lleg, bleg, wleg].forEach((c, idx) => {
+      if (c)
+        console.error(
+          `[ocr-debug M] ${c === lleg ? "lineTable" : c === bleg ? "blocks" : "walk"} matched=${c.matched}/${c.txCount} opening=${c.opening} closing=${c.closing}`
+        );
+      void names;
+    });
+  }
+  const pick = cands.sort((a, b) => b.matched - a.matched)[0];
   return pick ?? null;
 }
 
@@ -1196,7 +1477,7 @@ function parseMisrHistorical(text: string, file: string): AccountLeg | null {
  * OCR-fed): "Booking Date" + "02 MAR 26" anchors, Debit/Credit/Closing
  * Balance columns, opening from "Balance at Period Start". OCR-tolerant chain.
  */
-function parseAaibStatement(text: string, file: string): AccountLeg | null {
+function parseAaibStatement(text: string, file: string, ocr = false): AccountLeg | null {
   // Structural markers decide: a mere MENTION of the bank's name (client
   // notes, chat transcripts, analyst summaries) must not claim the document.
   const isAaib =
@@ -1211,14 +1492,23 @@ function parseAaibStatement(text: string, file: string): AccountLeg | null {
   }
   const meta = {
     account: /Account\s*[: ]\s*(\d{12,})/i.exec(text)?.[1] ?? null,
-    currency: /Currency\s*[:\s]*([A-Z]{3})/i.exec(text)?.[1] ?? "EGP",
+    currency: /\b(EGP|USD|EUR|GBP|SAR|AED)\b/.exec(text)?.[1] ?? "EGP",
     period: null as string | null,
   };
 
+  // Strategy 0 — line-paired rows (primary — see parseMisrHistorical)
+  const lrowsCand = lineTableRows(text, /(\d{1,2}\s+[A-Z]{3}\s+\d{2})\b/);
+  const lrows = solveDropStable(lrowsCand, statedOpening, ocr);
+  const lleg =
+    lrows.length >= 3
+      ? summarizeLeg(file, lrows, { ...meta, opening: statedOpening ?? lrows[0].balance ?? 0, closing: lrows[lrows.length - 1].balance ?? 0, matched: lrows.filter((r) => r.chainOk).length })
+      : null;
+
   // Strategy 1 — chain-guided walk
   const seq = scanAmountSequence(text, /(\d{1,2}\s+[A-Z]{3}\s+\d{2})\b/);
-  const walked =
-    walkLedgerAmounts(seq, statedOpening, true) ?? walkLedgerAmounts(seq, null, true);
+  const walkedRaw =
+    walkLedgerAmounts(seq, statedOpening, ocr) ?? walkLedgerAmounts(seq, null, ocr);
+  const walked = walkedRaw ? solveDropStable(walkedRaw, statedOpening, ocr) : null;
 
   // Strategy 2 — date-anchored blocks
   const blocks = anchorBlocks(text, /(\d{1,2}\s+[A-Z]{3}\s+\d{2})\b/);
@@ -1228,13 +1518,21 @@ function parseAaibStatement(text: string, file: string): AccountLeg | null {
     if (a.balance === null) continue;
     brows.push({ date: b.date, desc: a.desc, movement: a.movement, balance: a.balance, signed: 0, chainOk: false });
   }
-  solveIntlChain(brows, statedOpening, true);
+  solveIntlChain(brows, statedOpening, ocr);
   const bleg = brows.length >= 3 ? summarizeLeg(file, brows, { ...meta, opening: statedOpening ?? brows[0].balance ?? 0, closing: brows[brows.length - 1].balance ?? 0, matched: brows.filter((r) => r.chainOk).length }) : null;
-  const wleg = walked && walked.length >= 3 ? summarizeLeg(file, walked, { ...meta, opening: statedOpening ?? walked[0].balance ?? 0, closing: walked[walked.length - 1].balance ?? 0, matched: walked.length }) : null;
+  const wleg = walked && walked.length >= 3 ? summarizeLeg(file, walked, { ...meta, opening: statedOpening ?? walked[0].balance ?? 0, closing: walked[walked.length - 1].balance ?? 0, matched: walked.filter((r) => r.chainOk).length }) : null;
 
-  const pick = [bleg, wleg]
-    .filter((x): x is AccountLeg => x !== null)
-    .sort((a, b) => b.matched - a.matched)[0];
+  // best-of: the variant that chain-verified more rows wins; on ties the
+  // line-paired table (lleg) is preferred over block/walk reconstructions
+  const cands = [lleg, bleg, wleg].filter((x): x is AccountLeg => x !== null);
+  if (process.env.EIS_DEBUG_OCR) {
+    for (const c of [lleg, bleg, wleg])
+      if (c)
+        console.error(
+          `[ocr-debug A2] matched=${c.matched}/${c.txCount} opening=${c.opening} closing=${c.closing}`
+        );
+  }
+  const pick = cands.sort((a, b) => b.matched - a.matched)[0];
   return pick ?? null;
 }
 
