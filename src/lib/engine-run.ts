@@ -167,11 +167,11 @@ export async function runEngine(
           ? `<p style="margin:0 0 12px;color:#59636e;font-size:12px;line-height:1.55;">Period &amp; 6-month window: ${esc(analysis.windowSummary)}</p>`
           : "") +
         viewBlock.html +
-        mailButton(deliverUrl, "&#10003; Approve &amp; Email Report", "#1a7f37") +
+        mailButton(deliverUrl, "&#10003; Approve &amp; Email Report", "#1e40af") +
         mailButton(retryUrl, "&#8635; Re-run Engine", "#9a6700") +
         `<p style="text-align:center;margin:0 0 10px;"><a href="${actionUrl(sub.id, "start")}" style="color:#8b949e;font-size:11px;">start link (first run)</a> · ` +
         `<a href="${retryUrl}" style="color:#0969da;font-size:12px;">retry link — works any time</a> · ` +
-        `<a href="${deliverUrl}" style="color:#1a7f37;font-size:12px;">approve &amp; deliver link</a></p>` +
+        `<a href="${deliverUrl}" style="color:#1e40af;font-size:12px;">approve &amp; deliver link</a></p>` +
         `<p style="margin:0;color:#8b949e;font-size:11px;line-height:1.5;">${esc(telemetryLine)}</p>` +
         `</div></div></div>`,
       kind: "operator_alert",

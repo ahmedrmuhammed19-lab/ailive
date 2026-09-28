@@ -276,7 +276,7 @@ export function QueuePanel({ refreshKey, isOperator }: { refreshKey: number; isO
               size="sm"
               onClick={greenAll}
               disabled={busy}
-              className="gap-1.5 border-[var(--eis-btn-green-hover)] text-[var(--eis-btn-green-hover)] hover:bg-[var(--eis-success-subtle)] dark:border-[#2ea043] dark:text-[#3fb950] dark:hover:bg-[#12261e]"
+              className="gap-1.5 border-[var(--eis-btn-green-hover)] text-[var(--eis-btn-green-hover)] hover:bg-[var(--eis-success-subtle)] dark:border-[var(--eis-accent)] dark:text-[var(--eis-accent)] dark:hover:bg-[var(--eis-accent-subtle)]"
             >
               {busy ? <Loader2 className="h-3.5 w-3.5 animate-spin" aria-hidden="true" /> : <CheckCheck className="h-3.5 w-3.5" aria-hidden="true" />}
               Green all ({counts.WAITING + counts.ANALYZING})

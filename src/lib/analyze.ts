@@ -2274,12 +2274,12 @@ body{margin:0;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;ba
 .kpi .l{font-size:11px;color:#59636e;text-transform:uppercase;letter-spacing:.5px}
 .kpi .v{font-size:19px;font-weight:700;margin-top:3px}
 .kpi .n{font-size:11px;color:#59636e;margin-top:2px}
-.danger .v{color:#cf222e}.ok .v{color:#1a7f37}.warn .v{color:#9a6700}
+.danger .v{color:#cf222e}.ok .v{color:#1e40af}.warn .v{color:#9a6700}
 table{width:100%;border-collapse:collapse;font-size:12.5px;margin:10px 0 18px}
 th{background:#f6f8fa;text-align:left;padding:7px 9px;border-bottom:2px solid #d0d7de;font-size:11px;color:#59636e;text-transform:uppercase}
 td{padding:6px 9px;border-bottom:1px solid #eaeef2;vertical-align:top}
 td.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
-.cr{color:#1a7f37}.dr{color:#cf222e}
+.cr{color:#1e40af}.dr{color:#cf222e}
 .note{border:1px solid #d4a72c66;background:#fff8c5;border-radius:8px;padding:12px 14px;font-size:12.5px;color:#59636e;margin:14px 0}
 .wm{border:2px dashed #d4a72c;border-radius:8px;padding:10px 14px;text-align:center;color:#9a6700;font-weight:700;font-size:13px;letter-spacing:.6px;margin-bottom:18px}
 h2{font-size:15px;margin:22px 0 8px;border-bottom:1px solid #eaeef2;padding-bottom:6px}
@@ -2348,7 +2348,7 @@ function legFindings(l: AccountLeg, requiredEgp: number): Finding[] {
 
 function findingsHtml(fs: Finding[]): string {
   const color = (t: Finding["tone"]) =>
-    t === "ok" ? "#1a7f37" : t === "warn" ? "#9a6700" : t === "danger" ? "#cf222e" : "#59636e";
+    t === "ok" ? "#1e40af" : t === "warn" ? "#9a6700" : t === "danger" ? "#cf222e" : "#59636e";
   return `<table style="margin-top:6px"><tbody>${fs
     .map(
       (x) =>

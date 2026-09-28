@@ -41,9 +41,9 @@ function page(opts: {
   body: string;
   status?: 200 | 403 | 404 | 409;
 }): Response {
-  const color = opts.tone === "ok" ? "#1a7f37" : opts.tone === "warn" ? "#9a6700" : "#cf222e";
-  const bg = opts.tone === "ok" ? "#dafbe1" : opts.tone === "warn" ? "#fff8c5" : "#ffebe9";
-  const border = opts.tone === "ok" ? "#aceebb" : opts.tone === "warn" ? "#d4a72c66" : "#ff818266";
+  const color = opts.tone === "ok" ? "#1e40af" : opts.tone === "warn" ? "#9a6700" : "#cf222e";
+  const bg = opts.tone === "ok" ? "#dbeafe" : opts.tone === "warn" ? "#fff8c5" : "#ffebe9";
+  const border = opts.tone === "ok" ? "#93c5fd" : opts.tone === "warn" ? "#d4a72c66" : "#ff818266";
   const html = `<!DOCTYPE html>
 <html lang="en">
 <head>

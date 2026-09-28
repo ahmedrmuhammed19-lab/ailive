@@ -20,7 +20,7 @@ interface DashData {
   month: { key: string; label: string; days: DayCell[] };
 }
 
-/** GitHub contribution-graph green scale by analyzed count (theme-aware via CSS vars). */
+/** GitHub contribution-graph NAVY scale by analyzed count (theme-aware via CSS vars). */
 function cellColor(analyzed: number): string {
   if (analyzed <= 0) return GH.cellEmpty;
   if (analyzed === 1) return "var(--eis-scale-1)";

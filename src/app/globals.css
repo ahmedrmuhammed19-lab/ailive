@@ -62,9 +62,9 @@
   --destructive: oklch(0.577 0.245 27.325);
   --border: oklch(0.91 0.01 240);
   --input: oklch(0.91 0.01 240);
-  --ring: oklch(0.7 0.12 190);
+  --ring: oklch(0.62 0.16 255);
   --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
+  --chart-2: oklch(0.55 0.18 255);
   --chart-3: oklch(0.398 0.07 227.392);
   --chart-4: oklch(0.828 0.189 84.429);
   --chart-5: oklch(0.769 0.188 70.08);
@@ -75,7 +75,7 @@
   --sidebar-accent: oklch(0.965 0.008 240);
   --sidebar-accent-foreground: oklch(0.3 0.04 255);
   --sidebar-border: oklch(0.91 0.01 240);
-  --sidebar-ring: oklch(0.7 0.12 190);
+  --sidebar-ring: oklch(0.62 0.16 255);
 }
 
 .dark {
@@ -96,9 +96,9 @@
   --destructive: oklch(0.704 0.191 22.216);
   --border: oklch(1 0 0 / 10%);
   --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.7 0.12 190);
+  --ring: oklch(0.7 0.14 255);
   --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
+  --chart-2: oklch(0.7 0.14 255);
   --chart-3: oklch(0.769 0.188 70.08);
   --chart-4: oklch(0.627 0.265 303.9);
   --chart-5: oklch(0.645 0.246 16.439);
@@ -109,7 +109,7 @@
   --sidebar-accent: oklch(0.26 0.03 258);
   --sidebar-accent-foreground: oklch(0.94 0.01 240);
   --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.7 0.12 190);
+  --sidebar-ring: oklch(0.7 0.14 255);
 }
 
 @layer base {
@@ -122,7 +122,8 @@
 }
 
 /* ============================================================
-   Global EIS portal — 2026 design system ("Aurora Glass").
+   Global EIS portal — 2026 design system ("Aurora Glass", navy edition).
+   Brand accent: NAVY BLUE (#1e40af→#2563eb light / #60a5fa→#3b82f6 dark).
    GH tokens in src/lib/format.ts reference these variables, so
    inline styles and SVG props flip with the .dark class too.
    ============================================================ */
@@ -136,11 +137,11 @@
   --eis-border-muted: #e8edf4;
   --eis-fg: #0f172a;
   --eis-muted: #5b6b81;
-  --eis-accent: #0d9488;
-  --eis-accent-2: #059669;
-  --eis-accent-subtle: #ecfdf9;
-  --eis-success: #059669;
-  --eis-success-subtle: #e8fbf3;
+  --eis-accent: #1e40af;
+  --eis-accent-2: #2563eb;
+  --eis-accent-subtle: #eff6ff;
+  --eis-success: #1d4ed8;
+  --eis-success-subtle: #dbeafe;
   --eis-attention: #b45309;
   --eis-attention-subtle: #fef7e6;
   --eis-attention-fg: #7c3a00;
@@ -149,14 +150,14 @@
   --eis-danger-subtle: #fdeeee;
   --eis-neutral: #94a3b8;
   --eis-cell-empty: #edf1f8;
-  --eis-btn-green: #0d9488;
-  --eis-btn-green-hover: #0f766e;
+  --eis-btn-green: #1e40af;
+  --eis-btn-green-hover: #1e3a8a;
   --eis-divide: #edf1f7;
-  --eis-scale-1: #99f6e4;
-  --eis-scale-2: #2dd4bf;
-  --eis-scale-3: #0d9488;
-  --eis-scale-4: #0f766e;
-  --eis-glow: 0 0 0 1px rgba(13, 148, 136, 0.14), 0 8px 30px -6px rgba(13, 148, 136, 0.28);
+  --eis-scale-1: #bfdbfe;
+  --eis-scale-2: #60a5fa;
+  --eis-scale-3: #2563eb;
+  --eis-scale-4: #1e3a8a;
+  --eis-glow: 0 0 0 1px rgba(30, 64, 175, 0.14), 0 8px 30px -6px rgba(37, 99, 235, 0.28);
   --eis-card-shadow: 0 1px 2px rgba(15, 23, 42, 0.04), 0 8px 24px -12px rgba(15, 23, 42, 0.12);
 }
 
@@ -170,11 +171,11 @@
   --eis-border-muted: #18223d;
   --eis-fg: #e8edf7;
   --eis-muted: #8ea0bd;
-  --eis-accent: #2dd4bf;
-  --eis-accent-2: #34d399;
-  --eis-accent-subtle: #0c2a29;
-  --eis-success: #34d399;
-  --eis-success-subtle: #0b2a22;
+  --eis-accent: #60a5fa;
+  --eis-accent-2: #3b82f6;
+  --eis-accent-subtle: #0d2145;
+  --eis-success: #60a5fa;
+  --eis-success-subtle: #0d2145;
   --eis-attention: #fbbf24;
   --eis-attention-subtle: #2a2110;
   --eis-attention-fg: #fcd34d;
@@ -183,14 +184,14 @@
   --eis-danger-subtle: #2a1518;
   --eis-neutral: #64748b;
   --eis-cell-empty: #141d36;
-  --eis-btn-green: #0d9488;
-  --eis-btn-green-hover: #14b8a6;
+  --eis-btn-green: #2563eb;
+  --eis-btn-green-hover: #3b82f6;
   --eis-divide: #16203c;
-  --eis-scale-1: #134e4a;
-  --eis-scale-2: #0f766e;
-  --eis-scale-3: #14b8a6;
-  --eis-scale-4: #2dd4bf;
-  --eis-glow: 0 0 0 1px rgba(45, 212, 191, 0.16), 0 8px 32px -6px rgba(45, 212, 191, 0.25);
+  --eis-scale-1: #1e3a8a;
+  --eis-scale-2: #1d4ed8;
+  --eis-scale-3: #3b82f6;
+  --eis-scale-4: #60a5fa;
+  --eis-glow: 0 0 0 1px rgba(59, 130, 246, 0.16), 0 8px 32px -6px rgba(59, 130, 246, 0.25);
   --eis-card-shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 12px 32px -16px rgba(0, 0, 0, 0.5);
 }
 
@@ -251,8 +252,8 @@
   top: -18rem;
   right: -12rem;
   background:
-    radial-gradient(closest-side, rgba(13, 148, 136, 0.35), transparent 70%),
-    radial-gradient(closest-side, rgba(16, 185, 129, 0.22), transparent 75%);
+    radial-gradient(closest-side, rgba(37, 99, 235, 0.35), transparent 70%),
+    radial-gradient(closest-side, rgba(30, 64, 175, 0.22), transparent 75%);
   animation: eis-drift-a 38s ease-in-out infinite alternate;
 }
 .eis-aurora::after {
@@ -262,7 +263,7 @@
   left: -10rem;
   background:
     radial-gradient(closest-side, rgba(59, 130, 246, 0.22), transparent 72%),
-    radial-gradient(closest-side, rgba(45, 212, 191, 0.16), transparent 76%);
+    radial-gradient(closest-side, rgba(99, 102, 241, 0.16), transparent 76%);
   animation: eis-drift-b 46s ease-in-out infinite alternate;
 }
 .dark .eis-aurora::before { opacity: 0.4; }
@@ -309,7 +310,7 @@
 }
 .eis-cta:hover {
   filter: brightness(1.06);
-  box-shadow: var(--eis-glow), 0 4px 14px -2px rgba(13, 148, 136, 0.45);
+  box-shadow: var(--eis-glow), 0 4px 14px -2px rgba(37, 99, 235, 0.45);
   transform: translateY(-1px);
 }
 .eis-cta:active { transform: translateY(0); }
@@ -324,7 +325,7 @@
   position: absolute;
   inset: 0 0 auto 0;
   height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(45, 212, 191, 0.55), transparent);
+  background: linear-gradient(90deg, transparent, rgba(96, 165, 250, 0.55), transparent);
   pointer-events: none;
 }
 
@@ -342,5 +343,5 @@
 }
 ::-webkit-scrollbar-thumb:hover { background-color: var(--eis-neutral); }
 ::selection {
-  background: rgba(45, 212, 191, 0.32);
+  background: rgba(59, 130, 246, 0.32);
 }

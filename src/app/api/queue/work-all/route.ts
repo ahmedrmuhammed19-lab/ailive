@@ -73,9 +73,9 @@ function page(opts: {
   bodyHtml: string;
   status?: 200 | 403;
 }): Response {
-  const color = opts.tone === "ok" ? "#1a7f37" : opts.tone === "warn" ? "#9a6700" : "#cf222e";
-  const bg = opts.tone === "ok" ? "#dafbe1" : opts.tone === "warn" ? "#fff8c5" : "#ffebe9";
-  const border = opts.tone === "ok" ? "#aceebb" : opts.tone === "warn" ? "#d4a72c66" : "#ff818266";
+  const color = opts.tone === "ok" ? "#1e40af" : opts.tone === "warn" ? "#9a6700" : "#cf222e";
+  const bg = opts.tone === "ok" ? "#dbeafe" : opts.tone === "warn" ? "#fff8c5" : "#ffebe9";
+  const border = opts.tone === "ok" ? "#93c5fd" : opts.tone === "warn" ? "#d4a72c66" : "#ff818266";
   const html = `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -132,7 +132,7 @@ function viewBlockHtml(r: Awaited<ReturnType<typeof workTheQueue>>): string {
       );
       if (x.outcome === "draft-review") {
         parts.push(
-          `<a href="${actionUrl(x.id, "deliver")}" style="color:#1a7f37;font-weight:700;text-decoration:none;">&#10003; Approve &amp; deliver report</a> <span style="color:#8b949e;font-size:11px;">(emails the client)</span>`
+          `<a href="${actionUrl(x.id, "deliver")}" style="color:#1e40af;font-weight:700;text-decoration:none;">&#10003; Approve &amp; deliver report</a> <span style="color:#8b949e;font-size:11px;">(emails the client)</span>`
         );
       }
       if (x.outcome === "unrecognized" || x.outcome === "no-files") {
@@ -182,7 +182,7 @@ export async function GET(req: Request) {
 
   const remainingNote = r.remaining
     ? `<p style="margin:10px 0 0;color:#9a6700;font-weight:600;">${r.remaining} case(s) still pending — open this link again to work the next batch of ${MAX_WORK_BATCH}.</p>`
-    : `<p style="margin:10px 0 0;color:#1a7f37;font-weight:600;">All pending cases worked — the queue is clear.</p>`;
+    : `<p style="margin:10px 0 0;color:#1e40af;font-weight:600;">All pending cases worked — the queue is clear.</p>`;
 
   return page({
     tone: r.needsManual ? "warn" : "ok",
