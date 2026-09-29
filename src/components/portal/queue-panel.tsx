@@ -256,7 +256,7 @@ export function QueuePanel({ refreshKey, isOperator }: { refreshKey: number; isO
             </button>
           ))}
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           {isOperator && counts.WAITING + counts.ANALYZING > 0 && (
             <Button
               variant="outline"

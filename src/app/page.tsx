@@ -396,7 +396,7 @@ export default function PortalPage() {
             }}
           >
             {/* Segmented glass tab bar with spring pill */}
-            <TabsList className="mb-5 flex h-11 w-fit items-center gap-1 rounded-2xl border border-[var(--eis-border)] bg-[var(--eis-canvas-glass)] p-1 backdrop-blur-xl">
+            <TabsList className="mb-5 flex h-11 w-fit max-w-full items-center gap-1 overflow-x-auto rounded-2xl border border-[var(--eis-border)] bg-[var(--eis-canvas-glass)] p-1 backdrop-blur-xl">
               {tabs.map((t) => (
                 <TabsTrigger
                   key={t.value}

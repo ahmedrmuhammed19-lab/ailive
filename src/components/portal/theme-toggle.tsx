@@ -6,8 +6,10 @@ import { Button } from "@/components/ui/button";
 
 /**
  * Sun/moon toggle — flips between light and dark (system default on load).
- * Icon visibility is CSS-driven (`dark:` variant), so there is no mounted
- * state and no hydration mismatch; `resolvedTheme` settles right after mount.
+ * Icon visibility is CSS-driven (`dark:` variant). The accessible label is
+ * deliberately STATIC: `resolvedTheme` is undefined during SSR but set on the
+ * client, so branching on it would cause a hydration mismatch for every
+ * visitor with a persisted theme. The icon already communicates the state.
  */
 export function ThemeToggle() {
   const { resolvedTheme, setTheme } = useTheme();
@@ -17,8 +19,8 @@ export function ThemeToggle() {
     <Button
       variant="outline"
       size="icon"
-      aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
-      title={isDark ? "Switch to light mode" : "Switch to dark mode"}
+      aria-label="Toggle color theme"
+      title="Toggle color theme"
       onClick={() => setTheme(isDark ? "light" : "dark")}
       className="h-7 w-7 shrink-0 border-[var(--eis-border)] text-[var(--eis-muted)] hover:bg-[var(--eis-canvas-subtle)] hover:text-[var(--eis-fg)]"
     >
