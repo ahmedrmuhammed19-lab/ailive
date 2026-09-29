@@ -92,6 +92,10 @@ scripts/*
 !scripts/mail_sink.mjs
 !scripts/mail_livefire.ts
 !scripts/mail_showcase.py
+!scripts/make_scan_fixtures.py
+!scripts/probe_ocr.ts
+!scripts/probe_extract.ts
+!scripts/test_scan_path.py
 
 # self-improvement telemetry — may contain statement excerpts, never commit
 parser_samples/

@@ -21,6 +21,7 @@ import { createHash } from "crypto";
 import { mkdtemp, readdir, readFile, rm, writeFile } from "fs/promises";
 import { tmpdir } from "os";
 import path from "path";
+import { deflateSync, inflateSync } from "zlib";
 
 export const MAX_OCR_PAGES = (() => {
   const v = parseInt(process.env.OCR_MAX_PAGES ?? "", 10);
@@ -33,8 +34,6 @@ export const MAX_OCR_SECONDS = (() => {
   // truncates gracefully and the draft carries what was recovered.
   return Number.isFinite(v) && v > 0 ? v : 300;
 })();
-const MIN_PAGE_JPEG_BYTES = 8 * 1024; // stamps/logos are far smaller than statement pages
-
 export interface OcrOutcome {
   text: string;
   pages: number;
@@ -140,10 +139,20 @@ async function ocrPageCached(
 }
 
 /**
- * Extract embedded page JPEGs (DCTDecode image XObjects) from raw PDF bytes.
+ * Extract embedded page images (image XObjects) from raw PDF bytes.
  * Byte-level by design: works regardless of encryption-free writer quirks,
  * needs zero deps, and keeps only real page-sized photos (area heuristic).
- * Returns JPEG buffers in file order (== page order for scan-style writers).
+ *
+ * LESSON (eslam-scan campaign): scanners and PDF writers wrap page photos in
+ * several filter chains. The extractor decodes every common one natively —
+ *   /DCTDecode                     -> the bytes ARE the JPEG
+ *   [/ASCII85Decode /DCTDecode]    -> armor first (reportlab default), then JPEG
+ *   [/FlateDecode /DCTDecode]      -> inflate, then JPEG
+ *   /FlateDecode (raw bitmap)      -> inflate -> reconstructed PNG (RGB/Gray,
+ *                                     with or without PNG predictors)
+ * CCITT/JPX/JBIG2 stay out of scope — those need the PDF_RASTER poppler path.
+ * Returns image buffers (JPEG or PNG) in file order (== page order for
+ * scan-style writers); tesseract reads both formats natively.
  */
 export function extractPageJpegs(buf: Buffer, max = MAX_OCR_PAGES): Buffer[] {
   const latin = buf.toString("latin1");
@@ -158,11 +167,13 @@ export function extractPageJpegs(buf: Buffer, max = MAX_OCR_PAGES): Buffer[] {
     const dictMatch = dictRe.exec(latin);
     if (!dictMatch) break;
 
-    // The stream keyword that closes this dictionary
+    // Full dictionary: from the "N 0 obj" that opens this object (header keys
+    // like /Width /Filter /ColorSpace all live there) to the stream keyword.
+    const objStart = latin.lastIndexOf(" obj", dictMatch.index);
+    const dictFrom = objStart === -1 ? Math.max(0, dictMatch.index - 600) : objStart;
     const streamStart = latin.indexOf(marker, dictMatch.index);
     if (streamStart === -1) break;
-    const dict = latin.slice(Math.max(0, dictMatch.index - 400), streamStart);
-    const isJpeg = /DCTDecode/i.test(dict);
+    const dict = latin.slice(dictFrom, streamStart);
     // Actual data begins after "stream" + EOL (PDF spec: CRLF or LF)
     let dataStart = streamStart + marker.length;
     if (latin[dataStart] === "\r") dataStart++;
@@ -170,16 +181,9 @@ export function extractPageJpegs(buf: Buffer, max = MAX_OCR_PAGES): Buffer[] {
     const end = latin.indexOf("endstream", dataStart);
     if (end === -1) break;
 
-    if (isJpeg) {
-      const raw = buf.subarray(dataStart, end);
-      // Trim trailing EOL junk before endstream; verify JPEG magic
-      let slice = raw;
-      while (slice.length > 2 && (slice[slice.length - 1] === 10 || slice[slice.length - 1] === 13)) {
-        slice = slice.subarray(0, -1);
-      }
-      if (slice.length >= MIN_PAGE_JPEG_BYTES && slice[0] === 0xff && slice[1] === 0xd8) {
-        out.push(Buffer.from(slice)); // copy — subarray keeps the whole parent alive
-      }
+    const img = decodeImageStream(dict, buf.subarray(dataStart, end));
+    if (img && img.length >= MIN_PAGE_JPEG_BYTES) {
+      out.push(Buffer.from(img)); // copy — subarray keeps the whole parent alive
     }
     searchFrom = end + "endstream".length;
   }
@@ -198,6 +202,187 @@ export function extractPageJpegs(buf: Buffer, max = MAX_OCR_PAGES): Buffer[] {
     return kept.slice(0, max);
   }
   return out;
+}
+
+// ---------- image-XObject codec decoding (see extractPageJpegs) ----------
+
+const MIN_PAGE_JPEG_BYTES = 8 * 1024; // stamps/logos are far smaller than statement pages
+
+/** Minimal crc32 for PNG chunks (zlib.crc32 is not portable across runtimes). */
+const CRC_TABLE = (() => {
+  const t = new Uint32Array(256);
+  for (let n = 0; n < 256; n++) {
+    let c = n;
+    for (let k = 0; k < 8; k++) c = c & 1 ? 0xedb88320 ^ (c >>> 1) : c >>> 1;
+    t[n] = c >>> 0;
+  }
+  return t;
+})();
+
+function crc32(buf: Buffer): number {
+  let c = 0xffffffff;
+  for (let i = 0; i < buf.length; i++) c = CRC_TABLE[(c ^ buf[i]) & 0xff] ^ (c >>> 8);
+  return (c ^ 0xffffffff) >>> 0;
+}
+
+function pngChunk(type: string, data: Buffer): Buffer {
+  const len = Buffer.alloc(4);
+  len.writeUInt32BE(data.length);
+  const body = Buffer.concat([Buffer.from(type, "latin1"), data]);
+  const crc = Buffer.alloc(4);
+  crc.writeUInt32BE(crc32(body));
+  return Buffer.concat([len, body, crc]);
+}
+
+/**
+ * Decode an ASCII85 stream (PDF ASCII85Decode: big-endian base-85 groups,
+ * 'z' == zero group, optional "<~" prefix and "~>" EOD, whitespace ignored).
+ * The "~>" EOD is cut FIRST so trailing PDF scaffolding ("endstream" etc.)
+ * can never be decoded as data — bytes must match the embedded image exactly.
+ */
+function ascii85Decode(data: Buffer): Buffer | null {
+  let s = data.toString("latin1");
+  const eod = s.indexOf("~>");
+  if (eod !== -1) s = s.slice(0, eod);
+  s = s.replace(/^[^!-uz]*<~/, "").replace(/[^!-uz]/g, "");
+  const out: number[] = [];
+  let group: number[] = [];
+  for (let i = 0; i < s.length; i++) {
+    const ch = s[i];
+    if (ch === "z" && group.length === 0) {
+      out.push(0, 0, 0, 0);
+      continue;
+    }
+    group.push(ch.charCodeAt(0) - 33);
+    if (group.length === 5) {
+      let v = 0;
+      for (const d of group) v = v * 85 + d;
+      if (v > 0xffffffff) return null;
+      out.push((v >>> 24) & 0xff, (v >>> 16) & 0xff, (v >>> 8) & 0xff, v & 0xff);
+      group = [];
+    }
+  }
+  if (group.length > 0) {
+    const n = group.length;
+    while (group.length < 5) group.push(84);
+    let v = 0;
+    for (const d of group) v = v * 85 + d;
+    const bytes = [(v >>> 24) & 0xff, (v >>> 16) & 0xff, (v >>> 8) & 0xff, v & 0xff];
+    out.push(...bytes.slice(0, n - 1));
+  }
+  return Buffer.from(out);
+}
+
+function dictInt(dict: string, key: string): number | null {
+  const m = dict.match(new RegExp(`/${key}\\s+(-?\\d+)`));
+  return m ? parseInt(m[1], 10) : null;
+}
+
+/** Reconstruct a PNG from a PDF Flate raw bitmap (post-inflate). */
+function flateRawToPng(
+  raw: Buffer,
+  w: number,
+  h: number,
+  colorspace: string,
+  predictor: number | null
+): Buffer | null {
+  if (!w || !h || w <= 0 || h <= 0 || w * h > 40_000_000) return null;
+  const channels = /DeviceGray/i.test(colorspace) ? 1 : /DeviceRGB/i.test(colorspace) ? 3 : null;
+  if (!channels) return null; // CMYK/Indexed/ICB — out of scope
+  const colorType = channels === 1 ? 0 : 2;
+  const rowLen = w * channels;
+  const ihdr = Buffer.alloc(13);
+  ihdr.writeUInt32BE(w, 0);
+  ihdr.writeUInt32BE(h, 4);
+  ihdr[8] = 8; // bits per component
+  ihdr[9] = colorType;
+  let idat: Buffer;
+  if (predictor !== null && predictor >= 10) {
+    // PNG predictors: the inflated bytes ARE filtered scanlines — pass through
+    if (raw.length < h * (rowLen + 1)) return null;
+    idat = deflateSync(raw.subarray(0, h * (rowLen + 1)));
+  } else {
+    // raw bitmap: prefix every row with filter byte 0 (None)
+    if (raw.length < h * rowLen) return null;
+    const rows = Buffer.alloc(h * (rowLen + 1));
+    for (let y = 0; y < h; y++) {
+      rows[y * (rowLen + 1)] = 0;
+      raw.copy(rows, y * (rowLen + 1) + 1, y * rowLen, (y + 1) * rowLen);
+    }
+    idat = deflateSync(rows);
+  }
+  return Buffer.concat([
+    Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]),
+    pngChunk("IHDR", ihdr),
+    pngChunk("IDAT", idat),
+    pngChunk("IEND", Buffer.alloc(0)),
+  ]);
+}
+
+/** Filter chain tokens from an image-XObject dictionary ("[ /A85 /DCT ]" etc). */
+function dictFilters(dict: string): string[] {
+  const arr = dict.match(/\/Filter\s*\[([^\]]*)\]/);
+  if (arr) return [...arr[1].matchAll(/\/([A-Za-z0-9]+)/g)].map((m) => m[1]);
+  const one = dict.match(/\/Filter\s*\/([A-Za-z0-9]+)/);
+  return one ? [one[1]] : [];
+}
+
+/**
+ * Decode an image-XObject stream into a tesseract-readable image buffer
+ * (JPEG when a DCT terminal filter is present, else reconstructed PNG).
+ * Returns null for unsupported codecs (CCITT/JPX/JBIG2 -> rasterizer path).
+ */
+function decodeImageStream(dict: string, data: Buffer): Buffer | null {
+  const filters = dictFilters(dict);
+  let cur: Buffer | null = data;
+  for (const f of filters) {
+    if (!cur) return null;
+    if (/^DCTDecode$/i.test(f)) {
+      // terminal: the current bytes are the JPEG
+      return cur.length >= 2 && cur[0] === 0xff && cur[1] === 0xd8 ? cur : null;
+    }
+    if (/^ASCII85Decode$/i.test(f)) {
+      cur = ascii85Decode(cur);
+      continue;
+    }
+    if (/^FlateDecode$/i.test(f)) {
+      try {
+        const inflated = inflateSync(cur);
+        const predictor = dictInt(dict, "Predictor");
+        if (predictor !== null && predictor >= 10) {
+          return flateRawToPng(
+            inflated,
+            dictInt(dict, "Columns") ?? dictInt(dict, "Width") ?? 0,
+            dictInt(dict, "Rows") ?? dictInt(dict, "Height") ?? 0,
+            dictInt(dict, "Colors") === 1 ? "DeviceGray" : "DeviceRGB",
+            predictor
+          );
+        }
+        return flateRawToPng(
+          inflated,
+          dictInt(dict, "Width") ?? 0,
+          dictInt(dict, "Height") ?? 0,
+          dict.match(/\/ColorSpace\s*\/(\w+)/)?.[1] ?? "",
+          null
+        );
+      } catch {
+        return null;
+      }
+    }
+    // A85 variant spelled with digits, LZW, RunLength — rare; bail to rasterizer
+    return null;
+  }
+  // No filters at all: bare bitmap (pathological) — try PNG reconstruction
+  if (filters.length === 0 && cur) {
+    return flateRawToPng(
+      cur,
+      dictInt(dict, "Width") ?? 0,
+      dictInt(dict, "Height") ?? 0,
+      dict.match(/\/ColorSpace\s*\/(\w+)/)?.[1] ?? "",
+      null
+    );
+  }
+  return cur;
 }
 
 /**
