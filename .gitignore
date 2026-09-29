@@ -89,6 +89,8 @@ scripts/*
 !scripts/cleanup_probe.mjs
 !scripts/cib_extract.py
 !scripts/fx_rate.json
+!scripts/mail_sink.mjs
+!scripts/mail_livefire.ts
 
 # self-improvement telemetry — may contain statement excerpts, never commit
 parser_samples/
