@@ -18,6 +18,7 @@ import {
   Inbox,
   Zap,
   Link2,
+  Trash2,
 } from "lucide-react";
 import { GH, STATUS_META, timeAgo } from "@/lib/format";
 
@@ -233,6 +234,47 @@ export function QueuePanel({ refreshKey, isOperator }: { refreshKey: number; isO
     }
   }, [counts.WAITING, counts.ANALYZING, load]);
 
+  const clearQueue = useCallback(async () => {
+    const total = counts.ALL;
+    if (total === 0) return;
+    if (
+      !window.confirm(
+        `Clear the ENTIRE queue — delete all ${total} case${total > 1 ? "s" : ""}?\n\n` +
+          `• Every submission, statement file, published report and engine log for these cases is removed.\n` +
+          `• Portal accounts and the mail audit trail are NOT touched.\n` +
+          `• This cannot be undone.`
+      )
+    )
+      return;
+    if (!window.confirm(`Final check: type-confirming deletion of ${total} case${total > 1 ? "s" : ""}.\n\nAre you sure?`)) return;
+    setBusy(true);
+    try {
+      const res = await fetch(`/api/queue/clear`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ confirm: true }),
+      });
+      const data = (await res.json()) as {
+        ok: boolean;
+        cleared?: { submissions: number; files: number; reports: number; parseLogs: number; diskFiles: number };
+        error?: string;
+      };
+      if (!data.ok) {
+        window.alert(data.error ?? "Could not clear the queue.");
+        return;
+      }
+      const c = data.cleared!;
+      window.alert(
+        `Queue cleared: ${c.submissions} case(s), ${c.files} statement file(s), ${c.reports} report(s), ${c.parseLogs} engine log(s) removed.`
+      );
+      await load();
+    } catch {
+      window.alert("Network error while clearing the queue.");
+    } finally {
+      setBusy(false);
+    }
+  }, [counts.ALL, load]);
+
   return (
     <div className="space-y-3">
       {/* Toolbar */}
@@ -293,6 +335,19 @@ export function QueuePanel({ refreshKey, isOperator }: { refreshKey: number; isO
             >
               <Link2 className="h-3.5 w-3.5" aria-hidden="true" />
               <span className="hidden md:inline">One-tap link</span>
+            </Button>
+          )}
+          {isOperator && counts.ALL > 0 && (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={clearQueue}
+              disabled={busy}
+              title="Delete every case in the queue with its files, reports and engine logs — accounts and mail audit are kept"
+              className="gap-1.5 border-[var(--eis-danger)] text-[var(--eis-danger)] hover:bg-[var(--eis-danger-subtle,rgba(207,34,46,0.08))] dark:border-[#f85149] dark:text-[#f85149] dark:hover:bg-[#2d1517]"
+            >
+              {busy ? <Loader2 className="h-3.5 w-3.5 animate-spin" aria-hidden="true" /> : <Trash2 className="h-3.5 w-3.5" aria-hidden="true" />}
+              Clear queue ({counts.ALL})
             </Button>
           )}
           <Button variant="outline" size="sm" onClick={load} disabled={busy} className="gap-1.5 border-[var(--eis-border)] text-[var(--eis-fg)] hover:bg-[var(--eis-canvas-subtle)]">
