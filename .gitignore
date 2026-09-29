@@ -91,6 +91,7 @@ scripts/*
 !scripts/fx_rate.json
 !scripts/mail_sink.mjs
 !scripts/mail_livefire.ts
+!scripts/mail_showcase.py
 
 # self-improvement telemetry — may contain statement excerpts, never commit
 parser_samples/
