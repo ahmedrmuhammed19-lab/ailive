@@ -115,7 +115,7 @@ export function AccountsPanel({ refreshKey }: { refreshKey?: number }) {
           {rows?.map((u) => (
             <div key={u.username} className="flex flex-wrap items-center gap-x-4 gap-y-2 px-4 py-3">
               <Circle
-                className={`h-2.5 w-2.5 fill-current ${u.active ? "text-[var(--eis-btn-green-hover)]" : "text-[#d1242f]"}`}
+                className={`h-2.5 w-2.5 fill-current ${u.active ? "eis-dot-live text-[var(--eis-online)]" : "text-[#d1242f]"}`}
                 aria-hidden="true"
               />
               <div className="min-w-0">
@@ -260,7 +260,7 @@ export function AccountsPanel({ refreshKey }: { refreshKey?: number }) {
           role="status"
           className={`rounded-md border px-3 py-2 text-sm ${
             msg.kind === "ok"
-              ? "border-[var(--eis-border)] bg-[var(--eis-success-subtle)] text-[var(--eis-btn-green-hover)]"
+              ? "border-[var(--eis-border)] bg-[var(--eis-success-subtle)] text-[var(--eis-success)]"
               : "border-[var(--eis-border)] bg-[var(--eis-danger-subtle)] text-[var(--eis-danger)]"
           }`}
         >

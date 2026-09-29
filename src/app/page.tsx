@@ -162,6 +162,7 @@ export default function PortalPage() {
         <span className="eis-orb eis-orb-b" />
         <span className="eis-orb eis-orb-c" />
         <span className="eis-stars" />
+        <span className="eis-grain" />
       </div>
 
       {/* Header — floating glass bar */}

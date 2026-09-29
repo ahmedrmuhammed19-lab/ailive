@@ -324,6 +324,8 @@ export function QueuePanel({ refreshKey, isOperator }: { refreshKey: number; isO
                 item.status === "ANALYZING" && item.needsManual
                   ? STATUS_META.NEEDS_MANUAL
                   : STATUS_META[item.status] ?? STATUS_META.WAITING;
+              // DONE is the "online" state — its dot gets the live green pulse.
+              const live = meta === STATUS_META.DONE;
               const open = expanded === item.id;
               return (
                 <li key={item.id} className="group">
@@ -351,9 +353,13 @@ export function QueuePanel({ refreshKey, isOperator }: { refreshKey: number; isO
                     )}
                     <span
                       className="flex shrink-0 items-center gap-1.5 rounded-full border px-2 py-0.5 text-[11px] font-semibold"
-                      style={{ backgroundColor: meta.bg, color: meta.fg, borderColor: `${meta.dot}66` }}
+                      style={{ backgroundColor: meta.bg, color: meta.fg, borderColor: meta.border }}
                     >
-                      <span className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: meta.dot }} aria-hidden="true" />
+                      <span
+                        className={`h-1.5 w-1.5 rounded-full ${live ? "eis-dot-live" : ""}`}
+                        style={{ backgroundColor: meta.dot }}
+                        aria-hidden="true"
+                      />
                       {meta.label}
                     </span>
                     <span className="shrink-0 font-mono text-sm font-semibold" style={{ color: GH.fg }}>

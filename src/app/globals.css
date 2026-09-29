@@ -126,13 +126,16 @@
 }
 
 /* ============================================================
-   Global EIS portal — 2026 design system ("Aurora Glass — Live",
-   navy edition). Brand anchor: NAVY BLUE (#1e40af→#2563eb light /
-   #60a5fa→#3b82f6 dark). Live layer: cool-spectrum RGB companions
-   (--eis-live-1/2/3 = cyan/indigo/violet) drift, twinkle and cycle
-   behind glass surfaces. GH tokens in src/lib/format.ts reference
-   these variables, so inline styles and SVG props flip with the
-   .dark class too.
+   Global EIS portal — 2026 design system ("Rubber Navy — Live",
+   2026 edition). Brand anchor: NAVY BLUE (#1e40af→#2563eb light /
+   #60a5fa→#3b82f6 dark) on a deep rubberized navy canvas — matte,
+   soft-touch surfaces with a fine grain. Live layer: cool-spectrum
+   RGB companions (--eis-live-1/2/3 = cyan/indigo/violet) drift,
+   twinkle and cycle behind glass surfaces. Online/success states
+   are GREEN (--eis-success / --eis-online) with a pulsing glow
+   (.eis-dot-live). GH tokens in src/lib/format.ts reference these
+   variables, so inline styles and SVG props flip with the .dark
+   class too.
    ============================================================ */
 :root {
   color-scheme: light;
@@ -150,8 +153,9 @@
   --eis-accent: #1e40af;
   --eis-accent-2: #2563eb;
   --eis-accent-subtle: #eff6ff;
-  --eis-success: #1d4ed8;
-  --eis-success-subtle: #dbeafe;
+  --eis-success: #1a7f37;
+  --eis-success-subtle: #dafbe1;
+  --eis-online: #16a34a;
   --eis-attention: #b45309;
   --eis-attention-subtle: #fef7e6;
   --eis-attention-fg: #7c3a00;
@@ -173,22 +177,24 @@
 
 .dark {
   color-scheme: dark;
-  --eis-canvas: #080f21;
-  --eis-canvas-subtle: #0e1834;
-  --eis-canvas-glass: rgba(13, 21, 44, 0.62);
+  /* Rubber navy canvas: deeper, denser blue — matte soft-touch feel */
+  --eis-canvas: #070d1c;
+  --eis-canvas-subtle: #0c1428;
+  --eis-canvas-glass: rgba(9, 15, 32, 0.74);
   --eis-live-1: #38bdf8;
   --eis-live-2: #818cf8;
   --eis-live-3: #a78bfa;
-  --eis-hover: #16203c;
-  --eis-border: #1e2a4a;
-  --eis-border-muted: #18223d;
+  --eis-hover: #131c36;
+  --eis-border: #1b2545;
+  --eis-border-muted: #151f3a;
   --eis-fg: #e8edf7;
   --eis-muted: #8ea0bd;
   --eis-accent: #60a5fa;
   --eis-accent-2: #3b82f6;
   --eis-accent-subtle: #0d2145;
-  --eis-success: #60a5fa;
-  --eis-success-subtle: #0d2145;
+  --eis-success: #4ade80;
+  --eis-success-subtle: rgba(34, 197, 94, 0.13);
+  --eis-online: #22c55e;
   --eis-attention: #fbbf24;
   --eis-attention-subtle: #2a2110;
   --eis-attention-fg: #fcd34d;
@@ -205,7 +211,11 @@
   --eis-scale-3: #3b82f6;
   --eis-scale-4: #60a5fa;
   --eis-glow: 0 0 0 1px rgba(59, 130, 246, 0.16), 0 8px 32px -6px rgba(59, 130, 246, 0.25);
-  --eis-card-shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 12px 32px -16px rgba(0, 0, 0, 0.5);
+  /* Rubber panel depth: faint top sheen (soft-touch), deep diffuse drop */
+  --eis-card-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.045),
+    0 1px 2px rgba(0, 0, 0, 0.45),
+    0 14px 36px -16px rgba(0, 0, 0, 0.6);
 }
 
 /* --- Dark overrides for hardcoded light-only utilities --- */
@@ -290,8 +300,8 @@
   top: 32%;
   left: 36%;
   background:
-    radial-gradient(closest-side, rgba(139, 92, 246, 0.22), transparent 70%),
-    radial-gradient(closest-side, rgba(37, 99, 235, 0.18), transparent 76%);
+    radial-gradient(closest-side, rgba(99, 102, 241, 0.24), transparent 70%),
+    radial-gradient(closest-side, rgba(37, 99, 235, 0.2), transparent 76%);
   opacity: 0.44;
   animation:
     eis-drift-c 39s ease-in-out infinite alternate,
@@ -363,15 +373,37 @@
 }
 
 /* Glass surface: translucent panel with a live RGB edge light.
+   Rubber finish — matte blur, subtle inner top sheen, soft depth.
    Panels keep their semantic token colors; this adds depth. */
 .eis-glass {
   position: relative;
   background: var(--eis-canvas-glass);
-  backdrop-filter: blur(14px) saturate(1.35);
-  -webkit-backdrop-filter: blur(14px) saturate(1.35);
+  backdrop-filter: blur(16px) saturate(1.15);
+  -webkit-backdrop-filter: blur(16px) saturate(1.15);
   border: 1px solid var(--eis-border);
   box-shadow: var(--eis-card-shadow);
 }
+.eis-glass::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.05), transparent 22%);
+  pointer-events: none;
+}
+.dark .eis-glass::before { background: linear-gradient(180deg, rgba(148, 178, 255, 0.055), transparent 24%); }
+
+/* Rubber grain: ultra-fine fractal noise tiled over the aurora —
+   gives the canvas its matte, soft-touch rubber texture. */
+.eis-grain {
+  position: absolute;
+  inset: 0;
+  opacity: 0.032;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='280' height='280'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.7'/%3E%3C/svg%3E");
+  background-size: 280px 280px;
+  pointer-events: none;
+}
+.dark .eis-grain { opacity: 0.05; }
 .eis-glass::after {
   content: "";
   position: absolute;
@@ -400,6 +432,29 @@
 .dark .eis-glass::after { opacity: 0.6; }
 @keyframes eis-spin {
   to { --eis-angle: 360deg; }
+}
+
+/* Online status: live green dot with a pulsing glow ring — the classic
+   "online" effect. Pair with color var(--eis-online). */
+.eis-dot-live {
+  animation: eis-online-pulse 2.2s ease-out infinite;
+}
+@keyframes eis-online-pulse {
+  0% {
+    box-shadow:
+      0 0 0 0 rgba(34, 197, 94, 0.5),
+      0 0 7px 1px rgba(34, 197, 94, 0.45);
+  }
+  70% {
+    box-shadow:
+      0 0 0 6px rgba(34, 197, 94, 0),
+      0 0 7px 1px rgba(34, 197, 94, 0.45);
+  }
+  100% {
+    box-shadow:
+      0 0 0 0 rgba(34, 197, 94, 0),
+      0 0 7px 1px rgba(34, 197, 94, 0.45);
+  }
 }
 
 /* Live gradient brand mark — navy core with an indigo tail, slowly panning */
@@ -506,6 +561,7 @@
   .eis-gradient-brand,
   .eis-gradient-text,
   .eis-cta,
+  .eis-dot-live,
   .eis-sheen::before {
     animation: none !important;
   }
