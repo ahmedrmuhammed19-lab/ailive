@@ -155,9 +155,14 @@ export default function PortalPage() {
   const tabs = [...TABS, ...(user?.role === "operator" ? [{ value: "accounts", label: "Accounts", icon: UserCog }] : [])];
 
   return (
-    <div className="flex min-h-screen flex-col bg-[var(--eis-canvas)]" style={{ color: GH.fg }}>
-      {/* Ambient aurora backdrop */}
-      <div className="eis-aurora" aria-hidden="true" />
+    <div className="flex min-h-screen flex-col" style={{ color: GH.fg }}>
+      {/* Ambient aurora backdrop — live RGB scene */}
+      <div className="eis-aurora" aria-hidden="true">
+        <span className="eis-orb eis-orb-a" />
+        <span className="eis-orb eis-orb-b" />
+        <span className="eis-orb eis-orb-c" />
+        <span className="eis-stars" />
+      </div>
 
       {/* Header — floating glass bar */}
       <header className="sticky top-0 z-40 border-b border-[var(--eis-border)] bg-[var(--eis-canvas-glass)] backdrop-blur-xl backdrop-saturate-150">

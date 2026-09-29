@@ -117,21 +117,31 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground;
+    /* Canvas color lives on the BODY so it propagates to the root
+       canvas — painted below the negative-z fixed aurora, letting the
+       live RGB orbs and star dust show through the app shell. */
+    @apply text-foreground;
+    background-color: var(--eis-canvas);
   }
 }
 
 /* ============================================================
-   Global EIS portal — 2026 design system ("Aurora Glass", navy edition).
-   Brand accent: NAVY BLUE (#1e40af→#2563eb light / #60a5fa→#3b82f6 dark).
-   GH tokens in src/lib/format.ts reference these variables, so
-   inline styles and SVG props flip with the .dark class too.
+   Global EIS portal — 2026 design system ("Aurora Glass — Live",
+   navy edition). Brand anchor: NAVY BLUE (#1e40af→#2563eb light /
+   #60a5fa→#3b82f6 dark). Live layer: cool-spectrum RGB companions
+   (--eis-live-1/2/3 = cyan/indigo/violet) drift, twinkle and cycle
+   behind glass surfaces. GH tokens in src/lib/format.ts reference
+   these variables, so inline styles and SVG props flip with the
+   .dark class too.
    ============================================================ */
 :root {
   color-scheme: light;
   --eis-canvas: #ffffff;
   --eis-canvas-subtle: #f4f6fb;
   --eis-canvas-glass: rgba(255, 255, 255, 0.72);
+  --eis-live-1: #0ea5e9;
+  --eis-live-2: #6366f1;
+  --eis-live-3: #8b5cf6;
   --eis-hover: #edf1f8;
   --eis-border: #e2e8f0;
   --eis-border-muted: #e8edf4;
@@ -163,9 +173,12 @@
 
 .dark {
   color-scheme: dark;
-  --eis-canvas: #0b1120;
-  --eis-canvas-subtle: #101830;
-  --eis-canvas-glass: rgba(16, 24, 48, 0.6);
+  --eis-canvas: #080f21;
+  --eis-canvas-subtle: #0e1834;
+  --eis-canvas-glass: rgba(13, 21, 44, 0.62);
+  --eis-live-1: #38bdf8;
+  --eis-live-2: #818cf8;
+  --eis-live-3: #a78bfa;
   --eis-hover: #16203c;
   --eis-border: #1e2a4a;
   --eis-border-muted: #18223d;
@@ -225,11 +238,13 @@
 .dark .divide-\[\#eaeef2\] > :not(:last-child) { border-color: var(--eis-divide); }
 
 /* ============================================================
-   2026 primitives — aurora canvas, glass surfaces, accents
+   2026 primitives — LIVE aurora canvas, glass surfaces, accents
    ============================================================ */
 
-/* Ambient aurora backdrop: two slow-drifting conic/radial glows over
-   the canvas + a fine grain layer for depth. Purely decorative. */
+/* Live aurora backdrop: three blurred orbs drift on independent paths
+   while a per-orb hue oscillation cycles them through the cool RGB
+   spectrum (cyan → azure → indigo → violet) around the navy anchor.
+   A tiled star-dust layer twinkles on top. Purely decorative. */
 .eis-aurora {
   position: fixed;
   inset: 0;
@@ -237,86 +252,217 @@
   overflow: hidden;
   pointer-events: none;
 }
-.eis-aurora::before,
-.eis-aurora::after {
-  content: "";
+.eis-orb {
   position: absolute;
   border-radius: 9999px;
-  filter: blur(90px);
-  opacity: 0.55;
-  will-change: transform;
+  filter: blur(80px);
+  will-change: transform, filter;
 }
-.eis-aurora::before {
-  width: 44rem;
-  height: 44rem;
-  top: -18rem;
-  right: -12rem;
+.eis-orb-a {
+  width: 46rem;
+  height: 46rem;
+  top: -20rem;
+  right: -14rem;
   background:
-    radial-gradient(closest-side, rgba(37, 99, 235, 0.35), transparent 70%),
-    radial-gradient(closest-side, rgba(30, 64, 175, 0.22), transparent 75%);
-  animation: eis-drift-a 38s ease-in-out infinite alternate;
+    radial-gradient(closest-side, rgba(37, 99, 235, 0.4), transparent 70%),
+    radial-gradient(closest-side, rgba(14, 165, 233, 0.22), transparent 75%);
+  opacity: 0.58;
+  animation:
+    eis-drift-a 34s ease-in-out infinite alternate,
+    eis-hue-a 21s ease-in-out infinite alternate;
 }
-.eis-aurora::after {
-  width: 40rem;
-  height: 40rem;
-  bottom: -16rem;
-  left: -10rem;
+.eis-orb-b {
+  width: 42rem;
+  height: 42rem;
+  bottom: -18rem;
+  left: -12rem;
   background:
-    radial-gradient(closest-side, rgba(59, 130, 246, 0.22), transparent 72%),
-    radial-gradient(closest-side, rgba(99, 102, 241, 0.16), transparent 76%);
-  animation: eis-drift-b 46s ease-in-out infinite alternate;
+    radial-gradient(closest-side, rgba(59, 130, 246, 0.3), transparent 72%),
+    radial-gradient(closest-side, rgba(99, 102, 241, 0.26), transparent 76%);
+  opacity: 0.52;
+  animation:
+    eis-drift-b 44s ease-in-out infinite alternate,
+    eis-hue-b 27s ease-in-out infinite alternate;
 }
-.dark .eis-aurora::before { opacity: 0.4; }
-.dark .eis-aurora::after { opacity: 0.36; }
+.eis-orb-c {
+  width: 30rem;
+  height: 30rem;
+  top: 32%;
+  left: 36%;
+  background:
+    radial-gradient(closest-side, rgba(139, 92, 246, 0.22), transparent 70%),
+    radial-gradient(closest-side, rgba(37, 99, 235, 0.18), transparent 76%);
+  opacity: 0.44;
+  animation:
+    eis-drift-c 39s ease-in-out infinite alternate,
+    eis-hue-c 33s ease-in-out infinite alternate;
+}
+.eis-stars {
+  position: absolute;
+  inset: 0;
+  --eis-star-lo: 0.22;
+  --eis-star-hi: 0.55;
+  background-image:
+    radial-gradient(1px 1px at 18% 22%, rgba(96, 165, 250, 0.5), transparent 55%),
+    radial-gradient(1px 1px at 72% 12%, rgba(129, 140, 248, 0.42), transparent 55%),
+    radial-gradient(1.5px 1.5px at 44% 64%, rgba(56, 189, 248, 0.4), transparent 55%),
+    radial-gradient(1px 1px at 86% 48%, rgba(167, 139, 250, 0.36), transparent 55%),
+    radial-gradient(1px 1px at 10% 78%, rgba(96, 165, 250, 0.32), transparent 55%),
+    radial-gradient(1.5px 1.5px at 62% 88%, rgba(129, 140, 248, 0.3), transparent 55%);
+  background-repeat: repeat;
+  background-size: 640px 640px;
+  animation: eis-twinkle 9s ease-in-out infinite alternate;
+  opacity: 0.4;
+}
+.dark .eis-orb-a { opacity: 0.42; }
+.dark .eis-orb-b { opacity: 0.38; }
+.dark .eis-orb-c { opacity: 0.32; }
+.dark .eis-stars {
+  opacity: 0.75;
+  --eis-star-lo: 0.4;
+  --eis-star-hi: 0.85;
+}
 @keyframes eis-drift-a {
   from { transform: translate3d(0, 0, 0) rotate(0deg) scale(1); }
-  to { transform: translate3d(-6rem, 5rem, 0) rotate(24deg) scale(1.12); }
+  to { transform: translate3d(-7rem, 6rem, 0) rotate(28deg) scale(1.14); }
 }
 @keyframes eis-drift-b {
   from { transform: translate3d(0, 0, 0) scale(1); }
-  to { transform: translate3d(7rem, -4rem, 0) scale(1.15); }
+  to { transform: translate3d(8rem, -5rem, 0) scale(1.16); }
 }
-@media (prefers-reduced-motion: reduce) {
-  .eis-aurora::before, .eis-aurora::after { animation: none; }
+@keyframes eis-drift-c {
+  from { transform: translate3d(0, 0, 0) scale(1); }
+  to { transform: translate3d(-6rem, -7rem, 0) rotate(-18deg) scale(1.2); }
+}
+/* Hue cycles are tuned per orb so every stop stays in the cool
+   navy-indigo-violet-cyan band (never green/amber) while cycling. */
+@keyframes eis-hue-a {
+  from { filter: blur(80px) hue-rotate(0deg); }
+  to { filter: blur(80px) hue-rotate(60deg); }
+}
+@keyframes eis-hue-b {
+  from { filter: blur(80px) hue-rotate(-35deg); }
+  to { filter: blur(80px) hue-rotate(35deg); }
+}
+@keyframes eis-hue-c {
+  from { filter: blur(80px) hue-rotate(-30deg); }
+  to { filter: blur(80px) hue-rotate(30deg); }
+}
+@keyframes eis-twinkle {
+  from { opacity: var(--eis-star-lo); }
+  to { opacity: var(--eis-star-hi); }
 }
 
-/* Glass surface: translucent panel with hairline gradient edge.
+/* Rotating RGB edge for glass surfaces: @property registers the custom
+   angle so the conic gradient can animate. Browsers without @property
+   support simply render a static edge light — graceful degradation. */
+@property --eis-angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+
+/* Glass surface: translucent panel with a live RGB edge light.
    Panels keep their semantic token colors; this adds depth. */
 .eis-glass {
+  position: relative;
   background: var(--eis-canvas-glass);
   backdrop-filter: blur(14px) saturate(1.35);
   -webkit-backdrop-filter: blur(14px) saturate(1.35);
   border: 1px solid var(--eis-border);
   box-shadow: var(--eis-card-shadow);
 }
-
-/* Gradient brand mark / primary CTA */
-.eis-gradient-brand {
-  background: linear-gradient(135deg, var(--eis-accent) 0%, var(--eis-accent-2) 100%);
+.eis-glass::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: conic-gradient(
+    from var(--eis-angle),
+    transparent 0deg,
+    rgba(37, 99, 235, 0.55) 55deg,
+    rgba(14, 165, 233, 0.5) 105deg,
+    transparent 170deg,
+    transparent 205deg,
+    rgba(99, 102, 241, 0.5) 275deg,
+    rgba(139, 92, 246, 0.42) 315deg,
+    transparent 360deg
+  );
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  animation: eis-spin 16s linear infinite;
+  opacity: 0.4;
+  pointer-events: none;
 }
+.dark .eis-glass::after { opacity: 0.6; }
+@keyframes eis-spin {
+  to { --eis-angle: 360deg; }
+}
+
+/* Live gradient brand mark — navy core with an indigo tail, slowly panning */
+.eis-gradient-brand {
+  background: linear-gradient(135deg, var(--eis-accent) 0%, var(--eis-accent-2) 45%, var(--eis-live-2) 100%);
+  background-size: 200% 200%;
+  animation: eis-pan-soft 12s ease-in-out infinite;
+}
+@keyframes eis-pan-soft {
+  0%, 100% { background-position: 0% 30%; }
+  50% { background-position: 100% 70%; }
+}
+
+/* Live gradient headline text — navy → blue → cyan shimmer */
 .eis-gradient-text {
-  background: linear-gradient(120deg, var(--eis-accent), var(--eis-accent-2));
+  background: linear-gradient(120deg, var(--eis-accent), var(--eis-accent-2) 35%, var(--eis-live-1) 55%, var(--eis-accent-2) 80%, var(--eis-accent));
+  background-size: 250% 250%;
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
+  animation: eis-pan 9s ease-in-out infinite;
+}
+@keyframes eis-pan {
+  0%, 100% { background-position: 0% 40%; }
+  50% { background-position: 100% 60%; }
 }
 
-/* Primary button: gradient + glow, adaptive text color */
+/* Primary button: breathing gradient + glow, sheen sweep on hover */
 .eis-cta {
-  background: linear-gradient(135deg, var(--eis-accent) 0%, var(--eis-accent-2) 100%);
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, var(--eis-accent) 0%, var(--eis-accent-2) 50%, var(--eis-accent) 100%);
+  background-size: 220% 220%;
   color: #ffffff;
   box-shadow: var(--eis-glow);
+  animation: eis-cta-pan 7s ease-in-out infinite;
   transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease;
+}
+@keyframes eis-cta-pan {
+  0%, 100% { background-position: 0% 30%; }
+  50% { background-position: 100% 70%; }
+}
+.eis-cta::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(115deg, transparent 32%, rgba(255, 255, 255, 0.35) 50%, transparent 68%);
+  transform: translateX(-130%);
+  transition: transform 0.7s ease;
+  pointer-events: none;
 }
 .eis-cta:hover {
   filter: brightness(1.06);
   box-shadow: var(--eis-glow), 0 4px 14px -2px rgba(37, 99, 235, 0.45);
   transform: translateY(-1px);
 }
+.eis-cta:hover::after { transform: translateX(130%); }
 .eis-cta:active { transform: translateY(0); }
 .eis-cta:disabled { opacity: 0.55; transform: none; filter: none; }
+.eis-cta:disabled::after { display: none; }
 
-/* Hairline top shine for panel headers */
+/* Hairline top shine for panel headers — a violet-blue light slowly
+   sweeps left → right along the top edge */
 .eis-sheen {
   position: relative;
 }
@@ -325,8 +471,14 @@
   position: absolute;
   inset: 0 0 auto 0;
   height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(96, 165, 250, 0.55), transparent);
+  background: linear-gradient(90deg, transparent, rgba(96, 165, 250, 0.55) 35%, rgba(139, 92, 246, 0.45) 50%, rgba(96, 165, 250, 0.55) 65%, transparent);
+  background-size: 200% 100%;
+  animation: eis-sheen-slide 8s linear infinite;
   pointer-events: none;
+}
+@keyframes eis-sheen-slide {
+  from { background-position: 200% 0; }
+  to { background-position: -200% 0; }
 }
 
 /* Modern scrollbar */
@@ -344,4 +496,17 @@
 ::-webkit-scrollbar-thumb:hover { background-color: var(--eis-neutral); }
 ::selection {
   background: rgba(59, 130, 246, 0.32);
+}
+
+/* Accessibility: one switch kills every live/decorative motion */
+@media (prefers-reduced-motion: reduce) {
+  .eis-orb,
+  .eis-stars,
+  .eis-glass::after,
+  .eis-gradient-brand,
+  .eis-gradient-text,
+  .eis-cta,
+  .eis-sheen::before {
+    animation: none !important;
+  }
 }
