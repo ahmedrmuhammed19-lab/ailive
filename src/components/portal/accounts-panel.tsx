@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Loader2, RefreshCw, ShieldCheck, ShieldOff, KeyRound, UserPlus, Circle } from "lucide-react";
+import { Loader2, RefreshCw, ShieldCheck, ShieldOff, KeyRound, UserPlus } from "lucide-react";
 
 type UserRow = {
   username: string;
@@ -114,9 +114,13 @@ export function AccountsPanel({ refreshKey }: { refreshKey?: number }) {
           )}
           {rows?.map((u) => (
             <div key={u.username} className="flex flex-wrap items-center gap-x-4 gap-y-2 px-4 py-3">
-              <Circle
-                className={`h-2.5 w-2.5 fill-current ${u.active ? "eis-dot-live text-[var(--eis-online)]" : "text-[#d1242f]"}`}
+              {/* HTML dot (not an SVG icon): box-shadow glow + rounded-full
+                  keep the live pulse perfectly circular. */}
+              <span
                 aria-hidden="true"
+                className={`block h-2.5 w-2.5 shrink-0 rounded-full ${
+                  u.active ? "eis-dot-live bg-[var(--eis-online)]" : "bg-[#d1242f]"
+                }`}
               />
               <div className="min-w-0">
                 <p className="text-sm font-semibold leading-tight">
