@@ -35,3 +35,26 @@ Stage Summary:
 - Durability: worklog + ops scripts + fixtures now git-tracked; DB untracked
 - Known exposure (future hardening): work-all/retry can still race an in-flight auto-work run
   (double ParseLog possible); start-DONE guard removes the common path
+
+---
+Task ID: QUEUE-AUTOWORK-1 — FINAL RESOLUTION (2026-10-01, later)
+Agent: main (Super Z)
+Task: Land zero-tap AUTO_WORK on the reconciled mainline and push to prod.
+
+Work Log:
+- Discovered another session had re-based yesterday's 62d7635 (Clear queue) onto the theme line
+  and force-pushed it as origin/main (6 commits incl. clear-queue re-application + upload-route
+  restore); merge-base = theme commit 269d57e
+- Rebased my a20cf85 (AUTOWORK) onto origin/main -> a0abe3b; 2 conflicts (panel Clear button +
+  photo fixture — origin already had both) resolved --theirs; all AUTOWORK parts landed:
+  after()-driven engine on upload, AUTO_WORK=0 kill switch, start-on-DONE no-op, dual-mode suite,
+  worklog/scripts tracked, DB untracked
+- DB survived this round (abdo intact, login 200 verified); re-verified creds + env
+- Final validation on the exact shipped tree: test_autowork.py 12/12 PASS, regression 83/83 PASS,
+  tsc clean; pushed 62d7635..a0abe3b — Vercel auto-deploys zero-tap flow to prod
+
+Stage Summary:
+- PRODUCTION now has: navy theme UI + scan/OCR pipeline + Clear-queue button + ZERO-TAP engine
+  (upload -> auto green/yellow/red with mails). abdo/boda2026 (client) live locally.
+- Lineage war resolved in git history: old lineage fully contained in origin's history; theme
+  line restored via origin; backup-theme-autowork branch kept locally as archive.
