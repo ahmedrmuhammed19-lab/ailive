@@ -246,7 +246,7 @@ export function QueuePanel({ refreshKey, isOperator }: { refreshKey: number; isO
       )
     )
       return;
-    if (!window.confirm(`Final check: type-confirming deletion of ${total} case${total > 1 ? "s" : ""}.\n\nAre you sure?`)) return;
+    if (!window.confirm(`Final check: confirming deletion of ${total} case${total > 1 ? "s" : ""}.\n\nAre you sure?`)) return;
     setBusy(true);
     try {
       const res = await fetch(`/api/queue/clear`, {
@@ -344,7 +344,7 @@ export function QueuePanel({ refreshKey, isOperator }: { refreshKey: number; isO
               onClick={clearQueue}
               disabled={busy}
               title="Delete every case in the queue with its files, reports and engine logs — accounts and mail audit are kept"
-              className="gap-1.5 border-[var(--eis-danger)] text-[var(--eis-danger)] hover:bg-[var(--eis-danger-subtle,rgba(207,34,46,0.08))] dark:border-[#f85149] dark:text-[#f85149] dark:hover:bg-[#2d1517]"
+              className="gap-1.5 border-[var(--eis-danger)] text-[var(--eis-danger)] hover:bg-[rgba(207,34,46,0.08)] dark:border-[#f85149] dark:text-[#f85149] dark:hover:bg-[#2d1517]"
             >
               {busy ? <Loader2 className="h-3.5 w-3.5 animate-spin" aria-hidden="true" /> : <Trash2 className="h-3.5 w-3.5" aria-hidden="true" />}
               Clear queue ({counts.ALL})

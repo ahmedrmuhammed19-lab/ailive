@@ -227,6 +227,19 @@ export async function GET(req: Request) {
 
   // start is the FIRST run only; retry is the deliberate re-run (also rescues
   // cases stuck in ANALYZING). Both end up in the same engine below.
+  // DONE cases are never re-fired by start — with AUTO_WORK the engine has
+  // usually finished before an operator tap; re-runs go through retry only,
+  // so eager double-taps can never duplicate reports or client mails.
+  if (action === "start" && sub.status === "DONE") {
+    return page({
+      tone: "ok",
+      title: "Already delivered",
+      headline: "✓ This case is already delivered",
+      body:
+        `${detail}<br>The engine already completed this case — it is marked <b>DONE</b> and nothing was changed.` +
+        `<br>To re-run the analysis on it, use the <b>Retry</b> link from the operator email or the queue's “↻ Retry engine” button.`,
+    });
+  }
   if (action === "start" && sub.status === "ANALYZING") {
     return page({
       tone: "warn",

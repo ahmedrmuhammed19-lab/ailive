@@ -207,7 +207,9 @@ st, b, j, _ = http("GET", "/api/queue", cookie=ck_op)
 q = (j or {}).get("queue", [])
 row = next((r for r in q if r.get("id") == GREEN_ID), None)
 ck("C3 queue lists green case", row is not None, str(q)[:200])
-ck("C4 green case WAITING", row is not None and row.get("status") == "WAITING", str(row and row.get("status")))
+# AUTO_WORK mode: the engine may already be ANALYZING or DONE by the time we
+# look; manual mode: WAITING. All three are healthy here.
+ck("C4 green case present (WAITING/ANALYZING/DONE)", row is not None and row.get("status") in ("WAITING", "ANALYZING", "DONE"), str(row and row.get("status")))
 ck("C5 green case queueId", row is not None and row.get("userId") == "EISQA-OP-GREEN", str(row and row.get("userId")))
 
 st, b, j, _ = http("GET", "/api/queue", cookie=ck_a)
@@ -216,11 +218,23 @@ st, b, j, _ = http("GET", "/api/queue", cookie=ck_b)
 ck("C7 client B does NOT see op case", not any(r.get("id") == GREEN_ID for r in (j or {}).get("queue", [])))
 
 st, b, j, _ = http("POST", "/api/queue/work-all", {}, cookie=ck_op)
-ck("C8 work-all runs + attempts our case", st == 200 and j and j.get("ok") and j.get("attempted", 0) >= 1,
-   f"{st} attempted={j and j.get('attempted')}")
+_green_status_now = sql(f"SELECT status FROM Submission WHERE id='{GREEN_ID}';")
+ck("C8 work-all runs + attempts our case (or AUTO_WORK beat it)",
+   st == 200 and j and j.get("ok") and (j.get("attempted", 0) >= 1 or _green_status_now == "DONE"),
+   f"{st} attempted={j and j.get('attempted')} status={_green_status_now}")
 row_status = wait_status(GREEN_ID, "DONE")
 ck("C9 green case DONE (DB truth)", row_status == "DONE", row_status)
-pl = sql(f"SELECT outcome || ' ' || integrityMin || '/' || integrityAvg FROM ParseLog WHERE submissionId='{GREEN_ID}' ORDER BY createdAt DESC LIMIT 1;")
+
+def wait_parselog(sid, timeout=90):
+    dl = time.time() + timeout
+    while time.time() < dl:
+        pl = sql(f"SELECT outcome || ' ' || integrityMin || '/' || integrityAvg FROM ParseLog WHERE submissionId='{sid}' ORDER BY createdAt DESC LIMIT 1;")
+        if pl and pl.strip() and "None" not in pl:
+            return pl
+        time.sleep(2)
+    return pl
+
+pl = wait_parselog(GREEN_ID)
 ck("C10 ParseLog auto-delivered 100/100", "auto-delivered" in pl and "100" in pl, pl or "(no rows)")
 
 st, b, j, _ = http("GET", "/api/reports", cookie=ck_op)
@@ -261,8 +275,10 @@ st, b, j, _ = http("GET", "/api/queue", cookie=ck_op)
 ck("D5 operator sees client case", any(r.get("id") == CL_ID for r in (j or {}).get("queue", [])))
 
 st, b, j, _ = http("POST", "/api/queue/work-all", {}, cookie=ck_op)
-ck("D6 work-all runs client case", st == 200 and j and j.get("ok") and j.get("attempted", 0) >= 1,
-   f"{st} attempted={j and j.get('attempted')}")
+_cl_status_now = sql(f"SELECT status FROM Submission WHERE id='{CL_ID}';")
+ck("D6 work-all runs client case (or AUTO_WORK beat it)",
+   st == 200 and j and j.get("ok") and (j.get("attempted", 0) >= 1 or _cl_status_now == "DONE"),
+   f"{st} attempted={j and j.get('attempted')} status={_cl_status_now}")
 row_status = wait_status(CL_ID, "DONE")
 ck("D7 client case DONE (DB truth)", row_status == "DONE", row_status)
 

@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+import { NextResponse, after } from "next/server";
 import { db } from "@/lib/db";
 import {
   extAllowed,
@@ -11,6 +11,7 @@ import {
 import { DB_STORAGE, putStatement } from "@/lib/storage";
 import { loadMailCreds, operatorAddress, sendOrQueue } from "@/lib/mail";
 import { PORTAL_BASE_URL, actionUrl, statementViewUrl } from "@/lib/actions";
+import { runEngine } from "@/lib/engine-run";
 import { sessionUser } from "@/lib/session";
 import path from "path";
 
@@ -172,7 +173,7 @@ async function finalizeUpload(
     `Client email    : ${clientEmail ?? "not provided — report will go to this mailbox"}\n\n` +
     `Files (${handshake.length}) — MD5 hash-locked on arrival:\n${fileList}\n\n` +
     `View the statement(s) in your browser:\n${viewLinks}\n\n` +
-    `Tap "Start Analysis" (or the same case on the portal queue) to begin the process.\n\n` +
+    `Analysis starts automatically in the background — no tap needed. The button below still works if a manual re-run is ever required.\n\n` +
     `— Global EIS automated intake`;
 
   // Rich-HTML twin of the alert — email-client-safe tables + inline styles.
@@ -221,6 +222,31 @@ async function finalizeUpload(
     submissionId: submission.id,
   });
 
+  // --- AUTO_WORK: fire the engine automatically, zero taps ---
+  // After the response is sent, stamp ANALYZING and run the full engine
+  // (same code path as the signed start link — behavior can never drift).
+  // Kill switch: AUTO_WORK=0 restores the manual "Start Analysis" flow.
+  const autoWork = process.env.AUTO_WORK !== "0";
+  if (autoWork) {
+    after(async () => {
+      try {
+        const fresh = await db.submission.findUnique({ where: { id: submission.id } });
+        if (!fresh || fresh.status !== "WAITING") return; // operator beat us to it
+        await db.submission.update({
+          where: { id: fresh.id },
+          data: { status: "ANALYZING", analyzedAt: null },
+        });
+        const run = await runEngine(fresh, userId);
+        console.log(
+          `[auto-work] queue=${userId} submission=${fresh.id} outcome=${run.outcome}` +
+            (run.integrity.length ? ` integrity=${run.integrity.join("/")}%` : "")
+        );
+      } catch (err) {
+        console.error(`[auto-work] queue=${userId} submission=${submission.id} failed:`, err);
+      }
+    });
+  }
+
   return NextResponse.json({
     ok: true,
     submissionId: submission.id,
@@ -228,6 +254,7 @@ async function finalizeUpload(
     status: "WAITING",
     queuePosition: waitingAhead,
     handshake,
+    autoWork,
   });
 }
 
