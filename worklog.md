@@ -514,3 +514,49 @@ Stage Summary:
   a real case; feature verified locally (1.0s pass, both lanes) and deploys
   with every future upload. One-tap link now ends at the healthy "Queue
   already clear" page.
+
+---
+Task ID: SYNC-1 (2026-10-03)
+Agent: main (Super Z)
+Task: "check the portal and you are sync together for every rule, process,
+workflow and nodes... new lessons applied... rules the only last 6 month" +
+"one link = order to do the job... start your job... check self improvement
+allowed".
+
+Work Log:
+- FULL SYNC AUDIT (portal code vs agent workspace):
+  * IN SYNC: digital fast-lane (text extract -> 100% chain -> auto-deliver);
+    big-scan triage (FASTLANE-1); OCR shadow never auto-delivers;
+    6-month embassy window (applySixMonthWindow, engine + analyst reports);
+    AUTO_DELIVER_MIN=1 default; mail lock TEST_MAIL_TO; report design
+    report_design.ts #005677/#008DCB; per-country benchmarks;
+    work-all/brief maxDuration 300, upload 120.
+  * Lessons loop: ACTIVE by design — ParseLog on every attempt, fingerprint
+    dedupe (layout + chain-shape), 15-min cooldown, /api/engine/logs for
+    operator, PARSER_VERSION eis-ts/3.0. No disable flag exists.
+  * GAP FIXED: local .env stripped by sandbox reset (PORTAL_BASE_URL +
+    SESSION_SECRET restored; local-minted links were defaulting to prod).
+  * GAP NOTED: config/mail_credentials.json wiped by reset -> local mail =
+    outbox file mode (prod unaffected, MAIL_CREDS_JSON env); needs user
+    re-supply to restore local IMAP/SMTP checks.
+  * GAP NOTED: download/ + wafa_work artifacts wiped again by reset; all
+    regenerable from tracked generators (scripts/wafa_*.py, wafa_report_data.py).
+- BUILT one-link MISSION BRIEF (commit 85cdbee): GET /api/queue/go/<token>/brief
+  — same HMAC path-form trust; opening it FIRES a full queue pass then renders:
+  pass tally, per-case work orders (outcome/chain/view links/deliver/nudge/
+  re-run), explicit analyst orders (big-scan forensic pipeline + attach flow;
+  draft review + deliver), self-improvement block (ParseLog totals, last
+  attempt, parser version), and the standing rules contract checklist.
+- New src/lib/queue-brief.ts (pure builder) + route; local test
+  scripts/test_brief.ts: 8/8 PASS; lint clean; pushed; PROD VERIFIED via
+  page_reader: brief renders "Queue clear" + rules contract + self-improvement.
+
+Stage Summary:
+- Standing protocol: sending the brief link in agent chat IS the job order —
+  agent opens it (fires pass), reads analyst orders, completes flagged cases
+  off-platform, attaches reports so the queue goes green.
+- Brief URL (path form, survives link preview):
+  /api/queue/go/<workall-token>/brief alongside /go/<token> (quick pass) and
+  /go/<token>/status (read-only snapshot).
+- Prod queue remains EMPTY (cleared by operator earlier today); next real
+  upload exercises all lanes automatically.
