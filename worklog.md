@@ -448,3 +448,26 @@ Stage Summary:
   or an operator session).
 - Open items: mail app password re-supply (blocks IMAP verification locally);
   PDF edition of the report regenerable on request (wafa_report.py pipeline).
+
+---
+Task ID: MQAHR-CHECK (2026-10-03)
+Agent: main (Super Z)
+Task: User asked "do you work on this كشف_حساب_عيد_شاعت_الاهلي_معدل.pdf ?" — verify
+whether the Al Ahly scan inside EIS-MQAHR was actually analyzed.
+
+Work Log:
+- Prod /status snapshot (21:27Z): 13/13 DONE confirmed; EIS-MQAHR DONE at
+  18:55:43Z with report GlobalEIS_Report_EidFarag_EGP.html (31,430B) attached —
+  that is the WAFA-bank analysis of the same client (Eid Shaat), per ATTACH-1.
+- Searched sandbox for the Al Ahly scan: upload/ holds كشف الحساب.pdf (35pp,
+  AAIB / Salah Beshir Mohamed — different bank+client), WAFA 48pp original,
+  CIB/other files. NO copy of the Al Ahly Eid Shaat statement exists locally.
+- Conclusion: the EIS-MQAHR file itself was never OCR-parsed (serverless kills
+  at 120s/300s) and never read by the analyst; case was closed by attachment.
+
+Stage Summary:
+- Answer to user: queue case DONE, but the Al Ahly statement content itself is
+  unanalyzed. To do a real pass, the PDF must be sent into the sandbox (chat
+  attachment) — prod Postgres bytes unreachable (JINA can't carry binary).
+- Once received: full WAFA-style forensic pipeline + report, then attach via
+  /api/queue/attach to EIS-MQAHR as the dedicated Al Ahly report.
