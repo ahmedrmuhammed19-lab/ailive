@@ -319,3 +319,41 @@ Stage Summary:
   (finished Eid Shaat WAFA report already exists in download/ for reuse).
 - New permanent portal capability: query-free one-tap link + session-free queue
   snapshot, both gated by the same HMAC token.
+
+---
+Task ID: PORTAL-DESIGN-1 (2026-10-03)
+Agent: main (Super Z)
+Task: "many different between here and our portal, different design, rules..."
+-> unify: portal reports adopt the canonical client design (standing NEXT item
+from WAFA-CLIENT-DESIGN-1).
+
+Work Log:
+- RESET #5 mid-session (hostile, continuous): .env stripped twice, db/custom.db
+  deleted twice, config/mail_credentials.json deleted (APP PASSWORD NOT
+  RECOVERABLE — operator must re-supply), src/app/api/upload/route.ts deleted
+  (restored via git checkout; lesson: commit early), lightningcss native
+  module missing (npm i --legacy-peer-deps).
+- New tracked scripts/restore_env.sh: regenerates .env keys (fresh
+  SESSION_SECRET, TEST_MAIL_TO lock, PORTAL_BASE_URL=localhost scoping),
+  prisma db push + seed_users.mjs. Run at the top of every server mega-call.
+- Standalone server does NOT load .env -> must `set -a; . ./.env; set +a`
+  before bun .next/standalone/server.js (dev-mode too slow for suites).
+- src/lib/report_design.ts (NEW): client template CSS verbatim + builders
+  (reportShell/kpiCard/kpiGrid/sectionTitle/tag/alertBox/analysisCard).
+- src/lib/analyze.ts buildReportHtml REWRITTEN on it: same data (KPIs,
+  chain-integrity, findings, ledger preview) in the client skin; engine/review
+  stamps + OCR banner as alert-boxes; client header ("Financial Intelligence
+  Report" + Queue/Destination/Generated/Confidential) + verbatim disclaimer
+  footer + print button.
+- QA: 83/83 comprehensive PASS + 12/12 autowork PASS on the new path;
+  scripts/qa_design_shot.js asserts gradient #005677->#008DCB, Segoe UI,
+  uppercase h1, section bars, 9 KPI cards, 5 tags, 2 alerts, footer text —
+  ALL MATCH (download/qa_portal_report.png).
+- Pushed da1183e -> production auto-deploys the client-design reports.
+
+Stage Summary:
+- Portal reports and chat/analyst editions now share ONE design system —
+  "here" and the portal can no longer drift.
+- Open items: mail app password re-supply; EIS-MQAHR (prod, red, OCR > 120s
+  cap) needs manual path; optional full portal-UI reskin (queue/login) to the
+  same tokens if the client wants it.
