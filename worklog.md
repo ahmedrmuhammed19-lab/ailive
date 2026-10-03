@@ -202,3 +202,39 @@ Stage Summary:
   (portal template, full ledger), and rich-HTML email with both attached.
 - Reusable pattern: scripts/wafa_html_mail.py is the template-driven HTML
   report mailer; swap report_data.json for any future case.
+
+---
+Task ID: WAFA-GIS-HTML-1 (2026-10-03)
+Agent: main (Super Z)
+Task: "our design like GlobalEIS_Report_HaythamAttia_EGP.html and previous -
+can you check the design?" -> verified the firm's report design and rebuilt
+the WAFA HTML report in it.
+
+Work Log:
+- Design source: upload/GlobalEIS_Report_HaythamElsayed_EGP.pdf (8 pages)
+  rendered to PNG (cover, KPI page, visa page) -> design tokens extracted:
+  navy #0f2440 / gold #b9963f, GLOBAL EIS + Financial Intelligence Services
+  letterhead, CONFIDENTIAL chrome band, 4x3 colored KPI card grid, PASS/PILL
+  badges, footer "Page N" in gold; Attia HTML not on disk (email-only copy)
+- Recovered account metadata from OCR p1 (wafa_work/p1.txt): AWB Egypt,
+  Branch 00079-MOA, Account 60008788659-29 (Class 2050102, Customer 60100363),
+  EID FARAG SAAD SHAAT, period 01/03/2026-09/09/2026
+- New tracked script scripts/wafa_gis_html.py: 8-section embassy-format HTML
+  (cover/account details, KPI dashboard + financial summary + significant
+  events, monthly breakdown + notes, income/expenditure/key parties,
+  related-party/certificates/FX + adjusted view, risk & compliance flags,
+  visa assessment + conclusion 1/2, conclusion 2/2 + recommendations)
+- Honest KPIs: Balance Verification PARTIAL (98.8% D / 99.7% C mass computed
+  live; anchors reconcile exactly), OVERALL CONDITIONAL PASS; avg monthly
+  income 669,981.88 (6 full months), annual est 8,039,782.54
+- Output: download/GlobalEIS_Report_EidFarag_EGP.html (25,895 B) - firm's
+  naming convention; Playwright screenshot QA of all 8 sections PASS
+- Email SENT 14:55:23 UTC -> test inbox (full report as HTML body + HTML/PDF
+  attachments); NOTIFICATIONS.log + outbox JSON updated
+- Note: exact computed debit-mass share is 98.8% (prior sessions quoted the
+  rounded 99.0%); script computes from raw captured/printed masses
+
+Stage Summary:
+- Firm design now reproduced faithfully in HTML for the WAFA case; 3 editions
+  exist (23pp PDF w/ ledger appendix, portal-template HTML, GIS-design HTML).
+- scripts/gis_screenshot.js = reusable per-section visual QA helper.
