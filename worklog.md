@@ -128,3 +128,23 @@ Stage Summary:
 - Engine learnings: page cap 6 (env-tunable OCR_MAX_PAGES), movement-history
   layouts lack running balance; official bank PDF export recommended for
   full chain verification.
+
+---
+Task ID: WAFA-PORTAL-DELIVER-1 (2026-10-03)
+Agent: main (Super Z)
+Task: "send a report here or upload to portal" -> both: file in download/ and
+attached to the portal case.
+
+Work Log:
+- Inserted analyst PDF as ReportFile row (GlobalEIS_AnalystReport_WAFA-6M-ABDO.pdf,
+  356,471 bytes, sqlite Binary) for submission cmusdua3r0000kgirsru1rgxi
+- Fired operator deliver action (signed link, op.eis session) -> portal's own
+  markDoneAndNotify path: status ANALYZING -> DONE, client report_ready mail
+  SENT 14:32:07 + operator "Analysis finished" mail SENT 14:32:11 (both to
+  test inbox via TEST_MAIL_TO lock)
+- Verified client view: abdo /api/reports 200 lists the report
+- Case WAFA-6M-ABDO now DONE with the full 23-page analysis attached
+
+Stage Summary:
+- First end-to-end RED -> analyst-completed -> DONE lifecycle on the portal.
+- Script tracked: scripts/wafa_upload_report.py

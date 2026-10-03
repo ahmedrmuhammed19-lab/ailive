@@ -121,3 +121,4 @@ parser_samples/
 !scripts/wafa_final.py
 !scripts/wafa_closure.py
 !scripts/wafa_parse.py
+!scripts/wafa_upload_report.py
