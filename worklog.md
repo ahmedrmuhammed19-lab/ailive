@@ -357,3 +357,39 @@ Stage Summary:
 - Open items: mail app password re-supply; EIS-MQAHR (prod, red, OCR > 120s
   cap) needs manual path; optional full portal-UI reskin (queue/login) to the
   same tokens if the client wants it.
+
+---
+Task ID: ALIGN-1 (2026-10-03)
+Agent: main (Super Z)
+Task: "i guess there's many different between here and our portal, different
+design, rules many things" -> enumerate + close the chat-vs-portal gaps.
+
+Work Log:
+- Found reports ALREADY aligned (da1183e PORTAL-DESIGN-1: buildReportHtml renders
+  through report_design.ts = the client's canonical template). Remaining real gaps:
+  portal CHROME skin + engine time ceilings.
+- Chrome rebrand (9fe9b1d): --eis-* token layer swapped navy->client petrol teal
+  (#005677 accent light, #4db7e8/#008DCB dark), live orbs/aurora/glow/selection/
+  scale ramp/borders/canvas all in-brand; shadcn oklch primaries + charts hue
+  255->230; mail/status-page accents #1e40af->#005677 (engine-run, upload,
+  work-all, action). Var names preserved, zero logic change.
+- Font: body never consumed the stack (no font-sans utility) — Geist was dead
+  weight; added font-sans to body + 'Segoe UI' first in --font-sans so the
+  portal matches the reports' typeface on Windows/Office environments.
+- Rule fix: engine routes (upload/work-all/retry/action) maxDuration 120->300
+  to match MAX_OCR_SECONDS=300 — EIS-MQAHR-class 48-page scans were being killed
+  mid-OCR at 120s (stuck ANALYZING, no outcome mail). 300s is Vercel Pro's cap.
+- QA: tsc clean; test_autowork 12/12 + test_comprehensive 83/83 PASS (twice);
+  Playwright light+dark screenshots confirm petrol-teal chrome + Segoe UI
+  (scripts/rebrand_{light,dark}.png). Debug note: dev server runs under BUN —
+  pkill -f "next dev" never matches; kill by port pid (ss -tlnp) or fuser fails
+  silently; stale .next under a zombie server serves pre-edit CSS.
+- Pushed 9fe9b1d -> prod auto-deploy.
+
+Stage Summary:
+- Portal chrome, generated reports, and mail accents now share ONE brand
+  (#005677/#008DCB + Segoe UI) — "here" and the portal no longer drift.
+- Big scans get the full 300s window before falling back to the analyst path.
+- Known remaining deltas (intentional/needs owner): old DONE cases keep
+  pre-da1183e report designs until re-run; prod queue holds Sept TEST cases
+  (Clear queue button removes them); OCR_MAX_PAGES still 6-page sampling cap.
