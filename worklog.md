@@ -471,3 +471,38 @@ Stage Summary:
   attachment) — prod Postgres bytes unreachable (JINA can't carry binary).
 - Once received: full WAFA-style forensic pipeline + report, then attach via
   /api/queue/attach to EIS-MQAHR as the dedicated Al Ahly report.
+
+---
+Task ID: FASTLANE-1 (2026-10-03)
+Agent: main (Super Z)
+Task: User idea — "engine for e-digital statements only, mission = balance
+chain 100%, quick, no Vercel timeout; JPG/CamScanner scans go to the analyst
+by order/link/queue id."
+
+Work Log:
+- Audit: the digital fast-lane ALREADY existed (text-layer extraction ->
+  parseCibTextMulti -> 100% chain gate -> auto-deliver DONE + mail; OCR
+  legs never auto-deliver). The real gap: big scans still burned the
+  serverless window inside the shadow-OCR stage (multi-engine retries +
+  chain-gap re-OCR) -> killed at 120s/300s every pass, case stuck
+  ANALYZING forever (EIS-MQAHR).
+- Implemented BIG-SCAN TRIAGE (commit a8d5297):
+  * analyze.ts: when a thin-text PDF exceeds MAX_OCR_PAGES (6), skip the
+    OCR stage entirely (pass costs ~2s) and return mode "scan-analyst"
+    with the page count; rawSamples carry triage evidence.
+  * engine-run.ts: new outcome "analyst-needed" — operator mail "big scan
+    routed to analyst" (statement view links, retry link, analyst-attach
+    guidance); ParseLog outcome analyst-needed.
+  * queue-work.ts: WorkRowOutcome + WorkAllResult.analystNeeded counter.
+- Local verify (scripts/test_scan_triage.ts, bun + local SQLite):
+  48-page CamScanner scan -> analyst-needed, whole work-all pass 1.0s;
+  4-page CIB digital PDF -> auto-delivered, integrity 100%. Both PASS.
+  (Test needed SESSION_SECRET env; rows cleaned up afterwards.)
+- Lint clean; pushed to main -> Vercel auto-deploy.
+
+Stage Summary:
+- Engine contract now: digital -> instant 100%-chain auto-deliver; big
+  scan -> instant analyst triage (no more timeouts); small scan (<=6p) ->
+  shadow OCR as before; analyst completes by queue id/link via attach.
+- Prod verification pending deploy: fire /go pass, expect EIS-MQAHR
+  analyst-needed in seconds + operator mail in test inbox.
