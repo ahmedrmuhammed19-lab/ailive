@@ -148,3 +148,28 @@ Work Log:
 Stage Summary:
 - First end-to-end RED -> analyst-completed -> DONE lifecycle on the portal.
 - Script tracked: scripts/wafa_upload_report.py
+
+---
+Task ID: WAFA-MAIL-1 (2026-10-03)
+Agent: main (Super Z)
+Task: "send the report to ahmedr.muhammed19@gmail.com" -> deliver the finished
+WAFA analysis PDF as a real email attachment to the locked test inbox.
+
+Work Log:
+- Confirmed the portal's 14:32 report_ready / operator mails carried
+  attachments: [] (link notifications only - no PDF ever attached)
+- New tracked script scripts/send_report_mail.py: SMTP_SSL smtp.gmail.com:465
+  with config/mail_credentials.json, MIMEApplication PDF attachment
+  (Global_EIS_Statement_Analysis_WAFA_6M.pdf, 356,471 bytes), plain-text body
+  with the honest verification summary (99.0% debit / 99.7% credit mass,
+  anchors reconcile exactly, OCR-noise disclosure)
+- SENT 14:40:48 UTC -> ahmedr.muhammed19@gmail.com (test inbox lock;
+  a.imam@beta.com.eg never referenced)
+- Appended SENT analyst_report line to upload/portal/_outbox/NOTIFICATIONS.log
+  and dropped outbox JSON copy 20261003144048_analyst_report_wafa6m.json
+- .gitignore whitelist += !scripts/send_report_mail.py
+
+Stage Summary:
+- The WAFA report is now delivered three ways: download/ file, portal case
+  attachment (case DONE), and direct SMTP attachment to the test inbox.
+- Reusable for any future case: python3 scripts/send_report_mail.py pattern
