@@ -58,3 +58,41 @@ Stage Summary:
   (upload -> auto green/yellow/red with mails). abdo/boda2026 (client) live locally.
 - Lineage war resolved in git history: old lineage fully contained in origin's history; theme
   line restored via origin; backup-theme-autowork branch kept locally as archive.
+
+---
+Task ID: WAFA-1 + RESET-RECOVERY-4 (2026-10-03)
+Agent: main (Super Z)
+Task: User sent real 48-page scanned statement (Wafa Bank, CamScanner, no text
+layer) for the zero-tap flow; hit environment reset #4 en route.
+
+Work Log:
+- Reset #4 detected (all api/ mtimes 12:32, machine commit 14b2d47 deleted
+  src/app/api/upload/route.ts -418 lines + scan fixtures; .env stripped to
+  DATABASE_URL; mail_credentials.json gone; DB wiped 0 users). Origin was
+  still safe at b36db0d (never pushed) -> git reset --hard b36db0d restored
+  tree. NOTE: my earlier ls-tree existence check was a false positive (exit 0
+  with no matches); always verify output content, not exit code.
+- Restored .env (fresh SESSION_SECRET + TEST_MAIL_TO lock) and
+  config/mail_credentials.json; killed stale dev server
+- Durability: abdo/boda2026 added to tracked scripts/seed_users.mjs (one
+  command re-seeds all 4 accounts now); ran seeder
+- Sandbox reaps background servers at call end (setsid/nohup/disown all die)
+  -> all server work done in single mega-calls; explains the old stuck
+  ANALYZING residue row (engine killed mid-run at teardown)
+- WAFA-1: uploaded statement as abdo via /api/upload (multipart, ASCII alias
+  filename, Arabic original noted). Zero-tap engine auto-fired: shadow OCR 3
+  variants x 6-page samples read real data (EID FARAG SAAD SHAAT, WAFA
+  CURRENT ACCOUNT EGP, cheques/transfers/deposits) but parser structured 0
+  legs -> outcome=unrecognized (RED, status stays ANALYZING). Upload alert
+  SENT 12:43:03; red alert mail cut by teardown on first run, re-fired via
+  POST /api/queue/retry {id} (start action is a friendly no-op once outcome
+  exists) -> red mail SENT 12:49:52 to test inbox. Lesson layout:
+  abf319b126f07aa6 recorded.
+- Engine OCR page cap: 6 pages per variant (48-page statement sampled, not
+  fully chained) — future hardening candidate.
+
+Stage Summary:
+- Zero-tap flow handled a real foreign scanned statement end-to-end: RED
+  branch with both one-tap remedies live in the operator inbox.
+- Repo durability improved: abdo in tracked seeder; upload_wafa.py +
+  refire_red.py tracked; reset #4 fully recovered, origin in sync.

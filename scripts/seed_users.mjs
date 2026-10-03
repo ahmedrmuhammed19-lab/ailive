@@ -15,6 +15,7 @@ const users = [
   { username: "op.eis", password: "Op-Test-2026!", label: "Operator (E2E)", role: "operator" },
   { username: "client.workq", password: "Client-2026!", label: "Client (E2E)", role: "client" },
   { username: "client.other", password: "Client-2026!", label: "Client B (scoping probe)", role: "client" },
+  { username: "abdo", password: "boda2026", label: "Client (abdo)", role: "client" },
 ];
 
 for (const u of users) {

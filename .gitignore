@@ -109,3 +109,6 @@ parser_samples/
 !scripts/mail_livefire.ts
 !scripts/mail_sink.mjs
 !scripts/test_autowork.py
+!scripts/upload_wafa.py
+!scripts/refire_red.py
+!scripts/seed_users.mjs
