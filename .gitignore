@@ -126,3 +126,5 @@ parser_samples/
 !scripts/wafa_html_mail.py
 !scripts/wafa_gis_html.py
 !scripts/gis_screenshot.js
+!scripts/wafa_gis2_html.py
+!scripts/report_template.html

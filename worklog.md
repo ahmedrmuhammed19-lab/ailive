@@ -238,3 +238,42 @@ Stage Summary:
 - Firm design now reproduced faithfully in HTML for the WAFA case; 3 editions
   exist (23pp PDF w/ ledger appendix, portal-template HTML, GIS-design HTML).
 - scripts/gis_screenshot.js = reusable per-section visual QA helper.
+
+---
+Task ID: WAFA-CLIENT-DESIGN-1 (2026-10-03)
+Agent: main (Super Z)
+Task: client supplied the ACTUAL report design (HTML template, verbatim) ->
+"i need design like the html that i sent... for portal also and here, you got
+our memory design but i send html to get recovery more ready".
+
+Work Log:
+- Saved the client's template VERBATIM as scripts/report_template.html
+  (canonical design for chat + portal editions going forward)
+- New tracked generator scripts/wafa_gis2_html.py reproduces the template's
+  CSS + 8-section structure exactly (teal/blue gradient header, KPI cards
+  with colored left borders, section bars, data tables, tag pills, alert
+  boxes, analysis grid, print button, disclaimer footer) filled with the
+  real WAFA data
+- Key filled figures: closing 523,295.93 / opening 545,904.67 / credits
+  4,100,172.41 / instant-transfers-out flag card 2,796,973.25 (687 txns,
+  68.7%); Reconciliation section: As-Reported net -22,608.74 vs ADJUSTED
+  (external only) +554,350.61 (strips 1.0M internal cheque + 423,040.65
+  reversal returns; adjusted closing 1,100,255.28 indicative)
+- Data fix found while filling: report_data.json monthly lost 4 rows /
+  EGP 31,025.00 (Feb-dated statement-tail rows fell outside the month map);
+  generator recomputes buckets directly from rows and shows them as their
+  own "Feb-dated rows (statement tail / back-values)" line - monthly table
+  now sums exactly to captured mass; per-month closing balances shown n/a
+  (layout prints no running balance; noted in-table)
+- Output: download/GlobalEIS_Report_EidFarag_EGP.html (31,424 B, overwrites
+  prior navy edition); email SENT 15:03:42 UTC -> test inbox (full HTML body
+  + HTML/PDF attachments); outbox kind analyst_report_client_design
+- Visual QA (Playwright region screenshots): header, KPI grid, reconciliation
+  table, analysis grid, footer all match the client template
+
+Stage Summary:
+- Canonical design recovered from the client's own HTML: template stored in
+  repo; generator is the fill-pattern for future cases.
+- NEXT (portal adoption): wire this template into the portal's HTML report
+  path (replace/parallel buildReportHtml in src/lib/analyze.ts) so green-auto
+  and analyst-delivered reports both use the client design.
