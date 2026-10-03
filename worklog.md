@@ -173,3 +173,32 @@ Stage Summary:
 - The WAFA report is now delivered three ways: download/ file, portal case
   attachment (case DONE), and direct SMTP attachment to the test inbox.
 - Reusable for any future case: python3 scripts/send_report_mail.py pattern
+
+---
+Task ID: WAFA-HTML-1 (2026-10-03)
+Agent: main (Super Z)
+Task: "using our template, send me an html report to my email" -> HTML edition
+of the WAFA report in the portal's own template, emailed to the test inbox.
+
+Work Log:
+- Extracted the portal's report template verbatim (STYLE CSS + structure from
+  src/lib/analyze.ts buildReportHtml: .hdr/.kpi/.wm/.note/table classes)
+- Data source: scripts/wafa_work/report_data.json (844 rows, monthly x8,
+  categories x12, bigTransactions x8, reversal mass 423,040.65)
+- New tracked script scripts/wafa_html_mail.py builds two editions:
+  * download/Global_EIS_Statement_Analysis_WAFA_6M.html (195,494 B) with the
+    COMPLETE 844-row ledger embedded ("Complete ledger - all 844 rows")
+  * email body edition = first 30 rows (Gmail clips bodies over ~102KB)
+- Honest labeling preserved: ANALYST-COMPLETED + OCR-SOURCE banners, 99.0% /
+  99.7% mass figures, anchor cross-check shown, no 100% claim
+- Email: multipart/mixed with alternative plain+html; SENT 14:45:32 UTC ->
+  ahmedr.muhammed19@gmail.com with BOTH attachments (HTML 195,494 B + PDF
+  356,471 B); NOTIFICATIONS.log + outbox JSON copy written
+- HTML QA: no unrendered placeholders, 876 <tr> total (844+8+12+8+4 heads),
+  all tags balanced at EOF
+
+Stage Summary:
+- Report now exists in three editions: 23-page PDF, self-contained HTML
+  (portal template, full ledger), and rich-HTML email with both attached.
+- Reusable pattern: scripts/wafa_html_mail.py is the template-driven HTML
+  report mailer; swap report_data.json for any future case.
