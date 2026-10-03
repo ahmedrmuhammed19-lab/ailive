@@ -506,3 +506,11 @@ Stage Summary:
   shadow OCR as before; analyst completes by queue id/link via attach.
 - Prod verification pending deploy: fire /go pass, expect EIS-MQAHR
   analyst-needed in seconds + operator mail in test inbox.
+- Prod check post-deploy (21:44-21:45Z): /go pass returned "Queue already
+  clear"; /status shows total 0 — the prod queue (13/13 DONE at 21:27Z) was
+  CLEARED between checks, almost certainly the operator's "Clear queue"
+  button (user was exploring the portal). EIS-MQAHR + attached report rows
+  are gone with it. Live prod demo of the triage therefore not possible on
+  a real case; feature verified locally (1.0s pass, both lanes) and deploys
+  with every future upload. One-tap link now ends at the healthy "Queue
+  already clear" page.
