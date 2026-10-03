@@ -20,7 +20,7 @@ import { runEngine } from "@/lib/engine-run";
  * the queue panel can reflect the new state immediately.
  */
 export const dynamic = "force-dynamic";
-export const maxDuration = 120;
+export const maxDuration = 300; // matches MAX_OCR_SECONDS — big scans must not be killed mid-run
 
 export async function POST(req: Request) {
   const account = await sessionAccount(req);

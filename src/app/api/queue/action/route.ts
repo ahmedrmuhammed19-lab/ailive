@@ -32,7 +32,7 @@ import { loadMailCreds, operatorAddress, sendOrQueue } from "@/lib/mail";
  *        semantics are intentional, unlike the idempotent deliver.
  */
 export const dynamic = "force-dynamic";
-export const maxDuration = 120;
+export const maxDuration = 300; // matches MAX_OCR_SECONDS — big scans must not be killed mid-run
 
 function page(opts: {
   tone: "ok" | "warn" | "err";
@@ -41,7 +41,7 @@ function page(opts: {
   body: string;
   status?: 200 | 403 | 404 | 409;
 }): Response {
-  const color = opts.tone === "ok" ? "#1e40af" : opts.tone === "warn" ? "#9a6700" : "#cf222e";
+  const color = opts.tone === "ok" ? "#005677" : opts.tone === "warn" ? "#9a6700" : "#cf222e";
   const bg = opts.tone === "ok" ? "#dbeafe" : opts.tone === "warn" ? "#fff8c5" : "#ffebe9";
   const border = opts.tone === "ok" ? "#93c5fd" : opts.tone === "warn" ? "#d4a72c66" : "#ff818266";
   const html = `<!DOCTYPE html>

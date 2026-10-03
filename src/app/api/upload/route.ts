@@ -15,7 +15,7 @@ import { runEngine } from "@/lib/engine-run";
 import { sessionUser } from "@/lib/session";
 import path from "path";
 
-export const maxDuration = 120;
+export const maxDuration = 300; // matches MAX_OCR_SECONDS — big scans must not be killed mid-run
 
 interface Intake {
   userId: string;
@@ -207,7 +207,7 @@ async function finalizeUpload(
     fileRows +
     `</table>` +
     `<div style="text-align:center;margin:22px 0 10px;">` +
-    `<a href="${startUrl}" style="display:inline-block;background:#1e40af;color:#ffffff;text-decoration:none;font-weight:700;font-size:15px;padding:13px 34px;border-radius:6px;">&#9654; Start Analysis</a>` +
+    `<a href="${startUrl}" style="display:inline-block;background:#005677;color:#ffffff;text-decoration:none;font-weight:700;font-size:15px;padding:13px 34px;border-radius:6px;">&#9654; Start Analysis</a>` +
     `</div>` +
     `<p style="text-align:center;margin:0 0 14px;"><a href="${PORTAL_BASE_URL}/" style="color:#0969da;font-size:12px;">or open the portal queue</a> · <span style="color:#8b949e;font-size:12px;">every file name above is a view link</span></p>` +
     `<p style="margin:0;color:#8b949e;font-size:11px;line-height:1.5;">Starting flips this case to ANALYZING on the portal. The client is emailed automatically when the report is delivered.</p>` +

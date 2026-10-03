@@ -6,7 +6,9 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
+  /* Client brand font first (report_design.ts uses the same stack) —
+     Geist remains the fallback outside Windows/Office environments. */
+  --font-sans: 'Segoe UI', var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
@@ -51,10 +53,10 @@
   --card-foreground: oklch(0.21 0.03 255);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.21 0.03 255);
-  --primary: oklch(0.35 0.05 255);
+  --primary: oklch(0.37 0.06 230); /* petrol teal #005677 */
   --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.965 0.008 240);
-  --secondary-foreground: oklch(0.3 0.04 255);
+  --secondary: oklch(0.965 0.008 220);
+  --secondary-foreground: oklch(0.3 0.05 230);
   --muted: oklch(0.965 0.008 240);
   --muted-foreground: oklch(0.52 0.02 255);
   --accent: oklch(0.955 0.015 240);
@@ -62,20 +64,20 @@
   --destructive: oklch(0.577 0.245 27.325);
   --border: oklch(0.91 0.01 240);
   --input: oklch(0.91 0.01 240);
-  --ring: oklch(0.62 0.16 255);
+  --ring: oklch(0.62 0.11 225);
   --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.55 0.18 255);
-  --chart-3: oklch(0.398 0.07 227.392);
+  --chart-2: oklch(0.55 0.13 228);
+  --chart-3: oklch(0.4 0.07 224);
   --chart-4: oklch(0.828 0.189 84.429);
   --chart-5: oklch(0.769 0.188 70.08);
   --sidebar: oklch(0.985 0 0);
   --sidebar-foreground: oklch(0.21 0.03 255);
-  --sidebar-primary: oklch(0.35 0.05 255);
+  --sidebar-primary: oklch(0.37 0.06 230);
   --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.965 0.008 240);
-  --sidebar-accent-foreground: oklch(0.3 0.04 255);
+  --sidebar-accent: oklch(0.965 0.008 220);
+  --sidebar-accent-foreground: oklch(0.3 0.05 230);
   --sidebar-border: oklch(0.91 0.01 240);
-  --sidebar-ring: oklch(0.62 0.16 255);
+  --sidebar-ring: oklch(0.62 0.11 225);
 }
 
 .dark {
@@ -96,20 +98,20 @@
   --destructive: oklch(0.704 0.191 22.216);
   --border: oklch(1 0 0 / 10%);
   --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.7 0.14 255);
+  --ring: oklch(0.7 0.12 225);
   --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.7 0.14 255);
+  --chart-2: oklch(0.7 0.12 225);
   --chart-3: oklch(0.769 0.188 70.08);
   --chart-4: oklch(0.627 0.265 303.9);
   --chart-5: oklch(0.645 0.246 16.439);
   --sidebar: oklch(0.21 0.025 258);
   --sidebar-foreground: oklch(0.94 0.01 240);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
+  --sidebar-primary: oklch(0.55 0.1 230);
   --sidebar-primary-foreground: oklch(0.985 0 0);
   --sidebar-accent: oklch(0.26 0.03 258);
   --sidebar-accent-foreground: oklch(0.94 0.01 240);
   --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.7 0.14 255);
+  --sidebar-ring: oklch(0.7 0.12 225);
 }
 
 @layer base {
@@ -126,11 +128,13 @@
 }
 
 /* ============================================================
-   Global EIS portal — 2026 design system ("Rubber Navy — Live",
-   2026 edition). Brand anchor: NAVY BLUE (#1e40af→#2563eb light /
-   #60a5fa→#3b82f6 dark) on a deep rubberized navy canvas — matte,
-   soft-touch surfaces with a fine grain. Live layer: cool-spectrum
-   RGB companions (--eis-live-1/2/3 = cyan/indigo/violet) drift,
+   Global EIS portal — 2026 design system ("Petrol Teal — Live",
+   2026 edition). Brand anchor: the client's own identity
+   (#005677 primary → #008DCB secondary — the SAME tokens as
+   report_design.ts, so the portal chrome and every generated
+   report share one brand). Light: deep petrol on white; dark:
+   brighter secondary on a deep petrol canvas. Live layer:
+   in-brand cyan/petrol companions (--eis-live-1/2/3) drift,
    twinkle and cycle behind glass surfaces. Online/success states
    are GREEN (--eis-success / --eis-online) with a pulsing glow
    (.eis-dot-live). GH tokens in src/lib/format.ts reference these
@@ -140,19 +144,19 @@
 :root {
   color-scheme: light;
   --eis-canvas: #ffffff;
-  --eis-canvas-subtle: #f4f6fb;
+  --eis-canvas-subtle: #f0f5f8;
   --eis-canvas-glass: rgba(255, 255, 255, 0.72);
-  --eis-live-1: #0ea5e9;
-  --eis-live-2: #6366f1;
-  --eis-live-3: #8b5cf6;
-  --eis-hover: #edf1f8;
-  --eis-border: #e2e8f0;
-  --eis-border-muted: #e8edf4;
-  --eis-fg: #0f172a;
-  --eis-muted: #5b6b81;
-  --eis-accent: #1e40af;
-  --eis-accent-2: #2563eb;
-  --eis-accent-subtle: #eff6ff;
+  --eis-live-1: #00a8d6;
+  --eis-live-2: #0077b0;
+  --eis-live-3: #004a66;
+  --eis-hover: #e9f0f5;
+  --eis-border: #dde8ee;
+  --eis-border-muted: #e4edf2;
+  --eis-fg: #0e2029;
+  --eis-muted: #4f6672;
+  --eis-accent: #005677;
+  --eis-accent-2: #008dcb;
+  --eis-accent-subtle: #e7f3fe;
   --eis-success: #1a7f37;
   --eis-success-subtle: #dafbe1;
   --eis-online: #16a34a;
@@ -163,35 +167,35 @@
   --eis-danger-strong: #b91c1c;
   --eis-danger-subtle: #fdeeee;
   --eis-neutral: #94a3b8;
-  --eis-cell-empty: #edf1f8;
-  --eis-btn-green: #1e40af;
-  --eis-btn-green-hover: #1e3a8a;
-  --eis-divide: #edf1f7;
-  --eis-scale-1: #bfdbfe;
-  --eis-scale-2: #60a5fa;
-  --eis-scale-3: #2563eb;
-  --eis-scale-4: #1e3a8a;
-  --eis-glow: 0 0 0 1px rgba(30, 64, 175, 0.14), 0 8px 30px -6px rgba(37, 99, 235, 0.28);
+  --eis-cell-empty: #e9f0f5;
+  --eis-btn-green: #005677;
+  --eis-btn-green-hover: #00405a;
+  --eis-divide: #e8eff4;
+  --eis-scale-1: #cfe6f2;
+  --eis-scale-2: #66b5d6;
+  --eis-scale-3: #008dcb;
+  --eis-scale-4: #003d54;
+  --eis-glow: 0 0 0 1px rgba(0, 86, 119, 0.16), 0 8px 30px -6px rgba(0, 141, 203, 0.3);
   --eis-card-shadow: 0 1px 2px rgba(15, 23, 42, 0.04), 0 8px 24px -12px rgba(15, 23, 42, 0.12);
 }
 
 .dark {
   color-scheme: dark;
-  /* Rubber navy canvas: deeper, denser blue — matte soft-touch feel */
-  --eis-canvas: #070d1c;
-  --eis-canvas-subtle: #0c1428;
-  --eis-canvas-glass: rgba(9, 15, 32, 0.74);
-  --eis-live-1: #38bdf8;
-  --eis-live-2: #818cf8;
-  --eis-live-3: #a78bfa;
-  --eis-hover: #131c36;
-  --eis-border: #1b2545;
-  --eis-border-muted: #151f3a;
-  --eis-fg: #e8edf7;
-  --eis-muted: #8ea0bd;
-  --eis-accent: #60a5fa;
-  --eis-accent-2: #3b82f6;
-  --eis-accent-subtle: #0d2145;
+  /* Deep petrol canvas: teal-cast near-black — matte soft-touch feel */
+  --eis-canvas: #06131b;
+  --eis-canvas-subtle: #0a1c27;
+  --eis-canvas-glass: rgba(6, 17, 24, 0.74);
+  --eis-live-1: #3fc0ee;
+  --eis-live-2: #22a7d4;
+  --eis-live-3: #0e6f95;
+  --eis-hover: #0f2431;
+  --eis-border: #143240;
+  --eis-border-muted: #102a37;
+  --eis-fg: #e6f1f6;
+  --eis-muted: #8aa6b4;
+  --eis-accent: #4db7e8;
+  --eis-accent-2: #008dcb;
+  --eis-accent-subtle: #06283a;
   --eis-success: #4ade80;
   --eis-success-subtle: rgba(34, 197, 94, 0.13);
   --eis-online: #22c55e;
@@ -202,15 +206,15 @@
   --eis-danger-strong: #ef4444;
   --eis-danger-subtle: #2a1518;
   --eis-neutral: #64748b;
-  --eis-cell-empty: #141d36;
-  --eis-btn-green: #2563eb;
-  --eis-btn-green-hover: #3b82f6;
-  --eis-divide: #16203c;
-  --eis-scale-1: #1e3a8a;
-  --eis-scale-2: #1d4ed8;
-  --eis-scale-3: #3b82f6;
-  --eis-scale-4: #60a5fa;
-  --eis-glow: 0 0 0 1px rgba(59, 130, 246, 0.16), 0 8px 32px -6px rgba(59, 130, 246, 0.25);
+  --eis-cell-empty: #10242f;
+  --eis-btn-green: #008dcb;
+  --eis-btn-green-hover: #33a1d9;
+  --eis-divide: #0f2a38;
+  --eis-scale-1: #0a3c52;
+  --eis-scale-2: #0a5a7d;
+  --eis-scale-3: #008dcb;
+  --eis-scale-4: #4db7e8;
+  --eis-glow: 0 0 0 1px rgba(0, 141, 203, 0.2), 0 8px 32px -6px rgba(0, 141, 203, 0.28);
   /* Rubber panel depth: faint top sheen (soft-touch), deep diffuse drop */
   --eis-card-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.045),
@@ -274,8 +278,8 @@
   top: -20rem;
   right: -14rem;
   background:
-    radial-gradient(closest-side, rgba(37, 99, 235, 0.4), transparent 70%),
-    radial-gradient(closest-side, rgba(14, 165, 233, 0.22), transparent 75%);
+    radial-gradient(closest-side, rgba(0, 141, 203, 0.4), transparent 70%),
+    radial-gradient(closest-side, rgba(0, 168, 214, 0.22), transparent 75%);
   opacity: 0.58;
   animation:
     eis-drift-a 34s ease-in-out infinite alternate,
@@ -287,8 +291,8 @@
   bottom: -18rem;
   left: -12rem;
   background:
-    radial-gradient(closest-side, rgba(59, 130, 246, 0.3), transparent 72%),
-    radial-gradient(closest-side, rgba(99, 102, 241, 0.26), transparent 76%);
+    radial-gradient(closest-side, rgba(0, 141, 203, 0.26), transparent 72%),
+    radial-gradient(closest-side, rgba(0, 119, 176, 0.26), transparent 76%);
   opacity: 0.52;
   animation:
     eis-drift-b 44s ease-in-out infinite alternate,
@@ -300,8 +304,8 @@
   top: 32%;
   left: 36%;
   background:
-    radial-gradient(closest-side, rgba(99, 102, 241, 0.24), transparent 70%),
-    radial-gradient(closest-side, rgba(37, 99, 235, 0.2), transparent 76%);
+    radial-gradient(closest-side, rgba(0, 74, 102, 0.26), transparent 70%),
+    radial-gradient(closest-side, rgba(0, 86, 119, 0.22), transparent 76%);
   opacity: 0.44;
   animation:
     eis-drift-c 39s ease-in-out infinite alternate,
@@ -413,11 +417,11 @@
   background: conic-gradient(
     from var(--eis-angle),
     transparent 0deg,
-    rgba(37, 99, 235, 0.55) 55deg,
-    rgba(14, 165, 233, 0.5) 105deg,
+    rgba(0, 141, 203, 0.55) 55deg,
+    rgba(0, 168, 214, 0.5) 105deg,
     transparent 170deg,
     transparent 205deg,
-    rgba(99, 102, 241, 0.5) 275deg,
+    rgba(0, 119, 176, 0.5) 275deg,
     rgba(139, 92, 246, 0.42) 315deg,
     transparent 360deg
   );
@@ -508,7 +512,7 @@
 }
 .eis-cta:hover {
   filter: brightness(1.06);
-  box-shadow: var(--eis-glow), 0 4px 14px -2px rgba(37, 99, 235, 0.45);
+  box-shadow: var(--eis-glow), 0 4px 14px -2px rgba(0, 141, 203, 0.45);
   transform: translateY(-1px);
 }
 .eis-cta:hover::after { transform: translateX(130%); }
@@ -550,7 +554,7 @@
 }
 ::-webkit-scrollbar-thumb:hover { background-color: var(--eis-neutral); }
 ::selection {
-  background: rgba(59, 130, 246, 0.32);
+  background: rgba(0, 141, 203, 0.32);
 }
 
 /* Accessibility: one switch kills every live/decorative motion */
