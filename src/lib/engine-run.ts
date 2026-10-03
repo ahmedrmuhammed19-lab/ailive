@@ -21,7 +21,7 @@ import { actionUrl, statementViewUrl } from "@/lib/actions";
  *   - POST /api/queue/retry  (operator, signed-in, portal buttons)
  */
 
-export type EngineOutcome = "auto-delivered" | "draft-review" | "unrecognized" | "no-files";
+export type EngineOutcome = "auto-delivered" | "draft-review" | "analyst-needed" | "unrecognized" | "no-files";
 
 export type EngineRun = {
   outcome: EngineOutcome;
@@ -183,6 +183,73 @@ export async function runEngine(
       message: analysis.message,
       integrity,
       reportName,
+      telemetry: telemetryLine,
+    };
+  }
+
+  // --- Big-scan triage: engine protected its time window -> analyst route --
+  // The scan is bigger than the OCR page budget, so the engine skipped OCR
+  // on purpose (~2s pass instead of a killed 120-300s run). The case is
+  // handed to the workspace analyst: they complete it off-platform (the
+  // analyst-attach flow publishes the finished report + DONE + delivery
+  // mail), or the client re-uploads a digital PDF and the retry link runs.
+  if (analysis.mode === "scan-analyst") {
+    const viewBlock = await statementViewBlock(sub.id);
+    await logOutcome("analyst-needed");
+    await sendOrQueue({
+      to: operatorAddress(mailCreds),
+      subject: `🧭 Big scan routed to analyst — Queue ${label}`,
+      body:
+        `The engine triaged this case in seconds — no time budget was burned.
+
+` +
+        `Queue ID : ${label}
+` +
+        `Reason   : ${analysis.message}
+
+` +
+        `${telemetryLine}
+
+` +
+        `${viewBlock.text}
+
+` +
+        `Analyst path: complete the analysis off-platform and publish the
+` +
+        `finished report through the analyst-attach flow (same work link as
+` +
+        `the queue — the case turns DONE and the client mail goes out).
+
+` +
+        `If a digital (text-based) PDF becomes available instead, replace the
+` +
+        `file on the portal and re-run with one tap — the retry link works any
+` +
+        `time:
+${retryUrl}
+
+` +
+        `— Global EIS automated intake`,
+      html:
+        `<div style="margin:0;background:#f6f8fa;padding:20px 12px;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;">` +
+        `<div style="max-width:560px;margin:0 auto;background:#ffffff;border:1px solid #d0d7de;border-radius:8px;overflow:hidden;">` +
+        `<div style="background:#0d1117;padding:12px 18px;"><span style="color:#ffffff;font-weight:700;font-size:15px;">Global EIS</span>` +
+        `<span style="color:#8b949e;font-size:12px;margin-left:8px;">big scan → analyst</span></div>` +
+        `<div style="padding:18px;">` +
+        `<p style="margin:0 0 12px;color:#24292f;font-size:14px;line-height:1.55;">Queue <b>${esc(label)}</b> — big image-only scan detected. The engine skipped OCR to protect the serverless time window; the case is routed to the analyst.</p>` +
+        `<p style="margin:0 0 12px;color:#59636e;font-size:13px;line-height:1.55;">${esc(analysis.message)}</p>` +
+        viewBlock.html +
+        `<p style="margin:12px 0 4px;color:#59636e;font-size:12px;line-height:1.55;">Analyst path: complete off-platform and publish via the analyst-attach flow (same work link as the queue). Or replace the file with a digital PDF and re-run.</p>` +
+        mailButton(retryUrl, "&#8637; Re-run Engine (digital PDF)", "#9a6700") +
+        `<p style="margin:0;color:#8b949e;font-size:11px;line-height:1.5;">${esc(telemetryLine)}</p>` +
+        `</div></div></div>`,
+      kind: "operator_alert",
+      submissionId: sub.id,
+    });
+    return {
+      outcome: "analyst-needed",
+      message: analysis.message,
+      integrity: [],
       telemetry: telemetryLine,
     };
   }

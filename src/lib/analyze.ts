@@ -1,6 +1,6 @@
 import { extractText, getDocumentProxy } from "unpdf";
 import { db } from "@/lib/db";
-import { ocrImageText, ocrPdfText, reocrPages } from "@/lib/ocr";
+import { MAX_OCR_PAGES, ocrImageText, ocrPdfText, reocrPages } from "@/lib/ocr";
 import {
   alertBox,
   analysisCard,
@@ -133,7 +133,7 @@ interface AccountLeg {
 
 export interface AutoAnalysisResult {
   ok: boolean;
-  mode: "cib-parsed" | "unrecognized" | "no-files";
+  mode: "cib-parsed" | "unrecognized" | "no-files" | "scan-analyst";
   message: string;
   legs: Array<
     Pick<AccountLeg, "account" | "currency" | "mode" | "opening" | "closing" | "inflow" | "outflow" | "txCount" | "matched"> & {
@@ -192,6 +192,7 @@ export async function analyzeSubmission(submissionId: string): Promise<AutoAnaly
   const rawSamples: string[] = []; // first bytes of each PDF's text — failure evidence for ParseLog
   let ocrUsed = false;
   let scanDetected = false;
+  let bigScanPages = 0; // pages of the largest scan triaged away from OCR (analyst route)
   for (const f of submission.files) {
     const lowerName = f.originalName.toLowerCase();
     const isPdf = lowerName.endsWith(".pdf");
@@ -252,6 +253,29 @@ export async function analyzeSubmission(submissionId: string): Promise<AutoAnaly
       const textChars = merged.replace(/[^A-Za-z0-9]/g, "").length;
       if (legsFound.length === 0 && textChars < 240) {
         scanDetected = true;
+        // BIG-SCAN TRIAGE — protect the serverless time window. OCR cost grows
+        // linearly with pages (plus multi-engine retries), so a 30/48-page
+        // CamScanner scan can never finish inside Vercel's function budget —
+        // the run gets killed mid-OCR, nothing is learned, and every work-all
+        // pass re-burns the window on the same case. Instead: when the scan is
+        // bigger than the OCR page cap, skip the shadow OCR stage ENTIRELY
+        // (this whole pass costs ~2s of text extraction) and hand the case
+        // straight to the analyst — the digital fast-lane stays instant, and
+        // scans never time out again.
+        const pageCount = (() => {
+          try {
+            return pdf.numPages;
+          } catch {
+            return 0;
+          }
+        })();
+        if (pageCount > MAX_OCR_PAGES) {
+          bigScanPages = Math.max(bigScanPages, pageCount);
+          rawSamples.push(
+            `===== ${f.originalName} (big-scan triage: ${pageCount} pages > ${MAX_OCR_PAGES}-page OCR cap — routed to analyst, OCR skipped) =====\n${merged.slice(0, 2000)}`
+          );
+          continue; // legsFound is empty here — nothing to push
+        }
         const ocr = await ocrPdfText(buf);
         if (ocr) {
           rawSamples.push(
@@ -342,6 +366,22 @@ export async function analyzeSubmission(submissionId: string): Promise<AutoAnaly
   }
 
   if (legs.length === 0) {
+    if (bigScanPages > 0) {
+      return {
+        ok: false,
+        mode: "scan-analyst",
+        message:
+          `Big image-only scan detected (${bigScanPages} pages — over the ${MAX_OCR_PAGES}-page OCR budget). ` +
+          "The engine skipped OCR to protect the serverless time window and routed the case to the analyst. " +
+          "The analyst completes it off-platform; alternatively replace the file with a digital (text-based) PDF and re-run the engine.",
+        legs: [],
+        allVerified: false,
+        ocrUsed: false,
+        windowSummary: "",
+        parserVersion: PARSER_VERSION,
+        evidence: { unmatched: [], textPreview: rawSamples.join("\n\n").slice(0, 16384) },
+      };
+    }
     return {
       ok: false,
       mode: "unrecognized",

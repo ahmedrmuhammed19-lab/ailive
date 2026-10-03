@@ -24,7 +24,12 @@ import { runEngine } from "@/lib/engine-run";
 
 export const MAX_WORK_BATCH = 5;
 
-export type WorkRowOutcome = "auto-delivered" | "draft-review" | "unrecognized" | "no-files";
+export type WorkRowOutcome =
+  | "auto-delivered"
+  | "draft-review"
+  | "analyst-needed"
+  | "unrecognized"
+  | "no-files";
 
 export type WorkRowResult = {
   id: string;
@@ -40,6 +45,7 @@ export type WorkAllResult = {
   attempted: number;
   delivered: number;
   draftReview: number;
+  analystNeeded: number; // big scans triaged to the analyst (no time burned)
   needsManual: number;
   remaining: number;
   results: WorkRowResult[];
@@ -102,10 +108,11 @@ export async function workTheQueue(): Promise<WorkAllResult> {
 
   const delivered = results.filter((r) => r.outcome === "auto-delivered").length;
   const draftReview = results.filter((r) => r.outcome === "draft-review").length;
+  const analystNeeded = results.filter((r) => r.outcome === "analyst-needed").length;
   const needsManual = results.filter(
     (r) => r.outcome === "unrecognized" || r.outcome === "no-files"
   ).length;
   const remaining = await db.submission.count({ where: { status: { not: "DONE" } } });
 
-  return { attempted: results.length, delivered, draftReview, needsManual, remaining, results };
+  return { attempted: results.length, delivered, draftReview, analystNeeded, needsManual, remaining, results };
 }
