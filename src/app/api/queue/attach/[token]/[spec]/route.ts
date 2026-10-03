@@ -42,6 +42,7 @@ const ALLOWED_HOSTS = new Set([
   "transfer.sh",
   "temp.sh",
   "bashupload.com",
+  "raw.githubusercontent.com",
 ]);
 
 const MAX_BYTES = 8 * 1024 * 1024;

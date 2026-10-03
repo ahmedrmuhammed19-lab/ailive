@@ -132,4 +132,6 @@ parser_samples/
 !scripts/report_template.html
 !scripts/wafa_recover_check.py
 !scripts/wafa_recover_repair.py
+!scripts/gist_transport.py
+!scripts/repo_transport.py
 scripts/wafa_work/
