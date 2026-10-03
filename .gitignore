@@ -112,3 +112,12 @@ parser_samples/
 !scripts/upload_wafa.py
 !scripts/refire_red.py
 !scripts/seed_users.mjs
+!scripts/wafa_report.py
+!scripts/wafa_report_data.py
+!scripts/wafa_parse2.py
+!scripts/wafa_parse3.py
+!scripts/wafa_cells.py
+!scripts/wafa_vote.py
+!scripts/wafa_final.py
+!scripts/wafa_closure.py
+!scripts/wafa_parse.py

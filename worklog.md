@@ -96,3 +96,35 @@ Stage Summary:
   branch with both one-tap remedies live in the operator inbox.
 - Repo durability improved: abdo in tracked seeder; upload_wafa.py +
   refire_red.py tracked; reset #4 fully recovered, origin in sync.
+
+---
+Task ID: WAFA-REPORT-1 (2026-10-03)
+Agent: main (Super Z)
+Task: "can you work and give me a report for bank statement that I send" ->
+manual analyst pass on the 48-page Wafa scan + full analysis report PDF.
+
+Work Log:
+- Forensic OCR pipeline: 300/450/600dpi tesseract passes; column-geometry
+  extraction (debit x<474pt, credit x>=474pt on A4); three-way per-cell voting;
+  y-oracle line dedup across passes; comma-decimal + $-corruption repair;
+  recovered date-corrupted rows all passes had missed
+- Final ledger: 844 rows (824 consensus), D=4,073,809.19 (99.0% of printed
+  4,122,781.15), C=4,089,085.77 (99.7% of 4,100,172.41); residual disclosed as
+  single-digit OCR noise; printed anchors self-reconcile EXACTLY
+  (545,904.67 + 4,100,172.41 - 4,122,781.15 = 523,295.93)
+- Key findings: 687 instant transfers out (2.80M), 92 reversals (423k),
+  2 cash deposits 1.75M, 2 collected cheques 1.15M, internal cheque out 1M,
+  ACH in 350k, 8 transactions >= 100k
+- Report (pdf skill, Report route): TocDocTemplate+multiBuild, Template 07
+  Crystal Blue cover (html2poster.js 794px, cover_validate PASS), 2 matplotlib
+  charts, 6 tables, 844-row appendix ledger, roman-i TOC + arabic body
+  numbering; merged via pypdf normalize_to_A4
+- QA: pdf_qa PASS (1 cosmetic cover-margin warning), toc_validate clean,
+  font.check 0 issues, pages.clean 0 blank, 23 pages 338KB
+- Deliverable: download/Global_EIS_Statement_Analysis_WAFA_6M.pdf
+
+Stage Summary:
+- RED case completed manually end-to-end: scan -> forensics -> analyst report.
+- Engine learnings: page cap 6 (env-tunable OCR_MAX_PAGES), movement-history
+  layouts lack running balance; official bank PDF export recommended for
+  full chain verification.
