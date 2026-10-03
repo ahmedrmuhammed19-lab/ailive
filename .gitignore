@@ -130,3 +130,6 @@ parser_samples/
 !scripts/gis_screenshot.js
 !scripts/wafa_gis2_html.py
 !scripts/report_template.html
+!scripts/wafa_recover_check.py
+!scripts/wafa_recover_repair.py
+scripts/wafa_work/
