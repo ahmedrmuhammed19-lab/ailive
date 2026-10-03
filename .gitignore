@@ -123,6 +123,7 @@ parser_samples/
 !scripts/wafa_parse.py
 !scripts/wafa_upload_report.py
 !scripts/send_report_mail.py
+!scripts/restore_env.sh
 !scripts/wafa_html_mail.py
 !scripts/wafa_gis_html.py
 !scripts/gis_screenshot.js

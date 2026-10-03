@@ -1,6 +1,16 @@
 import { extractText, getDocumentProxy } from "unpdf";
 import { db } from "@/lib/db";
 import { ocrImageText, ocrPdfText, reocrPages } from "@/lib/ocr";
+import {
+  alertBox,
+  analysisCard,
+  escHtml,
+  kpiCard,
+  kpiGrid,
+  reportShell,
+  sectionTitle,
+  tag,
+} from "@/lib/report_design";
 
 /**
  * Auto-analysis engine — first-pass statement analysis triggered by the
@@ -2256,38 +2266,19 @@ function appendContinuation(row: TxRow | null, line: string): void {
   }
 }
 
-// ---------- draft report rendering ----------
+// ---------- draft report rendering (canonical client design — see report_design.ts) ----------
 
 function esc(s: string): string {
-  return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  return escHtml(s);
 }
 
-const STYLE = `
-body{margin:0;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;background:#f6f8fa;color:#24292f}
-.wrap{max-width:860px;margin:0 auto;padding:24px 16px}
-.hdr{background:#0d1117;color:#fff;border-radius:10px 10px 0 0;padding:22px 26px}
-.hdr h1{margin:0;font-size:20px;letter-spacing:.4px}
-.hdr .sub{color:#8b949e;font-size:12px;margin-top:4px}
-.body{background:#fff;border:1px solid #d0d7de;border-top:0;border-radius:0 0 10px 10px;padding:24px 26px}
-.kpis{display:flex;flex-wrap:wrap;gap:10px;margin:14px 0}
-.kpi{flex:1 1 160px;border:1px solid #d0d7de;border-radius:8px;padding:12px 14px;background:#f6f8fa}
-.kpi .l{font-size:11px;color:#59636e;text-transform:uppercase;letter-spacing:.5px}
-.kpi .v{font-size:19px;font-weight:700;margin-top:3px}
-.kpi .n{font-size:11px;color:#59636e;margin-top:2px}
-.danger .v{color:#cf222e}.ok .v{color:#1e40af}.warn .v{color:#9a6700}
-table{width:100%;border-collapse:collapse;font-size:12.5px;margin:10px 0 18px}
-th{background:#f6f8fa;text-align:left;padding:7px 9px;border-bottom:2px solid #d0d7de;font-size:11px;color:#59636e;text-transform:uppercase}
-td{padding:6px 9px;border-bottom:1px solid #eaeef2;vertical-align:top}
-td.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
-.cr{color:#1e40af}.dr{color:#cf222e}
-.note{border:1px solid #d4a72c66;background:#fff8c5;border-radius:8px;padding:12px 14px;font-size:12.5px;color:#59636e;margin:14px 0}
-.wm{border:2px dashed #d4a72c;border-radius:8px;padding:10px 14px;text-align:center;color:#9a6700;font-weight:700;font-size:13px;letter-spacing:.6px;margin-bottom:18px}
-h2{font-size:15px;margin:22px 0 8px;border-bottom:1px solid #eaeef2;padding-bottom:6px}
-.small{font-size:11.5px;color:#59636e;line-height:1.55}
-`;
+/** Legacy portal tone -> client KPI tone. */
+function kpiTone(cls: string): string {
+  return cls === "ok" ? "success" : cls === "warn" ? "warning" : cls;
+}
 
 function kpi(label: string, value: string, note: string, cls = ""): string {
-  return `<div class="kpi ${cls}"><div class="l">${label}</div><div class="v">${value}</div><div class="n">${note}</div></div>`;
+  return kpiCard(label, value, esc(note), kpiTone(cls));
 }
 
 interface Finding { label: string; detail: string; tone: "ok" | "warn" | "danger" | "mute" }
@@ -2347,15 +2338,15 @@ function legFindings(l: AccountLeg, requiredEgp: number): Finding[] {
 }
 
 function findingsHtml(fs: Finding[]): string {
-  const color = (t: Finding["tone"]) =>
-    t === "ok" ? "#1e40af" : t === "warn" ? "#9a6700" : t === "danger" ? "#cf222e" : "#59636e";
-  return `<table style="margin-top:6px"><tbody>${fs
+  const toneTag = (t: Finding["tone"]) =>
+    t === "ok" ? tag("PASS", "pass") : t === "warn" ? tag("WATCH", "warn") : t === "danger" ? tag("FLAG", "fail") : tag("INFO", "low");
+  return fs
     .map(
       (x) =>
-        `<tr><td style="width:190px;color:${color(x.tone)};font-weight:700;font-size:12px;vertical-align:top">${esc(x.label)}</td>` +
-        `<td style="color:#59636e;font-size:12px;line-height:1.5">${esc(x.detail)}</td></tr>`
+        `<p style="margin:0 0 12px">${toneTag(x.tone)} <b style="color:var(--primary)">${esc(x.label)}</b>` +
+        `<br><span class="small">${esc(x.detail)}</span></p>`
     )
-    .join("")}</tbody></table>`;
+    .join("");
 }
 
 function buildReportHtml(
@@ -2387,63 +2378,82 @@ function buildReportHtml(
         .map(
           (r) =>
             `<tr><td style="white-space:nowrap">${esc(r.date)}</td><td>${esc(r.desc.slice(0, 110))}</td>` +
-            `<td class="num ${r.signed >= 0 ? "cr" : "dr"}">${r.signed >= 0 ? "+" : "−"}${money(Math.abs(r.signed))}</td>` +
+            `<td class="num ${r.signed >= 0 ? "text-success" : "text-danger"}">${r.signed >= 0 ? "+" : "−"}${money(Math.abs(r.signed))}</td>` +
             `<td class="num">${money(r.balance ?? 0)}</td></tr>`
         )
         .join("");
-      return `<h2>Account ${esc(l.account ?? "(number not parsed)")} — ${esc(l.currency)}${
-        l.period ? ` · ${esc(l.period)}` : ""
-      }</h2>
-<div class="kpis">
-${kpi("Opening", `${l.currency} ${money(l.opening)}`, esc(l.file))}
-${kpi("Closing", `${l.currency} ${money(l.closing)}`, "end of period")}
-${kpi("Total inflows", `${l.currency} ${money(l.inflow)}`, l.windowFrom ? `${wrows.length} rows in window (of ${l.txCount})` : `${l.txCount} transactions`, "ok")}
-${kpi("Total outflows", `${l.currency} ${money(l.outflow)}`, integrity + "% chain integrity", "danger")}
-${kpi("EGP-equivalent closing", "EGP " + money(l.closing * fxOf(l.currency)), "indicative FX " + fxOf(l.currency).toFixed(2))}
-${l.windowFrom ? kpi("Window flows", `+${money(l.windowInflow ?? l.inflow)} / −${money(l.windowOutflow ?? l.outflow)}`, "last 6 months", "ok") : ""}
-</div>
+      return `${sectionTitle(`Account ${esc(l.account ?? "(number not parsed)")} — ${esc(l.currency)}${l.period ? ` · ${esc(l.period)}` : ""}`)}
+${kpiGrid([
+  kpi("Opening", `${l.currency} ${money(l.opening)}`, esc(l.file)),
+  kpi("Closing", `${l.currency} ${money(l.closing)}`, "end of period"),
+  kpi("Total inflows", `${l.currency} ${money(l.inflow)}`, l.windowFrom ? `${wrows.length} rows in window (of ${l.txCount})` : `${l.txCount} transactions`, "ok"),
+  kpi("Total outflows", `${l.currency} ${money(l.outflow)}`, integrity + "% chain integrity", "danger"),
+  kpi("EGP-equivalent closing", "EGP " + money(l.closing * fxOf(l.currency)), "indicative FX " + fxOf(l.currency).toFixed(2)),
+  ...(l.windowFrom ? [kpi("Window flows", `+${money(l.windowInflow ?? l.inflow)} / −${money(l.windowOutflow ?? l.outflow)}`, "last 6 months", "ok")] : []),
+])}
 ${(l.windowNotes ?? []).length ? `<p class="small">${(l.windowNotes ?? []).map((n) => esc(n)).join("<br>")}</p>` : ""}
 <p class="small">Largest credit: <b>${l.largestCredit ? esc(l.largestCredit.desc) + " (" + money(l.largestCredit.amount) + ")" : "—"}</b>
  · Largest debit: <b>${l.largestDebit ? esc(l.largestDebit.desc) + " (" + money(-l.largestDebit.amount) + ")" : "—"}</b>
  · Salary/payroll credits detected: <b>${l.salarySeen ? "yes" : "none visible"}</b></p>
-${findingsHtml(legFindings(l, required / Math.max(1, travelers)))}
-<table style="margin-top:12px"><thead><tr><th>Date</th><th>Description</th><th style="text-align:right">Movement</th><th style="text-align:right">Balance</th></tr></thead>
+${analysisCard("Pattern findings — analyst view", findingsHtml(legFindings(l, required / Math.max(1, travelers))), true)}
+<table class="data-table"><thead><tr><th>Date</th><th>Description</th><th class="text-right">Movement</th><th class="text-right">Balance</th></tr></thead>
 <tbody>${rowsHtml}</tbody></table>
 <p class="small">Showing first ${preview.length} of ${wrows.length} in-window rows${l.windowFrom ? ` (6-month window — ${l.txCount} total rows all chain-verified)` : ` (chain-verified against stated balances)`}. Full listing available on request.</p>`;
     })
     .join("\n");
 
-  return `<!DOCTYPE html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Global EIS — Auto-Analysis Draft (Queue ${esc(userId)})</title><style>${STYLE}</style></head>
-<body><div class="wrap">
-<div class="hdr"><h1>Global EIS — Financial Readiness Assessment</h1>
-<div class="sub">Queue ${esc(userId)} · ${esc(country ?? "destination pending")} ${visaType ? "· " + esc(visaType) : ""} · generated ${now}</div></div>
-<div class="body">
-<div class="wm">${stamp}</div>
-${legs.some((l) => l.ocr) ? '<div class="wm" style="border-color:#0969da;color:#0969da;">OCR-SOURCE DRAFT (SHADOW MODE) — RECOVERED FROM A SCANNED STATEMENT · ANALYST REVIEW REQUIRED · AUTO-DELIVERY DISABLED</div>' : ""}
+  const banners = [
+    alertBox(style === "engine" ? "blue" : "red", stamp, `<p style="margin:0" class="small">${
+      style === "engine"
+        ? "Every ledger row on every account has been verified against the bank's own running balances. Figures reflect the stated ledger without manual adjustment."
+        : "This first pass is parked for the Global EIS analyst: the pattern narrative, benchmark confirmation and final delivery follow analyst review."
+    }</p>`),
+    ...(legs.some((l) => l.ocr)
+      ? [
+          alertBox(
+            "danger",
+            "OCR-SOURCE DRAFT (SHADOW MODE)",
+            `<p style="margin:0" class="small">Recovered from a scanned statement · machine-read text with identical chain verification · analyst review required · auto-delivery disabled.</p>`
+          ),
+        ]
+      : []),
+  ];
 
-<h2>Consolidated position</h2>
-<div class="kpis">
-${kpi("Accounts analysed", String(legs.length), legs.map((l) => l.currency).join(" + "))}
-${kpi("Closing (EGP-equivalent)", "EGP " + money(consolidated), "indicative FX — refresh on submission day", "ok")}
-${kpi("Benchmark applied", "EGP " + money(required), `${esc(country ?? "default")} × ${travelers} applicant(s)`, "warn")}
-${kpi("Coverage", coverage.toFixed(1) + "%", coverage >= 100 ? "benchmark met" : "gap: EGP " + money(Math.max(0, required - consolidated)), covCls)}
-</div>
-<p class="small">Benchmark figure is the portal's indicative default for this destination — the analyst confirms or adjusts it before delivery. Joint applicants share this statement, so the requirement is multiplied accordingly.</p>
+  const content = [
+    sectionTitle("Executive Dashboard — Consolidated Position"),
+    kpiGrid([
+      kpi("Accounts analysed", String(legs.length), esc(legs.map((l) => l.currency).join(" + "))),
+      kpi("Closing (EGP-equivalent)", "EGP " + money(consolidated), "indicative FX — refresh on submission day", "ok"),
+      kpi("Benchmark applied", "EGP " + money(required), `${esc(country ?? "default")} × ${travelers} applicant(s)`, "warn"),
+      kpi("Coverage", coverage.toFixed(1) + "%", coverage >= 100 ? "benchmark met" : "gap: EGP " + money(Math.max(0, required - consolidated)), covCls),
+    ]),
+    `<p class="small">Benchmark figure is the portal's indicative default for this destination — the analyst confirms or adjusts it before delivery. Joint applicants share this statement, so the requirement is multiplied accordingly.</p>`,
+    legSections,
+    alertBox(
+      "blue",
+      `About this ${style === "engine" ? "report" : "draft"}`,
+      `<p style="margin:0" class="small">This document was generated automatically: the statement PDF was parsed, every ledger row was verified against the bank's own running balances (chain integrity ${legs
+        .map((l) => (l.txCount ? Math.round((l.matched / l.txCount) * 100) : 0))
+        .join("% / ")}%), and the consolidated position was computed at indicative FX rates. ${
+        style === "engine"
+          ? "Figures reflect the bank's stated ledger without manual adjustment — contact Global EIS for the detailed analyst narrative."
+          : "The Global EIS analyst reviews this draft, adds the pattern-level narrative (income origin, circulation analysis, payee clustering), confirms the benchmark, and only then is the final report delivered."
+      }${
+        legs.some((l) => l.ocr)
+          ? " Statement text was recovered by OCR from a scanned image (shadow mode): machine-read text, identical chain verification, mandatory analyst review before delivery."
+          : ""
+      }</p>`
+    ),
+  ].join("\n");
 
-${legSections}
-
-<div class="note"><b>About this ${style === "engine" ? "report" : "draft"}.</b> This document was generated automatically: the statement PDF was parsed, every ledger row was verified against the bank's own running balances (chain integrity ${legs
-    .map((l) => (l.txCount ? Math.round((l.matched / l.txCount) * 100) : 0))
-    .join("% / ")}%), and the consolidated position was computed at indicative FX rates. ${
-    style === "engine"
-      ? "Figures reflect the bank's stated ledger without manual adjustment — contact Global EIS for the detailed analyst narrative."
-      : "The Global EIS analyst reviews this draft, adds the pattern-level narrative (income origin, circulation analysis, payee clustering), confirms the benchmark, and only then is the final report delivered."
-  }${
-    legs.some((l) => l.ocr)
-      ? " Statement text was recovered by OCR from a scanned image (shadow mode): machine-read text, identical chain verification, mandatory analyst review before delivery."
-      : ""
-  }</div>
-</div></div></body></html>`;
+  return reportShell({
+    title: "Financial Intelligence Report",
+    subLines: [
+      `<strong>Queue:</strong> ${esc(userId)} &nbsp;|&nbsp; <strong>Destination:</strong> ${esc(country ?? "pending")} ${visaType ? "· " + esc(visaType) : ""}`,
+      `<strong>Generated:</strong> ${esc(now)} &nbsp;|&nbsp; <strong>Classification:</strong> Confidential`,
+    ],
+    banners,
+    contentHtml: content,
+    pageTitle: `Global EIS — Financial Intelligence Report (Queue ${esc(userId)})`,
+  });
 }
