@@ -560,3 +560,27 @@ Stage Summary:
   /go/<token>/status (read-only snapshot).
 - Prod queue remains EMPTY (cleared by operator earlier today); next real
   upload exercises all lanes automatically.
+
+---
+Task ID: MAIL-RESTORE-1 (2026-10-04)
+Agent: main (Super Z)
+Task: User re-supplied the Gmail app password (4x4 group format) after the
+sandbox reset wiped config/mail_credentials.json.
+
+Work Log:
+- Rebuilt config/mail_credentials.json (git-ignored, verified via
+  git check-ignore) — Gmail shape: email + app_password + notify_to, all
+  locked to the test inbox ahmedr.muhammed19@gmail.com.
+- Re-added TEST_MAIL_TO=ahmedr.muhammed19@gmail.com to local .env (lock was
+  lost with the reset; now every local mail is force-redirected + SMTP-guarded).
+- Recreated scripts/check_inbox.py (wiped by reset; same IMAP design).
+- IMAP LOGIN OK: 36 mails since Oct 2. Trail confirms portal deliveries:
+  WAFA-6M-ABDO report mails (14:32Z) and EIS-MQAHR "analysis report ready" +
+  "Analysis finished" at 18:55Z (ATTACH-1 attach delivery). Google security
+  alert at 19:23Z = sandbox/portal sign-ins (expected, new-region IP).
+
+Stage Summary:
+- Local mail capability fully restored (IMAP verify + SMTP send path).
+- Open item closed from SYNC-1. No git push needed (secrets never committed).
+- Noticed in inbox: user signed up at cron-job.org + Render — if the cron is
+  meant to auto-fire the queue, point it at the mission-brief link.
