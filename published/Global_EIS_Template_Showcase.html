@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Global EIS — Report Template Showcase</title>
+<style>
+:root{--primary:#005677;--secondary:#008DCB;--success:#28a745;--danger:#dc3545;--warning:#ffc107;--light:#f8f9fa;--dark:#343a40;--white:#ffffff}
+body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background-color:#eef2f5;color:var(--dark);margin:0;padding:20px}
+.container{max-width:1200px;margin:0 auto;background:var(--white);border-radius:12px;box-shadow:0 4px 20px rgba(0,0,0,0.08);overflow:hidden;position:relative}
+.header{background:linear-gradient(135deg,var(--primary),var(--secondary));color:var(--white);padding:40px 30px;text-align:center;position:relative}
+.header h1{margin:0;font-size:2.5em;text-transform:uppercase;letter-spacing:1px}
+.header p{margin:5px 0 0;opacity:0.9;font-size:1.1em}
+.download-btn{position:absolute;top:30px;right:30px;background:var(--white);color:var(--primary);border:none;padding:10px 20px;font-size:14px;font-weight:bold;border-radius:5px;cursor:pointer;box-shadow:0 2px 5px rgba(0,0,0,0.2);transition:0.2s}
+.download-btn:hover{background:#f0f0f0;transform:translateY(-2px)}
+.content{padding:40px}
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:20px;margin-bottom:40px}
+.kpi-card{background:var(--white);border-radius:10px;padding:20px;box-shadow:0 2px 10px rgba(0,0,0,0.05);border-left:5px solid var(--secondary);transition:transform 0.2s}
+.kpi-card:hover{transform:translateY(-5px)}
+.kpi-card h3{margin:0 0 10px;color:#666;font-size:1.1em;text-transform:uppercase}
+.kpi-card .value{font-size:1.8em;font-weight:bold;color:var(--primary)}
+.kpi-card .note{font-size:0.85em;color:#777;margin-top:6px}
+.kpi-card.success{border-left-color:var(--success)}.kpi-card.success .value{color:var(--success)}
+.kpi-card.danger{border-left-color:var(--danger)}.kpi-card.danger .value{color:var(--danger)}
+.kpi-card.warning{border-left-color:var(--warning)}.kpi-card.warning .value{color:#856404}
+.section-title{font-size:1.8em;color:var(--primary);border-bottom:2px solid #eee;padding-bottom:10px;margin-bottom:20px;margin-top:40px;font-weight:700;display:flex;align-items:center}
+.section-title::before{content:'';display:inline-block;width:8px;height:22px;background:var(--secondary);margin-right:12px;border-radius:2px}
+.data-table{width:100%;border-collapse:collapse;margin-bottom:30px;font-size:0.95em}
+.data-table th{background:var(--light);color:var(--primary);text-align:left;padding:12px;border-bottom:2px solid #ddd;font-size:0.85em;text-transform:uppercase;letter-spacing:0.4px}
+.data-table td{padding:12px;border-bottom:1px solid #eee;vertical-align:top}
+.text-right{text-align:right}.text-center{text-align:center}
+.text-success{color:var(--success);font-weight:bold}.text-danger{color:var(--danger);font-weight:bold}
+.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.analysis-grid{display:grid;grid-template-columns:1fr 1fr;gap:30px;margin-bottom:40px}
+@media (max-width:768px){.analysis-grid{grid-template-columns:1fr}.download-btn{position:static;margin-top:20px;display:inline-block}}
+.analysis-card{background:var(--white);border:1px solid #e1e4e8;border-radius:10px;padding:20px;box-shadow:0 2px 5px rgba(0,0,0,0.03)}
+.analysis-card.full-width{grid-column:span 2}
+.analysis-card h3{margin-top:0;color:var(--primary);display:flex;align-items:center;font-size:1.4em}
+.analysis-card h3::before{content:'';display:inline-block;width:10px;height:10px;background:var(--secondary);border-radius:50%;margin-right:10px}
+.tag{background:#e9ecef;padding:3px 10px;border-radius:12px;font-size:0.85em;color:#495057;margin-right:5px;display:inline-block;margin-bottom:5px}
+.tag.in{background:#e6f4ea;color:var(--success)}
+.tag.out{background:#fce8e6;color:var(--danger)}
+.tag.pass{background:#e6f4ea;color:var(--success);font-weight:bold}
+.tag.fail{background:#fee2e2;color:var(--danger);font-weight:bold}
+.tag.warn{background:#fff3cd;color:#856404;font-weight:bold}
+.tag.low{background:#e0f7fa;color:var(--primary);font-weight:bold}
+.alert-box{padding:20px;border-radius:8px;margin-top:15px;margin-bottom:15px;border-left:5px solid}
+.alert-box.blue{background:#e7f3fe;border-color:var(--secondary)}
+.alert-box.red{background:#fff3cd;border-color:var(--warning)}
+.alert-box.green{background:#e6f4ea;border-color:var(--success)}
+.alert-box.danger{background:#fef2f2;border-color:var(--danger)}
+.alert-box h4{margin:0 0 10px;color:var(--dark)}
+.alert-box ul{margin:10px 0 0 20px;padding:0}
+.alert-box li{margin-bottom:8px}
+.small{font-size:0.85em;color:#777;line-height:1.6}
+.footer{text-align:center;padding:20px;color:#777;font-size:0.9em;background:#f8f9fa;border-top:1px solid #eee}
+.footer p{margin:4px 0}
+@media print{body{background:none}.container{box-shadow:none;border-radius:0}.download-btn{display:none}.analysis-card{page-break-inside:avoid}.header{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+</style></head>
+<body><div class="container">
+<div class="header"><button class="download-btn" onclick="window.print()">&#11015; Download PDF Report</button><h1>Global EIS — Report Template</h1>
+<p><strong>Component Showcase — the exact design system used by every delivered report</strong></p>
+<p><strong>Source:</strong> src/lib/report_design.ts · adopted VERBATIM from owner template (2026-10-03)</p>
+<p><strong>Status:</strong> LOCKED — 5 older variants retired; gate-enforced</p>
+</div>
+<div class="content">
+
+
+<h2 class="section-title">1 · KPI Cards — four tones</h2>
+<div class="kpi-grid"><div class="kpi-card "><h3>Closing Balance (verified)</h3><div class="value">631,182.24</div><div class="note">Printed anchor — multi-dpi confirmed</div></div><div class="kpi-card success"><h3>Net Period Movement</h3><div class="value">+163,666.81</div><div class="note">Matches printed Totals row</div></div><div class="kpi-card danger"><h3>Rows pending rebuild</h3><div class="value">152</div><div class="note">Absorbed rows flagged for v4</div></div><div class="kpi-card warning"><h3>OCR confidence</h3><div class="value">98.2%</div><div class="note">3-PSM consensus on ambiguous cells</div></div></div>
+
+<h2 class="section-title">2 · Alert Boxes — all four tones</h2>
+<div class="alert-box green"><h4>GREEN — verification passed</h4><p>Balance-chain identity closed to the piastre: 467,515.43 + 163,666.81 = 631,182.24.</p></div>
+<div class="alert-box blue"><h4>BLUE — information</h4><p>Engine stamp: <strong>eis-ts/3.0</strong> · 5-pass OCR (450/600/900/1200/2400 dpi) · census-first parsing.</p></div>
+<div class="alert-box red"><h4>RED (caution) — needs attention</h4><p>Hold figure is identity-derived (200,020.00); printed cell degraded — dedicated re-read scheduled in v4.</p></div>
+<div class="alert-box danger"><h4>DANGER — material finding</h4><p>Row inventory mismatch: reconstruction carried 310 rows vs 461 printed transaction rows. v3.x quarantined.</p></div>
+
+<h2 class="section-title">3 · Data Table — right-aligned tabular numbers</h2>
+<table class="data-table">
+<tr><th>Date</th><th>Ref</th><th>Description</th><th class="text-right">Debit (EGP)</th><th class="text-right">Credit (EGP)</th><th class="text-right">Balance (EGP)</th></tr>
+<tr><td>01/03/2026</td><td>—</td><td>Previous Balance (b/f)</td><td class="num">—</td><td class="num">—</td><td class="num">467,515.43</td></tr>
+<tr><td>01/03/2026</td><td>244FT1ID260578340</td><td>Outgoing Transfer Fees IPN <span class="tag out">OUT</span></td><td class="num text-danger">10.00</td><td class="num">—</td><td class="num">467,505.43</td></tr>
+<tr><td>01/03/2026</td><td>244FTID260578340</td><td>Outgoing transfer IPN network <span class="tag out">OUT</span></td><td class="num text-danger">10,000.00</td><td class="num">—</td><td class="num">477,505.43</td></tr>
+<tr><td>02/03/2026</td><td>244DEP260580123</td><td>Deposit — branch counter <span class="tag in">IN</span></td><td class="num">—</td><td class="num text-success">25,000.00</td><td class="num">502,505.43</td></tr>
+<tr><td>16/03/2026</td><td>2441PNF260752099</td><td>IPN Balance Ing Fees <span class="tag warn">FEE</span></td><td class="num text-danger">0.50</td><td class="num">—</td><td class="num">502,504.93</td></tr>
+</table>
+
+<h2 class="section-title">4 · Pill Tags — every tone</h2>
+<p><span class="tag pass">PASS</span> <span class="tag fail">FAIL</span> <span class="tag warn">WARN</span> <span class="tag in">IN</span> <span class="tag out">OUT</span> <span class="tag low">LOW RISK</span> <span class="tag ">NEUTRAL</span></p>
+
+<h2 class="section-title">5 · Analysis Cards — two-column grid</h2>
+<div class="analysis-grid"><div class="analysis-card"><h3>Forensic Finding</h3><p>Each analysis card carries the secondary-color dot marker and primary-color heading. Body text runs at content width inside a bordered, soft-shadow container.</p><p class="small">Small print style for provenance notes and artifact references.</p></div><div class="analysis-card"><h3>Chain Verification</h3><p>Constraint set bound to bank-printed evidence: serial continuity (1→462), per-row chain identity, printed Totals row, 0.1% IPN fee law.</p><p>Verdict rendering uses pill tags inside the card body: <span class="tag pass">VERIFIED</span> <span class="tag pass">462/462</span></p></div><div class="analysis-card full-width"><h3>Wide Card (full-width)</h3><p>Adding the full-width flag spans both columns — used for methodology disclosures and correction registers.</p></div></div>
+
+<div class="alert-box green"><h4>This file IS the template</h4><p>Every byte of styling above comes from <strong>src/lib/report_design.ts</strong> — the locked Global EIS design adopted verbatim from the owner-supplied template of 2026-10-03. No report ships on any other skin (enforced by delivery gate SO-9).</p></div>
+
+</div>
+<div class="footer">
+<p><strong>Prepared By:</strong> Global EIS - Financial Intelligence Services</p>
+<p><strong>Disclaimer:</strong> This analysis is generated based on the provided bank statement document. All mathematical reconciliations are verified against official bank totals. This report does not constitute legal advice.</p>
+</div>
+</div></body></html>
