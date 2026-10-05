@@ -1024,3 +1024,19 @@ Work Log:
 
 Stage Summary:
 - v1.2 template set FINAL on the portal (corrected bytes, same filenames); chat delivery = full Global_EIS_Template_v1.2_Library.html per TPL-LIBRARY-1 protocol.
+
+---
+Task ID: UPLOAD-404-FIX (2026-10-06)
+Agent: main (Super Z)
+Task: Owner reported "File 1/1 (part 1/2): Upload failed (HTTP 404). on portal"; also asked for double-checks that work WITH the balance chain ("never fail in any bank statements") and a transparent explanation of how I work.
+
+Work Log:
+- Root-caused the 404: upload-panel.tsx posts chunked uploads to /api/upload; src/app/api/upload/route.ts was ABSENT from working tree and HEAD. Git forensics: 418-line route last present in 9fe9b1d (ALIGN-1 lineage), deleted in 59ec307 — THIRD loss of this route by lineage wipes (after 10ed6e7 restore and a0abe3b restore).
+- Restored route verbatim via git checkout 9fe9b1d -- src/app/api/upload/route.ts. tsc: 0 errors in src/. scripts/test_autowork.py: 12/12 PASS.
+- NEW scripts/test_chunked_upload.py (force-tracked): reproduces owner's exact scenario — 6.5MB PDF in 2 chunks (part 1/2 stage -> was the 404; part 2/2 finalize). Result: 200/200, batch ok=true, sizeBytes 6,500,000+2 EXACT vs sent bytes (DB + filesystem reassembly verified), submission queued. CHUNK-TEST: PASS. Test rows cleared from dev queue afterwards.
+- Committed f73286b, pushed origin/main; Vercel auto-deploy verified: prod POST /api/upload 404 -> 400 at 21:50:02Z (route alive). Authenticated prod probe skipped by design (prod operator creds unknown — do not guess).
+- Codified owner's "never fail" directive as SO-10 VERIFICATION PASSPORT (G1 serial census / G2 strict per-row chain / G3 printed totals match / G4 anchors / G5 page grid / G6 monotonicity / G7 two-pass extraction / G8 re-derivation / G9 adversarial audit) in STANDING_ORDERS.md; ledger rows ORD-1006-V12 (master v1.2 standard), ORD-1006-UP1 (this hotfix), ORD-1006-VP1 (passport) appended.
+
+Stage Summary:
+- Portal upload RESTORED and now regression-guarded by a test that replays the owner's exact failure signature; production live at 21:50Z 2026-10-06.
+- SO-10 makes the 310-row lesson structural: chain = amount conservation (one equation family); row completeness comes from census + printed totals + strict per-row identity together. Passport ships with every future report (first: NBE v4).
