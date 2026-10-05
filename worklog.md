@@ -863,3 +863,54 @@ Stage Summary:
   the repeatable method into skills/bank-statement-forensics/SKILL.md (locked
   contracts → state reconcile → OCR chain ladder → dual audit A+Semantic →
   correction-register protocol → gated 3-channel delivery + real pitfalls).
+
+---
+Task ID: NBE-COUNT-1 (2026-10-06)
+Agent: main (Super Z)
+Task: Owner challenge — "EID FARAG SAAD SHAAT it has more than 310 transactions".
+
+Work Log:
+- Source PDF recovered from /home/sync (upload/كشف_حساب_عيد_شاعت_الاهلي_معدل
+  (2).pdf, 10.85MB, 23pp, matches NBE-REPORT-1 entry) -> upload/nbe_eid_farag.pdf.
+- Built scripts/nbe_census.py (v1, band profile) — vertical rules bridged rows;
+  rebuilt as scripts/nbe_census2.py: 150dpi horizontal-rule detection -> per-row
+  strip crops @450dpi, OCR psm7/6, classify TX/CONT/STRUCT. Full 23pp census:
+  486 strips = 380 TX + 23 CONT + 83 STRUCT (incl. repeated 2-row table headers).
+- DECISIVE: NBE prints its own row serials. Sequence 1..462 continuous across
+  all pages (p1: 1..15, p3: 39..58, p12: 232..251, p16: 318..338, p22: 450..461,
+  p23: 462). Serial 1 = "Previous Balance" row; serials 2..462 = 461 transaction
+  rows; Totals row unnumbered.
+- scripts/nbe_verify_reads.py (600dpi bands + x2 upscale): p1 serial-1 b/f row
+  reads 467,515.43 (psm6+psm7 agree) — NOT 467,525.43 as v3.2 claimed. p23
+  serial-462 final row (50,000.00) prints balance 631,182.24 (closing intact).
+  p23 Totals row prints Debit 1,341,824.35 | Credit 1,505,491.16 ->
+  net +163,666.81; 631,182.24 - 163,666.81 = 467,515.43 EXACT (two independent
+  printed evidences agree; old anchor 467,525.43 refuted).
+- Mass reconciliation: old ledger debits 1,520,847.04 / credits 1,684,503.85 vs
+  printed Totals -> excess +179,022.69 debit / +179,012.69 credit (equal within
+  the Totals-row single-digit OCR tolerance) = phantom reversal-loop churn pair
+  inside the 310-row reconstruction.
+- Row reconciliation: 462 printed numbered rows vs 310 reconstructed ledger
+  rows = 152 rows absorbed/merged during solve phases (sums were made right;
+  row inventory was not 1:1). Owner's claim CONFIRMED (461 transactions).
+- New evidence classes the A1-A13/S1-S7 audits never saw: printed serial
+  column + printed Totals row. p22 re-reads also expose: stmt fee 160.00 row
+  (13/08), 3rd interest row (25/08, Certificate/term deposit), peak likely
+  751,222.24 (v3.2 said 751,202.24, -20.00 off). Hold cell on p23 remains
+  print-degraded (identity-derived 200,020.00 stands; S5 unchanged).
+- Verdict: v3.2 QUARANTINED (chain-closed but row-incomplete, opening anchor
+  misread, masses inflated). v3.1/v3.2 SUPERSEDED. Corrected rebuild = v4 with
+  serial-indexed 1:1 extraction constrained by printed Totals + b/f + closing.
+
+Stage Summary:
+- Owner claim TRUE: 461 transaction rows (bank serials 2..462; 462 numbered
+  rows incl. b/f). Old 310-row ledger: sums right, inventory short by 152.
+- TRUE printed anchors: b/f 467,515.43 (01/03, value date 26/02); Totals D
+  1,341,824.35 / C 1,505,491.16; net +163,666.81; closing 631,182.24 intact.
+- Next: v4 serial-indexed rebuild (all 462 rows, 4 constraints per row), then
+  re-delivery on the locked template via the 3-channel contract.
+- DELIVERY (3-channel, notice v3.3-NOTICE): mail SENT {"sent":true,
+  "to":"ahmedr.muhammed19@gmail.com"}; portal publish {"ok":true}
+  (GlobalEIS_Notice_NBE_v33_CORRECTION.html, 14,742 B, transport repo
+  eis-transport-40b7635f6c6e — delete 403, remove manually); full HTML
+  rendered in chat. Transport repo deletion pending (2nd occurrence).
