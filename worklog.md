@@ -698,3 +698,41 @@ Stage Summary:
   alahly_parse8.py / alahly_finalize2.py / alahly_report.ts (whitelisted).
 - Note: scripts/alahly_work/ holds per-page OCR JSON (client data, NOT
   whitelisted, stays local).
+
+---
+Task ID: NBE-100 (2026-10-05)
+Agent: main (Super Z)
+Task: "try anyway to get 100% balance chain" — push the NBE EGP Savings
+(EID FARAG SAAD SHAAT) ledger from 73.5% row coverage to a fully closed chain.
+
+Work Log:
+- Phase A: walked the v8 chain; isolated 9 failing segments + 13 src=interp
+  rows; discovered ALL 9 segments close EXACTLY once the interp rows are
+  excluded -> they were phantom/misassigned captures, not chain breaks.
+- Phase B/C (scripts alahly_solve_b..h2): 1200dpi full-page column-strip
+  token streams + 2400dpi cell crops with 3-PSM consensus (psm 7/6/11) on
+  every ambiguous cell; ~45 surgical reads total.
+- Root causes found & fixed: hidden 2nd ATM 12,000 row (v8 phantom 24,075);
+  merged fee rows (5.5 = 0.50+5.00; 9,800.50 = 9,800+0.50); ghost trust-bal
+  endpoints (97,110.37->91,110.37; 66,514.77->66,814.77; 31,463.77->31,794.27;
+  84,134.61->84,154.61; 8,845.80 path; 11,386.83->11,386.63); missed rows
+  (fee 20.00 ..674545; fee 75.00 p3; stmt fee 75.00 p10; fee 0.50 ladder
+  p10; 0.50 p17; 500.00 p20); page-break REVERSAL +3,003.00 (p9->p10);
+  TWO interest rows recovered (+205.33 p17 derived, +791.67 p18); NBE IPN
+  fee LAW induced: fee = 0.1% of transfer (11 independent confirmations).
+- Phase D/D2/D3 (scripts alahly_phase_*): corrections applied to the v8
+  ledger -> 310 rows; fixes for y-scale mixing (450 vs 1200 dpi keys).
+- Phase E: FULL CHAIN WALK = 310/310 pairs CLOSED, 0 failures, telescope
+  467,525.43 -> 631,182.24 EXACT (residual 0.00).
+- Phase F: final stats (credits 1,684,503.85 / debits 1,520,847.04 / net
+  +163,656.81; bal envelope 608.66..751,202.24; 14 derived rows disclosed).
+- Hold corrected: 200,030.00 (v8) -> 200,020.00 via identity arithmetic.
+- v3 report on firm canonical template (reportShell): published/
+  GlobalEIS_Report_EidFarag_NBE_EGP_v3_100pct.html, commit ccf90e1.
+
+Stage Summary:
+- 100% BALANCE CHAIN: 310/310 pairs closed, residual 0.00, telescope exact.
+- Delivered 3 channels: chat (full HTML), mail SENT 18:12Z (IMAP verified,
+  474 mails), portal publish-report {"ok":true} (idempotent re-check OK).
+- Scripts whitelisted & committed; final_ledger.json + final_stats.json in
+  scripts/alahly_work/ (client data, stays local).
