@@ -615,3 +615,20 @@ Stage Summary:
   big scan (>6p) -> seconds-fast analyst triage; small scan -> shadow OCR
   analyst review. 6-month window both sides. Waiting on the user's new
   bank statement upload to exercise the lanes.
+
+---
+Task ID: REPORT-HERE-1 (2026-10-05)
+Agent: main (Super Z)
+Task: User standing order — "send a report here also".
+
+Work Log:
+- Protocol adopted: EVERY report produced from now on (engine auto-delivery
+  reports, analyst forensic reports, status/ops reports) is posted IN CHAT in
+  full, in addition to the standard inbox delivery to
+  ahmedr.muhammed19@gmail.com.
+- First instance delivered: ops status report (mail restore, prod health,
+  lane readiness, pending items) posted in chat.
+
+Stage Summary:
+- New delivery contract: report = inbox copy + in-chat copy. No code change
+  needed (portal emails unchanged; chat posting is agent-side).
