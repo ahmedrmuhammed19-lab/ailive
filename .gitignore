@@ -137,3 +137,11 @@ parser_samples/
 scripts/wafa_work/
 !scripts/send_ops_report.ts
 !scripts/ops_report_template.ts
+!scripts/alahly_report.ts
+!scripts/alahly_parse*.py
+!scripts/alahly_ocr*.py
+!scripts/alahly_finalize*.py
+!scripts/alahly_region.py
+!scripts/alahly_dump_lines.py
+!scripts/inspect_alahly.py
+!scripts/ocr_probe_p1.py
