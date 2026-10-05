@@ -914,3 +914,9 @@ Stage Summary:
   (GlobalEIS_Notice_NBE_v33_CORRECTION.html, 14,742 B, transport repo
   eis-transport-40b7635f6c6e — delete 403, remove manually); full HTML
   rendered in chat. Transport repo deletion pending (2nd occurrence).
+- TPL-GALLERY (2026-10-06): owner asked to see the 5 retired templates. Built
+  self-contained gallery (scripts/retired_gallery.py) embedding all 5 via
+  srcdoc iframes on active chrome: templates/retired/_RETIRED_GALLERY.html +
+  copy published/Global_EIS_Retired_Templates_Gallery.html (166.1 KB).
+  Portal publish {"ok":true} 20:41Z (transport eis-transport-f2b36a8b674d,
+  delete 403 — manual removal pending, 3rd occurrence).
