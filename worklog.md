@@ -632,3 +632,31 @@ Work Log:
 Stage Summary:
 - New delivery contract: report = inbox copy + in-chat copy. No code change
   needed (portal emails unchanged; chat posting is agent-side).
+
+---
+Task ID: REPORT-HERE-2 (2026-10-05)
+Agent: main (Super Z)
+Task: "send a report here html like the previous + mail + upload on portal"
+— deliver the ops report through ALL THREE channels at once.
+
+Work Log:
+- Built Global_EIS_Ops_Report_2026-10-05.html in the Global EIS design
+  (#005677/#008DCB, pills, tables, rules checklist) — single source for all
+  channels. Copies: published/ (repo-hosted) + download/ (local deliverable).
+- NEW ENDPOINT /api/queue/publish-report/<token>/<spec> (commit 4b96cb8):
+  same HMAC path-form trust as attach, publishes case-less ReportFile rows
+  (submissionId null) from allowlisted https URLs (raw.githubusercontent.com),
+  sniffed PDF/HTML, 8MB cap, idempotent. Deploys with Vercel auto-deploy.
+- MAIL leg: bun scripts/send_ops_report.ts -> sendOrQueue (portal's own SMTP
+  path, TEST_MAIL_TO lock) -> SENT:true; IMAP verify: mail at top of inbox
+  (471 total, 15:24Z), HTML renders inline + attached.
+- PORTAL leg: fired publish-report via page_reader ->
+  {"ok":true,"published":[{"name":"Global_EIS_Ops_Report_2026-10-05.html",
+  "sizeBytes":11700}]} — now listed in /api/reports for operators,
+  downloadable via /api/report/download?file=...
+- CHAT leg: rendered report posted in the conversation (REPORT-HERE-1 rule).
+
+Stage Summary:
+- Standing capability: ops/status reports can now be published to the portal
+  on demand (repo raw URL -> publish-report endpoint), no queue case needed.
+- Three-channel delivery contract executed end-to-end and verified.
