@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Global EIS - Report Template Library</title>
+<style>
+:root{--primary:#005677;--secondary:#008DCB;--success:#28a745;--danger:#dc3545;--warning:#ffc107;--light:#f8f9fa;--dark:#343a40;--white:#ffffff}
+body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background-color:#eef2f5;color:var(--dark);margin:0;padding:20px}
+.container{max-width:1200px;margin:0 auto;background:var(--white);border-radius:12px;box-shadow:0 4px 20px rgba(0,0,0,0.08);overflow:hidden;position:relative}
+.header{background:linear-gradient(135deg,var(--primary),var(--secondary));color:var(--white);padding:40px 30px;text-align:center;position:relative}
+.header h1{margin:0;font-size:2.5em;text-transform:uppercase;letter-spacing:1px}
+.header p{margin:5px 0 0;opacity:0.9;font-size:1.1em}
+.download-btn{position:absolute;top:30px;right:30px;background:var(--white);color:var(--primary);border:none;padding:10px 20px;font-size:14px;font-weight:bold;border-radius:5px;cursor:pointer;box-shadow:0 2px 5px rgba(0,0,0,0.2);transition:0.2s}
+.download-btn:hover{background:#f0f0f0;transform:translateY(-2px)}
+.content{padding:40px}
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:20px;margin-bottom:40px}
+.kpi-card{background:var(--white);border-radius:10px;padding:20px;box-shadow:0 2px 10px rgba(0,0,0,0.05);border-left:5px solid var(--secondary);transition:transform 0.2s}
+.kpi-card:hover{transform:translateY(-5px)}
+.kpi-card h3{margin:0 0 10px;color:#666;font-size:1.1em;text-transform:uppercase}
+.kpi-card .value{font-size:1.8em;font-weight:bold;color:var(--primary)}
+.kpi-card .note{font-size:0.85em;color:#777;margin-top:6px}
+.kpi-card.success{border-left-color:var(--success)}.kpi-card.success .value{color:var(--success)}
+.kpi-card.danger{border-left-color:var(--danger)}.kpi-card.danger .value{color:var(--danger)}
+.kpi-card.warning{border-left-color:var(--warning)}.kpi-card.warning .value{color:#856404}
+.section-title{font-size:1.8em;color:var(--primary);border-bottom:2px solid #eee;padding-bottom:10px;margin-bottom:20px;margin-top:40px;font-weight:700;display:flex;align-items:center}
+.section-title::before{content:'';display:inline-block;width:8px;height:22px;background:var(--secondary);margin-right:12px;border-radius:2px}
+.data-table{width:100%;border-collapse:collapse;margin-bottom:30px;font-size:0.95em}
+.data-table th{background:var(--light);color:var(--primary);text-align:left;padding:12px;border-bottom:2px solid #ddd;font-size:0.85em;text-transform:uppercase;letter-spacing:0.4px}
+.data-table td{padding:12px;border-bottom:1px solid #eee;vertical-align:top}
+.text-right{text-align:right}.text-center{text-align:center}
+.text-success{color:var(--success);font-weight:bold}.text-danger{color:var(--danger);font-weight:bold}
+.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.analysis-grid{display:grid;grid-template-columns:1fr 1fr;gap:30px;margin-bottom:40px}
+@media (max-width:768px){.analysis-grid{grid-template-columns:1fr}.download-btn{position:static;margin-top:20px;display:inline-block}}
+.analysis-card{background:var(--white);border:1px solid #e1e4e8;border-radius:10px;padding:20px;box-shadow:0 2px 5px rgba(0,0,0,0.03)}
+.analysis-card.full-width{grid-column:span 2}
+.analysis-card h3{margin-top:0;color:var(--primary);display:flex;align-items:center;font-size:1.4em}
+.analysis-card h3::before{content:'';display:inline-block;width:10px;height:10px;background:var(--secondary);border-radius:50%;margin-right:10px}
+.tag{background:#e9ecef;padding:3px 10px;border-radius:12px;font-size:0.85em;color:#495057;margin-right:5px;display:inline-block;margin-bottom:5px}
+.tag.in{background:#e6f4ea;color:var(--success)}
+.tag.out{background:#fce8e6;color:var(--danger)}
+.tag.pass{background:#e6f4ea;color:var(--success);font-weight:bold}
+.tag.fail{background:#fee2e2;color:var(--danger);font-weight:bold}
+.tag.warn{background:#fff3cd;color:#856404;font-weight:bold}
+.tag.low{background:#e0f7fa;color:var(--primary);font-weight:bold}
+.alert-box{padding:20px;border-radius:8px;margin-top:15px;margin-bottom:15px;border-left:5px solid}
+.alert-box.blue{background:#e7f3fe;border-color:var(--secondary)}
+.alert-box.red{background:#fff3cd;border-color:var(--warning)}
+.alert-box.green{background:#e6f4ea;border-color:var(--success)}
+.alert-box.danger{background:#fef2f2;border-color:var(--danger)}
+.alert-box h4{margin:0 0 10px;color:var(--dark)}
+.alert-box ul{margin:10px 0 0 20px;padding:0}
+.alert-box li{margin-bottom:8px}
+.small{font-size:0.85em;color:#777;line-height:1.6}
+.footer{text-align:center;padding:20px;color:#777;font-size:0.9em;background:#f8f9fa;border-top:1px solid #eee}
+.footer p{margin:4px 0}
+@media print{body{background:none}.container{box-shadow:none;border-radius:0}.download-btn{display:none}.analysis-card{page-break-inside:avoid}.header{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+</style></head>
+<body><div class="container">
+<div class="header"><button class="download-btn" onclick="window.print()">&#11015; Download PDF Report</button><h1>GLOBAL EIS REPORT TEMPLATE LIBRARY</h1>
+<p>Four specimen templates · one locked design system (SO-1)</p>
+<p>Version 1.0 · 2026-10-06 · Generated from <strong>src/lib/report_design.ts</strong></p>
+<p><p><span class="tag low">TEMPLATE LIBRARY</span> <span class="tag ">v1.0</span> <span class="tag ">5 portal files</span></p></p>
+</div>
+<div class="content">
+<div class="alert-box blue"><h4>Single-source governance</h4><p class="small">Every artifact on this page is rendered from the firm's one and only design module <strong>src/lib/report_design.ts</strong> — tokens #005677 / #008DCB, Segoe UI, gradient header, KPI cards with colored left borders, section bars, pill tags, left-bordered alert boxes, prepared-by footer. No other skin exists (SO-1); the five decommissioned variants remain documented in the retired gallery. Deliveries pass the SO-9 pre-delivery gate and ship on the channels the owner requests (SO-2).</p></div>
+
+<h2 class="section-title">Specimen Index</h2>
+<table class="data-table">
+<tr><th>#</th><th>Template</th><th>Used For</th><th>Portal File</th><th class="text-center">Status</th></tr>
+<tr><td>01</td><td><strong>Bank Statement Analysis</strong></td><td>Full forensic statement report (the NBE / CIB report family)</td><td class="small">Global_EIS_Template_01_Bank_Statement_Analysis.html</td><td class="text-center"><span class="tag pass">ACTIVE</span></td></tr>
+<tr><td>02</td><td><strong>Correction Notice</strong></td><td>Formal erratum for a proven defect (the v3.3 family)</td><td class="small">Global_EIS_Template_02_Correction_Notice.html</td><td class="text-center"><span class="tag pass">ACTIVE</span></td></tr>
+<tr><td>03</td><td><strong>Standing Orders</strong></td><td>Locked rulebook + order ledger (the SO family)</td><td class="small">Global_EIS_Template_03_Standing_Orders.html</td><td class="text-center"><span class="tag pass">ACTIVE</span></td></tr>
+<tr><td>04</td><td><strong>Operations Report</strong></td><td>Periodic ops cycle: receipts, incidents, next actions (the ops family)</td><td class="small">Global_EIS_Template_04_Operations_Report.html</td><td class="text-center"><span class="tag pass">ACTIVE</span></td></tr>
+</table>
+<p class="small">Each section below embeds the <strong>exact content fragments</strong> of the corresponding standalone specimen — byte-identical section HTML, generated in this single pass from the locked module. Only the page header/footer wrap differs.</p>
+<h2 class="section-title">Template 01 — Bank Statement Analysis</h2><p class="small">Standalone file: <strong>Global_EIS_Template_01_Bank_Statement_Analysis.html</strong> · complete reportShell page with its own gradient header and prepared-by footer.</p>
+<h2 class="section-title">1 · Executive Summary</h2>
+<p>Sample paragraph — the executive summary states the engagement scope (institution, account, period), the verdict of the reconciliation in one sentence, and the single most important finding. It is written last but appears first. Keep it to one short paragraph; every number here must reappear, with its evidence, in the sections below.</p>
+<p><span class="tag pass">Chain 100%</span> <span class="tag pass">Residual 0.00</span> <span class="tag low">Dual anchors verified</span> <span class="tag ">v1.0 — FINAL</span></p>
+<div class="kpi-grid"><div class="kpi-card "><h3>Opening Balance (printed)</h3><div class="value">EGP 450,000.00</div><div class="note">Sample · statement p.1, serial 1 (b/f row)</div></div><div class="kpi-card success"><h3>Closing Balance (printed)</h3><div class="value">EGP 612,340.00</div><div class="note">Sample · final page, last printed serial</div></div><div class="kpi-card danger"><h3>Total Debits (printed)</h3><div class="value">EGP 387,660.00</div><div class="note">Sample · bank Totals row, column D</div></div><div class="kpi-card "><h3>Total Credits (printed)</h3><div class="value">EGP 550,000.00</div><div class="note">Sample · bank Totals row, column C</div></div><div class="kpi-card "><h3>Transactions (printed)</h3><div class="value">130</div><div class="note">Sample · bank serial range 1–130</div></div><div class="kpi-card success"><h3>Balance Chain Closure</h3><div class="value">100%</div><div class="note">Sample · 130/130 pairs, residual 0.00</div></div></div>
+<h2 class="section-title">2 · Balance Chain Verification</h2>
+<table class="data-table">
+<tr><th>Verification Anchor</th><th class="text-right">Value</th><th>Bank-Printed Evidence</th></tr>
+<tr><td>Opening anchor (b/f, serial 1)</td><td class="num">EGP 450,000.00</td><td>Statement p.1, serial 1 — "BALANCE B/F" row</td></tr>
+<tr><td>Closing anchor</td><td class="num">EGP 612,340.00</td><td>Final page, serial 130 — closing balance row</td></tr>
+<tr><td>Totals row — debits (D)</td><td class="num">EGP 387,660.00</td><td>Bank-printed Totals row, final page</td></tr>
+<tr><td>Totals row — credits (C)</td><td class="num">EGP 550,000.00</td><td>Bank-printed Totals row, final page</td></tr>
+<tr><td>Net movement</td><td class="num">+EGP 162,340.00</td><td>Arithmetic: credits − debits</td></tr>
+<tr><td>Closing identity</td><td class="num">EXACT</td><td>450,000.00 + 162,340.00 = 612,340.00 — exact to the piastre</td></tr>
+</table>
+<div class="alert-box green"><h4>Chain closure — sample verdict</h4><p>130/130 consecutive balance pairs closed. Residual: EGP 0.00. Opening and closing anchors verified against two independent bank-printed locations (first serial row and final Totals row).</p></div>
+<p class="small"><strong>Template rule (SO-4):</strong> no case report ships without this section printed in full — pairs closed N/N, residual, and both anchor identities. If the chain is below 100% the report must say so plainly, with the reason and the count of chain-derived rows.</p>
+<h2 class="section-title">3 · Monthly Flow Analysis</h2>
+<div class="analysis-grid"><div class="analysis-card"><h3>Credits by Month (sample)</h3><table class="data-table">
+<tr><th>Month</th><th class="text-right">Count</th><th class="text-right">Amount (EGP)</th></tr>
+<tr><td>01/2026</td><td class="num">12</td><td class="num">120,000.00</td></tr>
+<tr><td>02/2026</td><td class="num">18</td><td class="num">210,500.00</td></tr>
+<tr><td>03/2026</td><td class="num">24</td><td class="num">219,500.00</td></tr>
+<tr><td><strong>Total</strong></td><td class="num"><strong>54</strong></td><td class="num"><strong>550,000.00</strong></td></tr>
+</table><p class="small">The delivered report lists every month of the statement period, not only the top months.</p></div><div class="analysis-card"><h3>Debits by Month (sample)</h3><table class="data-table">
+<tr><th>Month</th><th class="text-right">Count</th><th class="text-right">Amount (EGP)</th></tr>
+<tr><td>01/2026</td><td class="num">21</td><td class="num">130,160.00</td></tr>
+<tr><td>02/2026</td><td class="num">25</td><td class="num">148,000.00</td></tr>
+<tr><td>03/2026</td><td class="num">30</td><td class="num">109,500.00</td></tr>
+<tr><td><strong>Total</strong></td><td class="num"><strong>76</strong></td><td class="num"><strong>387,660.00</strong></td></tr>
+</table><p class="small">Credit + debit counts must equal the printed transaction count (54 + 76 = 130). Any gap is disclosed, never absorbed.</p></div></div>
+<h2 class="section-title">4 · Findings &amp; Red Flags</h2>
+<div class="alert-box danger"><h4>RED FLAG — Fee-mass concentration (sample)</h4><ul><li><strong>Fee mass:</strong> 58 of 76 debit lines (76.3% by count) are sub-threshold service charges — flagged for churn analysis against the account's earnings.</li><li><strong>Round-number transfers:</strong> 9 outgoing transfers at exactly EGP 25,000.00 (sample) share one counterparty pattern — listed with dates and running balance.</li></ul></div>
+<div class="alert-box green"><h4>Positive assurance (sample)</h4><ul><li>Every bank-printed serial was extracted 1:1 — no rows absorbed, merged or dropped.</li><li>No duplicated value dates detected; no reversal chains without matching originals.</li></ul></div>
+<h2 class="section-title">5 · Methodology &amp; Evidence</h2>
+<div class="analysis-grid"><div class="analysis-card"><h3>Extraction &amp; verification</h3><ul><li>Table-line detection at 150 dpi → row-band OCR at 450–600 dpi (psm 7/6).</li><li>Row classification: transaction / continuation / structural.</li><li>Four-constraint row model: serial continuity, per-row chain identity, totals hit, fee-law conformity.</li><li>Dual printed anchors cross-checked before any verdict is stamped.</li></ul></div><div class="analysis-card"><h3>Evidence register</h3><table class="data-table">
+<tr><th>Item</th><th>Value (sample)</th></tr>
+<tr><td>Source document</td><td>23-page scanned statement (bank-issued)</td></tr>
+<tr><td>Read locations</td><td>p.1 serial 1 · p.23 serial 130 · p.23 Totals row</td></tr>
+<tr><td>Audit</td><td>Independent arithmetic audit, all checks PASS</td></tr>
+</table></div></div>
+<div class="alert-box blue"><h4>Template usage notes</h4><ul class="small">
+<li>Header block: report reference, institution, account identity and period are mandatory on every client-facing page.</li>
+<li>KPI values must be <strong>bank-printed anchors</strong> (or clearly flagged as derived — SO-7: never present a derived number as a printed one).</li>
+<li>Chain block (SO-4) is mandatory and must quote the bank's own serials and Totals row as evidence.</li>
+<li>Delivery: three-channel contract (SO-2) — full HTML here in chat, mail via send_ops_report.ts (TEST_MAIL_TO lock, SO-3), portal via the publish-report endpoint.</li>
+<li>Pre-delivery: scripts/delivery_gate.py must PASS (SO-9) — template markers, chain block, mail lock, portal receipt, worklog row.</li>
+</ul></div>
+<h2 class="section-title">Template 02 — Correction Notice</h2><p class="small">Standalone file: <strong>Global_EIS_Template_02_Correction_Notice.html</strong> · complete reportShell page with its own gradient header and prepared-by footer.</p>
+<h2 class="section-title">1 · What Changed</h2>
+<table class="data-table">
+<tr><th>#</th><th>Field</th><th>Previously Stated</th><th>Corrected Value</th><th>Evidence</th></tr>
+<tr><td>1</td><td>Transaction count</td><td class="text-danger">310 rows</td><td class="text-success">461 transactions — bank serials 1–462 incl. b/f</td><td>The bank's own printed serial column, all 23 pages (census)</td></tr>
+<tr><td>2</td><td>Opening balance</td><td class="text-danger">EGP 467,525.43</td><td class="text-success">EGP 467,515.43</td><td>p.1 serial 1 re-read at 600 dpi ×2 magnification</td></tr>
+<tr><td>3</td><td>Period turnover</td><td class="text-danger">Phantom churn in both columns</td><td class="text-success">Bank-printed Totals: D 1,341,824.35 / C 1,505,491.16</td><td>Totals row, p.23 — closes exactly with both anchors</td></tr>
+</table>
+<p class="small">Rows above are illustrative entries modeled on the live correction the firm issued for the NBE EID FARAG SAAD SHAAT statement (notice v3.3) — kept here because they show the required evidence discipline: every correction names the bank-printed location that proves it.</p>
+<div class="kpi-grid"><div class="kpi-card danger"><h3>Fields Corrected</h3><div class="value">3</div><div class="note">Sample · each with printed evidence</div></div><div class="kpi-card warning"><h3>Reports Superseded</h3><div class="value">1</div><div class="note">Prior version quarantined</div></div><div class="kpi-card success"><h3>Channels Notified</h3><div class="value">3</div><div class="note">Chat + mail + portal</div></div><div class="kpi-card success"><h3>Re-verified Checks</h3><div class="value">13/13</div><div class="note">Independent audit re-run after fix</div></div></div>
+<h2 class="section-title">2 · Root Cause</h2>
+<p>Sample text — the notice states the cause chain in plain language and does not soften it (SO-7: an audit finding is disclosed even when embarrassing to the analyst). The live case traced to five stacked layers: a degraded scan; a chain-only solver that can silently absorb rows; an opening-anchor misread protected by circular verification; an audit that validated self-consistency instead of external printed evidence; and optimization of the wrong metric (chain closure instead of row count vs the bank's printed serials).</p>
+<p><span class="tag warn">OCR degradation</span> <span class="tag fail">Absorption loophole</span> <span class="tag fail">Anchor misread</span> <span class="tag fail">Self-referential audit</span> <span class="tag fail">Wrong metric</span></p>
+<h2 class="section-title">3 · Actions Taken</h2>
+<table class="data-table">
+<tr><th>Step</th><th>Action</th><th>Receipt</th></tr>
+<tr><td>1</td><td>Superseded report quarantined — marked SUPERSEDED, excluded from the portal's live list</td><td>published/…_v3.2 → QUARANTINE</td></tr>
+<tr><td>2</td><td>Corrected notice issued on the three-channel contract</td><td>chat rendered · mail {"sent":true} · portal {"ok":true}</td></tr>
+<tr><td>3</td><td>Root cause logged to the lessons register and worklog</td><td>worklog row NBE-COUNT-1</td></tr>
+<tr><td>4</td><td>Corrected rebuild ordered under a stricter row model</td><td>v4 serial-indexed reconstruction (4 constraints/row)</td></tr>
+</table>
+<div class="alert-box blue"><h4>Template usage notes</h4><ul class="small">
+<li>Header block: report reference, institution, account identity and period are mandatory on every client-facing page.</li>
+<li>KPI values must be <strong>bank-printed anchors</strong> (or clearly flagged as derived — SO-7: never present a derived number as a printed one).</li>
+<li>The notice must identify the superseded artifact by exact ref + version, and state which corrected version is the only authoritative one.</li>
+<li>Delivery: three-channel contract (SO-2) — full HTML here in chat, mail via send_ops_report.ts (TEST_MAIL_TO lock, SO-3), portal via the publish-report endpoint.</li>
+<li>Pre-delivery: scripts/delivery_gate.py must PASS (SO-9) — template markers, chain block, mail lock, portal receipt, worklog row.</li>
+</ul></div>
+<h2 class="section-title">Template 03 — Standing Orders</h2><p class="small">Standalone file: <strong>Global_EIS_Template_03_Standing_Orders.html</strong> · complete reportShell page with its own gradient header and prepared-by footer.</p>
+<h2 class="section-title">1 · Locked Rules Register</h2>
+<table class="data-table">
+<tr><th>ID</th><th>Rule</th><th>Enforcement</th><th class="text-center">Status</th></tr>
+<tr><td><strong>SO-1</strong></td><td>Template lock — exactly one design system: src/lib/report_design.ts; all other skins retired</td><td>delivery-gate markers</td><td class="text-center"><span class="tag pass">LOCKED</span></td></tr>
+<tr><td><strong>SO-2</strong></td><td>Three-channel delivery — chat + mail + portal receipts; without all three it is not delivered</td><td>receipts/ directory</td><td class="text-center"><span class="tag pass">LOCKED</span></td></tr>
+<tr><td><strong>SO-3</strong></td><td>Mail lock — TEST_MAIL_TO only; the forbidden recipient is hard-refused at the mail layer</td><td>src/lib/mail.ts guard</td><td class="text-center"><span class="tag pass">LOCKED</span></td></tr>
+<tr><td><strong>SO-4</strong></td><td>Chain gate — no case report without its printed balance-chain verification</td><td>delivery-gate chain block</td><td class="text-center"><span class="tag pass">LOCKED</span></td></tr>
+<tr><td><strong>SO-5</strong></td><td>Order ledger — every owner order appended below; owner edits override any row</td><td>ledger (section B)</td><td class="text-center"><span class="tag pass">LOCKED</span></td></tr>
+<tr><td><strong>SO-6</strong></td><td>Worklog — every task appends before its delivery is announced</td><td>worklog.md</td><td class="text-center"><span class="tag pass">LOCKED</span></td></tr>
+<tr><td><strong>SO-7</strong></td><td>Honesty — derived numbers are disclosed as derived; findings disclosed even against the analyst</td><td>disclosure rule</td><td class="text-center"><span class="tag pass">LOCKED</span></td></tr>
+<tr><td><strong>SO-8</strong></td><td>Expectations — scan = forensic pass; bank digital PDF = 100% fast lane; portal auto-runs on upload</td><td>AUTO_WORK</td><td class="text-center"><span class="tag pass">LOCKED</span></td></tr>
+<tr><td><strong>SO-9</strong></td><td>Pre-delivery gate — delivery_gate.py must PASS before any announcement</td><td>gate script</td><td class="text-center"><span class="tag pass">LOCKED</span></td></tr>
+</table>
+<h2 class="section-title">2 · Order Ledger (append-only)</h2>
+<table class="data-table">
+<tr><th>ID</th><th>Date</th><th>Order</th><th>Status</th><th>Receipt</th></tr>
+<tr><td>ORD-SPEC-01</td><td>2026-10-06</td><td><em>(sample row)</em> adopt the four-template library</td><td><span class="tag pass">DONE</span></td><td>receipts/publish_templates.json</td></tr>
+<tr><td>ORD-SPEC-02</td><td>2026-10-06</td><td><em>(sample row)</em> publish specimens to the reports portal</td><td><span class="tag pass">DONE</span></td><td>portal {"ok":true}</td></tr>
+<tr><td colspan="5" class="small">The live ledger lives in STANDING_ORDERS.md and its portal copy; specimen rows above only demonstrate the row format.</td></tr>
+</table>
+<h2 class="section-title">3 · Open Items (owner side, no pressure — listed once)</h2>
+<div class="alert-box danger"><h4>Pending on the owner</h4><ul><li>Bank-issued <strong>digital PDF</strong> for the NBE account → glyph-exact fast-lane confirmation, closes the open disclosures.</li><li>Branch explanation of the <strong>EGP 200,020.00 hold</strong> at print time (identity-derived figure).</li><li><strong>cron-job.org</strong> activation for the queue auto-poll.</li></ul></div>
+<div class="alert-box blue"><h4>Template usage notes</h4><ul class="small">
+<li>Header block: report reference, institution, account identity and period are mandatory on every client-facing page.</li>
+<li>KPI values must be <strong>bank-printed anchors</strong> (or clearly flagged as derived — SO-7: never present a derived number as a printed one).</li>
+<li>Specimens never replace the live rulebook: amendments happen in STANDING_ORDERS.md, then the rulebook is re-published to the portal.</li>
+<li>Delivery: three-channel contract (SO-2) — full HTML here in chat, mail via send_ops_report.ts (TEST_MAIL_TO lock, SO-3), portal via the publish-report endpoint.</li>
+<li>Pre-delivery: scripts/delivery_gate.py must PASS (SO-9) — template markers, chain block, mail lock, portal receipt, worklog row.</li>
+</ul></div>
+<h2 class="section-title">Template 04 — Operations Report</h2><p class="small">Standalone file: <strong>Global_EIS_Template_04_Operations_Report.html</strong> · complete reportShell page with its own gradient header and prepared-by footer.</p>
+<div class="kpi-grid"><div class="kpi-card "><h3>Reports Live on Portal</h3><div class="value">7</div><div class="note">Sample · includes rulebook + notices</div></div><div class="kpi-card success"><h3>Delivery Channels</h3><div class="value">3/3</div><div class="note">Chat · mail · portal — all receipted</div></div><div class="kpi-card success"><h3>Engine Cases DONE</h3><div class="value">13/13</div><div class="note">Sample · queue fully cleared</div></div><div class="kpi-card warning"><h3>Open Items</h3><div class="value">3</div><div class="note">Owner-side, tracked not chased</div></div></div>
+<h2 class="section-title">1 · Delivery Receipts</h2>
+<table class="data-table">
+<tr><th>Artifact</th><th class="text-center">Chat</th><th class="text-center">Mail</th><th class="text-center">Portal</th></tr>
+<tr><td>NBE correction notice (v3.3)</td><td class="text-center"><span class="tag pass">OK</span></td><td class="text-center"><span class="tag pass">SENT</span></td><td class="text-center"><span class="tag pass">ok:true</span></td></tr>
+<tr><td>Ops report v2</td><td class="text-center"><span class="tag pass">OK</span></td><td class="text-center"><span class="tag pass">SENT</span></td><td class="text-center"><span class="tag pass">ok:true</span></td></tr>
+<tr><td>Standing orders (rulebook)</td><td class="text-center"><span class="tag pass">OK</span></td><td class="text-center">—</td><td class="text-center"><span class="tag pass">ok:true</span></td></tr>
+<tr><td>Template library (this cycle)</td><td class="text-center"><span class="tag pass">OK</span></td><td class="text-center">on request</td><td class="text-center"><span class="tag warn">pending</span></td></tr>
+</table>
+<h2 class="section-title">2 · Incidents &amp; Lessons</h2>
+<div class="alert-box danger"><h4>Incident recap — transaction undercount (sample)</h4><ul><li>Client-side review caught a 310-row count against 461 bank-printed serials — the owner was right.</li><li>Two prior versions quarantined; correction notice issued on all three channels within the same cycle.</li></ul></div>
+<div class="alert-box green"><h4>Lesson applied</h4><ul><li>Row counts must reconcile to the bank's own printed serial column — a closed chain alone proves nothing about row completeness.</li><li>Audits bind to at least two external printed anchors; self-consistency checks are necessary but never sufficient.</li></ul></div>
+<h2 class="section-title">3 · Next Actions</h2>
+<table class="data-table">
+<tr><th>#</th><th>Action</th><th>Owner</th><th>Status</th></tr>
+<tr><td>1</td><td>v4 serial-indexed rebuild — all 462 numbered rows, four constraints per row</td><td>Analyst (this workspace)</td><td><span class="tag warn">ON DECK</span></td></tr>
+<tr><td>2</td><td>Manual deletion of retired transport repos (API delete returns 403)</td><td>Owner (GitHub UI)</td><td><span class="tag ">WHEN CONVENIENT</span></td></tr>
+<tr><td>3</td><td>Request bank-issued digital PDF from the branch</td><td>Owner</td><td><span class="tag ">OPEN</span></td></tr>
+</table>
+<div class="alert-box blue"><h4>Template usage notes</h4><ul class="small">
+<li>Header block: report reference, institution, account identity and period are mandatory on every client-facing page.</li>
+<li>KPI values must be <strong>bank-printed anchors</strong> (or clearly flagged as derived — SO-7: never present a derived number as a printed one).</li>
+<li>Every receipt quoted in this report must exist on disk (receipts/) before the report itself may ship (SO-9).</li>
+<li>Delivery: three-channel contract (SO-2) — full HTML here in chat, mail via send_ops_report.ts (TEST_MAIL_TO lock, SO-3), portal via the publish-report endpoint.</li>
+<li>Pre-delivery: scripts/delivery_gate.py must PASS (SO-9) — template markers, chain block, mail lock, portal receipt, worklog row.</li>
+</ul></div>
+<p class="small" style="margin-top:30px">Generation note: this library page and the four standalone specimens were produced by one generator (scripts/template_library_gen.ts) importing the locked design module — the firm can never drift between "here" and the portal again.</p>
+</div>
+<div class="footer">
+<p><strong>Prepared By:</strong> Global EIS - Financial Intelligence Services</p>
+<p><strong>Disclaimer:</strong> This analysis is generated based on the provided bank statement document. All mathematical reconciliations are verified against official bank totals. This report does not constitute legal advice.</p>
+</div>
+</div></body></html>

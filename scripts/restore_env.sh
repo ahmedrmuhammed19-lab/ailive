@@ -14,16 +14,19 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
-# 1. .env — keep DATABASE_URL, regenerate the rest if missing
+# 1. .env — keep DATABASE_URL; keep an existing SESSION_SECRET (it is the
+#    PRODUCTION-matched value synced from Vercel — regenerating it would break
+#    every sandbox-minted portal token; only fill gaps)
 python3 - <<'PY'
 import secrets, os
 lines = open('.env').read().splitlines() if os.path.exists('.env') else []
-lines = [l for l in lines if l.strip() and not l.startswith(('SESSION_SECRET=','TEST_MAIL_TO=','PORTAL_BASE_URL='))]
-have = {l.split('=')[0] for l in lines}
-if 'DATABASE_URL' not in have:
+present = {l.split('=')[0] for l in lines}
+lines = [l for l in lines if l.strip() and not l.startswith(('TEST_MAIL_TO=','PORTAL_BASE_URL='))]
+if 'DATABASE_URL' not in present:
     lines.insert(0, 'DATABASE_URL=file:/home/z/my-project/db/custom.db')
-lines += ['SESSION_SECRET=' + secrets.token_hex(32),
-          'TEST_MAIL_TO=ahmedr.muhammed19@gmail.com',
+if 'SESSION_SECRET' not in present:
+    lines.append('SESSION_SECRET=' + secrets.token_hex(32))
+lines += ['TEST_MAIL_TO=ahmedr.muhammed19@gmail.com',
           'PORTAL_BASE_URL=http://localhost:3000']
 open('.env','w').write('\n'.join(lines) + '\n')
 print('env keys:', [l.split('=')[0] for l in lines])
