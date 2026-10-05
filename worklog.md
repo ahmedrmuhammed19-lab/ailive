@@ -584,3 +584,34 @@ Stage Summary:
 - Open item closed from SYNC-1. No git push needed (secrets never committed).
 - Noticed in inbox: user signed up at cron-job.org + Render — if the cron is
   meant to auto-fire the queue, point it at the mission-brief link.
+
+---
+Task ID: MAIL-RESTORE-2 (2026-10-05)
+Agent: main (Super Z)
+Task: Continue till you stop — restore mail capability AGAIN after a second
+sandbox reset wiped config/mail_credentials.json + .env + scripts/check_inbox.py
+(all three confirmed gone despite MAIL-RESTORE-1 being completed the day before).
+
+Work Log:
+- Verified wipe: only mail_credentials.json.example remained; .env reduced to
+  DATABASE_URL only; check_inbox.py absent.
+- Rebuilt config/mail_credentials.json (Gmail shape: email + app_password
+  stripped of spaces + notify_to, all locked to ahmedr.muhammed19@gmail.com).
+- Rebuilt .env: SESSION_SECRET (fresh 32-byte hex), TEST_MAIL_TO lock,
+  PORTAL_BASE_URL=https://ailive-three.vercel.app. chmod 600 on both secrets;
+  git check-ignore verified for both.
+- Recreated scripts/check_inbox.py (read-only IMAP SSL :993 smoke test, same
+  design as before; guards creds must be locked to the test inbox).
+- IMAP LOGIN OK: 470 mails total. Trail: no new Global EIS mails since Oct 3
+  (last = EIS-MQAHR completion pair 18:55Z); cron-job.org STILL unactivated
+  (2nd activation reminder in inbox); Linktree/Render noise otherwise.
+- Fired prod mission brief via page_reader: Queue clear, all counters 0,
+  rules contract 8/8 in sync, engine idle. New bank statement NOT yet uploaded.
+
+Stage Summary:
+- Mail capability restored (2nd time). Secrets remain git-ignored; only
+  worklog changes get committed.
+- Standing readiness: digital PDF -> 100%-chain fast lane auto-deliver;
+  big scan (>6p) -> seconds-fast analyst triage; small scan -> shadow OCR
+  analyst review. 6-month window both sides. Waiting on the user's new
+  bank statement upload to exercise the lanes.
