@@ -1,29 +1,7 @@
-/**
- * THE FIRM'S CANONICAL REPORT DESIGN — STANDARD BUILD: MASTER v1.2.
- *
- * Owner order 2026-10-06 ("i guess 1.2master will be standard"): the Master
- * Template v1.2 design (templates/retired/global_eis_master_v1.2.html) is
- * PROMOTED to the firm's single standard. One design system for every HTML
- * report the firm produces — engine auto-reports, analyst drafts, notices,
- * ops pages, template specimens — so a report looks identical whether the
- * client receives it here, by mail or from the portal (zero drift, SO-1).
- *
- * Lineage: client-supplied base (2026-10-03) → master v1.0 → v1.1 → v1.2
- * (STANDARD, promoted 2026-10-06). The v1.2 build adds the master template's
- * full section vocabulary on top of the shared tokens: verdict badge +
- * verdict block, document-authenticity alert, linked-account annex banner,
- * authorized sign-off block, zebra data tables, A4 @page print contract,
- * richer legal footer. All earlier exports keep their names and signatures —
- * every existing generator compiles unchanged.
- *
- * Tokens: --primary #005677 / --secondary #008DCB on Segoe UI, gradient
- * header, KPI cards with colored left borders, section bars, pill tags,
- * left-bordered alert boxes, print button + prepared-by footer.
- */
-
-export const TEMPLATE_VERSION = "Master v1.2 (STANDARD — promoted 2026-10-06)";
-
-export const REPORT_CSS = `
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Global EIS - Template 02 (v1.2) - Correction Notice</title>
+<style>
 :root{--primary:#005677;--secondary:#008DCB;--success:#28a745;--danger:#dc3545;--warning:#ffc107;--light:#f8f9fa;--dark:#343a40;--white:#ffffff}
 body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background-color:#eef2f5;color:var(--dark);margin:0;padding:20px}
 .container{max-width:1200px;margin:0 auto;background:var(--white);border-radius:12px;box-shadow:0 4px 20px rgba(0,0,0,0.08);overflow:hidden;position:relative}
@@ -93,109 +71,48 @@ body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background-color:#e
 .footer .legal{max-width:900px;margin:6px auto 0;line-height:1.5}
 @page{size:A4;margin:16mm 12mm}
 @media print{body{background:none;padding:0}.container{box-shadow:none;border-radius:0;max-width:none}.download-btn{display:none}.section-title,.analysis-card,.kpi-card,.annex-body{page-break-inside:avoid}.data-table tr{page-break-inside:avoid}.data-table thead{display:table-header-group}.header{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
-`;
-
-export function escHtml(s: string): string {
-  return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-}
-
-/** Pill tag — tone: "" | "in" | "out" | "pass" | "fail" | "warn" | "low". */
-export function tag(text: string, tone = ""): string {
-  return `<span class="tag ${tone}">${escHtml(text)}</span>`;
-}
-
-/** KPI card — tone: "" | "success" | "warning" | "danger" (colored left border). */
-export function kpiCard(label: string, value: string, note = "", tone = ""): string {
-  return (
-    `<div class="kpi-card ${tone}"><h3>${escHtml(label)}</h3>` +
-    `<div class="value">${value}</div>` +
-    (note ? `<div class="note">${note}</div>` : "") +
-    `</div>`
-  );
-}
-
-export function kpiGrid(cards: string[]): string {
-  return `<div class="kpi-grid">${cards.join("")}</div>`;
-}
-
-export function sectionTitle(text: string): string {
-  return `<h2 class="section-title">${text}</h2>`;
-}
-
-/** tone: "blue" | "red" (yellow caution) | "green" | "danger" (red). */
-export function alertBox(tone: "blue" | "red" | "green" | "danger", title: string, bodyHtml: string): string {
-  return `<div class="alert-box ${tone}"><h4>${escHtml(title)}</h4>${bodyHtml}</div>`;
-}
-
-export function analysisCard(title: string, bodyHtml: string, full = false): string {
-  return `<div class="analysis-card${full ? " full-width" : ""}"><h3>${escHtml(title)}</h3>${bodyHtml}</div>`;
-}
-
-export function analysisGrid(cards: string[]): string {
-  return `<div class="analysis-grid">${cards.join("")}</div>`;
-}
-
-/* ---------------- Master v1.2 vocabulary (promoted 2026-10-06) ---------------- */
-
-/** Verdict stamp for the executive dashboard. pass=true → green, else red. */
-export function verdictBadge(verdict: string, reason: string, pass = true): string {
-  return `<div class="verdict-badge ${pass ? "pass" : "fail"}"><span class="big">VERDICT: ${escHtml(verdict)}</span><span class="small">${escHtml(reason)}</span></div>`;
-}
-
-/** Flex wrapper pairing an overview alert with a verdict badge. */
-export function verdictWrap(overviewHtml: string, badgeHtml: string): string {
-  return `<div class="verdict-block">${overviewHtml}${badgeHtml}</div>`;
-}
-
-/** Dark-red authenticity banner — render ONLY when the source document is flagged. */
-export function authenticityAlert(watermark: string, explanationHtml: string, mode = "technical validation exercise"): string {
-  return `<div class="authenticity-alert"><h3>⛔ DOCUMENT AUTHENTICITY ALERT — READ FIRST</h3><p>The source file carries the following marking:</p><div class="watermark-box">${escHtml(watermark)}</div>${explanationHtml}<p>The analysis below is issued as a <strong>${escHtml(mode)}</strong> accordingly.</p></div>`;
-}
-
-/** Linked/related-account annex: primary banner + bordered body. */
-export function annexBlock(label: string, bodyHtml: string): string {
-  return `<div class="annex-banner">${escHtml(label)}</div><div class="annex-body">${bodyHtml}</div>`;
-}
-
-/** Authorized sign-off block above the footer. */
-export function signoff(left = "Authorized Signature — Global EIS", right = `Date Issued: ${new Date().toISOString().slice(0, 10)}`): string {
-  return `<div class="signoff"><div class="sig-line">${escHtml(left)}</div><div class="sig-line">${escHtml(right)}</div></div>`;
-}
-
-export interface ReportShellOpts {
-  title: string;
-  /** Fully-qualified header sub-lines (HTML allowed, e.g. <strong>…</strong>). */
-  subLines: string[];
-  /** Banner boxes rendered at the top of the content (engine/OCR stamps). */
-  banners?: string[];
-  contentHtml: string;
-  /** Page <title> (defaults to the firm's standard). */
-  pageTitle?: string;
-  downloadButton?: boolean;
-  /** Master v1.2 header reference line (ref · generated date). */
-  refLine?: string;
-}
-
-/** Full standard page: gradient header → content → sign-off-ready prepared-by footer. */
-export function reportShell(opts: ReportShellOpts): string {
-  const btn = opts.downloadButton === false ? "" : `<button class="download-btn" onclick="window.print()">&#11015; Download PDF Report</button>`;
-  const ref = opts.refLine ? `<p class="ref-line">${opts.refLine}</p>` : "";
-  return `<!DOCTYPE html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>${escHtml(opts.pageTitle ?? "Global EIS - Financial Intelligence Report")}</title>
-<style>${REPORT_CSS}</style></head>
+</style></head>
 <body><div class="container">
-<div class="header">${btn}<h1>${escHtml(opts.title)}</h1>
-${opts.subLines.map((l) => `<p>${l}</p>`).join("\n")}
-${ref}
+<div class="header"><button class="download-btn" onclick="window.print()">&#11015; Download PDF Report</button><h1>CORRECTION NOTICE</h1>
+<p><strong>Notice Ref:</strong> GLEIS-&lt;CASE&gt;-CORR-&lt;SEQ&gt; — sample: GLEIS-NBE-EIDFARAG-C2</p>
+<p><strong>Supersedes:</strong> &lt;prior report ref + version&gt; · <strong>Issue date:</strong> 2026-10-06</p>
+<p><span class="tag warn">TEMPLATE SPECIMEN</span> <span class="tag ">v1.2 · 2026-10-06</span> <span class="tag low">STANDARD: Master v1.2 · report_design.ts</span></p>
+<p class="ref-line">Ref: GLEIS-NBE-EIDFARAG-2026-100B · Notice v3.3-NOTICE &nbsp;|&nbsp; Report Generated: 2026-10-06</p>
 </div>
 <div class="content">
-${(opts.banners ?? []).join("\n")}
-${opts.contentHtml}
+<div class="alert-box blue"><h4>TEMPLATE SPECIMEN — SAMPLE DATA</h4><p class="small">This page is a <strong>template specimen</strong> issued from the standard Global EIS design system (SO-1: single source <strong>src/lib/report_design.ts</strong> — standard build <strong>Master v1.2</strong>, promoted by owner order 2026-10-06; tokens #005677 / #008DCB, Segoe UI). All names, figures and findings below are illustrative placeholders that demonstrate the required structure for <strong>Template 02 — Correction Notice</strong>. Replace every sample value with live case data before delivery, then run the SO-9 pre-delivery gate.</p><p class="small"><strong>Purpose:</strong> Formal erratum when a delivered report contains a proven defect: what changed, why it happened, what was done — with the superseding verdict badge.</p></div>
+<div class="verdict-block"><div class="alert-box red"><h4>CORRECTION — SUPERSEDES PRIOR VERSION</h4><p class="small">Sample banner for a live notice: identify the superseded report by ref + version, state that the corrected version is the only authoritative one, and instruct every recipient to discard the superseded copy.</p></div><div class="verdict-badge fail"><span class="big">VERDICT: v3.3 AUTHORITATIVE</span><span class="small">supersedes &amp;amp; quarantines v3.1 / v3.2</span></div></div>
+<h2 class="section-title">1 · What Changed</h2>
+<table class="data-table">
+<tr><th>#</th><th>Field</th><th>Previously Stated</th><th>Corrected Value</th><th>Evidence</th></tr>
+<tr><td>1</td><td>Transaction count</td><td class="text-danger">310 rows</td><td class="text-success">461 transactions — bank serials 1–462 incl. b/f</td><td>The bank's own printed serial column, all 23 pages (census)</td></tr>
+<tr><td>2</td><td>Opening balance</td><td class="text-danger">EGP 467,525.43</td><td class="text-success">EGP 467,515.43</td><td>p.1 serial 1 re-read at 600 dpi ×2 magnification</td></tr>
+<tr><td>3</td><td>Period turnover</td><td class="text-danger">Phantom churn in both columns</td><td class="text-success">Bank-printed Totals: D 1,341,824.35 / C 1,505,491.16</td><td>Totals row, p.23 — closes exactly with both anchors</td></tr>
+</table>
+<p class="small">Rows above are illustrative entries modeled on the live correction the firm issued for the NBE EID FARAG SAAD SHAAT statement (notice v3.3) — kept here because they show the required evidence discipline: every correction names the bank-printed location that proves it.</p>
+<div class="kpi-grid"><div class="kpi-card danger"><h3>Fields Corrected</h3><div class="value">3</div><div class="note">Sample · each with printed evidence</div></div><div class="kpi-card warning"><h3>Reports Superseded</h3><div class="value">1</div><div class="note">Prior version quarantined</div></div><div class="kpi-card success"><h3>Channels Notified</h3><div class="value">3</div><div class="note">Chat + mail + portal</div></div><div class="kpi-card success"><h3>Re-verified Checks</h3><div class="value">13/13</div><div class="note">Independent audit re-run after fix</div></div></div>
+<h2 class="section-title">2 · Root Cause</h2>
+<p>Sample text — the notice states the cause chain in plain language and does not soften it (SO-7: an audit finding is disclosed even when embarrassing to the analyst). The live case traced to five stacked layers: a degraded scan; a chain-only solver that can silently absorb rows; an opening-anchor misread protected by circular verification; an audit that validated self-consistency instead of external printed evidence; and optimization of the wrong metric (chain closure instead of row count vs the bank's printed serials).</p>
+<p><span class="tag warn">OCR degradation</span> <span class="tag fail">Absorption loophole</span> <span class="tag fail">Anchor misread</span> <span class="tag fail">Self-referential audit</span> <span class="tag fail">Wrong metric</span></p>
+<h2 class="section-title">3 · Actions Taken</h2>
+<table class="data-table">
+<tr><th>Step</th><th>Action</th><th>Receipt</th></tr>
+<tr><td>1</td><td>Superseded report quarantined — marked SUPERSEDED, excluded from the portal's live list</td><td>published/…_v3.2 → QUARANTINE</td></tr>
+<tr><td>2</td><td>Corrected notice issued on the three-channel contract</td><td>chat rendered · mail {"sent":true} · portal {"ok":true}</td></tr>
+<tr><td>3</td><td>Root cause logged to the lessons register and worklog</td><td>worklog row NBE-COUNT-1</td></tr>
+<tr><td>4</td><td>Corrected rebuild ordered under a stricter row model</td><td>v4 serial-indexed reconstruction (4 constraints/row)</td></tr>
+</table>
+<div class="signoff"><div class="sig-line">Authorized Signature — Global EIS</div><div class="sig-line">Date Issued: 2026-10-06</div></div>
+<div class="alert-box blue"><h4>Template usage notes</h4><ul class="small">
+<li>Header block: report reference, institution, account identity and period are mandatory on every client-facing page (use the v1.2 <strong>ref-line</strong> for ref + generation date).</li>
+<li>KPI values must be <strong>bank-printed anchors</strong> (or clearly flagged as derived — SO-7: never present a derived number as a printed one).</li>
+<li>The notice must identify the superseded artifact by exact ref + version, and state which corrected version is the only authoritative one. The v1.2 verdict badge (red) is the standard header stamp for a live notice.</li>
+<li>Delivery: three-channel contract (SO-2) — full HTML here in chat, mail via send_ops_report.ts (TEST_MAIL_TO lock, SO-3), portal via the publish-report endpoint.</li>
+<li>Pre-delivery: scripts/delivery_gate.py must PASS (SO-9) — template markers, chain block, mail lock, portal receipt, worklog row.</li>
+</ul></div>
 </div>
 <div class="footer">
 <p><strong>Prepared By:</strong> Global EIS - Financial Intelligence Services</p>
 <p class="legal"><strong>Disclaimer:</strong> This report is prepared by Global EIS based solely on the bank statement document supplied by the client. Global EIS does not independently verify the authenticity of the underlying bank statement and makes no representation as to the applicant's eligibility for any visa or immigration outcome. All mathematical reconciliations are verified against the stated bank totals. This report is intended solely to support the client's own submission, should be read together with all other required supporting documentation, and does not constitute legal advice.</p>
 </div>
-</div></body></html>`;
-}
+</div></body></html>

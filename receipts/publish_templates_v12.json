@@ -1,0 +1,39 @@
+{
+  "ok": true,
+  "published": [
+    {
+      "name": "Global_EIS_Template_v1.2_01_Bank_Statement_Analysis.html",
+      "sizeBytes": 26371
+    },
+    {
+      "name": "Global_EIS_Template_v1.2_02_Correction_Notice.html",
+      "sizeBytes": 14062
+    },
+    {
+      "name": "Global_EIS_Template_v1.2_03_Standing_Orders.html",
+      "sizeBytes": 14082
+    },
+    {
+      "name": "Global_EIS_Template_v1.2_04_Operations_Report.html",
+      "sizeBytes": 13290
+    },
+    {
+      "name": "Global_EIS_Template_v1.2_Library.html",
+      "sizeBytes": 45974
+    }
+  ],
+  "skipped": [],
+  "note": "TPL-V12-STANDARD corrected bytes: p-tag nesting fix + uniform Date Issued 2026-10-06 (republication after surgical unpublish, same names)",
+  "at": "2026-10-05T21:37:02.111Z",
+  "transport": {
+    "repo": "ahmedrmuhammed19-lab/eis-transport-c8fc04f8b42e",
+    "rawUrls": [
+      "https://raw.githubusercontent.com/ahmedrmuhammed19-lab/eis-transport-c8fc04f8b42e/main/Global_EIS_Template_v1.2_01_Bank_Statement_Analysis.html",
+      "https://raw.githubusercontent.com/ahmedrmuhammed19-lab/eis-transport-c8fc04f8b42e/main/Global_EIS_Template_v1.2_02_Correction_Notice.html",
+      "https://raw.githubusercontent.com/ahmedrmuhammed19-lab/eis-transport-c8fc04f8b42e/main/Global_EIS_Template_v1.2_03_Standing_Orders.html",
+      "https://raw.githubusercontent.com/ahmedrmuhammed19-lab/eis-transport-c8fc04f8b42e/main/Global_EIS_Template_v1.2_04_Operations_Report.html",
+      "https://raw.githubusercontent.com/ahmedrmuhammed19-lab/eis-transport-c8fc04f8b42e/main/Global_EIS_Template_v1.2_Library.html"
+    ]
+  },
+  "label": "templates_v12"
+}

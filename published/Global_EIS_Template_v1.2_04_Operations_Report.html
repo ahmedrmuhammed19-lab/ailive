@@ -1,29 +1,7 @@
-/**
- * THE FIRM'S CANONICAL REPORT DESIGN — STANDARD BUILD: MASTER v1.2.
- *
- * Owner order 2026-10-06 ("i guess 1.2master will be standard"): the Master
- * Template v1.2 design (templates/retired/global_eis_master_v1.2.html) is
- * PROMOTED to the firm's single standard. One design system for every HTML
- * report the firm produces — engine auto-reports, analyst drafts, notices,
- * ops pages, template specimens — so a report looks identical whether the
- * client receives it here, by mail or from the portal (zero drift, SO-1).
- *
- * Lineage: client-supplied base (2026-10-03) → master v1.0 → v1.1 → v1.2
- * (STANDARD, promoted 2026-10-06). The v1.2 build adds the master template's
- * full section vocabulary on top of the shared tokens: verdict badge +
- * verdict block, document-authenticity alert, linked-account annex banner,
- * authorized sign-off block, zebra data tables, A4 @page print contract,
- * richer legal footer. All earlier exports keep their names and signatures —
- * every existing generator compiles unchanged.
- *
- * Tokens: --primary #005677 / --secondary #008DCB on Segoe UI, gradient
- * header, KPI cards with colored left borders, section bars, pill tags,
- * left-bordered alert boxes, print button + prepared-by footer.
- */
-
-export const TEMPLATE_VERSION = "Master v1.2 (STANDARD — promoted 2026-10-06)";
-
-export const REPORT_CSS = `
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Global EIS - Template 04 (v1.2) - Operations Report</title>
+<style>
 :root{--primary:#005677;--secondary:#008DCB;--success:#28a745;--danger:#dc3545;--warning:#ffc107;--light:#f8f9fa;--dark:#343a40;--white:#ffffff}
 body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background-color:#eef2f5;color:var(--dark);margin:0;padding:20px}
 .container{max-width:1200px;margin:0 auto;background:var(--white);border-radius:12px;box-shadow:0 4px 20px rgba(0,0,0,0.08);overflow:hidden;position:relative}
@@ -93,109 +71,46 @@ body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background-color:#e
 .footer .legal{max-width:900px;margin:6px auto 0;line-height:1.5}
 @page{size:A4;margin:16mm 12mm}
 @media print{body{background:none;padding:0}.container{box-shadow:none;border-radius:0;max-width:none}.download-btn{display:none}.section-title,.analysis-card,.kpi-card,.annex-body{page-break-inside:avoid}.data-table tr{page-break-inside:avoid}.data-table thead{display:table-header-group}.header{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
-`;
-
-export function escHtml(s: string): string {
-  return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-}
-
-/** Pill tag — tone: "" | "in" | "out" | "pass" | "fail" | "warn" | "low". */
-export function tag(text: string, tone = ""): string {
-  return `<span class="tag ${tone}">${escHtml(text)}</span>`;
-}
-
-/** KPI card — tone: "" | "success" | "warning" | "danger" (colored left border). */
-export function kpiCard(label: string, value: string, note = "", tone = ""): string {
-  return (
-    `<div class="kpi-card ${tone}"><h3>${escHtml(label)}</h3>` +
-    `<div class="value">${value}</div>` +
-    (note ? `<div class="note">${note}</div>` : "") +
-    `</div>`
-  );
-}
-
-export function kpiGrid(cards: string[]): string {
-  return `<div class="kpi-grid">${cards.join("")}</div>`;
-}
-
-export function sectionTitle(text: string): string {
-  return `<h2 class="section-title">${text}</h2>`;
-}
-
-/** tone: "blue" | "red" (yellow caution) | "green" | "danger" (red). */
-export function alertBox(tone: "blue" | "red" | "green" | "danger", title: string, bodyHtml: string): string {
-  return `<div class="alert-box ${tone}"><h4>${escHtml(title)}</h4>${bodyHtml}</div>`;
-}
-
-export function analysisCard(title: string, bodyHtml: string, full = false): string {
-  return `<div class="analysis-card${full ? " full-width" : ""}"><h3>${escHtml(title)}</h3>${bodyHtml}</div>`;
-}
-
-export function analysisGrid(cards: string[]): string {
-  return `<div class="analysis-grid">${cards.join("")}</div>`;
-}
-
-/* ---------------- Master v1.2 vocabulary (promoted 2026-10-06) ---------------- */
-
-/** Verdict stamp for the executive dashboard. pass=true → green, else red. */
-export function verdictBadge(verdict: string, reason: string, pass = true): string {
-  return `<div class="verdict-badge ${pass ? "pass" : "fail"}"><span class="big">VERDICT: ${escHtml(verdict)}</span><span class="small">${escHtml(reason)}</span></div>`;
-}
-
-/** Flex wrapper pairing an overview alert with a verdict badge. */
-export function verdictWrap(overviewHtml: string, badgeHtml: string): string {
-  return `<div class="verdict-block">${overviewHtml}${badgeHtml}</div>`;
-}
-
-/** Dark-red authenticity banner — render ONLY when the source document is flagged. */
-export function authenticityAlert(watermark: string, explanationHtml: string, mode = "technical validation exercise"): string {
-  return `<div class="authenticity-alert"><h3>⛔ DOCUMENT AUTHENTICITY ALERT — READ FIRST</h3><p>The source file carries the following marking:</p><div class="watermark-box">${escHtml(watermark)}</div>${explanationHtml}<p>The analysis below is issued as a <strong>${escHtml(mode)}</strong> accordingly.</p></div>`;
-}
-
-/** Linked/related-account annex: primary banner + bordered body. */
-export function annexBlock(label: string, bodyHtml: string): string {
-  return `<div class="annex-banner">${escHtml(label)}</div><div class="annex-body">${bodyHtml}</div>`;
-}
-
-/** Authorized sign-off block above the footer. */
-export function signoff(left = "Authorized Signature — Global EIS", right = `Date Issued: ${new Date().toISOString().slice(0, 10)}`): string {
-  return `<div class="signoff"><div class="sig-line">${escHtml(left)}</div><div class="sig-line">${escHtml(right)}</div></div>`;
-}
-
-export interface ReportShellOpts {
-  title: string;
-  /** Fully-qualified header sub-lines (HTML allowed, e.g. <strong>…</strong>). */
-  subLines: string[];
-  /** Banner boxes rendered at the top of the content (engine/OCR stamps). */
-  banners?: string[];
-  contentHtml: string;
-  /** Page <title> (defaults to the firm's standard). */
-  pageTitle?: string;
-  downloadButton?: boolean;
-  /** Master v1.2 header reference line (ref · generated date). */
-  refLine?: string;
-}
-
-/** Full standard page: gradient header → content → sign-off-ready prepared-by footer. */
-export function reportShell(opts: ReportShellOpts): string {
-  const btn = opts.downloadButton === false ? "" : `<button class="download-btn" onclick="window.print()">&#11015; Download PDF Report</button>`;
-  const ref = opts.refLine ? `<p class="ref-line">${opts.refLine}</p>` : "";
-  return `<!DOCTYPE html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>${escHtml(opts.pageTitle ?? "Global EIS - Financial Intelligence Report")}</title>
-<style>${REPORT_CSS}</style></head>
+</style></head>
 <body><div class="container">
-<div class="header">${btn}<h1>${escHtml(opts.title)}</h1>
-${opts.subLines.map((l) => `<p>${l}</p>`).join("\n")}
-${ref}
+<div class="header"><button class="download-btn" onclick="window.print()">&#11015; Download PDF Report</button><h1>OPERATIONS REPORT</h1>
+<p><strong>Cycle:</strong> 2026-10-05 → 2026-10-06 · <strong>Prepared by:</strong> Global EIS Operations</p>
+<p><span class="tag warn">TEMPLATE SPECIMEN</span> <span class="tag ">v1.2 · 2026-10-06</span> <span class="tag low">STANDARD: Master v1.2 · report_design.ts</span></p>
+<p class="ref-line">Ref: GLEIS-OPS-CYCLE-2026-10-06 &nbsp;|&nbsp; Report Generated: 2026-10-06</p>
 </div>
 <div class="content">
-${(opts.banners ?? []).join("\n")}
-${opts.contentHtml}
+<div class="alert-box blue"><h4>TEMPLATE SPECIMEN — SAMPLE DATA</h4><p class="small">This page is a <strong>template specimen</strong> issued from the standard Global EIS design system (SO-1: single source <strong>src/lib/report_design.ts</strong> — standard build <strong>Master v1.2</strong>, promoted by owner order 2026-10-06; tokens #005677 / #008DCB, Segoe UI). All names, figures and findings below are illustrative placeholders that demonstrate the required structure for <strong>Template 04 — Operations Report</strong>. Replace every sample value with live case data before delivery, then run the SO-9 pre-delivery gate.</p><p class="small"><strong>Purpose:</strong> Periodic operations cycle on the Master v1.2 standard: delivery receipts, portal health, incidents and lessons, next actions.</p></div>
+<div class="kpi-grid"><div class="kpi-card "><h3>Reports Live on Portal</h3><div class="value">12</div><div class="note">Sample · includes rulebook + notices</div></div><div class="kpi-card success"><h3>Delivery Channels</h3><div class="value">3/3</div><div class="note">Chat · mail · portal — all receipted</div></div><div class="kpi-card success"><h3>Engine Cases DONE</h3><div class="value">13/13</div><div class="note">Sample · queue fully cleared</div></div><div class="kpi-card warning"><h3>Open Items</h3><div class="value">3</div><div class="note">Owner-side, tracked not chased</div></div></div>
+<h2 class="section-title">1 · Delivery Receipts</h2>
+<table class="data-table">
+<tr><th>Artifact</th><th class="text-center">Chat</th><th class="text-center">Mail</th><th class="text-center">Portal</th></tr>
+<tr><td>NBE correction notice (v3.3)</td><td class="text-center"><span class="tag pass">OK</span></td><td class="text-center"><span class="tag pass">SENT</span></td><td class="text-center"><span class="tag pass">ok:true</span></td></tr>
+<tr><td>Ops report v2</td><td class="text-center"><span class="tag pass">OK</span></td><td class="text-center"><span class="tag pass">SENT</span></td><td class="text-center"><span class="tag pass">ok:true</span></td></tr>
+<tr><td>Standing orders (rulebook)</td><td class="text-center"><span class="tag pass">OK</span></td><td class="text-center">—</td><td class="text-center"><span class="tag pass">ok:true</span></td></tr>
+<tr><td>Template library v1.0 (prior cycle)</td><td class="text-center"><span class="tag pass">OK</span></td><td class="text-center">on request</td><td class="text-center"><span class="tag pass">ok:true</span></td></tr>
+<tr><td>Template library v1.2 (this cycle)</td><td class="text-center"><span class="tag pass">OK</span></td><td class="text-center">on request</td><td class="text-center"><span class="tag pass">ok:true</span></td></tr>
+</table>
+<h2 class="section-title">2 · Incidents &amp; Lessons</h2>
+<div class="alert-box danger"><h4>Incident recap — transaction undercount (sample)</h4><ul><li>Client-side review caught a 310-row count against 461 bank-printed serials — the owner was right.</li><li>Two prior versions quarantined; correction notice issued on all three channels within the same cycle.</li></ul></div>
+<div class="alert-box green"><h4>Lesson applied</h4><ul><li>Row counts must reconcile to the bank's own printed serial column — a closed chain alone proves nothing about row completeness.</li><li>Audits bind to at least two external printed anchors; self-consistency checks are necessary but never sufficient.</li></ul></div>
+<h2 class="section-title">3 · Next Actions</h2>
+<table class="data-table">
+<tr><th>#</th><th>Action</th><th>Owner</th><th>Status</th></tr>
+<tr><td>1</td><td>v4 serial-indexed rebuild — all 462 numbered rows, four constraints per row</td><td>Analyst (this workspace)</td><td><span class="tag warn">ON DECK</span></td></tr>
+<tr><td>2</td><td>Manual deletion of retired transport repos (API delete returns 403)</td><td>Owner (GitHub UI)</td><td><span class="tag ">WHEN CONVENIENT</span></td></tr>
+<tr><td>3</td><td>Request bank-issued digital PDF from the branch</td><td>Owner</td><td><span class="tag ">OPEN</span></td></tr>
+</table>
+<div class="alert-box blue"><h4>Template usage notes</h4><ul class="small">
+<li>Header block: report reference, institution, account identity and period are mandatory on every client-facing page (use the v1.2 <strong>ref-line</strong> for ref + generation date).</li>
+<li>KPI values must be <strong>bank-printed anchors</strong> (or clearly flagged as derived — SO-7: never present a derived number as a printed one).</li>
+<li>Every receipt quoted in this report must exist on disk (receipts/) before the report itself may ship (SO-9).</li>
+<li>Delivery: three-channel contract (SO-2) — full HTML here in chat, mail via send_ops_report.ts (TEST_MAIL_TO lock, SO-3), portal via the publish-report endpoint.</li>
+<li>Pre-delivery: scripts/delivery_gate.py must PASS (SO-9) — template markers, chain block, mail lock, portal receipt, worklog row.</li>
+</ul></div>
+<div class="signoff"><div class="sig-line">Global EIS Operations</div><div class="sig-line">Date Issued: 2026-10-06</div></div>
 </div>
 <div class="footer">
 <p><strong>Prepared By:</strong> Global EIS - Financial Intelligence Services</p>
 <p class="legal"><strong>Disclaimer:</strong> This report is prepared by Global EIS based solely on the bank statement document supplied by the client. Global EIS does not independently verify the authenticity of the underlying bank statement and makes no representation as to the applicant's eligibility for any visa or immigration outcome. All mathematical reconciliations are verified against the stated bank totals. This report is intended solely to support the client's own submission, should be read together with all other required supporting documentation, and does not constitute legal advice.</p>
 </div>
-</div></body></html>`;
-}
+</div></body></html>
