@@ -1,0 +1,16 @@
+{
+  "ok": true,
+  "published": [
+    {
+      "name": "GlobalEIS_Report_EidFarag_NBE_EGP_v3.1_100pct.html",
+      "sizeBytes": 28721
+    },
+    {
+      "name": "Global_EIS_Standing_Orders.html",
+      "sizeBytes": 12520
+    }
+  ],
+  "skipped": [],
+  "note": "Global EIS delivery 2026-10-05T19:25:34Z",
+  "at": "2026-10-05T19:25:37.603Z"
+}

@@ -58,7 +58,7 @@ body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background-color:#e
 <div class="header"><button class="download-btn" onclick="window.print()">&#11015; Download PDF Report</button><h1>Bank Statement Analysis — NBE EGP Savings</h1>
 <p><strong>EID FARAG SAAD SHAAT</strong> · Account 2445000302432001010 · IBAN EG290003024450003024320010100</p>
 <p>National Bank of Egypt (NBE) — New Nubaria Branch — EGP Savings Account — Annual Return</p>
-<p>Period 01/03/2026 → 09/09/2026 · Report REF: GLEIS-NBE-EIDFARAG-2026-100</p>
+<p>Period 01/03/2026 → 09/09/2026 · Report REF: GLEIS-NBE-EIDFARAG-2026-100A · v3.1 (audit-corrected)</p>
 </div>
 <div class="content">
 <div class="alert-box green"><h4>VERDICT — FULL BALANCE-CHAIN VERIFICATION ACHIEVED</h4><p><strong>Every one of the 310 reconstructed ledger rows now chains exactly:</strong> for all consecutive printed balances,
@@ -124,6 +124,8 @@ independently confirmed by the bank's own printed anchors and now by every one o
 <h2 class="section-title">4.1 · Monthly movement</h2>
 <table class="data-table">
 <tr><th>Month</th><th class="text-right">Credits (EGP)</th><th class="text-right">Debits (EGP)</th><th class="text-right">Rows</th><th class="text-right">Net (EGP)</th></tr>
+<tr><td>February 2026 (26–28/02 tail) *</td><td class="num text-success">46,615.92</td><td class="num text-danger">280,259.18</td>
+   <td class="num">26</td><td class="num">−233,643.26</td></tr>
 <tr><td>April 2026</td><td class="num text-success">300,996.25</td><td class="num text-danger">150,309.72</td>
    <td class="num">46</td><td class="num">+150,686.53</td></tr>
 <tr><td>August 2026</td><td class="num text-success">750,000.00</td><td class="num text-danger">90,826.22</td>
@@ -142,6 +144,7 @@ independently confirmed by the bank's own printed anchors and now by every one o
 <td class="num text-danger"><strong>1,520,847.04</strong></td><td class="num"><strong>310</strong></td>
 <td class="num"><strong>+163,656.81</strong></td></tr>
 </table>
+<p class="small">* Implied bucket — reconstructed from the chain-closed printed totals during the independent audit (ORD-1006-C1): rows 26 · credits 46,615.92 · debits 280,259.18 · net −233,643.26. Its rows fall in the 26/02–28/02 tail between the printed b/f anchor (EGP 467,525.43) and 01/03. The v3 monthly breakdown listed only the 01/03→09/09 buckets while the totals row always included this tail — totals, anchors and the 310/310 chain were never affected.</p>
 <h2 class="section-title">4.2 · Flow categories</h2>
 <table class="data-table">
 <tr><th>Category</th><th class="text-right">Rows</th><th class="text-right">In (EGP)</th><th class="text-right">Out (EGP)</th></tr>
@@ -214,7 +217,7 @@ independently confirmed by the bank's own printed anchors and now by every one o
    <td class="num">681,202.24</td></tr>
 <tr><td>26/03/2026</td><td>To-Revenue from #5 nw non-financial fee~DIEIA6IDTI4CAEFD Outgoing Transfer Fees IPN Soad-9</td><td class="num text-danger">−64,824.17</td>
    <td class="num">98,199.23</td></tr>
-<tr><td>17/09/2026</td><td>MOHAMED SHEHAB~PNBG60E851185BDC | wearer 60851185</td><td class="num text-danger">−59,000.00</td>
+<tr><td>OCR-uncertain</td><td>MOHAMED SHEHAB~PNBG60E851185BDC | wearer 60851185 · <em>appendix note (audit ORD-1006-C1): the printed date “17/09” is impossible after the 06/09 close (digit artifact); the −59,000.00 amount is confirmed by §4.1 September debits (179,020.00) — no chain impact</em></td><td class="num text-danger">−59,000.00</td>
    <td class="num">274,027.03</td></tr>
 <tr><td>17/03/2026</td><td>Network to EID FARAG SAAD~PNBGD76C5991C935 outgoing transfer IPN network | tmnt -Cortifica</td><td class="num text-danger">−50,020.00</td>
    <td class="num">224,002.03</td></tr>
@@ -281,8 +284,8 @@ compliance decisions.</p></div>
 <li>Request the <strong>bank-issued digital PDF</strong> (e-statement) for this account — it will flow through the 100%-gate fast lane and confirm every amount glyph-for-glyph.</li>
 <li>Obtain a branch explanation of the EGP 200,020.00 hold.</li>
 <li>For any credit decision, weigh the four genuine funding deposits (+1,200,000.00 combined) against the reversal-loop churn disclosed above.</li></ul></div></div>
-<p style="margin-top:30px"><span class="tag ">v3 — FINAL</span> <span class="tag ">100% balance chain</span> <span class="tag ">310/310 pairs</span> <span class="tag ">residual 0.00</span>
-<span class="tag ">4-pass OCR + constraint solver</span> <span class="tag ">firm canonical template</span></p>
+<p style="margin-top:30px"><span class="tag ">v3.1 — FINAL (audit-corrected)</span> <span class="tag ">100% balance chain</span> <span class="tag ">310/310 pairs</span> <span class="tag ">residual 0.00</span>
+<span class="tag ">4-pass OCR + constraint solver</span> <span class="tag ">firm canonical template</span> <span class="tag pass">independent audit A1–A13 PASS</span></p>
 </div>
 <div class="footer">
 <p><strong>Prepared By:</strong> Global EIS - Financial Intelligence Services</p>

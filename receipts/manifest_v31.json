@@ -1,0 +1,8 @@
+{
+  "task_id": "ORD-1006-C1",
+  "report_html": "published/GlobalEIS_Report_EidFarag_NBE_EGP_v3.1_100pct.html",
+  "chain_required": true,
+  "publish_receipt": "receipts/publish_latest.json",
+  "mail_receipt": "receipts/mail_v31.json",
+  "forbidden": ["a.imam@beta.com.eg"]
+}
