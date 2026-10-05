@@ -818,3 +818,44 @@ Stage Summary:
 - Open items unchanged: transport repo manual deletion; cron-job.org
   activation; bank-issued digital PDF for fast-lane confirmation;
   200,020.00 hold explanation from branch.
+
+---
+Task ID: NBE-AUDIT-2 (2026-10-06)
+Agent: main (Super Z)
+Task: Owner — "any publish report i wanna our report (global eis report) Full
+final report (v3.1 — audit-corrected, company template)" + "you know you got
+some hallucination about of this report?" + operational tips + "can you check
+about self improvement?"
+
+Work Log:
+- Built scripts/audit_v31_semantic.py — semantic audit BEYOND the arithmetic
+  audit (A1–A13): evidence-bucket reconciliation, fee-law vs fee-mass, sign/
+  description mismatches, provenance labels, cross-reference pointers.
+- v3.1 AUDIT CONFIRMED THE OWNER: 7 semantic findings, all proven from the
+  report's own text — S1 evidence buckets sum 309≠310; S2 "fees" bucket
+  EGP 564,950.03 contradicts the 0.1% IPN fee law (63.8% effective — keyword-
+  polluted with transfer rows); S3 +87,687.00 CREDIT carrying an OUTGOING-
+  transfer description; S4 "(OCR, cleaned)" label over raw garble; S5 hold
+  headline presented identity-derived 200,020.00 as printed; S6 "4-pass" vs
+  5 dpi levels; S7 verdict pointed to §7, disclosure lives in §6. Arithmetic
+  identities (A1–A13) never broke.
+- Built scripts/alahly_report_v32.ts — canonical reportShell VERBATIM (no new
+  skin). v3.2 = same verified numbers + §0 Correction Register (S1–S7 + R1
+  reproducibility disclosure: raw ledger wiped by sandbox reset, chain stands
+  on Phase-E walk record + internal identities + today's audits). Corrections:
+  buckets 67+228+1+14=310 exact; fees bucket relabeled + footnote; S3 flagged
+  in-row; OCR header "raw scan text"; hold headline provenance; 5-pass; §6
+  pointer.
+- v3.2 verification: audit_nbe_report.py 13/13 PASS; audit_v31_semantic.py
+  0 findings, 1 DISCLOSED-OPEN (S3 — reclassification pending bank digital
+  PDF, by design).
+- SO-5: order ledger row ORD-1006-H1 appended. SO-2 three-channel delivery:
+  portal publish_via_repo.py, mail send_ops_report.ts (TEST_MAIL_TO lock),
+  full HTML in chat. SO-9 delivery gate run before announcement.
+
+Stage Summary:
+- Owner's hallucination charge: CONFIRMED (7 findings) and ANSWERED — v3.2 is
+  the FINAL report (re-audited, corrections disclosed in-report); v3.1
+  SUPERSEDED. Chain verdict unchanged: 310/310, residual 0.00, anchors exact.
+- Open: bank-issued digital PDF (closes S2 fee mass + S3 reclassification,
+  glyph-exact fast lane); 200,020.00 hold explanation; cron-job.org activation.

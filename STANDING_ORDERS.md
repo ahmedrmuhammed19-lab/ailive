@@ -78,8 +78,9 @@ A failed gate blocks the announcement — fix, re-run, then deliver.
 | ORD-1005-N100 | 2026-10-05 | "try anyway to get 100% balance chain" | DONE | **310/310 pairs closed, residual 0.00**, telescope 467,525.43→631,182.24 exact; v3 report 18:12Z, mail IMAP-verified, portal `{"ok":true}`; commit ccf90e1 |
 | ORD-1006-C1 | 2026-10-06 | "more control between portal and here"; stop template churn; prove the chain verification | DONE | this file + `scripts/delivery_gate.py` + independent audit; audit found §4.1 omission → corrected as **v3.1** (same template, same verdict), re-delivered 3 channels |
 | ORD-1006-C1a | 2026-10-06 | (agent-committed) §4.1 monthly table lacked the pre-March tail bucket | DONE | v3.1 adds implied bucket (26 rows, +46,615.92 / −280,259.18); flagged, not hidden |
+| ORD-1006-H1 | 2026-10-06 | "you got some hallucination about of this report?" — audit it | DONE | semantic re-audit **S1–S7: 7 findings proven** (buckets 309≠310 · fee-mass 63.8% vs 0.1% law · +87,687 credit w/ outgoing desc · false "(OCR, cleaned)" · hold provenance · pass-count · §7→§6 pointer) → **v3.2 FINAL** with in-report Correction Register; A1–A13 still PASS; 3-channel delivery |
 
 **Open items (owner side, no pressure — listed once):**
-- Bank-issued **digital PDF** for this account → glyph-exact fast-lane confirmation.
-- Branch explanation of the **EGP 200,020.00 hold** at print time.
+- Bank-issued **digital PDF** for this account → glyph-exact fast-lane confirmation AND closes the two open v3.2 disclosures (S2 fee mass reclassification, S3 counterparty/sign fix).
+- Branch explanation of the **EGP 200,020.00 hold** (identity-derived; printed first-read 200,030.00) at print time.
 - cron-job.org activation for the queue auto-poll.
