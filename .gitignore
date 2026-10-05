@@ -136,3 +136,4 @@ parser_samples/
 !scripts/repo_transport.py
 scripts/wafa_work/
 !scripts/send_ops_report.ts
+!scripts/ops_report_template.ts
