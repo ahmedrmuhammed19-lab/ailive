@@ -859,3 +859,7 @@ Stage Summary:
   SUPERSEDED. Chain verdict unchanged: 310/310, residual 0.00, anchors exact.
 - Open: bank-issued digital PDF (closes S2 fee mass + S3 reclassification,
   glyph-exact fast lane); 200,020.00 hold explanation; cron-job.org activation.
+- SELF-IMPROVEMENT (owner: "can you check about self improvement?"): distilled
+  the repeatable method into skills/bank-statement-forensics/SKILL.md (locked
+  contracts → state reconcile → OCR chain ladder → dual audit A+Semantic →
+  correction-register protocol → gated 3-channel delivery + real pitfalls).
