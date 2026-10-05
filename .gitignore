@@ -135,3 +135,4 @@ parser_samples/
 !scripts/gist_transport.py
 !scripts/repo_transport.py
 scripts/wafa_work/
+!scripts/send_ops_report.ts
