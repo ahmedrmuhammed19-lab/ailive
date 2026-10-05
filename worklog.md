@@ -660,3 +660,41 @@ Stage Summary:
 - Standing capability: ops/status reports can now be published to the portal
   on demand (repo raw URL -> publish-report endpoint), no queue case needed.
 - Three-channel delivery contract executed end-to-end and verified.
+
+---
+Task ID: NBE-REPORT-1 (2026-10-05)
+Agent: main (Super Z)
+Task: "i wanna full report for bank statement that i sent a final html report
+like the previous we made" — full analyst report for the statement the user
+sent: upload/كشف_حساب_عيد_شاعت_الاهلي_معدل (2).pdf (placed 05 Oct 11:46,
+10.8MB, 23 pages, pure scan).
+
+Work Log:
+- Identified: National Bank of Egypt (NBE), New Nubaria Branch, EGP Savings
+  (Annual Return), EID FARAG SAAD SHAAT, acct 2445000302432001010, IBAN
+  EG290003024450003024320010100, period 01/03/2026 → 09/09/2026 (6.3 months).
+- Three-pass OCR: 450dpi full page + 600dpi numeric band + 900dpi targeted
+  (credit column, b/f row, final row, closing block). Decoded NBE layout:
+  single amount column w/ print-artifact dashes, direction from balance walk,
+  per-page table shift, comma-decimal artifacts, fee rows recovered from
+  deltas. Parsers v3-v8 iterated; final = LOCAL pair reconciliation (no
+  cascade divergence) — 279 rows captured, 205 locally chain-reconciled (73%).
+- PRINTED ANCHORS (900dpi, exact): opening b/f 467,525.43 (vdate 26/02);
+  closing ledger 631,182.24 (06/09); print-time identity Current 631,182.24 =
+  Available 431,162.24 + Hold 200,030.00 + Uncollected 0.00; amount-in-words
+  confirms Available. Net period movement +163,656.81. Hold 200,030 flagged.
+- Pattern: heavy IPN churn with reversal loops (same as Wafa companion case)
+  — gross churn ≠ income; anchors are the evidence.
+- Report built on firm canonical template (reportShell verbatim), 8 sections
+  mirroring the delivered Wafa report + notable-txns appendix. File:
+  published/GlobalEIS_Report_EidFarag_NBE_EGP.html (25,083 B), commit 1dec202.
+- DELIVERED 3 channels: portal publish-report {"ok":true} 16:27Z; SMTP mail
+  sent+IMAP-verified 16:27Z (473 mails); chat summary posted.
+
+Stage Summary:
+- NBE case complete with reference-grade honesty: anchors exact, row
+  coverage 73% disclosed, bank-issued PDF advisory included.
+- Scripts persisted: alahly_ocr.py / alahly_ocr600.py / alahly_ocr900c.py /
+  alahly_parse8.py / alahly_finalize2.py / alahly_report.ts (whitelisted).
+- Note: scripts/alahly_work/ holds per-page OCR JSON (client data, NOT
+  whitelisted, stays local).
