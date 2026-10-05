@@ -96,6 +96,17 @@ absorbed unless the chain is strict per-row AND the row census and printed
 totals agree. G1+G2+G3 are mutually reinforcing: chain catches absorption
 except exact-cancellation coincidences; census and printed totals catch those.
 
+**SO-11 · STANDING MANDATE — ALL STATEMENTS**
+Owner delegated ALL bank-statement work to Global EIS — the entire present
+and future corpus, any bank, any language, any format. Every statement goes
+through the same locked pipeline, no ad-hoc processing ever: census ->
+parse -> strict per-row chain -> Verification Passport (SO-10, G1-G9) ->
+locked template (SO-1) -> pre-delivery gate (SO-9) -> chat + portal
+(+ mail on request, SO-3). Fail-loud always: a gate that cannot be
+evaluated = FAIL = quarantine, never a silent best guess.
+
+---
+
 ---
 
 ## B. ORDER LEDGER (append-only)
@@ -115,6 +126,8 @@ except exact-cancellation coincidences; census and printed totals catch those.
 | ORD-1006-V12 | 2026-10-06 | "i guess 1.2master will be standard" | DONE | Master v1.2 promoted ADDITIVELY into `src/lib/report_design.ts` (single source intact, SO-1); 5 v1.2 artifacts on portal ×2 cycles (defect fix); worklog TPL-V12-STANDARD(-FIX) |
 | ORD-1006-UP1 | 2026-10-06 | owner hit "File 1/1 (part 1/2): Upload failed (HTTP 404)" on portal | DONE | Root cause: 418-line `/api/upload` route lost AGAIN in lineage wipe (3rd loss); restored verbatim from 9fe9b1d; tsc 0 src errors; autowork 12/12; NEW `scripts/test_chunked_upload.py` reproduces owner's exact 2-chunk 6.5MB path — byte-exact reassembly PASS; prod live 21:50Z (400-alive, not 404); commit f73286b |
 | ORD-1006-VP1 | 2026-10-06 | (agent-committed) "never fail in any bank statements" — double-checks that work WITH the balance chain | DONE | SO-10 Verification Passport (G1–G9) codified from the 310-row lesson; v4 NBE rebuild will ship with passport |
+
+| ORD-1006-ALL1 | 2026-10-06 | "i'll depend on you for all my work, you will work on every bank statement i have" — standing mandate | ACCEPTED | SO-11 codified; corpus inventoried; NBE v4 running as first passport-flagship (worklog MANDATE-1) |
 
 **Open items (owner side, no pressure — listed once):**
 - Bank-issued **digital PDF** for this account → glyph-exact fast-lane confirmation AND closes the two open v3.2 disclosures (S2 fee mass reclassification, S3 counterparty/sign fix).

@@ -1040,3 +1040,26 @@ Work Log:
 Stage Summary:
 - Portal upload RESTORED and now regression-guarded by a test that replays the owner's exact failure signature; production live at 21:50Z 2026-10-06.
 - SO-10 makes the 310-row lesson structural: chain = amount conservation (one equation family); row completeness comes from census + printed totals + strict per-row identity together. Passport ships with every future report (first: NBE v4).
+
+---
+Task ID: MANDATE-1 / NBE-V4-STAGE1 (2026-10-06)
+Agent: main (Super Z)
+Task: Owner standing mandate "you will work on every bank statement i have" (SO-11) — begin the work program with the NBE v4 serial-indexed rebuild (462 printed rows, four constraints, first G1-G9 passport report).
+
+Work Log:
+- SO-11 codified in STANDING_ORDERS.md (ALL statements, locked pipeline, no ad-hoc); ledger ORD-1006-ALL1.
+- Corpus inventoried: upload/ holds NBE Eid Farag, CIB Haytham EGP+USD (done), WAFA (done), plus unnamed statements (كشف الحساب, MOhamed Bank, Statements_28FEB26_to_31AUG26, Current/Saving PDFs) for later cycles.
+- v4 Stage A v2 (line-aware): scripts/nbe_v4_extract2.py — 486 physical bands -> 1,441 visual lines, word-box geometry, OCR-tolerant amount parser (dot/comma flip classes: 10,00 / 457,696,03 / 457.696,03).
+- Stage A2/A3: serial re-reads at 600dpi (v4_serialfix.py) and merge+arbiter (nbe_v4_serial_merge.py) — found the 900dpi blind-column-crop arbiter UNRELIABLE (overrode correct 450dpi reads like "| 104 |"); lesson recorded: sequence coherence, not blurry crops, arbitrates serials.
+- Stage B: nbe_v4_build.py assembles 402 logical rows; G4 anchors PASS EXACT (467,515.43 opening / 631,182.24 closing).
+- Stage C: nbe_v4_repair.py 600dpi Pass B on ALL rows (G7 two-pass) + 900dpi special reads.
+- MAJOR PRINT FINDING (p23 summary box, verified visually from rendered image, not OCR): Current Balance 431,162.24 | Available 431,162.24 | Hold 0.00 | Uncollected 0.00; amount-in-words "Four Hundred Thirty One Thousand One Hundred Sixty Two... Twenty Four Piastres" = 431,162.24; snapshot stamped 10/09/2026 7:16:30 PM (AFTER period end 09/09/2026). This OVERTURNS the v3.2 identity-derived "Hold = 200,020.00": the bank prints Hold=0.00, yet its own ledger closes at 631,182.24 — an internal 200,020.00 inconsistency the bank does NOT label as hold. v4 will report printed truth + flag for branch clarification.
+- Totals row confirmed at 900dpi visually: D 1,341,824.35 / C 1,505,491.16 ("1341824,35" token).
+- Stage D/E: A/B reconciliation + 900dpi Pass C on flagged rows -> 58 flags; Stage F/F2: visual adjudication sheets (scripts/alahly_work/adj2/) — agent read printed truth directly (i=37 6.50, i=38/39 fee-pair cluster 6,500/6.50, i=58/59 0.50 fees, i=69 +5.35, i=79 224,342.70, sheet_01 cluster).
+- Stage G: nbe_v4_solver.py chain solver (balance candidates + movement tokens + G3 referee). STATUS: 363/402 rows machine-closed; 39 rows remain in visual adjudication zone; G3 sums short (residual 183,734.28 D / 229,223.95 C concentrated in those 39); G1 serial census incomplete (same rows).
+- ALL v4 state persisted: v4_lines_p*.json, v4_rows*.json, v4_final*.json, v4_solved.json, adj2 sheets, gates JSONs.
+
+Stage Summary:
+- v4 is UNDERWAY and ~90% machine-closed; NO report shipped (gate would fail — correct behavior under SO-10).
+- Hold 200,020 question resolved by print evidence (Hold=0.00 printed; gap real but unlabeled).
+- Next cycle: visual adjudication of remaining 39 rows (sheets adj2/sheet_02..07), serial census completion, G3 referee, then report on Master v1.2 + passport + 3-channel delivery.
