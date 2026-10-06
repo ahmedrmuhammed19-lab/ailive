@@ -1234,3 +1234,10 @@ Stage Summary:
 - NBE v4 = FIRST 100%-COVERAGE PASSPORT DELIVERY: 462/462 rows, G1–G9 PASS,
   both bank totals exact. Supersedes v3.x (310 rows). SO-12: all state
   force-tracked (v4_stage3/v4_print_table/v4_stats + generators + crops tool).
+
+Delivery evidence (NBE-V4-SHIP-1):
+- SO-9 gate: PASS 9/9 (manifest, template, chain, mail lock, forbidden-absent,
+  portal 200-verified, worklog). Gate syntax repaired pre-run.
+- Prod URL: https://ailive-three.vercel.app/GlobalEIS_Report_EidFarag_NBE_EGP_v4_462rows.html (HTTP 200)
+- Commits: cabfdaa (report+state+gate fix), 7f916e5 (receipts). Mail: outbox
+  queued (SMTP key owner-side). Chat: live link delivered.
