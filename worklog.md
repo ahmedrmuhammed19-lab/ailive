@@ -1063,3 +1063,14 @@ Stage Summary:
 - v4 is UNDERWAY and ~90% machine-closed; NO report shipped (gate would fail — correct behavior under SO-10).
 - Hold 200,020 question resolved by print evidence (Hold=0.00 printed; gap real but unlabeled).
 - Next cycle: visual adjudication of remaining 39 rows (sheets adj2/sheet_02..07), serial census completion, G3 referee, then report on Master v1.2 + passport + 3-channel delivery.
+
+---
+Task ID: WIPE-4-TRIVIAL (2026-10-06)
+Agent: main (Super Z)
+Task: Post-session-continuation hygiene check.
+
+Work Log:
+- Found src/app/api/upload/route.ts deleted in WORKING TREE only (4th occurrence of the pattern; HEAD 4178183 intact). Restored via git checkout; tree clean. No commit needed.
+
+Stage Summary:
+- Portal route healthy; loss counter now 4, all recovered. Tracked regression test remains the backstop.
