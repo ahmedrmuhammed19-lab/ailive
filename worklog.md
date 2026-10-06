@@ -1074,3 +1074,54 @@ Work Log:
 
 Stage Summary:
 - Portal route healthy; loss counter now 4, all recovered. Tracked regression test remains the backstop.
+
+---
+Task ID: AUDIT-1 (2026-10-06)
+Agent: main (Super Z)
+Task: Owner ordered full audit of "nodes, workflow, process and everything" to re-anchor
+the work and prevent any repeat of the Eid-class mistake (310-row omission).
+
+Work Log:
+- Read STANDING_ORDERS.md end-to-end: SO-1..SO-11 intact, ledger 15 rows.
+- NODES (portal): /api/upload restored earlier today (418 lines, 4th wipe), /api/queue/*
+  (action/attach/clear/complete-all/go/publish-report/retry/update/work-all/work-link),
+  /api/reports, engine, dashboard, login/logout/me/setup — ALL present; tsc 0 errors in
+  src/; dev :3000 alive; prod POST /api/upload 400-alive.
+- TESTS: scripts/test_autowork.py 12/12 PASS; scripts/test_chunked_upload.py PASS
+  (byte-exact 6,500,002 reassembly). Template source report_design.ts intact
+  (TEMPLATE_VERSION Master v1.2).
+- LOSSES FOUND (untracked-casualty class, same wipe as route #4):
+  1. scripts/delivery_gate.py (SO-9 gate) — never committed; REBUILT from SO-9 spec +
+     receipts/*.json formats; self-test fixture receipts/gate_selftest_*.json 9/9 PASS
+     (fixed forbidden-scan false positive: manifest declares its own forbidden list).
+     Force-tracked.
+  2. scripts/publish_via_repo.py — never committed; REBUILD SPEC recorded (below);
+     blocked on GitHub token (owner item).
+  3. config/mail_credentials.json (real SMTP key) — unrecoverable; mail degrades to
+     file outbox (sendOrQueue fallback intact in src/lib/mail.ts); owner must re-supply.
+  4. .env gutted (only DATABASE_URL) — restored via scripts/restore_env.sh (fresh
+     SESSION_SECRET, TEST_MAIL_TO lock, PORTAL_BASE_URL); sandbox-minted portal tokens
+     reset (users re-login); prod Vercel env unaffected.
+  5. scripts/alahly_work/ (NBE v4 working state: lines/rows/solved/adj2) — untracked,
+     LOST. Pipeline scripts ARE tracked; source PDF upload/nbe_eid_farag.pdf SAFE
+     (mirrored /home/sync/upload). v4 must be RE-RUN deterministically; ground-truth
+     print findings preserved in worklog MANDATE-1 (anchors 467,515.43/631,182.24;
+     totals D 1,341,824.35 / C 1,505,491.16; p23 Hold=0.00, snapshot 431,162.24
+     10/09/2026 7:16:30 PM) serve as rebuild validation references.
+- GOVERNANCE: SO-12 WIPE HARDENING (track-or-rebuild) codified; stale open-item about
+  the 200,020 "hold" corrected to the v4 print finding; two new owner open-items added
+  (SMTP key, GitHub token).
+- PUBLISH SENDER REBUILD SPEC (for next delivery cycle): GET
+  /api/queue/publish-report/<token>/<spec>; token = HMAC-SHA256(secret,
+  "__queue__:workall")[:32] lowercase hex per src/lib/actions.ts actionToken();
+  spec = base64url JSON {files:[{u:"<https url>", n:"<filename>"}]}; portal fetches
+  bytes from URL (transport repo served this role); wrong token = 404. Needs GitHub
+  token OR alternative https host.
+- Lesson reinforced: the 310-row Eid failure class is defended by SO-10 G1+G2+G3
+  (census+strict chain+printed totals); the wipe failure class is now defended by
+  SO-12 + restore_env.sh + tracked regression tests.
+
+Stage Summary:
+- System audit COMPLETE: 12 standing orders, all portal nodes verified, both
+  regression suites green, gate rebuilt+tracked, env restored, v4 data loss
+  quantified with deterministic rebuild path. Two owner-side secrets to re-supply.

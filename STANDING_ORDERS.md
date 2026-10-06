@@ -105,6 +105,17 @@ locked template (SO-1) -> pre-delivery gate (SO-9) -> chat + portal
 (+ mail on request, SO-3). Fail-loud always: a gate that cannot be
 evaluated = FAIL = quarantine, never a silent best guess.
 
+**SO-12 · WIPE HARDENING (track-or-rebuild)**
+The sandbox periodically wipes untracked files (upload route lost 4×;
+delivery_gate.py, publish_via_repo.py, mail creds, .env keys, and the NBE
+v4 working state all lost 2026-10-06). Rule: every artifact needed for a
+delivery must be EITHER git-tracked (force-add if gitignored) OR regenerable
+by a tracked script from a tracked/on-disk source. After every work cycle:
+force-track new gate/receipt/state files before announcing the delivery.
+Final pipeline state JSONs (rows/solved/gates) are force-tracked at cycle end;
+intermediate line-level files may stay untracked. `scripts/restore_env.sh`
+restores .env + DB + seeds after any wipe; run it before working.
+
 ---
 
 ---
@@ -131,5 +142,7 @@ evaluated = FAIL = quarantine, never a silent best guess.
 
 **Open items (owner side, no pressure — listed once):**
 - Bank-issued **digital PDF** for this account → glyph-exact fast-lane confirmation AND closes the two open v3.2 disclosures (S2 fee mass reclassification, S3 counterparty/sign fix).
-- Branch explanation of the **EGP 200,020.00 hold** (identity-derived; printed first-read 200,030.00) at print time.
+- Branch explanation of the **EGP 200,020.00 gap** — UPDATED by v4 print evidence (2026-10-06): p23 summary box prints Hold = 0.00 and the words-match 431,162.24 at snapshot 10/09/2026 7:16:30 PM (after period end); the 631,182.24 ledger close vs 431,162.24 snapshot gap is REAL but the bank does NOT label it as hold. v4 reports printed truth; branch clarification still welcome.
 - cron-job.org activation for the queue auto-poll.
+- Re-supply `config/mail_credentials.json` (SMTP key lost in the 2026-10-06 wipe; mail currently degrades to outbox mode).
+- GitHub token for transport-repo publishing (lost in the same wipe) OR approve an alternative https host for publish URLs — needed before the next portal publish (`publish_via_repo.py` rebuild spec recorded in worklog AUDIT-1).

@@ -1,0 +1,12 @@
+{
+ "ok": true,
+ "published": [
+  {
+   "name": "GlobalEIS_Report_EidFarag_NBE_EGP_v3.1_100pct.html",
+   "sizeBytes": 1
+  }
+ ],
+ "skipped": [],
+ "note": "GATE SELFTEST fixture (frozen v3.1 publish state)",
+ "at": "2026-10-06T00:00:00Z"
+}
