@@ -1,6 +1,14 @@
 {
-  "ok": false,
-  "published": [],
-  "note": "pending push+deploy",
-  "at": "2026-10-06T19:20:22.465111+00:00"
+  "ok": true,
+  "published": [
+    {
+      "name": "GlobalEIS_Report_EidFarag_NBE_EGP_v4_462rows.html",
+      "sizeBytes": 48861
+    }
+  ],
+  "skipped": [],
+  "url": "https://ailive-three.vercel.app/GlobalEIS_Report_EidFarag_NBE_EGP_v4_462rows.html",
+  "lane": "repo public/ + vercel (publish_via_repo rebuild spec; GitHub token via remote)",
+  "note": "Global EIS delivery NBE-V4-SHIP-1 2026-10-06 \u2014 HTTP 200 verified after deploy",
+  "at": "2026-10-06T19:22:20.266514+00:00"
 }

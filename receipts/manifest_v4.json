@@ -1,0 +1,8 @@
+{
+  "task_id": "NBE-V4-SHIP-1",
+  "report_html": "published/GlobalEIS_Report_EidFarag_NBE_EGP_v4_462rows.html",
+  "chain_required": true,
+  "publish_receipt": "receipts/publish_v4.json",
+  "mail_receipt": "receipts/mail_v4.json",
+  "forbidden": ["a.imam@beta.com.eg"]
+}
