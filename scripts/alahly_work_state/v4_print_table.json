@@ -1,0 +1,8934 @@
+{
+ "table": [
+  {
+   "serial": 1,
+   "src": "bf",
+   "walk_i": 0,
+   "page": 1,
+   "date": "01/03/2026",
+   "desc": "Previous Balance",
+   "balance_printed": 467515.43,
+   "tokens": [
+    467515.43
+   ],
+   "balance": 467515.43,
+   "delta": 0.0,
+   "attrib": "bf",
+   "amount": 0.0
+  },
+  {
+   "serial": 2,
+   "read_ser": 2,
+   "src": "walk",
+   "walk_i": 1,
+   "page": 1,
+   "date": "01/03/2026",
+   "desc": "2 01/03/2026 244FT1ID260578340 Network to EID FARAG SAAD «10,00 467,525.43 26/02/2026",
+   "balance_printed": 467525.43,
+   "tokens": [
+    10.0,
+    467525.43
+   ],
+   "used": "A",
+   "delta": 10.0,
+   "balance": 467525.43,
+   "attrib": "reversal",
+   "amount": -10.0
+  },
+  {
+   "serial": 3,
+   "read_ser": 3,
+   "src": "walk",
+   "walk_i": 2,
+   "page": 1,
+   "date": "01/03/2026",
+   "desc": "3 01/03/2026 244FTID260578340 EID FARAG SAAD =10,000,00 477,525.43 26/02/2026",
+   "balance_printed": 477525.43,
+   "tokens": [
+    10000.0,
+    477525.43
+   ],
+   "used": "A",
+   "delta": 10000.0,
+   "balance": 477525.43,
+   "attrib": "reversal",
+   "amount": -10000.0
+  },
+  {
+   "serial": 4,
+   "read_ser": 4,
+   "src": "walk",
+   "walk_i": 3,
+   "page": 1,
+   "date": "01/03/2026",
+   "desc": "4 01/03/2026 244FT1D260578340 Network to EID FARAG SAAD 10,00 477,515.43 26/02/1026",
+   "balance_printed": 477515.43,
+   "tokens": [
+    10.0,
+    477515.43
+   ],
+   "used": "A",
+   "delta": -10.0,
+   "balance": 477515.43,
+   "attrib": "debit",
+   "amount": 10.0
+  },
+  {
+   "serial": 5,
+   "read_ser": 5,
+   "src": "walk",
+   "walk_i": 4,
+   "page": 1,
+   "date": "01/03/2026",
+   "desc": "5 01/03/2026 244FTID260578340 EID FARAG SAAD 10,000.00 467,515.43 26/02/2026",
+   "balance_printed": 467515.43,
+   "tokens": [
+    10000.0,
+    467515.43
+   ],
+   "used": "A",
+   "delta": -10000.0,
+   "balance": 467515.43,
+   "attrib": "debit",
+   "amount": 10000.0
+  },
+  {
+   "serial": 6,
+   "read_ser": 6,
+   "src": "walk",
+   "walk_i": 5,
+   "page": 1,
+   "date": "01/03/2026",
+   "desc": "6 01/03/2026 244FTID260576310 Network to EID FARAG SAAD 9.80 467,505.63 26/02/2026",
+   "balance_printed": 467505.63,
+   "tokens": [
+    9.8,
+    467505.63
+   ],
+   "used": "A",
+   "delta": -9.8,
+   "balance": 467505.63,
+   "attrib": "debit",
+   "amount": 9.8
+  },
+  {
+   "serial": 7,
+   "read_ser": 7,
+   "src": "walk",
+   "walk_i": 6,
+   "page": 1,
+   "date": "01/03/2026",
+   "desc": "7 01/03/2026 244FTID260576310 EID FARAG SAAD 9,800.00 457,705.63 26/02/2026",
+   "balance_printed": 457705.63,
+   "tokens": [
+    9800.0,
+    457705.63
+   ],
+   "used": "A",
+   "delta": -9800.0,
+   "balance": 457705.63,
+   "attrib": "debit",
+   "amount": 9800.0
+  },
+  {
+   "serial": 8,
+   "read_ser": 8,
+   "src": "walk",
+   "walk_i": 7,
+   "page": 1,
+   "date": "01/03/2026",
+   "desc": "8 01/03/2026 244FTID260576311 Network to EID FARAG SAAD 9.60\" 457,696,03 16/02/2026",
+   "balance_printed": 457696.03,
+   "tokens": [
+    9.6,
+    457696.03
+   ],
+   "used": "A",
+   "delta": -9.6,
+   "balance": 457696.03,
+   "attrib": "debit",
+   "amount": 9.6
+  },
+  {
+   "serial": 9,
+   "read_ser": 9,
+   "src": "walk",
+   "walk_i": 8,
+   "page": 1,
+   "date": "01/03/2026",
+   "desc": "9 01/03/2026 244FTID260576311 EID FARAG SAAD 9,600.00 448,096.03 26/02/2026",
+   "balance_printed": 448096.03,
+   "tokens": [
+    8096.03,
+    9600.0,
+    448096.03
+   ],
+   "used": "A",
+   "delta": -9600.0,
+   "balance": 448096.03,
+   "attrib": "debit",
+   "amount": 9600.0
+  },
+  {
+   "serial": 10,
+   "read_ser": 10,
+   "src": "walk",
+   "walk_i": 9,
+   "page": 1,
+   "date": "01/03/2026",
+   "desc": "10 | 01/03/2026 | 244FTID260576310 Network to EID FARAG SAAD -9.90 448,105.83 26/02/2026",
+   "balance_printed": 448105.83,
+   "tokens": [
+    9.8,
+    9.9,
+    448105.83
+   ],
+   "used": "B",
+   "delta": 9.8,
+   "balance": 448105.83,
+   "attrib": "reversal",
+   "amount": -9.8
+  },
+  {
+   "serial": 11,
+   "read_ser": null,
+   "src": "walk",
+   "walk_i": 10,
+   "page": 1,
+   "date": "01/03/2026",
+   "desc": "01/03/2026 244FTID260576310 EID FARAG SAAD -9,800.00 457,905.83 26/02/2026",
+   "balance_printed": 457905.83,
+   "tokens": [
+    9800.0,
+    457905.83
+   ],
+   "used": "A",
+   "delta": 9800.0,
+   "balance": 457905.83,
+   "attrib": "reversal",
+   "amount": -9800.0
+  },
+  {
+   "serial": 12,
+   "read_ser": 12,
+   "src": "walk",
+   "walk_i": 11,
+   "page": 1,
+   "date": "01/03/2026",
+   "desc": "12 | 01/03/2026 | 2441PNF260576169 To-Revenue from <2 aa oy) 0.50 457,905.33 01/03/2026",
+   "balance_printed": 457905.33,
+   "tokens": [
+    0.5,
+    457905.33
+   ],
+   "used": "A",
+   "delta": -0.5,
+   "balance": 457905.33,
+   "attrib": "debit",
+   "amount": 0.5
+  },
+  {
+   "serial": 13,
+   "read_ser": 13,
+   "src": "walk",
+   "walk_i": 12,
+   "page": 1,
+   "date": "01/03/2026",
+   "desc": "13 | 01/03/2026 | 244FTID260604452 Network to ESLAM MOHSEN 1.30 457,904.03 28/02/2026",
+   "balance_printed": 457904.03,
+   "tokens": [
+    1.3,
+    457904.03
+   ],
+   "used": "A",
+   "delta": -1.3,
+   "balance": 457904.03,
+   "attrib": "debit",
+   "amount": 1.3
+  },
+  {
+   "serial": 14,
+   "read_ser": null,
+   "src": "walk",
+   "walk_i": 13,
+   "page": 1,
+   "date": "01/03/2026",
+   "desc": "i4 01/03/2026 244FTID260604452 ESLAM MOHSEN 1,300.00 456,604.03 28/02/2026",
+   "balance_printed": 456604.03,
+   "tokens": [
+    1300.0,
+    456604.03
+   ],
+   "used": "A",
+   "delta": -1300.0,
+   "balance": 456604.03,
+   "attrib": "debit",
+   "amount": 1300.0
+  },
+  {
+   "serial": 15,
+   "read_ser": 15,
+   "src": "walk",
+   "walk_i": 14,
+   "page": 1,
+   "date": "01/03/2026",
+   "desc": "15 01/03/2026 244FTID260604625 AIMED MOHAMED 1,00 56,603,03 6",
+   "balance_printed": 456603.03,
+   "tokens": [
+    1.0,
+    56603.03,
+    456603.03
+   ],
+   "used": "B",
+   "delta": -1.0,
+   "balance": 456603.03,
+   "attrib": "debit",
+   "amount": 1.0
+  },
+  {
+   "serial": 16,
+   "read_ser": 16,
+   "src": "walk",
+   "walk_i": 15,
+   "page": 2,
+   "date": "01/03/2026",
+   "desc": "16 01/03/2026 244FT1D260604625 MOHAMED 1,000.00 455,603.03 28/02/2026",
+   "balance_printed": 455603.03,
+   "tokens": [
+    1000.0,
+    455603.03
+   ],
+   "used": "A",
+   "delta": -1000.0,
+   "balance": 455603.03,
+   "attrib": "debit",
+   "amount": 1000.0
+  },
+  {
+   "serial": 17,
+   "read_ser": 17,
+   "src": "walk",
+   "walk_i": 16,
+   "page": 2,
+   "date": "01/03/2026",
+   "desc": "17 01/03/2026 244FTID26060A1M0 Network to EID FARAG SAAD 6.00 455,597.03 01/03/2026",
+   "balance_printed": 455597.03,
+   "tokens": [
+    6.0,
+    455597.03
+   ],
+   "used": "A",
+   "delta": -6.0,
+   "balance": 455597.03,
+   "attrib": "debit",
+   "amount": 6.0
+  },
+  {
+   "serial": 18,
+   "read_ser": 18,
+   "src": "walk",
+   "walk_i": 17,
+   "page": 2,
+   "date": "01/03/2026",
+   "desc": "18 01/03/2026 244FTID26060A1M0 EID FARAG SAAD 6,000.00 449,597.03 01/03/2026",
+   "balance_printed": 449597.03,
+   "tokens": [
+    6000.0,
+    449597.03
+   ],
+   "used": "A",
+   "delta": -6000.0,
+   "balance": 449597.03,
+   "attrib": "debit",
+   "amount": 6000.0
+  },
+  {
+   "serial": 19,
+   "read_ser": 19,
+   "src": "walk",
+   "walk_i": 18,
+   "page": 2,
+   "date": "01/03/2026",
+   "desc": "19 01/03/2026 244FTID26060A33Q Network to EID FARAG SAAD -5.00 449,602.03 01/03/2026",
+   "balance_printed": 449602.03,
+   "tokens": [
+    5.0,
+    449602.03
+   ],
+   "used": "A",
+   "delta": 5.0,
+   "balance": 449602.03,
+   "attrib": "reversal",
+   "amount": -5.0
+  },
+  {
+   "serial": 20,
+   "read_ser": 20,
+   "src": "walk",
+   "walk_i": 19,
+   "page": 2,
+   "date": "01/03/2026",
+   "desc": "20 01/03/2026 244FTID26060A33Q EID FARAG SAAD -5,000.00 454,602.03 01/03/2026",
+   "balance_printed": 454602.03,
+   "tokens": [
+    5000.0,
+    454602.03
+   ],
+   "used": "A",
+   "delta": 5000.0,
+   "balance": 454602.03,
+   "attrib": "reversal",
+   "amount": -5000.0
+  },
+  {
+   "serial": 21,
+   "read_ser": 21,
+   "src": "walk",
+   "walk_i": 20,
+   "page": 2,
+   "date": "01/03/2026",
+   "desc": "21 01/03/2026 244FTID26060A1M0 Network to EID FARAG SAAD -6.00 454,608.03 01/03/2026",
+   "balance_printed": 454608.03,
+   "tokens": [
+    6.0,
+    454608.03
+   ],
+   "used": "A",
+   "delta": 6.0,
+   "balance": 454608.03,
+   "attrib": "reversal",
+   "amount": -6.0
+  },
+  {
+   "serial": 22,
+   "read_ser": 22,
+   "src": "walk",
+   "walk_i": 21,
+   "page": 2,
+   "date": "01/03/2026",
+   "desc": "22 01/03/2026 244F TID26060A1M0 EID FARAG SAAD -6,000.00 460,608.03 01/03/2026",
+   "balance_printed": 460608.03,
+   "tokens": [
+    6000.0,
+    460608.03
+   ],
+   "used": "A",
+   "delta": 6000.0,
+   "balance": 460608.03,
+   "attrib": "reversal",
+   "amount": -6000.0
+  },
+  {
+   "serial": 23,
+   "read_ser": 23,
+   "src": "walk",
+   "walk_i": 22,
+   "page": 2,
+   "date": "01/03/2026",
+   "desc": "23 01/03/2026 244FTID26060A33Q Network to EID FARAG SAAD 5.00 460,603.03 01/03/2026",
+   "balance_printed": 460603.03,
+   "tokens": [
+    5.0,
+    460603.03
+   ],
+   "used": "A",
+   "delta": -5.0,
+   "balance": 460603.03,
+   "attrib": "debit",
+   "amount": 5.0
+  },
+  {
+   "serial": 24,
+   "read_ser": 24,
+   "src": "walk",
+   "walk_i": 23,
+   "page": 2,
+   "date": "01/03/2026",
+   "desc": "24 01/03/2026 244FTID26060A33Q EID FARAG SAAD 5,000.00 455,603.03 01/03/2026",
+   "balance_printed": 455603.03,
+   "tokens": [
+    5000.0,
+    455603.03
+   ],
+   "used": "A",
+   "delta": -5000.0,
+   "balance": 455603.03,
+   "attrib": "debit",
+   "amount": 5000.0
+  },
+  {
+   "serial": 25,
+   "read_ser": 25,
+   "src": "walk",
+   "walk_i": 24,
+   "page": 2,
+   "date": "01/03/2026",
+   "desc": "25 01/03/2026 244FT1ID260606588 Network to EID FARAG SAAD 3.00 455,600.03 01/03/2026",
+   "balance_printed": 455600.03,
+   "tokens": [
+    3.0,
+    455600.03
+   ],
+   "used": "A",
+   "delta": -3.0,
+   "balance": 455600.03,
+   "attrib": "debit",
+   "amount": 3.0
+  },
+  {
+   "serial": 26,
+   "read_ser": 26,
+   "src": "walk",
+   "walk_i": 25,
+   "page": 2,
+   "date": "01/03/2026",
+   "desc": "26 01/03/2026 244FTID260606588 EID FARAG SAAD 3,000.00 452,600.03 01/03/2026",
+   "balance_printed": 452600.03,
+   "tokens": [
+    3000.0,
+    452600.03
+   ],
+   "used": "A",
+   "delta": -3000.0,
+   "balance": 452600.03,
+   "attrib": "debit",
+   "amount": 3000.0
+  },
+  {
+   "serial": 27,
+   "read_ser": 27,
+   "src": "walk",
+   "walk_i": 26,
+   "page": 2,
+   "date": "01/03/2026",
+   "desc": "27 01/03/2026 244FTID260606588 Network to EID FARAG SAAD -3.00 452,603.03 01/03/2026",
+   "balance_printed": 452603.03,
+   "tokens": [
+    3.0,
+    452603.03
+   ],
+   "used": "A",
+   "delta": 3.0,
+   "balance": 452603.03,
+   "attrib": "reversal",
+   "amount": -3.0
+  },
+  {
+   "serial": 28,
+   "read_ser": 28,
+   "src": "walk",
+   "walk_i": 27,
+   "page": 2,
+   "date": "01/03/2026",
+   "desc": "28 01/03/2026 244FTID260606588 EID FARAG SAAD -3,000.00 455,603.03 01/03/2026",
+   "balance_printed": 455603.03,
+   "tokens": [
+    3000.0,
+    455603.03
+   ],
+   "used": "A",
+   "delta": 3000.0,
+   "balance": 455603.03,
+   "attrib": "reversal",
+   "amount": -3000.0
+  },
+  {
+   "serial": 29,
+   "read_ser": 29,
+   "src": "walk",
+   "walk_i": 28,
+   "page": 2,
+   "date": "01/03/2026",
+   "desc": "29 01/03/2026 244FTID26060A33T Network to EID FARAG SAAD 2,50 455,600.53 01/03/2026",
+   "balance_printed": 455600.53,
+   "tokens": [
+    2.5,
+    455600.53
+   ],
+   "used": "A",
+   "delta": -2.5,
+   "balance": 455600.53,
+   "attrib": "debit",
+   "amount": 2.5
+  },
+  {
+   "serial": 30,
+   "read_ser": 30,
+   "src": "walk",
+   "walk_i": 29,
+   "page": 2,
+   "date": "01/03/2026",
+   "desc": "30 01/03/2026 244FTID26060A33T EID FARAG SAAD 2,500.00 453,100.53 01/03/2026",
+   "balance_printed": 453100.53,
+   "tokens": [
+    2500.0,
+    453100.53
+   ],
+   "used": "A",
+   "delta": -2500.0,
+   "balance": 453100.53,
+   "attrib": "debit",
+   "amount": 2500.0
+  },
+  {
+   "serial": 31,
+   "read_ser": 31,
+   "src": "walk",
+   "walk_i": 30,
+   "page": 2,
+   "date": "01/03/2026",
+   "desc": "31 01/03/2026 244FTID26060A33T Network to EID FARAG SAAD -2.50 453,103.03 01/03/2026",
+   "balance_printed": 453103.03,
+   "tokens": [
+    2.5,
+    453103.03
+   ],
+   "used": "A",
+   "delta": 2.5,
+   "balance": 453103.03,
+   "attrib": "reversal",
+   "amount": -2.5
+  },
+  {
+   "serial": 32,
+   "read_ser": 32,
+   "src": "walk",
+   "walk_i": 31,
+   "page": 2,
+   "date": "01/03/2026",
+   "desc": "32 01/03/2026 244FTID26060A33T EID FARAG SAAD -2,500.00 455,603.03 01/03/2026",
+   "balance_printed": 455603.03,
+   "tokens": [
+    2500.0,
+    455603.03
+   ],
+   "used": "A",
+   "delta": 2500.0,
+   "balance": 455603.03,
+   "attrib": "reversal",
+   "amount": -2500.0
+  },
+  {
+   "serial": 33,
+   "read_ser": 33,
+   "src": "walk",
+   "walk_i": 32,
+   "page": 2,
+   "date": "01/03/2026",
+   "desc": "33 01/03/2026 244FTID260606594 Network to EID FARAG SAAD 2.00 455,601.03 01/03/2026",
+   "balance_printed": 455601.03,
+   "tokens": [
+    2.0,
+    455601.03
+   ],
+   "used": "A",
+   "delta": -2.0,
+   "balance": 455601.03,
+   "attrib": "debit",
+   "amount": 2.0
+  },
+  {
+   "serial": 34,
+   "read_ser": 34,
+   "src": "walk",
+   "walk_i": 33,
+   "page": 2,
+   "date": "01/03/2026",
+   "desc": "34 01/03/2026 244FT1D260606594 EID FARAG SAAD 2,000.00 453,601.03 01/03/2026",
+   "balance_printed": 453601.03,
+   "tokens": [
+    2000.0,
+    453601.03
+   ],
+   "used": "A",
+   "delta": -2000.0,
+   "balance": 453601.03,
+   "attrib": "debit",
+   "amount": 2000.0
+  },
+  {
+   "serial": 35,
+   "read_ser": 35,
+   "src": "walk",
+   "walk_i": 34,
+   "page": 2,
+   "date": "01/03/2026",
+   "desc": "35 01/03/2026 244FT1D260606594 Network to EID FARAG SAAD -2.00 453,603.03 01/03/2026",
+   "balance_printed": 453603.03,
+   "tokens": [
+    2.0,
+    453603.03
+   ],
+   "used": "A",
+   "delta": 2.0,
+   "balance": 453603.03,
+   "attrib": "reversal",
+   "amount": -2.0
+  },
+  {
+   "serial": 36,
+   "read_ser": 36,
+   "src": "walk",
+   "walk_i": 35,
+   "page": 2,
+   "date": "01/03/2026",
+   "desc": "36 01/03/2026 244FTID260606594 EID FARAG SAAD -2,000.00 455,603.03 01/03/2026",
+   "balance_printed": 455603.03,
+   "tokens": [
+    2000.0,
+    455603.03
+   ],
+   "used": "A",
+   "delta": 2000.0,
+   "balance": 455603.03,
+   "attrib": "reversal",
+   "amount": -2000.0
+  },
+  {
+   "serial": 37,
+   "read_ser": 37,
+   "src": "walk",
+   "walk_i": 36,
+   "page": 2,
+   "date": "01/03/2026",
+   "desc": "37 | 01/03/2026 | 244FTIC26060A4MS 79> pS Lible from _ ew pty $1241.00 460,844.03 01/03/2026",
+   "balance_printed": 460844.03,
+   "tokens": [
+    5241.0,
+    460844.03
+   ],
+   "used": "C",
+   "delta": 5241.0,
+   "balance": 460844.03,
+   "attrib": "credit",
+   "amount": 5241.0
+  },
+  {
+   "serial": 38,
+   "read_ser": 38,
+   "src": "walk",
+   "walk_i": 37,
+   "page": 2,
+   "date": "01/03/2026",
+   "desc": "38 | 01/03/2026 | 244FTID26060AIMC | Network to EID FARAG SAAD + 50%9V\" rh in 460,837.53 01/03/2026",
+   "balance_printed": 460837.53,
+   "tokens": [
+    460837.53
+   ],
+   "used": "solver",
+   "delta": -6.5,
+   "balance": 460837.53,
+   "attrib": "debit",
+   "amount": 6.5
+  },
+  {
+   "serial": 39,
+   "read_ser": 39,
+   "src": "walk",
+   "walk_i": 38,
+   "page": 3,
+   "date": null,
+   "desc": "39 | DIANa/2026 | 2dlFTTb260eDATMC EID FARAG SAAD 6500.00 484,337.53 O1/312046",
+   "balance_printed": 454337.53,
+   "tokens": [
+    6500.0,
+    444337.53,
+    444339.53,
+    484337.53
+   ],
+   "used": "solver",
+   "delta": -6500.0,
+   "balance": 454337.53,
+   "attrib": "debit",
+   "amount": 6500.0
+  },
+  {
+   "serial": 40,
+   "read_ser": null,
+   "src": "walk",
+   "walk_i": 39,
+   "page": 3,
+   "date": "01/03/2026",
+   "desc": "ap | Vi/oaev2e | 244ETID2eDEVAIMC | Netwurkty EMD FARAG SAAD +56 44,444.03 01/03/2026",
+   "balance_printed": 454344.03,
+   "tokens": [
+    6.5,
+    44444.03,
+    444144.03,
+    444444.03
+   ],
+   "used": "solver",
+   "delta": 6.5,
+   "balance": 454344.03,
+   "attrib": "reversal",
+   "amount": -6.5
+  },
+  {
+   "serial": 41,
+   "read_ser": null,
+   "src": "walk",
+   "walk_i": 40,
+   "page": 3,
+   "date": "1/02/2026",
+   "desc": "a1 | 1/02/2026 | 2adFTTbD26D0DAIMC EID FARAG SAAD -6,500.00 460,844.03 01/03/2026",
+   "balance_printed": 460844.03,
+   "tokens": [
+    6500.0,
+    460844.03
+   ],
+   "used": "solver",
+   "delta": 6500.0,
+   "balance": 460844.03,
+   "attrib": "reversal",
+   "amount": -6500.0
+  },
+  {
+   "serial": 42,
+   "read_ser": 42,
+   "src": "walk",
+   "walk_i": 41,
+   "page": 3,
+   "date": "01/03/2026",
+   "desc": "42 01/03/2026 244F TID 260606606 Network to EID FARAG SAAD 6.00 460,838.03 01/03/2026",
+   "balance_printed": 460838.03,
+   "tokens": [
+    6.0,
+    460838.03
+   ],
+   "used": "A",
+   "delta": -6.0,
+   "balance": 460838.03,
+   "attrib": "debit",
+   "amount": 6.0
+  },
+  {
+   "serial": 43,
+   "read_ser": 43,
+   "src": "walk",
+   "walk_i": 42,
+   "page": 3,
+   "date": "01/03/2026",
+   "desc": "43 01/03/2026 244FT1D 260606606 EID FARAG SAAD 6,000.00 454,838.03 01/03/2026",
+   "balance_printed": 454838.03,
+   "tokens": [
+    6000.0,
+    434838.03,
+    454838.03
+   ],
+   "used": "A",
+   "delta": -6000.0,
+   "balance": 454838.03,
+   "attrib": "debit",
+   "amount": 6000.0
+  },
+  {
+   "serial": 44,
+   "read_ser": null,
+   "src": "walk",
+   "walk_i": 43,
+   "page": 3,
+   "date": "01/03/2026",
+   "desc": "a4 01/03/2026 244F TID 260606607 Network to EID FARAG SAAD 6.00 454,832.03 01/03/2026",
+   "balance_printed": 454832.03,
+   "tokens": [
+    6.0,
+    454832.03
+   ],
+   "used": "A",
+   "delta": -6.0,
+   "balance": 454832.03,
+   "attrib": "debit",
+   "amount": 6.0
+  },
+  {
+   "serial": 45,
+   "read_ser": 45,
+   "src": "walk",
+   "walk_i": 44,
+   "page": 3,
+   "date": "01/03/2026",
+   "desc": "45 01/03/2026 244FTIN260606607 EID FARAG SAAD 6,000.00 448,832.03 01/03/2026",
+   "balance_printed": 448832.03,
+   "tokens": [
+    6000.0,
+    448832.03
+   ],
+   "used": "A",
+   "delta": -6000.0,
+   "balance": 448832.03,
+   "attrib": "debit",
+   "amount": 6000.0
+  },
+  {
+   "serial": 46,
+   "read_ser": 46,
+   "src": "walk",
+   "walk_i": 45,
+   "page": 3,
+   "date": "01/03/2026",
+   "desc": "46 01/03/2026 782c06826060C61.1 2445000302432001010-VISA 6,725.00 442,107.03 01/03/2026",
+   "balance_printed": 442107.03,
+   "tokens": [
+    6725.0,
+    442107.03
+   ],
+   "used": "A",
+   "delta": -6725.0,
+   "balance": 442107.03,
+   "attrib": "debit",
+   "amount": 6725.0
+  },
+  {
+   "serial": 47,
+   "read_ser": 47,
+   "src": "walk",
+   "walk_i": 46,
+   "page": 3,
+   "date": "04/03/2026",
+   "desc": "47 | owes | 2440S WP260630001 | Automatic sweeping instructions | 75.00 | | 442,032.03 | 04/03/2026 |",
+   "balance_printed": 442032.03,
+   "tokens": [
+    75.0,
+    442032.03
+   ],
+   "used": "A",
+   "delta": -75.0,
+   "balance": 442032.03,
+   "attrib": "debit",
+   "amount": 75.0
+  },
+  {
+   "serial": 48,
+   "read_ser": 48,
+   "src": "walk",
+   "walk_i": 47,
+   "page": 3,
+   "date": "08/03/2026",
+   "desc": "48 08/03/2026 244CATM260641 3hh NBE ATM-559444******790] 12,000.00 430,032.03 05/03/2026",
+   "balance_printed": 430032.03,
+   "tokens": [
+    12000.0,
+    430032.03
+   ],
+   "used": "A",
+   "delta": -12000.0,
+   "balance": 430032.03,
+   "attrib": "debit",
+   "amount": 12000.0
+  },
+  {
+   "serial": 49,
+   "read_ser": 49,
+   "src": "walk",
+   "walk_i": 48,
+   "page": 3,
+   "date": "08/03/2026",
+   "desc": "49 08/03/2026 244CATM2606413xv NBE ATM-559444**##80790] 12,000.00 418,032.03 05/03/2026",
+   "balance_printed": 418032.03,
+   "tokens": [
+    12000.0,
+    418032.03
+   ],
+   "used": "A",
+   "delta": -12000.0,
+   "balance": 418032.03,
+   "attrib": "debit",
+   "amount": 12000.0
+  },
+  {
+   "serial": 50,
+   "read_ser": 50,
+   "src": "walk",
+   "walk_i": 49,
+   "page": 3,
+   "date": "08/03/2026",
+   "desc": "50 | 08/03/2026 | 244CATM2606413xw NBE ATM-5594444*####790] 6,000.00 412,032.03 05/03/2026",
+   "balance_printed": 412032.03,
+   "tokens": [
+    6000.0,
+    412032.03
+   ],
+   "used": "A",
+   "delta": -6000.0,
+   "balance": 412032.03,
+   "attrib": "debit",
+   "amount": 6000.0
+  },
+  {
+   "serial": 51,
+   "read_ser": 51,
+   "src": "walk",
+   "walk_i": 50,
+   "page": 3,
+   "date": "08/03/2026",
+   "desc": "51 08/03/2026 244FT1ID260674545 GAD ELRAB 20.00 ’",
+   "balance_printed": 412012.03,
+   "tokens": [
+    20.0,
+    412012.03
+   ],
+   "used": "B",
+   "delta": -20.0,
+   "balance": 412012.03,
+   "attrib": "debit",
+   "amount": 20.0
+  },
+  {
+   "serial": 52,
+   "read_ser": 52,
+   "src": "walk",
+   "walk_i": 51,
+   "page": 3,
+   "date": "08/03/2026",
+   "desc": "52 | 08/03/2026 244FTID260674545 RAMADAN NOBI GAD ELRAB 70,000.00 342,012.03 07/03/2026",
+   "balance_printed": 342012.03,
+   "tokens": [
+    70000.0,
+    342012.03
+   ],
+   "used": "A",
+   "delta": -70000.0,
+   "balance": 342012.03,
+   "attrib": "debit",
+   "amount": 70000.0
+  },
+  {
+   "serial": 53,
+   "read_ser": 53,
+   "src": "walk",
+   "walk_i": 52,
+   "page": 3,
+   "date": "08/03/2026",
+   "desc": "53 08/03/2026 244FT1ID260674546 GAD ELRAB 20.00 341,992.03 07/03/2026",
+   "balance_printed": 341992.03,
+   "tokens": [
+    20.0,
+    341992.03
+   ],
+   "used": "A",
+   "delta": -20.0,
+   "balance": 341992.03,
+   "attrib": "debit",
+   "amount": 20.0
+  },
+  {
+   "serial": 54,
+   "read_ser": 54,
+   "src": "walk",
+   "walk_i": 53,
+   "page": 3,
+   "date": "08/03/2026",
+   "desc": "54 | 08/03/2026 244FTID260674546 RAMADAN NOBI GAD ELRAB 45,800.00 296,192.03 07/03/2026",
+   "balance_printed": 296192.03,
+   "tokens": [
+    45800.0,
+    296192.03
+   ],
+   "used": "A",
+   "delta": -45800.0,
+   "balance": 296192.03,
+   "attrib": "debit",
+   "amount": 45800.0
+  },
+  {
+   "serial": 55,
+   "read_ser": 55,
+   "src": "walk",
+   "walk_i": 54,
+   "page": 3,
+   "date": "08/03/2026",
+   "desc": "55 08/03/2026 244FT1IC260678253 from as se OBI GAD 41,861.00 338,053.03 07/03/2026",
+   "balance_printed": 338053.03,
+   "tokens": [
+    41861.0,
+    338053.03
+   ],
+   "used": "A",
+   "delta": 41861.0,
+   "balance": 338053.03,
+   "attrib": "credit",
+   "amount": 41861.0
+  },
+  {
+   "serial": 56,
+   "read_ser": 56,
+   "src": "walk",
+   "walk_i": 55,
+   "page": 3,
+   "date": "16/03/2026",
+   "desc": "56 | 16/03/2026 | 2441PNF260752099 To-Revenue from <4 sn gi 0.50 338,052.53 16/03/2026",
+   "balance_printed": 338052.53,
+   "tokens": [
+    0.5,
+    338052.53
+   ],
+   "used": "A",
+   "delta": -0.5,
+   "balance": 338052.53,
+   "attrib": "debit",
+   "amount": 0.5
+  },
+  {
+   "serial": 57,
+   "read_ser": 57,
+   "src": "walk",
+   "walk_i": 56,
+   "page": 3,
+   "date": "17/03/2026",
+   "desc": "57 17/03/2026 | 244FTID26075A059 MAHMOUD 5,00 338,047.53 16/03/2026",
+   "balance_printed": 338047.53,
+   "tokens": [
+    5.0,
+    338047.53
+   ],
+   "used": "A",
+   "delta": -5.0,
+   "balance": 338047.53,
+   "attrib": "debit",
+   "amount": 5.0
+  },
+  {
+   "serial": 58,
+   "read_ser": 58,
+   "src": "walk",
+   "walk_i": 57,
+   "page": 3,
+   "date": "17/03/2026",
+   "desc": "58 17/03/2026 244FTID26075A059 SALAMA~PNBGBBACDID3A87 5,000.00 333,047.53 16/03/2026",
+   "balance_printed": 333047.53,
+   "tokens": [
+    5000.0,
+    333047.53
+   ],
+   "used": "A",
+   "delta": -5000.0,
+   "balance": 333047.53,
+   "attrib": "debit",
+   "amount": 5000.0
+  },
+  {
+   "serial": 59,
+   "read_ser": null,
+   "src": "walk",
+   "walk_i": 58,
+   "page": 4,
+   "date": "16/3/2026",
+   "desc": "ao | 19/0aude | 2adtPRRZoU7a006E% TOF TOHH SULA a 5 6.80 344,047.33 16/3/2026",
+   "balance_printed": 333047.03,
+   "tokens": [
+    6.8,
+    335047.83,
+    344047.33,
+    344047.89
+   ],
+   "used": "solver",
+   "delta": -0.5,
+   "balance": 333047.03,
+   "attrib": "debit",
+   "amount": 0.5
+  },
+  {
+   "serial": 60,
+   "src": "insert",
+   "walk_i": null,
+   "page": 4,
+   "date": null,
+   "desc": null,
+   "D": -0.5,
+   "C": 0.0,
+   "balance_printed": 333047.53,
+   "tokens": [],
+   "source": "p4 crop: fee reversal",
+   "balance": 333047.53,
+   "delta": 0.5,
+   "attrib": "reversal",
+   "amount": -0.5
+  },
+  {
+   "serial": 61,
+   "read_ser": 6,
+   "src": "walk",
+   "walk_i": 59,
+   "page": 4,
+   "date": "16/05/2026",
+   "desc": "6) «| 19/0972026 | 2adtHAE26078HDon To-RWOHHe POH SLs ae pd 0.58 333,047.03 16/05/2026",
+   "balance_printed": 333047.03,
+   "tokens": [
+    0.58,
+    6.56,
+    333047.03
+   ],
+   "used": "solver",
+   "delta": -0.5,
+   "balance": 333047.03,
+   "attrib": "debit",
+   "amount": 0.5
+  },
+  {
+   "serial": 62,
+   "read_ser": 2,
+   "src": "walk",
+   "walk_i": 60,
+   "page": 4,
+   "date": "17/03/2026",
+   "desc": "2 17/03/2026 244F TID 260758466 AHMED MOHAMED 20.00 333,027.03 16/03/2026",
+   "balance_printed": 333027.03,
+   "tokens": [
+    20.0,
+    333027.03
+   ],
+   "used": "A",
+   "delta": -20.0,
+   "balance": 333027.03,
+   "attrib": "debit",
+   "amount": 20.0
+  },
+  {
+   "serial": 63,
+   "read_ser": 3,
+   "src": "walk",
+   "walk_i": 61,
+   "page": 4,
+   "date": "17/03/2026",
+   "desc": "03 17/03/2026 244FTID260758466 MOHAMED §9,000.00 274,027.03 16/03/2026",
+   "balance_printed": 274027.03,
+   "tokens": [
+    59000.0,
+    274027.03
+   ],
+   "used": "C",
+   "delta": -59000.0,
+   "balance": 274027.03,
+   "attrib": "debit",
+   "amount": 59000.0
+  },
+  {
+   "serial": 64,
+   "read_ser": null,
+   "src": "walk",
+   "walk_i": 62,
+   "page": 4,
+   "date": "17/03/2026",
+   "desc": "6d = | 17/03/2026 | 244FTID26075A1SW Network to EID FARAG SAAD 5.37 274,021.66 16/03/2026",
+   "balance_printed": 274021.66,
+   "tokens": [
+    5.37,
+    274021.66
+   ],
+   "used": "A",
+   "delta": -5.37,
+   "balance": 274021.66,
+   "attrib": "debit",
+   "amount": 5.37
+  },
+  {
+   "serial": 65,
+   "read_ser": null,
+   "src": "walk",
+   "walk_i": 63,
+   "page": 4,
+   "date": "17/03/2026",
+   "desc": "& 17/03/2026 | 244FTID26075A1SW EID FARAG SAAD 5,370.00 268,651.66 16/03/2026",
+   "balance_printed": 268651.66,
+   "tokens": [
+    5370.0,
+    268651.66
+   ],
+   "used": "A",
+   "delta": -5370.0,
+   "balance": 268651.66,
+   "attrib": "debit",
+   "amount": 5370.0
+  },
+  {
+   "serial": 66,
+   "read_ser": 66,
+   "src": "walk",
+   "walk_i": 64,
+   "page": 4,
+   "date": "17/03/2026",
+   "desc": "66 17/03/2026 244FTID26075A1SW Network to EID FARAG SAAD -5.37 268,657.03 16/03/2026",
+   "balance_printed": 268657.03,
+   "tokens": [
+    5.37,
+    268657.03
+   ],
+   "used": "A",
+   "delta": 5.37,
+   "balance": 268657.03,
+   "attrib": "reversal",
+   "amount": -5.37
+  },
+  {
+   "serial": 67,
+   "read_ser": 67,
+   "src": "walk",
+   "walk_i": 65,
+   "page": 4,
+   "date": "17/03/2026",
+   "desc": "67 17/03/2026 | 244FTID26075A1SW EID FARAG SAAD ~5,370.00 274,027.03 16/03/2026",
+   "balance_printed": 274027.03,
+   "tokens": [
+    5370.0,
+    274027.03
+   ],
+   "used": "A",
+   "delta": 5370.0,
+   "balance": 274027.03,
+   "attrib": "reversal",
+   "amount": -5370.0
+  },
+  {
+   "serial": 68,
+   "read_ser": null,
+   "src": "walk",
+   "walk_i": 66,
+   "page": 4,
+   "date": "17/03/2026",
+   "desc": "6B 17/03/2026 | 244FTID26075A07N Network to EID FARAG SAAD 5.35 274,021.68 16/03/2026",
+   "balance_printed": 274021.68,
+   "tokens": [
+    5.35,
+    274021.68
+   ],
+   "used": "A",
+   "delta": -5.35,
+   "balance": 274021.68,
+   "attrib": "debit",
+   "amount": 5.35
+  },
+  {
+   "serial": 69,
+   "read_ser": 69,
+   "src": "walk",
+   "walk_i": 67,
+   "page": 4,
+   "date": "17/03/2026",
+   "desc": "69 17/03/2026 | 244FTID26075A07N EID FARAG SAAD 5,350.00 268,671.68 16/03/2026",
+   "balance_printed": 268671.68,
+   "tokens": [
+    5350.0,
+    268671.68
+   ],
+   "used": "A",
+   "delta": -5350.0,
+   "balance": 268671.68,
+   "attrib": "debit",
+   "amount": 5350.0
+  },
+  {
+   "serial": 70,
+   "read_ser": 70,
+   "src": "walk",
+   "walk_i": 68,
+   "page": 4,
+   "date": "17/03/2026",
+   "desc": "70 17/03/2026 | 244FTID26075A07N EID FARAG SAAD 5,350.00 274,021.68 16/03/2026",
+   "balance_printed": 274021.68,
+   "tokens": [
+    5350.0,
+    274021.68
+   ],
+   "used": "A",
+   "delta": 5350.0,
+   "balance": 274021.68,
+   "attrib": "reversal",
+   "amount": -5350.0
+  },
+  {
+   "serial": 71,
+   "read_ser": 71,
+   "src": "walk",
+   "walk_i": 69,
+   "page": 4,
+   "date": "17/03/2026",
+   "desc": "71 17/03/2026 | 244FTID26075A07N Network to EID FARAG SAAD -§,.35 274,027.03 16/03/2026",
+   "balance_printed": 274027.03,
+   "tokens": [
+    5.55,
+    274027.03
+   ],
+   "used": "solver",
+   "delta": 5.35,
+   "balance": 274027.03,
+   "attrib": "reversal",
+   "amount": -5.35
+  },
+  {
+   "serial": 72,
+   "read_ser": 72,
+   "src": "walk",
+   "walk_i": 70,
+   "page": 4,
+   "date": "17/03/2026",
+   "desc": "72 =| 17/03/2026 | 244FTID26075A070 Network to EID FARAG SAAD 5.30 274,021.73 16/03/2026",
+   "balance_printed": 274021.73,
+   "tokens": [
+    5.3,
+    274021.73
+   ],
+   "used": "A",
+   "delta": -5.3,
+   "balance": 274021.73,
+   "attrib": "debit",
+   "amount": 5.3
+  },
+  {
+   "serial": 73,
+   "read_ser": 73,
+   "src": "walk",
+   "walk_i": 71,
+   "page": 4,
+   "date": "17/03/2026",
+   "desc": "73 17/03/2026 | 244FTID26075A070 EID FARAG SAAD 5,300.00 268,721.73 16/03/2026",
+   "balance_printed": 268721.73,
+   "tokens": [
+    5300.0,
+    268721.73
+   ],
+   "used": "A",
+   "delta": -5300.0,
+   "balance": 268721.73,
+   "attrib": "debit",
+   "amount": 5300.0
+  },
+  {
+   "serial": 74,
+   "read_ser": 74,
+   "src": "walk",
+   "walk_i": 72,
+   "page": 4,
+   "date": "17/03/2026",
+   "desc": "74 17/03/2026 | 244FTID26075A070 Network to EID FARAG SAAD 5.30 268,727.03 16/03/2026",
+   "balance_printed": 268727.03,
+   "tokens": [
+    5.3,
+    268727.03
+   ],
+   "used": "A",
+   "delta": 5.3,
+   "balance": 268727.03,
+   "attrib": "reversal",
+   "amount": -5.3
+  },
+  {
+   "serial": 75,
+   "read_ser": 75,
+   "src": "walk",
+   "walk_i": 73,
+   "page": 4,
+   "date": "17/03/2026",
+   "desc": "75 17/03/2026 | 244FTID26075A070 EID FARAG SAAD 5,300.00 274,027.03 16/03/2026",
+   "balance_printed": 274027.03,
+   "tokens": [
+    5300.0,
+    274027.03
+   ],
+   "used": "A",
+   "delta": 5300.0,
+   "balance": 274027.03,
+   "attrib": "reversal",
+   "amount": -5300.0
+  },
+  {
+   "serial": 76,
+   "read_ser": 76,
+   "src": "walk",
+   "walk_i": 74,
+   "page": 4,
+   "date": "17/03/2026",
+   "desc": "76 17/03/2026 244FT1D260758478 Network to EID FARAG SAAD 5.00 274,022.03 16/03/2026",
+   "balance_printed": 274022.03,
+   "tokens": [
+    5.0,
+    274022.03
+   ],
+   "used": "A",
+   "delta": -5.0,
+   "balance": 274022.03,
+   "attrib": "debit",
+   "amount": 5.0
+  },
+  {
+   "serial": 77,
+   "read_ser": 77,
+   "src": "walk",
+   "walk_i": 75,
+   "page": 4,
+   "date": "17/03/2026",
+   "desc": "77 17/03/2026 244FTID260758478 EID FARAG SAAD 5,000.00 269,022.03 16/03/2026",
+   "balance_printed": 269022.03,
+   "tokens": [
+    5000.0,
+    269022.03
+   ],
+   "used": "A",
+   "delta": -5000.0,
+   "balance": 269022.03,
+   "attrib": "debit",
+   "amount": 5000.0
+  },
+  {
+   "serial": 78,
+   "read_ser": 78,
+   "src": "walk",
+   "walk_i": 76,
+   "page": 4,
+   "date": "17/03/2026",
+   "desc": "78 17/03/2026 | 244FTID26075A08G Network to EID FARAG 20.00 269,002.03 17/03/2026",
+   "balance_printed": 269002.03,
+   "tokens": [
+    20.0,
+    269002.03
+   ],
+   "used": "A",
+   "delta": -20.0,
+   "balance": 269002.03,
+   "attrib": "debit",
+   "amount": 20.0
+  },
+  {
+   "serial": 79,
+   "read_ser": 79,
+   "src": "walk",
+   "walk_i": 77,
+   "page": 4,
+   "date": "17/03/2026",
+   "desc": "79 17/03/2026 | 244FTID26075A08G EID FARAG 45,000.00 224,002.03 17/03/2026",
+   "balance_printed": 224002.03,
+   "tokens": [
+    45000.0,
+    224002.03
+   ],
+   "used": "A",
+   "delta": -45000.0,
+   "balance": 224002.03,
+   "attrib": "debit",
+   "amount": 45000.0
+  },
+  {
+   "serial": 80,
+   "read_ser": 80,
+   "src": "walk",
+   "walk_i": 78,
+   "page": 4,
+   "date": "18/03/2026",
+   "desc": "| 80 | sersrnz | 244UD01EGP 00001 | 2447480302432000021 | | » 791.67 | 224,793.70 | 18/03/2026 | ||WRAP-AMT:[{\"v\": 6.5, \"cx\": 0.5233}, {\"v\": 444792.7,",
+   "balance_printed": 224793.7,
+   "tokens": [
+    791.67,
+    224793.7
+   ],
+   "used": "A",
+   "delta": 791.67,
+   "balance": 224793.7,
+   "attrib": "credit",
+   "amount": 791.67
+  },
+  {
+   "serial": 81,
+   "src": "insert",
+   "walk_i": null,
+   "page": 5,
+   "date": null,
+   "desc": null,
+   "D": 0.5,
+   "C": 0.0,
+   "balance_printed": 224793.2,
+   "tokens": [],
+   "source": "p5 crop: IPN balance-inq fee",
+   "balance": 224793.2,
+   "delta": -0.5,
+   "attrib": "debit",
+   "amount": 0.5
+  },
+  {
+   "serial": 82,
+   "src": "insert",
+   "walk_i": null,
+   "page": 5,
+   "date": null,
+   "desc": null,
+   "D": 0.5,
+   "C": 0.0,
+   "balance_printed": 224792.7,
+   "tokens": [],
+   "source": "p5 crop: outgoing transfer fee",
+   "balance": 224792.7,
+   "delta": -0.5,
+   "attrib": "debit",
+   "amount": 0.5
+  },
+  {
+   "serial": 83,
+   "read_ser": 3,
+   "src": "walk",
+   "walk_i": 79,
+   "page": 5,
+   "date": "18/03/2026",
+   "desc": "3 18/03/2026 | 244FTIN26077A1KI SALAH FAWZY MOHAMED 450.00 224,342.70 18/04/2016",
+   "balance_printed": 224342.7,
+   "tokens": [
+    450.0,
+    124542.7,
+    224342.7
+   ],
+   "used": "solver",
+   "delta": -450.0,
+   "balance": 224342.7,
+   "attrib": "debit",
+   "amount": 450.0
+  },
+  {
+   "serial": 84,
+   "read_ser": null,
+   "src": "walk",
+   "walk_i": 80,
+   "page": 5,
+   "date": "18/03/2026",
+   "desc": "Ha 18/03/2026 244FTID26077H314 Network to ETD FARAG SAAD 9,50 224,333.20 18/03/2026",
+   "balance_printed": 224333.2,
+   "tokens": [
+    9.5,
+    224333.2
+   ],
+   "used": "A",
+   "delta": -9.5,
+   "balance": 224333.2,
+   "attrib": "debit",
+   "amount": 9.5
+  },
+  {
+   "serial": 85,
+   "read_ser": null,
+   "src": "walk",
+   "walk_i": 81,
+   "page": 5,
+   "date": "18/03/2026",
+   "desc": "R5 | 18/03/2026 24dFTID260778314 EID FARAG SAAD 9,500.00 214,833.20 19/03/2026",
+   "balance_printed": 214833.2,
+   "tokens": [
+    9500.0,
+    214833.2
+   ],
+   "used": "A",
+   "delta": -9500.0,
+   "balance": 214833.2,
+   "attrib": "debit",
+   "amount": 9500.0
+  },
+  {
+   "serial": 86,
+   "read_ser": 46,
+   "src": "walk",
+   "walk_i": 82,
+   "page": 5,
+   "date": "18/03/2026",
+   "desc": "46 18/03/2026 2441PNF2607741 non-financial 214,832.70 19/03/2026",
+   "balance_printed": 214832.7,
+   "tokens": [
+    0.5,
+    214832.7
+   ],
+   "used": "B",
+   "delta": -0.5,
+   "balance": 214832.7,
+   "attrib": "debit",
+   "amount": 0.5
+  },
+  {
+   "serial": 87,
+   "read_ser": 87,
+   "src": "walk",
+   "walk_i": 83,
+   "page": 5,
+   "date": "24/03/2026",
+   "desc": "87 | 24/03/2026 | 244FT1D260832528 Network to EID FARAG SAAD 3.00 214,829.70 21/03/2026",
+   "balance_printed": 214829.7,
+   "tokens": [
+    3.0,
+    214829.7
+   ],
+   "used": "A",
+   "delta": -3.0,
+   "balance": 214829.7,
+   "attrib": "debit",
+   "amount": 3.0
+  },
+  {
+   "serial": 88,
+   "read_ser": 88,
+   "src": "walk",
+   "walk_i": 84,
+   "page": 5,
+   "date": "24/03/2026",
+   "desc": "88 24/03/2026 244FTID260832528 EID FARAG SAAD 3,000.00 211,829.70 21/03/2026",
+   "balance_printed": 211829.7,
+   "tokens": [
+    3000.0,
+    211829.7
+   ],
+   "used": "A",
+   "delta": -3000.0,
+   "balance": 211829.7,
+   "attrib": "debit",
+   "amount": 3000.0
+  },
+  {
+   "serial": 89,
+   "read_ser": 89,
+   "src": "walk",
+   "walk_i": 85,
+   "page": 5,
+   "date": "24/03/2026",
+   "desc": "89 | 24/03/2026 244FTID260832530 Network to EID FARAG SAAD 2,00 211,827.70 21/03/2026",
+   "balance_printed": 211827.7,
+   "tokens": [
+    2.0,
+    211827.7
+   ],
+   "used": "A",
+   "delta": -2.0,
+   "balance": 211827.7,
+   "attrib": "debit",
+   "amount": 2.0
+  },
+  {
+   "serial": 90,
+   "read_ser": 90,
+   "src": "walk",
+   "walk_i": 86,
+   "page": 5,
+   "date": "24/03/2026",
+   "desc": "90 | 24/03/2026 244FTID260832530 EID FARAG SAAD 2,000.00 209,827.70 21/03/2026",
+   "balance_printed": 209827.7,
+   "tokens": [
+    2000.0,
+    209827.7
+   ],
+   "used": "A",
+   "delta": -2000.0,
+   "balance": 209827.7,
+   "attrib": "debit",
+   "amount": 2000.0
+  },
+  {
+   "serial": 91,
+   "read_ser": 91,
+   "src": "walk",
+   "walk_i": 87,
+   "page": 5,
+   "date": "24/03/2026",
+   "desc": "91 24/03/2026 244FT1ID260832531 Network to EID FARAG SAAD 1,00 209,826.70 21/03/2026",
+   "balance_printed": 209826.7,
+   "tokens": [
+    1.0,
+    209826.7
+   ],
+   "used": "A",
+   "delta": -1.0,
+   "balance": 209826.7,
+   "attrib": "debit",
+   "amount": 1.0
+  },
+  {
+   "serial": 92,
+   "read_ser": 92,
+   "src": "walk",
+   "walk_i": 88,
+   "page": 5,
+   "date": "24/03/2026",
+   "desc": "92 24/03/2026 244FT1D260832531 EID FARAG SAAD. 1,000.00 208,826.70 21/03/2026",
+   "balance_printed": 208826.7,
+   "tokens": [
+    1000.0,
+    208826.7
+   ],
+   "used": "A",
+   "delta": -1000.0,
+   "balance": 208826.7,
+   "attrib": "debit",
+   "amount": 1000.0
+  },
+  {
+   "serial": 93,
+   "read_ser": 93,
+   "src": "walk",
+   "walk_i": 89,
+   "page": 5,
+   "date": "24/03/2026",
+   "desc": "93 24/03/2026 244FTID260834779 Network to EID FARAG SAAD -0.50 208,827.20 21/03/2026",
+   "balance_printed": 208827.2,
+   "tokens": [
+    0.5,
+    208827.2
+   ],
+   "used": "A",
+   "delta": 0.5,
+   "balance": 208827.2,
+   "attrib": "reversal",
+   "amount": -0.5
+  },
+  {
+   "serial": 94,
+   "read_ser": 94,
+   "src": "walk",
+   "walk_i": 90,
+   "page": 5,
+   "date": "24/03/2026",
+   "desc": "94 24/03/2026 244FTID260834779 EID FARAG SAAD -500.00 209,327.20 21/03/2026",
+   "balance_printed": 209327.2,
+   "tokens": [
+    500.0,
+    209327.2
+   ],
+   "used": "A",
+   "delta": 500.0,
+   "balance": 209327.2,
+   "attrib": "reversal",
+   "amount": -500.0
+  },
+  {
+   "serial": 95,
+   "read_ser": 95,
+   "src": "walk",
+   "walk_i": 91,
+   "page": 5,
+   "date": "24/03/2026",
+   "desc": "95 24/03/2026 244FT1D260832531 Network to EID FARAG SAAD -1,00 209,328.20 21/03/2026",
+   "balance_printed": 209328.2,
+   "tokens": [
+    1.0,
+    209328.2
+   ],
+   "used": "A",
+   "delta": 1.0,
+   "balance": 209328.2,
+   "attrib": "reversal",
+   "amount": -1.0
+  },
+  {
+   "serial": 96,
+   "read_ser": 96,
+   "src": "walk",
+   "walk_i": 92,
+   "page": 5,
+   "date": "24/03/2026",
+   "desc": "96 24/03/2026 244FT1D260832531 EID FARAG SAAD -1,000.00 210,328.20 21/03/2026",
+   "balance_printed": 210328.2,
+   "tokens": [
+    1000.0,
+    210328.2
+   ],
+   "used": "A",
+   "delta": 1000.0,
+   "balance": 210328.2,
+   "attrib": "reversal",
+   "amount": -1000.0
+  },
+  {
+   "serial": 97,
+   "read_ser": 97,
+   "src": "walk",
+   "walk_i": 93,
+   "page": 5,
+   "date": "24/03/2026",
+   "desc": "97 24/03/2026 244FT1ID260834779 Network to EID FARAG SAAD 0.50 210,327.70 21/03/2026",
+   "balance_printed": 210327.7,
+   "tokens": [
+    0.5,
+    210327.7
+   ],
+   "used": "A",
+   "delta": -0.5,
+   "balance": 210327.7,
+   "attrib": "debit",
+   "amount": 0.5
+  },
+  {
+   "serial": 98,
+   "read_ser": 98,
+   "src": "walk",
+   "walk_i": 94,
+   "page": 5,
+   "date": "24/03/2026",
+   "desc": "98 24/03/2026 244FT1ID260834779 EID FARAG SAAD 500.00 209,827.70 21/03/2026",
+   "balance_printed": 209827.7,
+   "tokens": [
+    500.0,
+    209827.7
+   ],
+   "used": "A",
+   "delta": -500.0,
+   "balance": 209827.7,
+   "attrib": "debit",
+   "amount": 500.0
+  },
+  {
+   "serial": 99,
+   "read_ser": 99,
+   "src": "walk",
+   "walk_i": 95,
+   "page": 5,
+   "date": "24/03/2026",
+   "desc": "99 24/03/2026 244FT1D260834793 Network to EID FARAG SAAD 0.50 209,827.20 21/03/2026",
+   "balance_printed": 209827.2,
+   "tokens": [
+    0.5,
+    209827.2
+   ],
+   "used": "A",
+   "delta": -0.5,
+   "balance": 209827.2,
+   "attrib": "debit",
+   "amount": 0.5
+  },
+  {
+   "serial": 100,
+   "read_ser": 100,
+   "src": "walk",
+   "walk_i": 96,
+   "page": 5,
+   "date": "24/03/2026",
+   "desc": "100 | 24/03/2026 244FTID260834793 EID FARAG SAAD 500.00 209,327.20 21/03/2026",
+   "balance_printed": 209327.2,
+   "tokens": [
+    500.0,
+    209327.2
+   ],
+   "used": "A",
+   "delta": -500.0,
+   "balance": 209327.2,
+   "attrib": "debit",
+   "amount": 500.0
+  },
+  {
+   "serial": 101,
+   "read_ser": 101,
+   "src": "walk",
+   "walk_i": 97,
+   "page": 5,
+   "date": "24/03/2026",
+   "desc": "101 | 24/03/2026 244FT1D260834793 Network to EID FARAG SAAD 209,327.70 21/03/2026",
+   "balance_printed": 209327.7,
+   "tokens": [
+    0.5,
+    209327.7
+   ],
+   "used": "B",
+   "delta": 0.5,
+   "balance": 209327.7,
+   "attrib": "reversal",
+   "amount": -0.5
+  },
+  {
+   "serial": 102,
+   "read_ser": 102,
+   "src": "walk",
+   "walk_i": 98,
+   "page": 5,
+   "date": "24/03/2026",
+   "desc": "102 | 24/03/2026 | 244FT1D260834793 EID FARAG SAAD -500.00 209,827.70 21/03/2026",
+   "balance_printed": 209827.7,
+   "tokens": [
+    500.0,
+    500.08,
+    209827.7
+   ],
+   "used": "A",
+   "delta": 500.0,
+   "balance": 209827.7,
+   "attrib": "reversal",
+   "amount": -500.0
+  },
+  {
+   "serial": 103,
+   "read_ser": 103,
+   "src": "walk",
+   "walk_i": 99,
+   "page": 6,
+   "date": "24/03/2026",
+   "desc": "103 24/03/2026 2d4F TTD 260832538 Network to EID FARAG SAAD 0.50 209,827.20 21/03/1026",
+   "balance_printed": 209827.2,
+   "tokens": [
+    0.5,
+    209827.2
+   ],
+   "used": "A",
+   "delta": -0.5,
+   "balance": 209827.2,
+   "attrib": "debit",
+   "amount": 0.5
+  },
+  {
+   "serial": 104,
+   "read_ser": 104,
+   "src": "walk",
+   "walk_i": 100,
+   "page": 6,
+   "date": "24/03/2026",
+   "desc": "104 | 24/03/2026 244F11D260832538 EID FARAG SAAD 300.00 209,527.20 21/03/2026",
+   "balance_printed": 209527.2,
+   "tokens": [
+    300.0,
+    306.0,
+    209527.2
+   ],
+   "used": "A",
+   "delta": -300.0,
+   "balance": 209527.2,
+   "attrib": "debit",
+   "amount": 300.0
+  },
+  {
+   "serial": 105,
+   "read_ser": 105,
+   "src": "walk",
+   "walk_i": 101,
+   "page": 6,
+   "date": "24/03/2026",
+   "desc": "105 | 24/03/2026 244FTID260832539 Network to EID FARAG SAAD 0.50 209,526.70 21/03/2026",
+   "balance_printed": 209526.7,
+   "tokens": [
+    0.5,
+    209526.7
+   ],
+   "used": "A",
+   "delta": -0.5,
+   "balance": 209526.7,
+   "attrib": "debit",
+   "amount": 0.5
+  },
+  {
+   "serial": 106,
+   "read_ser": 106,
+   "src": "walk",
+   "walk_i": 102,
+   "page": 6,
+   "date": "24/03/2026",
+   "desc": "106 | 24/03/2026 244FTID 260832539 EID FARAG SAAD 150.00 209,376.70 21/03/2026",
+   "balance_printed": 209376.7,
+   "tokens": [
+    150.0,
+    209376.7
+   ],
+   "used": "A",
+   "delta": -150.0,
+   "balance": 209376.7,
+   "attrib": "debit",
+   "amount": 150.0
+  },
+  {
+   "serial": 107,
+   "read_ser": 107,
+   "src": "walk",
+   "walk_i": 103,
+   "page": 6,
+   "date": "24/03/2026",
+   "desc": "107 | 24/03/2026 244FTID260834880 Network to EID FARAG SAAD 5.60 209,371.10 21/03/2026",
+   "balance_printed": 209371.1,
+   "tokens": [
+    5.6,
+    209.37,
+    209371.1
+   ],
+   "used": "A",
+   "delta": -5.6,
+   "balance": 209371.1,
+   "attrib": "debit",
+   "amount": 5.6
+  },
+  {
+   "serial": 108,
+   "read_ser": 108,
+   "src": "walk",
+   "walk_i": 104,
+   "page": 6,
+   "date": "24/03/2026",
+   "desc": "108 | 24/03/2026 244FT1ID260834880 EID FARAG SAAD 5,600.00 203,771.10 21/03/2026",
+   "balance_printed": 203771.1,
+   "tokens": [
+    5600.0,
+    203771.1
+   ],
+   "used": "A",
+   "delta": -5600.0,
+   "balance": 203771.1,
+   "attrib": "debit",
+   "amount": 5600.0
+  },
+  {
+   "serial": 109,
+   "read_ser": 109,
+   "src": "walk",
+   "walk_i": 105,
+   "page": 6,
+   "date": "24/03/2026",
+   "desc": "109 | 24/03/2026 244FT1D260835031 Network to EID FARAG SAAD 7.70 203,763.40 22/03/2026",
+   "balance_printed": 203763.4,
+   "tokens": [
+    7.7,
+    203763.4
+   ],
+   "used": "A",
+   "delta": -7.7,
+   "balance": 203763.4,
+   "attrib": "debit",
+   "amount": 7.7
+  },
+  {
+   "serial": 110,
+   "read_ser": 110,
+   "src": "walk",
+   "walk_i": 106,
+   "page": 6,
+   "date": "24/03/2026",
+   "desc": "110 24/03/2026 244FTID260835031 EID FARAG SAAD 7,700.00 196,063.40 22/03/2026",
+   "balance_printed": 196063.4,
+   "tokens": [
+    7700.0,
+    196063.4
+   ],
+   "used": "A",
+   "delta": -7700.0,
+   "balance": 196063.4,
+   "attrib": "debit",
+   "amount": 7700.0
+  },
+  {
+   "serial": 111,
+   "read_ser": 111,
+   "src": "walk",
+   "walk_i": 107,
+   "page": 6,
+   "date": "24/03/2026",
+   "desc": "111 | 24/03/2026 244FTID260832692 Network to EID FARAG SAAD 9,50 196,053.90 22/03/2026",
+   "balance_printed": 196053.9,
+   "tokens": [
+    9.5,
+    196053.9
+   ],
+   "used": "A",
+   "delta": -9.5,
+   "balance": 196053.9,
+   "attrib": "debit",
+   "amount": 9.5
+  },
+  {
+   "serial": 112,
+   "read_ser": 112,
+   "src": "walk",
+   "walk_i": 108,
+   "page": 6,
+   "date": "24/03/2026",
+   "desc": "112 | 24/03/2026 244FTID260832692 EID FARAG SAAD 9,500.00 186,553.90 22/03/2026",
+   "balance_printed": 186553.9,
+   "tokens": [
+    9500.0,
+    186553.9
+   ],
+   "used": "A",
+   "delta": -9500.0,
+   "balance": 186553.9,
+   "attrib": "debit",
+   "amount": 9500.0
+  },
+  {
+   "serial": 113,
+   "read_ser": 113,
+   "src": "walk",
+   "walk_i": 109,
+   "page": 6,
+   "date": "24/03/2026",
+   "desc": "113 | 24/03/2026 | 2441PNF260834163 To-Rovonuc from #14 s-~ qi 0.50 186,553.40 24/03/2026",
+   "balance_printed": 186553.4,
+   "tokens": [
+    0.5,
+    186553.4
+   ],
+   "used": "A",
+   "delta": -0.5,
+   "balance": 186553.4,
+   "attrib": "debit",
+   "amount": 0.5
+  },
+  {
+   "serial": 114,
+   "read_ser": 114,
+   "src": "walk",
+   "walk_i": 110,
+   "page": 6,
+   "date": "24/03/2026",
+   "desc": "114 | 24/03/2026 | 2441PNF260830319 To-Revenuc from “41+ a 23 0.50 186,552.90 24/03/2026",
+   "balance_printed": 186552.9,
+   "tokens": [
+    0.5,
+    186552.9
+   ],
+   "used": "A",
+   "delta": -0.5,
+   "balance": 186552.9,
+   "attrib": "debit",
+   "amount": 0.5
+  },
+  {
+   "serial": 115,
+   "read_ser": 115,
+   "src": "walk",
+   "walk_i": 111,
+   "page": 6,
+   "date": "24/03/2026",
+   "desc": "115 | 24/03/2026 244FT1ID260832723 Network to EID FARAG SAAD 1,50 186,551.40 22/03/2026",
+   "balance_printed": 186551.4,
+   "tokens": [
+    1.5,
+    186551.4
+   ],
+   "used": "A",
+   "delta": -1.5,
+   "balance": 186551.4,
+   "attrib": "debit",
+   "amount": 1.5
+  },
+  {
+   "serial": 116,
+   "read_ser": 116,
+   "src": "walk",
+   "walk_i": 112,
+   "page": 6,
+   "date": "24/03/2026",
+   "desc": "116 | 24/03/2026 244FT1ID260832723 EID FARAG SAAD 1,500.00 185,051.40 22/03/2026",
+   "balance_printed": 185051.4,
+   "tokens": [
+    1500.0,
+    185051.4
+   ],
+   "used": "A",
+   "delta": -1500.0,
+   "balance": 185051.4,
+   "attrib": "debit",
+   "amount": 1500.0
+  },
+  {
+   "serial": 117,
+   "read_ser": 117,
+   "src": "walk",
+   "walk_i": 113,
+   "page": 6,
+   "date": "24/03/2026",
+   "desc": "117 | 24/03/2026 244FTID260832777 Network to EID FARAG SAAD 185,049.40 23/03/2026",
+   "balance_printed": 185049.4,
+   "tokens": [
+    2.0,
+    185049.4
+   ],
+   "used": "B",
+   "delta": -2.0,
+   "balance": 185049.4,
+   "attrib": "debit",
+   "amount": 2.0
+  },
+  {
+   "serial": 118,
+   "read_ser": 118,
+   "src": "walk",
+   "walk_i": 114,
+   "page": 6,
+   "date": "24/03/2026",
+   "desc": "118 | 24/03/2026 244FTID260832777 EID FARAG SAAD 2,000.00 183,049.40 23/03/2026",
+   "balance_printed": 183049.4,
+   "tokens": [
+    2000.0,
+    183049.4
+   ],
+   "used": "A",
+   "delta": -2000.0,
+   "balance": 183049.4,
+   "attrib": "debit",
+   "amount": 2000.0
+  },
+  {
+   "serial": 119,
+   "read_ser": 119,
+   "src": "walk",
+   "walk_i": 115,
+   "page": 6,
+   "date": "24/03/2026",
+   "desc": "119 | 24/03/2026 244FT1D260832778 Network to EID FARAG SAAD 6.00 183,043.40 23/03/2026",
+   "balance_printed": 183043.4,
+   "tokens": [
+    6.0,
+    183043.4
+   ],
+   "used": "A",
+   "delta": -6.0,
+   "balance": 183043.4,
+   "attrib": "debit",
+   "amount": 6.0
+  },
+  {
+   "serial": 120,
+   "read_ser": 120,
+   "src": "walk",
+   "walk_i": 116,
+   "page": 6,
+   "date": "24/03/2026",
+   "desc": "120 | 24/03/2026 244FT1ID260832778 EID FARAG SAAD 6,000.00 177,043.40 23/03/2026",
+   "balance_printed": 177043.4,
+   "tokens": [
+    6000.0,
+    177043.4
+   ],
+   "used": "A",
+   "delta": -6000.0,
+   "balance": 177043.4,
+   "attrib": "debit",
+   "amount": 6000.0
+  },
+  {
+   "serial": 121,
+   "read_ser": 121,
+   "src": "walk",
+   "walk_i": 117,
+   "page": 6,
+   "date": "24/03/2026",
+   "desc": "121 | 24/03/2026 | 244FT1D260835285 | Network to EID FARAG SAAD 6.00 177,037.40 23/03/2026",
+   "balance_printed": 177037.4,
+   "tokens": [
+    6.0,
+    177037.4
+   ],
+   "used": "A",
+   "delta": -6.0,
+   "balance": 177037.4,
+   "attrib": "debit",
+   "amount": 6.0
+  },
+  {
+   "serial": 122,
+   "read_ser": 122,
+   "src": "walk",
+   "walk_i": 118,
+   "page": 6,
+   "date": "24/03/2026",
+   "desc": "122 | 24/03/2026 244FTID260835285 EID FARAG SAAD 6,000.00 171,037.40 23/03/2026",
+   "balance_printed": 171037.4,
+   "tokens": [
+    6000.0,
+    171037.4
+   ],
+   "used": "A",
+   "delta": -6000.0,
+   "balance": 171037.4,
+   "attrib": "debit",
+   "amount": 6000.0
+  },
+  {
+   "serial": 123,
+   "read_ser": 123,
+   "src": "walk",
+   "walk_i": 119,
+   "page": 6,
+   "date": "24/03/2026",
+   "desc": "123 | 24/03/2026 244FTID260835286 Network to EID FARAG SAAD 1,50 171,035.90 23/03/2026",
+   "balance_printed": 171035.9,
+   "tokens": [
+    1.5,
+    171035.9
+   ],
+   "used": "A",
+   "delta": -1.5,
+   "balance": 171035.9,
+   "attrib": "debit",
+   "amount": 1.5
+  },
+  {
+   "serial": 124,
+   "read_ser": 124,
+   "src": "walk",
+   "walk_i": 120,
+   "page": 6,
+   "date": "24/03/2026",
+   "desc": "124 | 24/03/2026 244FTID260835286 EID FARAG SAAD , 1,500,00° 169,535.90 23/03/2026",
+   "balance_printed": 169535.9,
+   "tokens": [
+    169535.9
+   ],
+   "used": "solver",
+   "delta": -1500.0,
+   "balance": 169535.9,
+   "attrib": "debit",
+   "amount": 1500.0
+  },
+  {
+   "serial": 125,
+   "read_ser": 125,
+   "src": "walk",
+   "walk_i": 121,
+   "page": 6,
+   "date": "24/03/2026",
+   "desc": "125 | 24/03/2026 244FT1D260835286 Network to EID FARAG SAAD -1,50 ) 169,537.40 23/03/2026 ||WRAP-AMT:[{\"v\": 1500.0, \"cx\": 0.5246}]",
+   "balance_printed": 169537.4,
+   "tokens": [
+    1.5,
+    169537.4
+   ],
+   "used": "A",
+   "delta": 1.5,
+   "balance": 169537.4,
+   "attrib": "reversal",
+   "amount": -1.5
+  },
+  {
+   "serial": 126,
+   "src": "insert",
+   "walk_i": null,
+   "page": 7,
+   "date": null,
+   "desc": null,
+   "D": -1500.0,
+   "C": 0.0,
+   "balance_printed": 171037.4,
+   "tokens": [],
+   "source": "p7: transfer reversal (chain+print consistent)",
+   "balance": 171037.4,
+   "delta": 1500.0,
+   "attrib": "reversal",
+   "amount": -1500.0
+  },
+  {
+   "serial": 127,
+   "read_ser": 127,
+   "src": "walk",
+   "walk_i": 122,
+   "page": 7,
+   "date": "24/03/2026",
+   "desc": "127. | 24/03/2026 244FT1ID260835287 Network to EID FARAG SAAD 1,00 171,036.40 23/03/2016",
+   "balance_printed": 171036.4,
+   "tokens": [
+    1.0,
+    171036.4
+   ],
+   "used": "solver",
+   "delta": -1.0,
+   "balance": 171036.4,
+   "attrib": "debit",
+   "amount": 1.0
+  },
+  {
+   "serial": 128,
+   "src": "insert",
+   "walk_i": null,
+   "page": 7,
+   "date": null,
+   "desc": null,
+   "D": 1000.0,
+   "C": 0.0,
+   "balance_printed": 170036.4,
+   "tokens": [],
+   "source": "p7 crop",
+   "balance": 170036.4,
+   "delta": -1000.0,
+   "attrib": "debit",
+   "amount": 1000.0
+  },
+  {
+   "serial": 129,
+   "read_ser": null,
+   "src": "walk",
+   "walk_i": 125,
+   "page": 7,
+   "date": "23/03/2026",
+   "desc": "SUAAT~517719997N47510C0 0,036.40 23/03/2026 ||WRAP-AMT:[{\"v\": 0.5, \"cx\": 0.5239}]",
+   "balance_printed": 170035.9,
+   "tokens": [
+    36.4,
+    500.0,
+    170036.4
+   ],
+   "used": "solver",
+   "delta": -0.5,
+   "balance": 170035.9,
+   "attrib": "debit",
+   "amount": 0.5
+  },
+  {
+   "serial": 130,
+   "src": "insert",
+   "walk_i": null,
+   "page": 7,
+   "date": null,
+   "desc": null,
+   "D": 500.0,
+   "C": 0.0,
+   "balance_printed": 169535.9,
+   "tokens": [],
+   "source": "p7 crop",
+   "balance": 169535.9,
+   "delta": -500.0,
+   "attrib": "debit",
+   "amount": 500.0
+  },
+  {
+   "serial": 131,
+   "read_ser": 131,
+   "src": "walk",
+   "walk_i": 123,
+   "page": 7,
+   "date": "24/03/2026",
+   "desc": "131 24/03/2026 244FTID260835288 Network to EID FARAG SAAD -0.50 169,536.40 23/03/2026",
+   "balance_printed": 169536.4,
+   "tokens": [
+    0.5,
+    169536.4
+   ],
+   "used": "solver",
+   "delta": 0.5,
+   "balance": 169536.4,
+   "attrib": "reversal",
+   "amount": -0.5
+  },
+  {
+   "serial": 132,
+   "read_ser": 132,
+   "src": "walk",
+   "walk_i": 124,
+   "page": 7,
+   "date": null,
+   "desc": "132 244FTID260835288 EID FARAG SAAD -500.00 170.036",
+   "balance_printed": 170036.4,
+   "tokens": [
+    500.0,
+    170036.4
+   ],
+   "used": "B",
+   "delta": 500.0,
+   "balance": 170036.4,
+   "attrib": "reversal",
+   "amount": -500.0
+  },
+  {
+   "serial": 133,
+   "read_ser": null,
+   "src": "walk",
+   "walk_i": 126,
+   "page": 7,
+   "date": "23/03/2016",
+   "desc": "= SHAAT~CRIODITIIS9OSCF49 170,035.90 23/03/2016",
+   "balance_printed": 170035.9,
+   "tokens": [
+    0.5,
+    170035.9
+   ],
+   "used": "solver",
+   "delta": -0.5,
+   "balance": 170035.9,
+   "attrib": "debit",
+   "amount": 0.5
+  },
+  {
+   "serial": 134,
+   "src": "insert",
+   "walk_i": null,
+   "page": 7,
+   "date": null,
+   "desc": null,
+   "D": 300.0,
+   "C": 0.0,
+   "balance_printed": 169735.9,
+   "tokens": [],
+   "source": "p7 crop",
+   "balance": 169735.9,
+   "delta": -300.0,
+   "attrib": "debit",
+   "amount": 300.0
+  },
+  {
+   "serial": 135,
+   "src": "insert",
+   "walk_i": null,
+   "page": 7,
+   "date": null,
+   "desc": null,
+   "D": -0.5,
+   "C": 0.0,
+   "balance_printed": 169736.4,
+   "tokens": [],
+   "source": "p7 crop: fee reversal",
+   "balance": 169736.4,
+   "delta": 0.5,
+   "attrib": "reversal",
+   "amount": -0.5
+  },
+  {
+   "serial": 136,
+   "read_ser": 136,
+   "src": "walk",
+   "walk_i": 127,
+   "page": 7,
+   "date": "24/03/2026",
+   "desc": "136 | 24/03/2026 244FTID260835289 EID FARAG SAAD -300.00 170,036.40 23/03/2026",
+   "balance_printed": 170036.4,
+   "tokens": [
+    300.0,
+    170036.4
+   ],
+   "used": "solver",
+   "delta": 300.0,
+   "balance": 170036.4,
+   "attrib": "reversal",
+   "amount": -300.0
+  },
+  {
+   "serial": 137,
+   "read_ser": 137,
+   "src": "walk",
+   "walk_i": 128,
+   "page": 7,
+   "date": "24/03/2026",
+   "desc": "137 | 24/03/2026 244FTID260836432 Network to EID FARAG SAAD -3.00 170,039.40 23/03/2026",
+   "balance_printed": 170039.4,
+   "tokens": [
+    3.0,
+    170039.4
+   ],
+   "used": "A",
+   "delta": 3.0,
+   "balance": 170039.4,
+   "attrib": "reversal",
+   "amount": -3.0
+  },
+  {
+   "serial": 138,
+   "read_ser": 138,
+   "src": "walk",
+   "walk_i": 129,
+   "page": 7,
+   "date": "24/03/2026",
+   "desc": "138 | 24/03/2026 244FTID260836432 EID FARAG SAAD -3,000.00 173,039.40 23/03/2026",
+   "balance_printed": 173039.4,
+   "tokens": [
+    3000.0,
+    173039.4
+   ],
+   "used": "A",
+   "delta": 3000.0,
+   "balance": 173039.4,
+   "attrib": "reversal",
+   "amount": -3000.0
+  },
+  {
+   "serial": 139,
+   "read_ser": 139,
+   "src": "walk",
+   "walk_i": 130,
+   "page": 7,
+   "date": "23/03/2026",
+   "desc": "139 244FT1ID260832779 Network to EID FARAG SAAD 1,00 173,038.40 23/03/2026",
+   "balance_printed": 173038.4,
+   "tokens": [
+    1.0,
+    173038.4
+   ],
+   "used": "A",
+   "delta": -1.0,
+   "balance": 173038.4,
+   "attrib": "debit",
+   "amount": 1.0
+  },
+  {
+   "serial": 140,
+   "read_ser": 140,
+   "src": "walk",
+   "walk_i": 131,
+   "page": 7,
+   "date": "24/03/2026",
+   "desc": "140 | 24/03/2026 244FTID260832779 EID FARAG SAAD 1,000.00 172,038.40 23/03/2026",
+   "balance_printed": 172038.4,
+   "tokens": [
+    1000.0,
+    172038.4
+   ],
+   "used": "A",
+   "delta": -1000.0,
+   "balance": 172038.4,
+   "attrib": "debit",
+   "amount": 1000.0
+  },
+  {
+   "serial": 141,
+   "read_ser": null,
+   "src": "walk",
+   "walk_i": 132,
+   "page": 7,
+   "date": "24/03/2026",
+   "desc": "I4t | 24/03/2026 244FTID260836432 Network to EID FARAG SAAD 3.00 172,035.40 23/03/2026",
+   "balance_printed": 172035.4,
+   "tokens": [
+    3.0,
+    172035.4
+   ],
+   "used": "A",
+   "delta": -3.0,
+   "balance": 172035.4,
+   "attrib": "debit",
+   "amount": 3.0
+  },
+  {
+   "serial": 142,
+   "read_ser": null,
+   "src": "walk",
+   "walk_i": 133,
+   "page": 7,
+   "date": "23/03/2026",
+   "desc": "244FTID260836432 EID FARAG SAAD 3,000.00 169,035.40 23/03/2026",
+   "balance_printed": 169035.4,
+   "tokens": [
+    3000.0,
+    169035.4
+   ],
+   "used": "A",
+   "delta": -3000.0,
+   "balance": 169035.4,
+   "attrib": "debit",
+   "amount": 3000.0
+  },
+  {
+   "serial": 143,
+   "read_ser": 143,
+   "src": "walk",
+   "walk_i": 134,
+   "page": 7,
+   "date": "24/03/2026",
+   "desc": "143 24/03/2026 244FTID260835287 Network to EID FARAG SAAD -1,00 169,036.40 23/03/2026",
+   "balance_printed": 169036.4,
+   "tokens": [
+    1.0,
+    169036.4
+   ],
+   "used": "A",
+   "delta": 1.0,
+   "balance": 169036.4,
+   "attrib": "reversal",
+   "amount": -1.0
+  },
+  {
+   "serial": 144,
+   "read_ser": 144,
+   "src": "walk",
+   "walk_i": 135,
+   "page": 7,
+   "date": "24/03/2026",
+   "desc": "144 | 24/03/2026 244FTID260835287 EID FARAG SAAD 1,000.00 170,036.40 23/03/2026",
+   "balance_printed": 170036.4,
+   "tokens": [
+    1000.0,
+    170036.4
+   ],
+   "used": "A",
+   "delta": 1000.0,
+   "balance": 170036.4,
+   "attrib": "reversal",
+   "amount": -1000.0
+  },
+  {
+   "serial": 145,
+   "read_ser": 145,
+   "src": "walk",
+   "walk_i": 136,
+   "page": 7,
+   "date": "24/03/2026",
+   "desc": "145 | 24/03/2026 244FTID260835293 Network to EID FARAG SAAD 7,00 170,029.40 23/03/2026",
+   "balance_printed": 170029.4,
+   "tokens": [
+    7.0,
+    170029.4
+   ],
+   "used": "A",
+   "delta": -7.0,
+   "balance": 170029.4,
+   "attrib": "debit",
+   "amount": 7.0
+  },
+  {
+   "serial": 146,
+   "read_ser": 146,
+   "src": "walk",
+   "walk_i": 137,
+   "page": 7,
+   "date": "24/03/2026",
+   "desc": "146 | 24/03/2026 244FTID260835293 EID FARAG SAAD 7,000.00 163,029.40 23/03/2026",
+   "balance_printed": 163029.4,
+   "tokens": [
+    7000.0,
+    163029.4
+   ],
+   "used": "A",
+   "delta": -7000.0,
+   "balance": 163029.4,
+   "attrib": "debit",
+   "amount": 7000.0
+  },
+  {
+   "serial": 147,
+   "read_ser": 147,
+   "src": "walk",
+   "walk_i": 138,
+   "page": 7,
+   "date": "24/03/2026",
+   "desc": "147 | 24/03/2026 244FT1D260832782 Network to EID FARAG SAAD -2.50 163,031.90 23/03/2026",
+   "balance_printed": 163031.9,
+   "tokens": [
+    2.5,
+    163031.9
+   ],
+   "used": "A",
+   "delta": 2.5,
+   "balance": 163031.9,
+   "attrib": "reversal",
+   "amount": -2.5
+  },
+  {
+   "serial": 148,
+   "read_ser": 148,
+   "src": "walk",
+   "walk_i": 139,
+   "page": 7,
+   "date": "24/03/2026",
+   "desc": "148 | 24/03/2026 244FTID260832782 EID FARAG SAAD -2,500,00 165,531.90 23/03/2026",
+   "balance_printed": 165531.9,
+   "tokens": [
+    2500.0,
+    165531.9
+   ],
+   "used": "A",
+   "delta": 2500.0,
+   "balance": 165531.9,
+   "attrib": "reversal",
+   "amount": -2500.0
+  },
+  {
+   "serial": 149,
+   "src": "insert",
+   "walk_i": null,
+   "page": 8,
+   "date": null,
+   "desc": null,
+   "D": -1.5,
+   "C": 0.0,
+   "balance_printed": 165533.4,
+   "tokens": [],
+   "source": "p8 crop: fee reversal",
+   "balance": 165533.4,
+   "delta": 1.5,
+   "attrib": "reversal",
+   "amount": -1.5
+  },
+  {
+   "serial": 150,
+   "src": "insert",
+   "walk_i": null,
+   "page": 8,
+   "date": null,
+   "desc": null,
+   "D": -1500.0,
+   "C": 0.0,
+   "balance_printed": 167033.4,
+   "tokens": [],
+   "source": "p8 crop: transfer reversal",
+   "balance": 167033.4,
+   "delta": 1500.0,
+   "attrib": "reversal",
+   "amount": -1500.0
+  },
+  {
+   "serial": 151,
+   "read_ser": null,
+   "src": "walk",
+   "walk_i": 140,
+   "page": 8,
+   "date": "24/03/2026",
+   "desc": "1s) | 24/03/2026 | 244FT1D260832782 Network (o EID FARAG SAAD 2.50 167,030.90 23/03/2026",
+   "balance_printed": 167030.9,
+   "tokens": [
+    2.5,
+    167030.9
+   ],
+   "used": "solver",
+   "delta": -2.5,
+   "balance": 167030.9,
+   "attrib": "debit",
+   "amount": 2.5
+  },
+  {
+   "serial": 152,
+   "read_ser": 182,
+   "src": "walk",
+   "walk_i": 141,
+   "page": 8,
+   "date": "24/03/2026",
+   "desc": "182 | 24/03/2026 244FTID260832782 EID FARAG SAAD 2,500,00 164,530.90 2/04/1026",
+   "balance_printed": 164530.9,
+   "tokens": [
+    2500.0,
+    164530.9
+   ],
+   "used": "A",
+   "delta": -2500.0,
+   "balance": 164530.9,
+   "attrib": "debit",
+   "amount": 2500.0
+  },
+  {
+   "serial": 153,
+   "read_ser": 18,
+   "src": "walk",
+   "walk_i": 142,
+   "page": 8,
+   "date": "24/01/2026",
+   "desc": "18) 24/01/2026 244FTID26083278) Network to EID FARAG SAAD 2.00 164,528.90 23/04/202",
+   "balance_printed": 164528.9,
+   "tokens": [
+    2.0,
+    164528.9
+   ],
+   "used": "A",
+   "delta": -2.0,
+   "balance": 164528.9,
+   "attrib": "debit",
+   "amount": 2.0
+  },
+  {
+   "serial": 154,
+   "read_ser": 14,
+   "src": "walk",
+   "walk_i": 143,
+   "page": 8,
+   "date": "24/03/2026",
+   "desc": "14 | 24/03/2026 | 244FT1D260832783 EID FARAG SAAD 2,000.00 162,528.90 23/03/2026",
+   "balance_printed": 162528.9,
+   "tokens": [
+    2000.0,
+    162528.9,
+    162528590.0
+   ],
+   "used": "A",
+   "delta": -2000.0,
+   "balance": 162528.9,
+   "attrib": "debit",
+   "amount": 2000.0
+  },
+  {
+   "serial": 155,
+   "read_ser": 155,
+   "src": "walk",
+   "walk_i": 144,
+   "page": 8,
+   "date": "24/03/2016",
+   "desc": "155 24/03/2016 244FTID260832783 Network to EID FARAG SAAD -1,00 162,530.90 23/03/2026",
+   "balance_printed": 162530.9,
+   "tokens": [
+    1.0,
+    2.0,
+    162530.9
+   ],
+   "used": "B",
+   "delta": 2.0,
+   "balance": 162530.9,
+   "attrib": "reversal",
+   "amount": -2.0
+  },
+  {
+   "serial": 156,
+   "read_ser": 156,
+   "src": "walk",
+   "walk_i": 145,
+   "page": 8,
+   "date": "24/03/2026",
+   "desc": "156 | 24/03/2026 244FTID260832783 EID FARAG SAAD -1,000.00 164,530.90 23/03/2026",
+   "balance_printed": 164530.9,
+   "tokens": [
+    1000.0,
+    2000.0,
+    164530.9
+   ],
+   "used": "B",
+   "delta": 2000.0,
+   "balance": 164530.9,
+   "attrib": "reversal",
+   "amount": -2000.0
+  },
+  {
+   "serial": 157,
+   "read_ser": 157,
+   "src": "walk",
+   "walk_i": 146,
+   "page": 8,
+   "date": "24/09/2026",
+   "desc": "157 | 24/09/2026 | 244FT1D260836433 Network to EID FARAG SAAD 1.50 164,529.40 23/03/2026",
+   "balance_printed": 164529.4,
+   "tokens": [
+    1.5,
+    164529.4
+   ],
+   "used": "A",
+   "delta": -1.5,
+   "balance": 164529.4,
+   "attrib": "debit",
+   "amount": 1.5
+  },
+  {
+   "serial": 158,
+   "read_ser": 158,
+   "src": "walk",
+   "walk_i": 147,
+   "page": 8,
+   "date": "24/03/2026",
+   "desc": "158 | 24/03/2026 244FTID260836433 EID FARAG SAAD 1,500.00 163,029.40 23/03/2026",
+   "balance_printed": 163029.4,
+   "tokens": [
+    1500.0,
+    163029.4
+   ],
+   "used": "A",
+   "delta": -1500.0,
+   "balance": 163029.4,
+   "attrib": "debit",
+   "amount": 1500.0
+  },
+  {
+   "serial": 159,
+   "read_ser": 159,
+   "src": "walk",
+   "walk_i": 148,
+   "page": 8,
+   "date": "24/03/2026",
+   "desc": "159 | 24/03/2026 244FTID260836434 Network to EID FARAG SAAD 6.00 163,023.40",
+   "balance_printed": 163023.4,
+   "tokens": [
+    6.0,
+    163023.4
+   ],
+   "used": "A",
+   "delta": -6.0,
+   "balance": 163023.4,
+   "attrib": "debit",
+   "amount": 6.0
+  },
+  {
+   "serial": 160,
+   "read_ser": 160,
+   "src": "walk",
+   "walk_i": 149,
+   "page": 8,
+   "date": "24/03/2026",
+   "desc": "160 24/03/2026 244FTID260836434 EID FARAG SAAD 6,000.00 157,023.40 23/03/1026",
+   "balance_printed": 157023.4,
+   "tokens": [
+    6000.0,
+    157023.4
+   ],
+   "used": "A",
+   "delta": -6000.0,
+   "balance": 157023.4,
+   "attrib": "debit",
+   "amount": 6000.0
+  },
+  {
+   "serial": 161,
+   "read_ser": 161,
+   "src": "walk",
+   "walk_i": 150,
+   "page": 8,
+   "date": "24/03/2026",
+   "desc": "161 24/03/2026 244FT1D260832806 Network to EID FARAG 9,00 157,014.40 23/03/2026",
+   "balance_printed": 157014.4,
+   "tokens": [
+    9.0,
+    157014.4
+   ],
+   "used": "A",
+   "delta": -9.0,
+   "balance": 157014.4,
+   "attrib": "debit",
+   "amount": 9.0
+  },
+  {
+   "serial": 162,
+   "read_ser": 162,
+   "src": "walk",
+   "walk_i": 151,
+   "page": 8,
+   "date": "24/03/2026",
+   "desc": "162 24/03/2026 244FT1ID260832806 EID FARAG 9,000.00 148,014.40 23/03/2026",
+   "balance_printed": 148014.4,
+   "tokens": [
+    9000.0,
+    148014.4
+   ],
+   "used": "A",
+   "delta": -9000.0,
+   "balance": 148014.4,
+   "attrib": "debit",
+   "amount": 9000.0
+  },
+  {
+   "serial": 163,
+   "read_ser": 163,
+   "src": "walk",
+   "walk_i": 152,
+   "page": 8,
+   "date": "28/03/2026",
+   "desc": "163 | 28/03/2026 | 244UD0IEGP 00001 24.47480302432000010 - | sas 148,220.23 25/03/2026",
+   "balance_printed": 148220.23,
+   "tokens": [
+    205.83,
+    148220.23
+   ],
+   "used": "B",
+   "delta": 205.83,
+   "balance": 148220.23,
+   "attrib": "credit",
+   "amount": 205.83
+  },
+  {
+   "serial": 164,
+   "read_ser": 164,
+   "src": "walk",
+   "walk_i": 153,
+   "page": 8,
+   "date": "26/03/2026",
+   "desc": "164 | 26/03/2026 2441 PNF260846082 Tonfoevennes fee Sei? 0.50 148,219.73 26/03/2026",
+   "balance_printed": 148219.73,
+   "tokens": [
+    0.5,
+    148219.73
+   ],
+   "used": "A",
+   "delta": -0.5,
+   "balance": 148219.73,
+   "attrib": "debit",
+   "amount": 0.5
+  },
+  {
+   "serial": 165,
+   "read_ser": 165,
+   "src": "walk",
+   "walk_i": 154,
+   "page": 8,
+   "date": "26/03/2026",
+   "desc": "165 | 26/03/2026 244FTID260854087 Network to Eld Farag 20.00 148,199.73 26/03/2026",
+   "balance_printed": 148199.73,
+   "tokens": [
+    20.0,
+    148199.73
+   ],
+   "used": "A",
+   "delta": -20.0,
+   "balance": 148199.73,
+   "attrib": "debit",
+   "amount": 20.0
+  },
+  {
+   "serial": 166,
+   "read_ser": 166,
+   "src": "walk",
+   "walk_i": 155,
+   "page": 8,
+   "date": "26/03/2026",
+   "desc": "166 | 26/03/2026 244FTID260854087 Eld Farag 40,000.00 98,199.73 26/03/2026",
+   "balance_printed": 98199.73,
+   "tokens": [
+    40000.0,
+    98199.73
+   ],
+   "used": "solver",
+   "delta": -50000.0,
+   "balance": 98199.73,
+   "attrib": "debit",
+   "amount": 50000.0
+  },
+  {
+   "serial": 167,
+   "read_ser": 167,
+   "src": "walk",
+   "walk_i": 156,
+   "page": 8,
+   "date": "26/03/2026",
+   "desc": "167 | 26/03/2026 | 2441PNF260852084 To-Revenue from <2l> aa gy} 0.50 98,199.23 26/03/2026",
+   "balance_printed": 98199.23,
+   "tokens": [
+    0.5,
+    98199.23
+   ],
+   "used": "A",
+   "delta": -0.5,
+   "balance": 98199.23,
+   "attrib": "debit",
+   "amount": 0.5
+  },
+  {
+   "serial": 168,
+   "read_ser": null,
+   "src": "walk",
+   "walk_i": 157,
+   "page": 8,
+   "date": "26/03/2026",
+   "desc": "To-Revenue from =# a oJ 0.50 98,198.73 26/03/2026",
+   "balance_printed": 98198.73,
+   "tokens": [
+    0.5,
+    98198.73
+   ],
+   "used": "A",
+   "delta": -0.5,
+   "balance": 98198.73,
+   "attrib": "debit",
+   "amount": 0.5
+  },
+  {
+   "serial": 169,
+   "read_ser": 169,
+   "src": "walk",
+   "walk_i": 158,
+   "page": 8,
+   "date": "26/03/2026",
+   "desc": "169 | 26/03/2026 | 244FTID260852164 | “*c***e ***c ***! 4 Network to 0.81 98,197.92 26/03/2026",
+   "balance_printed": 98197.92,
+   "tokens": [
+    0.81,
+    98197.92
+   ],
+   "used": "A",
+   "delta": -0.81,
+   "balance": 98197.92,
+   "attrib": "debit",
+   "amount": 0.81
+  },
+  {
+   "serial": 170,
+   "read_ser": 170,
+   "src": "walk",
+   "walk_i": 159,
+   "page": 8,
+   "date": "26/03/2026",
+   "desc": "170 | 26/03/2026 | 244FTID260852164 abe ely ayes taki ee | acer 2A 3 97,387.92 26/03/2026",
+   "balance_printed": 97387.92,
+   "tokens": [
+    97387.92
+   ],
+   "used": "solver",
+   "delta": -810.0,
+   "balance": 97387.92,
+   "attrib": "debit",
+   "amount": 810.0
+  },
+  {
+   "serial": 171,
+   "read_ser": 171,
+   "src": "walk",
+   "walk_i": 160,
+   "page": 9,
+   "date": "26/01/2026",
+   "desc": "171 | 26/01/2026 244FTID260852212 HIAB MOHAMED MONAMED 2.17, 97,385.75 26/03/2026",
+   "balance_printed": 97385.75,
+   "tokens": [
+    2.17,
+    97385.75
+   ],
+   "used": "A",
+   "delta": -2.17,
+   "balance": 97385.75,
+   "attrib": "debit",
+   "amount": 2.17
+  },
+  {
+   "serial": 172,
+   "read_ser": 172,
+   "src": "walk",
+   "walk_i": 161,
+   "page": 9,
+   "date": "26/03/2026",
+   "desc": "172 | 26/03/2026 244FTID260852212 MONAMED MOMAMED 2,170.00 95,215,75 26/03/2026",
+   "balance_printed": 95215.75,
+   "tokens": [
+    2170.0,
+    95215.75
+   ],
+   "used": "A",
+   "delta": -2170.0,
+   "balance": 95215.75,
+   "attrib": "debit",
+   "amount": 2170.0
+  },
+  {
+   "serial": 173,
+   "read_ser": 173,
+   "src": "walk",
+   "walk_i": 162,
+   "page": 9,
+   "date": "29/03/2026",
+   "desc": "173 29/03/2026 244FT1ID160852341 Network to Mohamed Mahmoud 330 95.212.45 27/03/2026",
+   "balance_printed": 95212.45,
+   "tokens": [
+    3.3,
+    95212.45
+   ],
+   "used": "solver",
+   "delta": -3.3,
+   "balance": 95212.45,
+   "attrib": "debit",
+   "amount": 3.3
+  },
+  {
+   "serial": 174,
+   "read_ser": 174,
+   "src": "walk",
+   "walk_i": 163,
+   "page": 9,
+   "date": "29/03/2026",
+   "desc": "174 | 29/03/2026 244FT1D260852341 Mohamed Mahmoud 3,300.00 91,912.45 27/03/2026",
+   "balance_printed": 91912.45,
+   "tokens": [
+    3300.0,
+    91912.45
+   ],
+   "used": "solver",
+   "delta": -3300.0,
+   "balance": 91912.45,
+   "attrib": "debit",
+   "amount": 3300.0
+  },
+  {
+   "serial": 175,
+   "read_ser": 175,
+   "src": "walk",
+   "walk_i": 164,
+   "page": 9,
+   "date": "29/03/2016",
+   "desc": "175 | 29/03/2016 | 244FTID260882182 Sy Wee palm pacalle Network to 0.80 91,911.65 27/03/2026",
+   "balance_printed": 91911.65,
+   "tokens": [
+    0.8,
+    91911.65
+   ],
+   "used": "A",
+   "delta": -0.8,
+   "balance": 91911.65,
+   "attrib": "debit",
+   "amount": 0.8
+  },
+  {
+   "serial": 176,
+   "read_ser": 176,
+   "src": "walk",
+   "walk_i": 165,
+   "page": 9,
+   "date": "29/03/2026",
+   "desc": "176 | 29/03/2026 244FTID160882182 ced Slag palm pacallige 400.00 O1,111.65 27/03/2026",
+   "balance_printed": 91111.65,
+   "tokens": [
+    400.0,
+    91111.68
+   ],
+   "used": "solver",
+   "delta": -800.0,
+   "balance": 91111.65,
+   "attrib": "debit",
+   "amount": 800.0
+  },
+  {
+   "serial": 177,
+   "read_ser": 177,
+   "src": "walk",
+   "walk_i": 166,
+   "page": 9,
+   "date": "29/03/2026",
+   "desc": "177 29/03/2026 244FTID26088A047 eovereN ctwork to Elsald M 1,28, 91,110.37 28/03/2026",
+   "balance_printed": 91110.37,
+   "tokens": [
+    1.28,
+    91110.37
+   ],
+   "used": "solver",
+   "delta": -1.28,
+   "balance": 91110.37,
+   "attrib": "debit",
+   "amount": 1.28
+  },
+  {
+   "serial": 178,
+   "read_ser": 178,
+   "src": "walk",
+   "walk_i": 167,
+   "page": 9,
+   "date": "29/03/2026",
+   "desc": "178 | 29/03/2026 244FTID26088A047 oneEisald Meteee* GC - 1,280.00 89,830.37 28/03/2026",
+   "balance_printed": 89830.37,
+   "tokens": [
+    1280.0,
+    89830.37
+   ],
+   "used": "A",
+   "delta": -1280.0,
+   "balance": 89830.37,
+   "attrib": "debit",
+   "amount": 1280.0
+  },
+  {
+   "serial": 179,
+   "read_ser": null,
+   "src": "walk",
+   "walk_i": 168,
+   "page": 9,
+   "date": "29/03/2026",
+   "desc": "29/03/2026 244FT1D260880474 Network to AIMED MOHAMED 0.50 89,829.87 28/03/2026",
+   "balance_printed": 89829.87,
+   "tokens": [
+    0.5,
+    89829.87
+   ],
+   "used": "A",
+   "delta": -0.5,
+   "balance": 89829.87,
+   "attrib": "debit",
+   "amount": 0.5
+  },
+  {
+   "serial": 180,
+   "read_ser": 180,
+   "src": "walk",
+   "walk_i": 169,
+   "page": 9,
+   "date": "29/03/2026",
+   "desc": "180 | 29/03/2026 244FTID260890474 AIMED MOHAMED 315.00 89,514.87 28/03/2026",
+   "balance_printed": 89514.87,
+   "tokens": [
+    315.0,
+    89514.87
+   ],
+   "used": "A",
+   "delta": -315.0,
+   "balance": 89514.87,
+   "attrib": "debit",
+   "amount": 315.0
+  },
+  {
+   "serial": 181,
+   "read_ser": null,
+   "src": "walk",
+   "walk_i": 170,
+   "page": 9,
+   "date": "29/03/2026",
+   "desc": "29/03/2026 | 2441PNF260880144 To-Revenue from <#l> aa gh 0.50 89,514.37 29/03/2026",
+   "balance_printed": 89514.37,
+   "tokens": [
+    0.5,
+    89514.37
+   ],
+   "used": "A",
+   "delta": -0.5,
+   "balance": 89514.37,
+   "attrib": "debit",
+   "amount": 0.5
+  },
+  {
+   "serial": 182,
+   "read_ser": 182,
+   "src": "walk",
+   "walk_i": 171,
+   "page": 9,
+   "date": "29/03/2026",
+   "desc": "182 | 29/03/2026 | 2441PNF260884180 To-Revenue from “> sa» qh 0.50 89,513.87 29/03/2026",
+   "balance_printed": 89513.87,
+   "tokens": [
+    0.5,
+    89513.87
+   ],
+   "used": "A",
+   "delta": -0.5,
+   "balance": 89513.87,
+   "attrib": "debit",
+   "amount": 0.5
+  },
+  {
+   "serial": 183,
+   "read_ser": 183,
+   "src": "walk",
+   "walk_i": 172,
+   "page": 9,
+   "date": "29/03/2026",
+   "desc": "183 29/03/2026 244FTID26088A37C IIAMED ALSAYED 5.80 89,508.07 29/03/2026",
+   "balance_printed": 89508.07,
+   "tokens": [
+    5.8,
+    89508.07
+   ],
+   "used": "A",
+   "delta": -5.8,
+   "balance": 89508.07,
+   "attrib": "debit",
+   "amount": 5.8
+  },
+  {
+   "serial": 184,
+   "read_ser": 184,
+   "src": "walk",
+   "walk_i": 173,
+   "page": 9,
+   "date": "29/03/2026",
+   "desc": "184 | 29/03/2026 | 244FTID26088A37C Aen 5,800.00 83,708.07 29/03/2026",
+   "balance_printed": 83708.07,
+   "tokens": [
+    5800.0,
+    83708.07
+   ],
+   "used": "A",
+   "delta": -5800.0,
+   "balance": 83708.07,
+   "attrib": "debit",
+   "amount": 5800.0
+  },
+  {
+   "serial": 185,
+   "read_ser": 185,
+   "src": "walk",
+   "walk_i": 174,
+   "page": 9,
+   "date": "29/03/2026",
+   "desc": "185 | 29/03/2026 244FTID26088A37T Network (o EID FARAG SAAD 9.80 83,698.27 29/03/2026",
+   "balance_printed": 83698.27,
+   "tokens": [
+    9.8,
+    83698.27
+   ],
+   "used": "A",
+   "delta": -9.8,
+   "balance": 83698.27,
+   "attrib": "debit",
+   "amount": 9.8
+  },
+  {
+   "serial": 186,
+   "read_ser": 186,
+   "src": "walk",
+   "walk_i": 175,
+   "page": 9,
+   "date": "29/03/2026",
+   "desc": "186 | 29/03/2026 | 244FTID26088A37T EID FARAG SAAD 9,800.00 73,898.27 29/03/2026",
+   "balance_printed": 73898.27,
+   "tokens": [
+    9800.0,
+    73898.27
+   ],
+   "used": "A",
+   "delta": -9800.0,
+   "balance": 73898.27,
+   "attrib": "debit",
+   "amount": 9800.0
+  },
+  {
+   "serial": 187,
+   "read_ser": 187,
+   "src": "walk",
+   "walk_i": 176,
+   "page": 9,
+   "date": "30/03/2026",
+   "desc": "187 | 30/03/2026 | 2441PNF260898040 To-Revenue from <2 20 cd 0.50 73,897.77 30/03/2026",
+   "balance_printed": 73897.77,
+   "tokens": [
+    0.5,
+    73897.77
+   ],
+   "used": "A",
+   "delta": -0.5,
+   "balance": 73897.77,
+   "attrib": "debit",
+   "amount": 0.5
+  },
+  {
+   "serial": 188,
+   "read_ser": 188,
+   "src": "walk",
+   "walk_i": 177,
+   "page": 9,
+   "date": "30/03/2026",
+   "desc": "188 | 30/03/2026 | 2441PNF260898043 To-Revenue fram <> an ch 0.50 73,897.27 30/03/2026",
+   "balance_printed": 73897.27,
+   "tokens": [
+    0.5,
+    73897.27
+   ],
+   "used": "A",
+   "delta": -0.5,
+   "balance": 73897.27,
+   "attrib": "debit",
+   "amount": 0.5
+  },
+  {
+   "serial": 189,
+   "read_ser": 189,
+   "src": "walk",
+   "walk_i": 178,
+   "page": 9,
+   "date": "30/03/2026",
+   "desc": "189 | 30/03/2026 244FT1ID260898267 Network to EID FARAG SAAD 3.00 73,894.27 30/03/2026",
+   "balance_printed": 73894.27,
+   "tokens": [
+    3.0,
+    73894.27
+   ],
+   "used": "A",
+   "delta": -3.0,
+   "balance": 73894.27,
+   "attrib": "debit",
+   "amount": 3.0
+  },
+  {
+   "serial": 190,
+   "read_ser": 190,
+   "src": "walk",
+   "walk_i": 179,
+   "page": 9,
+   "date": "30/03/2026",
+   "desc": "190 | 30/03/2026 244FT1ID260898267 EID FARAG SAAD 3,000.00 10,894.27 30/03/2026",
+   "balance_printed": 70894.27,
+   "tokens": [
+    3000.0,
+    10894.27,
+    70894.27
+   ],
+   "used": "B",
+   "delta": -3000.0,
+   "balance": 70894.27,
+   "attrib": "debit",
+   "amount": 3000.0
+  },
+  {
+   "serial": 191,
+   "read_ser": 191,
+   "src": "walk",
+   "walk_i": 180,
+   "page": 10,
+   "date": "30/03/2026",
+   "desc": "191 | 30/03/2026 244FTID260898267 Network to EID FARAG SAAD -3.00 70,897.27 | 30/03/2026 |",
+   "balance_printed": 70897.27,
+   "tokens": [
+    3.0,
+    70897.27
+   ],
+   "used": "A",
+   "delta": 3.0,
+   "balance": 70897.27,
+   "attrib": "reversal",
+   "amount": -3.0
+  },
+  {
+   "serial": 192,
+   "read_ser": 192,
+   "src": "walk",
+   "walk_i": 181,
+   "page": 10,
+   "date": "30/03/2026",
+   "desc": "192 | 30/03/2026 244FT1D260898267 EID FARAG SAAD -3,000.00 73,897.27 30/03/2026",
+   "balance_printed": 73897.27,
+   "tokens": [
+    3000.0,
+    73897.27
+   ],
+   "used": "A",
+   "delta": 3000.0,
+   "balance": 73897.27,
+   "attrib": "reversal",
+   "amount": -3000.0
+  },
+  {
+   "serial": 193,
+   "read_ser": 193,
+   "src": "walk",
+   "walk_i": 182,
+   "page": 10,
+   "date": "30/01/2026",
+   "desc": "193 | 30/01/2026 244FTID26089A035 Network (o EID FARAG SAAD 2.00 73,895.27 30/03/2026",
+   "balance_printed": 73895.27,
+   "tokens": [
+    2.0,
+    73895.27
+   ],
+   "used": "A",
+   "delta": -2.0,
+   "balance": 73895.27,
+   "attrib": "debit",
+   "amount": 2.0
+  },
+  {
+   "serial": 194,
+   "read_ser": null,
+   "src": "walk",
+   "walk_i": 183,
+   "page": 10,
+   "date": "30/0/2026",
+   "desc": "30/0/2026 244FTID26089A035 EID FARAG SAAD 2,000.00 71,895.27 30/03/2026",
+   "balance_printed": 71895.27,
+   "tokens": [
+    2000.0,
+    71895.27
+   ],
+   "used": "A",
+   "delta": -2000.0,
+   "balance": 71895.27,
+   "attrib": "debit",
+   "amount": 2000.0
+  },
+  {
+   "serial": 195,
+   "read_ser": 195,
+   "src": "walk",
+   "walk_i": 184,
+   "page": 10,
+   "date": "31/01/2026",
+   "desc": "195 | 31/01/2026 244FT1D260906219 sae te sal 132 Network fo 1.50 71,893.77 31/03/2026",
+   "balance_printed": 71893.77,
+   "tokens": [
+    1.5,
+    71893.77
+   ],
+   "used": "A",
+   "delta": -1.5,
+   "balance": 71893.77,
+   "attrib": "debit",
+   "amount": 1.5
+  },
+  {
+   "serial": 196,
+   "read_ser": 196,
+   "src": "walk",
+   "walk_i": 185,
+   "page": 10,
+   "date": "31/03/2026",
+   "desc": "196 | 31/03/2026 244FT1D260906219 sas ptt aml 1,500.00 70,393.77 31/03/2026",
+   "balance_printed": 70393.77,
+   "tokens": [
+    1500.0,
+    70393.77
+   ],
+   "used": "A",
+   "delta": -1500.0,
+   "balance": 70393.77,
+   "attrib": "debit",
+   "amount": 1500.0
+  },
+  {
+   "serial": 197,
+   "read_ser": 197,
+   "src": "walk",
+   "walk_i": 186,
+   "page": 10,
+   "date": "31/03/2026",
+   "desc": "197 244FT1D260902214 Network bode eg FAWZY 0.50 70,393.27 31/03/2026",
+   "balance_printed": 70393.27,
+   "tokens": [
+    0.5,
+    70393.27
+   ],
+   "used": "A",
+   "delta": -0.5,
+   "balance": 70393.27,
+   "attrib": "debit",
+   "amount": 0.5
+  },
+  {
+   "serial": 198,
+   "read_ser": null,
+   "src": "walk",
+   "walk_i": 187,
+   "page": 10,
+   "date": "31/03/2026",
+   "desc": "31/03/2026 244FTID260902214 SALAIL FAWZY MOIIMED $00.00 69,893.27 31/03/2026",
+   "balance_printed": 69893.27,
+   "tokens": [
+    400.0,
+    69893.17,
+    69893.27
+   ],
+   "used": "solver",
+   "delta": -500.0,
+   "balance": 69893.27,
+   "attrib": "debit",
+   "amount": 500.0
+  },
+  {
+   "serial": 199,
+   "read_ser": 199,
+   "src": "walk",
+   "walk_i": 188,
+   "page": 10,
+   "date": "31/03/2026",
+   "desc": "199 | 31/0M2026 244FTID260904329 Network to EID FARAG SAAD 3.00 69,890.27 31/03/2026",
+   "balance_printed": 69890.27,
+   "tokens": [
+    3.0,
+    69890.27
+   ],
+   "used": "A",
+   "delta": -3.0,
+   "balance": 69890.27,
+   "attrib": "debit",
+   "amount": 3.0
+  },
+  {
+   "serial": 200,
+   "read_ser": 200,
+   "src": "walk",
+   "walk_i": 189,
+   "page": 10,
+   "date": "31/03/2026",
+   "desc": "200 244FTID260904329 EID FARAG SAAD 3,000.00 66,890.27 31/03/2026",
+   "balance_printed": 66890.27,
+   "tokens": [
+    3000.0,
+    66890.27
+   ],
+   "used": "A",
+   "delta": -3000.0,
+   "balance": 66890.27,
+   "attrib": "debit",
+   "amount": 3000.0
+  },
+  {
+   "serial": 201,
+   "read_ser": null,
+   "src": "walk",
+   "walk_i": 190,
+   "page": 10,
+   "date": "01/04/2026",
+   "desc": "| 2or | suoszoss | 244SA44EGP 00001 | Admin fees | 75.00 | | 66,815.27 | 01/04/2026 |",
+   "balance_printed": 66815.27,
+   "tokens": [
+    75.0,
+    66815.27
+   ],
+   "used": "A",
+   "delta": -75.0,
+   "balance": 66815.27,
+   "attrib": "debit",
+   "amount": 75.0
+  },
+  {
+   "serial": 202,
+   "read_ser": null,
+   "src": "walk",
+   "walk_i": 191,
+   "page": 10,
+   "date": "31/03/2026",
+   "desc": "’ a 0.50 66,814.77 31/03/2026",
+   "balance_printed": 66814.77,
+   "tokens": [
+    0.5,
+    66814.77
+   ],
+   "used": "A",
+   "delta": -0.5,
+   "balance": 66814.77,
+   "attrib": "debit",
+   "amount": 0.5
+  },
+  {
+   "serial": 203,
+   "read_ser": 203,
+   "src": "walk",
+   "walk_i": 192,
+   "page": 10,
+   "date": "01/04/2026",
+   "desc": "203 01/04/2026 2441 PNN26090A4MP -To-Revenue from non = a 0.40 66,814.27 31/03/2026",
+   "balance_printed": 66814.27,
+   "tokens": [
+    0.4,
+    0.5,
+    66814.27
+   ],
+   "used": "B",
+   "delta": -0.5,
+   "balance": 66814.27,
+   "attrib": "debit",
+   "amount": 0.5
+  },
+  {
+   "serial": 204,
+   "read_ser": 204,
+   "src": "walk",
+   "walk_i": 193,
+   "page": 10,
+   "date": "01/04/2026",
+   "desc": "204 | 01/04/2026 244FT1ID260912002 AIMED MOHAMED 20.00 66,794.27 01/04/2026",
+   "balance_printed": 66794.27,
+   "tokens": [
+    20.0,
+    66794.27
+   ],
+   "used": "A",
+   "delta": -20.0,
+   "balance": 66794.27,
+   "attrib": "debit",
+   "amount": 20.0
+  },
+  {
+   "serial": 205,
+   "read_ser": null,
+   "src": "walk",
+   "walk_i": 194,
+   "page": 10,
+   "date": "01/04/2026",
+   "desc": "20s | o1/os2026 | 24467T1D260912002 SAMEH ootee MED AIMED 35,000.00 31,794.27 01/04/2026",
+   "balance_printed": 31794.27,
+   "tokens": [
+    31794.27,
+    35000.0
+   ],
+   "used": "A",
+   "delta": -35000.0,
+   "balance": 31794.27,
+   "attrib": "debit",
+   "amount": 35000.0
+  },
+  {
+   "serial": 206,
+   "read_ser": 206,
+   "src": "walk",
+   "walk_i": 195,
+   "page": 10,
+   "date": "01/04/2026",
+   "desc": "206 | 01/04/2026 | 244FTID26091A4RJ Sear hI aa>! Network to 0.50 31,793.77 01/04/2026",
+   "balance_printed": 31793.77,
+   "tokens": [
+    0.5,
+    31793.77
+   ],
+   "used": "A",
+   "delta": -0.5,
+   "balance": 31793.77,
+   "attrib": "debit",
+   "amount": 0.5
+  },
+  {
+   "serial": 207,
+   "read_ser": 207,
+   "src": "walk",
+   "walk_i": 196,
+   "page": 10,
+   "date": "01/04/2026",
+   "desc": "207 | 01/04/2026 | 244FTID26091A4RJ deer Dp! sam! 230.00 31,563.77 01/04/2026",
+   "balance_printed": 31563.77,
+   "tokens": [
+    230.0,
+    31563.77
+   ],
+   "used": "A",
+   "delta": -230.0,
+   "balance": 31563.77,
+   "attrib": "debit",
+   "amount": 230.0
+  },
+  {
+   "serial": 208,
+   "read_ser": 208,
+   "src": "walk",
+   "walk_i": 197,
+   "page": 10,
+   "date": "01/04/2026",
+   "desc": "| 208 | svosnons | 244SA22EGP 00001 | Account statement charges | 100.00 | | 31,463.77 | 01/04/2026 | ||WRAP-AMT:[{\"v\": 58.68, \"cx\": 0.1951}]",
+   "balance_printed": 31463.77,
+   "tokens": [
+    100.0,
+    31463.77
+   ],
+   "used": "A",
+   "delta": -100.0,
+   "balance": 31463.77,
+   "attrib": "debit",
+   "amount": 100.0
+  },
+  {
+   "serial": 209,
+   "src": "insert",
+   "walk_i": null,
+   "page": 10,
+   "date": null,
+   "desc": null,
+   "D": 0.0,
+   "C": 100.0,
+   "balance_printed": null,
+   "tokens": [],
+   "source": "G9: p10 stamp zone credit",
+   "balance": 31563.77,
+   "delta": 100.0,
+   "attrib": "credit",
+   "amount": 100.0
+  },
+  {
+   "serial": 210,
+   "src": "insert",
+   "walk_i": null,
+   "page": 10,
+   "date": null,
+   "desc": null,
+   "D": 8300.0,
+   "C": 0.0,
+   "balance_printed": null,
+   "tokens": [],
+   "source": "G9: p10 stamp zone",
+   "balance": 23263.77,
+   "delta": -8300.0,
+   "attrib": "debit",
+   "amount": 8300.0
+  },
+  {
+   "serial": 211,
+   "src": "insert",
+   "walk_i": null,
+   "page": 10,
+   "date": null,
+   "desc": null,
+   "D": 448.0,
+   "C": 0.0,
+   "balance_printed": null,
+   "tokens": [],
+   "source": "G9: p10 stamp zone",
+   "balance": 22815.77,
+   "delta": -448.0,
+   "attrib": "debit",
+   "amount": 448.0
+  },
+  {
+   "serial": 212,
+   "src": "insert",
+   "walk_i": null,
+   "page": 10,
+   "date": null,
+   "desc": null,
+   "D": 8588.0,
+   "C": 0.0,
+   "balance_printed": null,
+   "tokens": [],
+   "source": "G9: p10 stamp zone",
+   "balance": 14227.77,
+   "delta": -8588.0,
+   "attrib": "debit",
+   "amount": 8588.0
+  },
+  {
+   "serial": 213,
+   "read_ser": 213,
+   "src": "walk",
+   "walk_i": 198,
+   "page": 11,
+   "date": "31/03/2026",
+   "desc": "| 213 ema 782NPMD260901bq] | ne eo 3,806.49 | | 10,421.28 | 31/03/2026",
+   "balance_printed": 10421.28,
+   "tokens": [
+    0.5,
+    3806.49,
+    10421.28,
+    182743.45
+   ],
+   "used": "solver",
+   "delta": -3806.49,
+   "balance": 10421.28,
+   "attrib": "debit",
+   "amount": 3806.49
+  },
+  {
+   "serial": 214,
+   "read_ser": 214,
+   "src": "walk",
+   "walk_i": 199,
+   "page": 11,
+   "date": "13/04/2026",
+   "desc": "214 | 14/042026 | 244FTID26104A05Q | ciate | 0.55 | 10,420.73 13/04/2026",
+   "balance_printed": 10420.73,
+   "tokens": [
+    0.55,
+    10420.73
+   ],
+   "used": "A",
+   "delta": -0.55,
+   "balance": 10420.73,
+   "attrib": "debit",
+   "amount": 0.55
+  },
+  {
+   "serial": 215,
+   "read_ser": 215,
+   "src": "walk",
+   "walk_i": 200,
+   "page": 11,
+   "date": "14/04/2026",
+   "desc": "| 215 | 14/04/2026 | 244FTIDI610N4A0IQ | MOHAMED ELSAYED | 550,00 | | 9,870.73 | 13/04/2026",
+   "balance_printed": 9870.73,
+   "tokens": [
+    550.0,
+    9870.73
+   ],
+   "used": "A",
+   "delta": -550.0,
+   "balance": 9870.73,
+   "attrib": "debit",
+   "amount": 550.0
+  },
+  {
+   "serial": 216,
+   "read_ser": 216,
+   "src": "walk",
+   "walk_i": 201,
+   "page": 11,
+   "date": "14/04/2026",
+   "desc": "216 | 14/04722026 | 244FTID26104A0LD | eee 8° se Network to | 1,25 | 9,869.48 14/04/2026",
+   "balance_printed": 9869.48,
+   "tokens": [
+    1.25,
+    9869.48
+   ],
+   "used": "A",
+   "delta": -1.25,
+   "balance": 9869.48,
+   "attrib": "debit",
+   "amount": 1.25
+  },
+  {
+   "serial": 217,
+   "read_ser": 217,
+   "src": "walk",
+   "walk_i": 202,
+   "page": 11,
+   "date": "14/04/2026",
+   "desc": "217 14/04/2026 244FTIDZ6104A0LD, | ee Od ae | 1,250.00 8,619.48 14/04/2026",
+   "balance_printed": 8619.48,
+   "tokens": [
+    1250.0,
+    8619.48
+   ],
+   "used": "A",
+   "delta": -1250.0,
+   "balance": 8619.48,
+   "attrib": "debit",
+   "amount": 1250.0
+  },
+  {
+   "serial": 218,
+   "read_ser": null,
+   "src": "walk",
+   "walk_i": 203,
+   "page": 11,
+   "date": "14/04/2026",
+   "desc": "| | 14/04/2026 | 244FTID26104A0MD | ELSAYED 0,50 8,613.98 14/04/2026",
+   "balance_printed": 8618.98,
+   "tokens": [
+    0.5,
+    8613.98,
+    8618.98
+   ],
+   "used": "B",
+   "delta": -0.5,
+   "balance": 8618.98,
+   "attrib": "debit",
+   "amount": 0.5
+  },
+  {
+   "serial": 219,
+   "read_ser": 219,
+   "src": "walk",
+   "walk_i": 204,
+   "page": 11,
+   "date": "14/04/2026",
+   "desc": "219 | 14/04/2026 | 244FTID2610SA0MD | AYA AIIMED ELSAYED | 120.00 8,498.98 14/04/2026",
+   "balance_printed": 8498.98,
+   "tokens": [
+    120.0,
+    8498.98
+   ],
+   "used": "A",
+   "delta": -120.0,
+   "balance": 8498.98,
+   "attrib": "debit",
+   "amount": 120.0
+  },
+  {
+   "serial": 220,
+   "read_ser": 220,
+   "src": "walk",
+   "walk_i": 205,
+   "page": 11,
+   "date": "14/04/2026",
+   "desc": "220 | 14/04/2026 | 244FTID26104A1ZF saa eat 4.20 8,494.78 14/04/2026",
+   "balance_printed": 8494.78,
+   "tokens": [
+    4.2,
+    8494.78
+   ],
+   "used": "A",
+   "delta": -4.2,
+   "balance": 8494.78,
+   "attrib": "debit",
+   "amount": 4.2
+  },
+  {
+   "serial": 221,
+   "read_ser": 221,
+   "src": "walk",
+   "walk_i": 206,
+   "page": 11,
+   "date": "14/04/2026",
+   "desc": "221 | 14/04/2026 | 244FTID26104A1ZF wenvan| anand, ene, ts 4,200.00 4,294.78 14/04/2026",
+   "balance_printed": 4294.78,
+   "tokens": [
+    4200.0,
+    4294.78
+   ],
+   "used": "A",
+   "delta": -4200.0,
+   "balance": 4294.78,
+   "attrib": "debit",
+   "amount": 4200.0
+  },
+  {
+   "serial": 222,
+   "read_ser": 222,
+   "src": "walk",
+   "walk_i": 207,
+   "page": 11,
+   "date": "14/04/2026",
+   "desc": "222 | 14/04/2026 | 244FTID26104A4P6 KARIM 2,00 4,292.78 14/04/2026",
+   "balance_printed": 4292.78,
+   "tokens": [
+    2.0,
+    4292.78
+   ],
+   "used": "A",
+   "delta": -2.0,
+   "balance": 4292.78,
+   "attrib": "debit",
+   "amount": 2.0
+  },
+  {
+   "serial": 223,
+   "read_ser": 223,
+   "src": "walk",
+   "walk_i": 208,
+   "page": 11,
+   "date": "14/04/2026",
+   "desc": "223 14/04/2026 244FTID26104A4P6 ABDELKADER~8B7044980935B 2,000.00 2,292.78 14/04/2026",
+   "balance_printed": 2292.78,
+   "tokens": [
+    2000.0,
+    2292.78
+   ],
+   "used": "A",
+   "delta": -2000.0,
+   "balance": 2292.78,
+   "attrib": "debit",
+   "amount": 2000.0
+  },
+  {
+   "serial": 224,
+   "read_ser": 224,
+   "src": "walk",
+   "walk_i": 209,
+   "page": 11,
+   "date": "16/04/2026",
+   "desc": "224 | 16/04/2026 | 782NPMD261043WPo -ELNOBARIA E& EX 300.00 1,992.78 14/04/2026",
+   "balance_printed": 1992.78,
+   "tokens": [
+    300.0,
+    1992.78
+   ],
+   "used": "A",
+   "delta": -300.0,
+   "balance": 1992.78,
+   "attrib": "debit",
+   "amount": 300.0
+  },
+  {
+   "serial": 225,
+   "read_ser": 225,
+   "src": "walk",
+   "walk_i": 210,
+   "page": 11,
+   "date": "18/04/2026",
+   "desc": "| 225 | sroan0ns | 244UDO1EGP 00001 | 2447480302432000021 | | 791.67 | 2,784.45 | 18/04/2026 |",
+   "balance_printed": 2784.45,
+   "tokens": [
+    791.67,
+    2784.45
+   ],
+   "used": "A",
+   "delta": 791.67,
+   "balance": 2784.45,
+   "attrib": "credit",
+   "amount": 791.67
+  },
+  {
+   "serial": 226,
+   "read_ser": 226,
+   "src": "walk",
+   "walk_i": 211,
+   "page": 11,
+   "date": "21/04/2026",
+   "desc": "226 | 21/04/2026 | 2441PNF261114041 To-Revenuc from sl saw oy 0.50 2,783.95 21/0472026",
+   "balance_printed": 2783.95,
+   "tokens": [
+    0.5,
+    2783.95
+   ],
+   "used": "A",
+   "delta": -0.5,
+   "balance": 2783.95,
+   "attrib": "debit",
+   "amount": 0.5
+  },
+  {
+   "serial": 227,
+   "read_ser": 227,
+   "src": "walk",
+   "walk_i": 212,
+   "page": 11,
+   "date": "21/04/2026",
+   "desc": "227 21/04/2026 413FTNU261116015 ry aut To yal 300,000.00 302,783.95 21/04/2026",
+   "balance_printed": 302783.95,
+   "tokens": [
+    300000.0,
+    302783.95
+   ],
+   "used": "A",
+   "delta": 300000.0,
+   "balance": 302783.95,
+   "attrib": "credit",
+   "amount": 300000.0
+  },
+  {
+   "serial": 228,
+   "src": "insert",
+   "walk_i": null,
+   "page": 11,
+   "date": null,
+   "desc": null,
+   "D": 20.0,
+   "C": 0.0,
+   "balance_printed": null,
+   "tokens": [],
+   "source": "G9: p11 bottom",
+   "balance": 302763.95,
+   "delta": -20.0,
+   "attrib": "debit",
+   "amount": 20.0
+  },
+  {
+   "serial": 229,
+   "src": "insert",
+   "walk_i": null,
+   "page": 11,
+   "date": null,
+   "desc": null,
+   "D": 70000.0,
+   "C": 0.0,
+   "balance_printed": null,
+   "tokens": [],
+   "source": "G9: p11 bottom",
+   "balance": 232763.95,
+   "delta": -70000.0,
+   "attrib": "debit",
+   "amount": 70000.0
+  },
+  {
+   "serial": 230,
+   "src": "insert",
+   "walk_i": null,
+   "page": 11,
+   "date": null,
+   "desc": null,
+   "D": 20.0,
+   "C": 0.0,
+   "balance_printed": null,
+   "tokens": [],
+   "source": "G9: p11 bottom",
+   "balance": 232743.95,
+   "delta": -20.0,
+   "attrib": "debit",
+   "amount": 20.0
+  },
+  {
+   "serial": 231,
+   "read_ser": null,
+   "src": "walk",
+   "walk_i": 213,
+   "page": 11,
+   "date": "22/04/2026",
+   "desc": "£51 | Se f54P LIDZOLIZALJM - EIBFBI8EE6F8ES79 | §0,000.00 | 182,743.95 | 22/04/2026",
+   "balance_printed": 182743.95,
+   "tokens": [
+    20000.0,
+    182743.95
+   ],
+   "used": "solver",
+   "delta": -50000.0,
+   "balance": 182743.95,
+   "attrib": "debit",
+   "amount": 50000.0
+  },
+  {
+   "serial": 232,
+   "read_ser": 232,
+   "src": "walk",
+   "walk_i": 214,
+   "page": 12,
+   "date": "23/04/2026",
+   "desc": "232 | 237042026 | 2441PNF261138050 To-Revenuc from als anc) 0.50 182,743.45 23/04/2026",
+   "balance_printed": 182743.45,
+   "tokens": [
+    0.5,
+    182743.45
+   ],
+   "used": "A",
+   "delta": -0.5,
+   "balance": 182743.45,
+   "attrib": "debit",
+   "amount": 0.5
+  },
+  {
+   "serial": 233,
+   "read_ser": 233,
+   "src": "walk",
+   "walk_i": 215,
+   "page": 12,
+   "date": "23/04/2026",
+   "desc": "233 | 204n026 | 244FTID26113A02A | Network to one SAAD 255 182,740.90 23/04/2026",
+   "balance_printed": 182740.9,
+   "tokens": [
+    2.55,
+    182740.9
+   ],
+   "used": "B",
+   "delta": -2.55,
+   "balance": 182740.9,
+   "attrib": "debit",
+   "amount": 2.55
+  },
+  {
+   "serial": 234,
+   "read_ser": 234,
+   "src": "walk",
+   "walk_i": 216,
+   "page": 12,
+   "date": null,
+   "desc": "234 | 230472026 | 244FTID26113A02A ae 2,550.00 180,190.90 230472026",
+   "balance_printed": 180190.9,
+   "tokens": [
+    2550.0,
+    180190.9
+   ],
+   "used": "A",
+   "delta": -2550.0,
+   "balance": 180190.9,
+   "attrib": "debit",
+   "amount": 2550.0
+  },
+  {
+   "serial": 235,
+   "read_ser": 235,
+   "src": "walk",
+   "walk_i": 217,
+   "page": 12,
+   "date": "23/04/2026",
+   "desc": "235 | 23/04/2026 244FTID261132236 ae yl lly Network lo 5.00 180,185.90 23/04/2026",
+   "balance_printed": 180185.9,
+   "tokens": [
+    5.0,
+    180185.9
+   ],
+   "used": "A",
+   "delta": -5.0,
+   "balance": 180185.9,
+   "attrib": "debit",
+   "amount": 5.0
+  },
+  {
+   "serial": 236,
+   "read_ser": 236,
+   "src": "walk",
+   "walk_i": 218,
+   "page": 12,
+   "date": "23/04/2026",
+   "desc": "236 | 2404/2026 244FT1ID261132236 am gol all, 5,000.00 175,185.90 23/04/2026",
+   "balance_printed": 175185.9,
+   "tokens": [
+    5000.0,
+    175185.9
+   ],
+   "used": "A",
+   "delta": -5000.0,
+   "balance": 175185.9,
+   "attrib": "debit",
+   "amount": 5000.0
+  },
+  {
+   "serial": 237,
+   "read_ser": 237,
+   "src": "walk",
+   "walk_i": 219,
+   "page": 12,
+   "date": "23/04/2026",
+   "desc": "237 23/04/2026 | 244CATM2611313Zm NBDE ATM-559444%*****7901 5,000.00 170,185.90 23/04/2026",
+   "balance_printed": 170185.9,
+   "tokens": [
+    0.5,
+    5000.0,
+    160400.78,
+    170185.9
+   ],
+   "used": "A",
+   "delta": -5000.0,
+   "balance": 170185.9,
+   "attrib": "debit",
+   "amount": 5000.0
+  },
+  {
+   "serial": 238,
+   "read_ser": 238,
+   "src": "walk",
+   "walk_i": 220,
+   "page": 12,
+   "date": "23/04/2026",
+   "desc": "238 | 23/0472026 | 244FT1D261132344 ei evlede a5 R 0.50 170,185.40 23/04/2026",
+   "balance_printed": 170185.4,
+   "tokens": [
+    0.5,
+    170185.4
+   ],
+   "used": "A",
+   "delta": -0.5,
+   "balance": 170185.4,
+   "attrib": "debit",
+   "amount": 0.5
+  },
+  {
+   "serial": 239,
+   "read_ser": 29,
+   "src": "walk",
+   "walk_i": 221,
+   "page": 12,
+   "date": "23/04/2026",
+   "desc": "29 23/04/2026 ***Iend Ree* Ateereesee D 230.00 169,955.40 23/04/2026",
+   "balance_printed": 169955.4,
+   "tokens": [
+    230.0,
+    169955.4
+   ],
+   "used": "A",
+   "delta": -230.0,
+   "balance": 169955.4,
+   "attrib": "debit",
+   "amount": 230.0
+  },
+  {
+   "serial": 240,
+   "read_ser": 240,
+   "src": "walk",
+   "walk_i": 222,
+   "page": 12,
+   "date": "23/04/2026",
+   "desc": "240 | 23/04/2026 244FTID261138236 perl yl dame sperms pd! Network fo 2.80 169,952.60 23/04/2026",
+   "balance_printed": 169952.6,
+   "tokens": [
+    2.8,
+    169952.6
+   ],
+   "used": "A",
+   "delta": -2.8,
+   "balance": 169952.6,
+   "attrib": "debit",
+   "amount": 2.8
+  },
+  {
+   "serial": 241,
+   "read_ser": 241,
+   "src": "walk",
+   "walk_i": 223,
+   "page": 12,
+   "date": "23/04/2026",
+   "desc": "241 | 23/04/2026 Z44FTID261138236 Berl y! tars spars pl 2,800.00 167,152.60 23/04/2026",
+   "balance_printed": 167152.6,
+   "tokens": [
+    1.64,
+    2.6,
+    2800.0,
+    151390.14,
+    167152.6
+   ],
+   "used": "A",
+   "delta": -2800.0,
+   "balance": 167152.6,
+   "attrib": "debit",
+   "amount": 2800.0
+  },
+  {
+   "serial": 242,
+   "read_ser": 242,
+   "src": "walk",
+   "walk_i": 224,
+   "page": 12,
+   "date": "25/04/2026",
+   "desc": "| 242 | 2coun0ae | 244UDOIEGF 00001 | Aepepeehapal are | | 205.83 | 167,358.43 | 25/04/2026 |",
+   "balance_printed": 167358.43,
+   "tokens": [
+    205.83,
+    167358.43
+   ],
+   "used": "A",
+   "delta": 205.83,
+   "balance": 167358.43,
+   "attrib": "credit",
+   "amount": 205.83
+  },
+  {
+   "serial": 243,
+   "read_ser": 243,
+   "src": "walk",
+   "walk_i": 225,
+   "page": 12,
+   "date": "24/04/2026",
+   "desc": "243 | 26/042026 | 244FTID261160118 | Network to SRAGRY SAAD 0.75 167,357.68 24/04/2026",
+   "balance_printed": 167357.68,
+   "tokens": [
+    0.75,
+    167357.68
+   ],
+   "used": "A",
+   "delta": -0.75,
+   "balance": 167357.68,
+   "attrib": "debit",
+   "amount": 0.75
+  },
+  {
+   "serial": 244,
+   "read_ser": 244,
+   "src": "walk",
+   "walk_i": 226,
+   "page": 12,
+   "date": "24/04/2026",
+   "desc": "244 | 26042026 | 244FTID261160118 aaa aa 750.00 166,607.68 24/04/2026",
+   "balance_printed": 166607.68,
+   "tokens": [
+    750.0,
+    166607.68
+   ],
+   "used": "A",
+   "delta": -750.0,
+   "balance": 166607.68,
+   "attrib": "debit",
+   "amount": 750.0
+  },
+  {
+   "serial": 245,
+   "read_ser": 245,
+   "src": "walk",
+   "walk_i": 227,
+   "page": 12,
+   "date": "26/04/2026",
+   "desc": "245 | 26/04/2026 244FTID261165302 Network to EID FARAG SAAD 1.00 166,606.68 25/04/2026",
+   "balance_printed": 166606.68,
+   "tokens": [
+    1.0,
+    166606.68
+   ],
+   "used": "A",
+   "delta": -1.0,
+   "balance": 166606.68,
+   "attrib": "debit",
+   "amount": 1.0
+  },
+  {
+   "serial": 246,
+   "read_ser": null,
+   "src": "walk",
+   "walk_i": 228,
+   "page": 12,
+   "date": "26/04/2026",
+   "desc": "26/04/2026 244FT1ID261164302 EID FARAG SAAD 1,000.00 165,606.68 25/04/2026",
+   "balance_printed": 165606.68,
+   "tokens": [
+    1000.0,
+    165606.68
+   ],
+   "used": "A",
+   "delta": -1000.0,
+   "balance": 165606.68,
+   "attrib": "debit",
+   "amount": 1000.0
+  },
+  {
+   "serial": 247,
+   "read_ser": 247,
+   "src": "walk",
+   "walk_i": 229,
+   "page": 12,
+   "date": "26/04/2026",
+   "desc": "247 | 26/04/2026 | 244FT1D261162469 Network het rr aes 3.90 165,602.78 25/04/2026",
+   "balance_printed": 165602.78,
+   "tokens": [
+    3.9,
+    165602.78
+   ],
+   "used": "A",
+   "delta": -3.9,
+   "balance": 165602.78,
+   "attrib": "debit",
+   "amount": 3.9
+  },
+  {
+   "serial": 248,
+   "read_ser": 248,
+   "src": "walk",
+   "walk_i": 230,
+   "page": 12,
+   "date": "26/04/2026",
+   "desc": "248 | 26/04/2026 244FTID261162469 SALAH FAWZY MOMMED 3,900.00 161,702.78 25/04/2026",
+   "balance_printed": 161702.78,
+   "tokens": [
+    3900.0,
+    161702.78
+   ],
+   "used": "A",
+   "delta": -3900.0,
+   "balance": 161702.78,
+   "attrib": "debit",
+   "amount": 3900.0
+  },
+  {
+   "serial": 249,
+   "read_ser": 249,
+   "src": "walk",
+   "walk_i": 231,
+   "page": 12,
+   "date": "26/04/2026",
+   "desc": "249 | 26/04/2026 244FTID261168234 ue Oe al) sane Network to 0.50 161,702.28 25/04/2026",
+   "balance_printed": 161702.28,
+   "tokens": [
+    0.5,
+    161702.28
+   ],
+   "used": "A",
+   "delta": -0.5,
+   "balance": 161702.28,
+   "attrib": "debit",
+   "amount": 0.5
+  },
+  {
+   "serial": 250,
+   "read_ser": 250,
+   "src": "walk",
+   "walk_i": 232,
+   "page": 12,
+   "date": "26/04/2026",
+   "desc": "250 | 26/04/2026 244FTID261168234 le Oe candy tems 300.00 161,402.28 25/04/2026",
+   "balance_printed": 161402.28,
+   "tokens": [
+    300.0,
+    161402.28
+   ],
+   "used": "A",
+   "delta": -300.0,
+   "balance": 161402.28,
+   "attrib": "debit",
+   "amount": 300.0
+  },
+  {
+   "serial": 251,
+   "read_ser": 251,
+   "src": "walk",
+   "walk_i": 233,
+   "page": 12,
+   "date": "26/04/2026",
+   "desc": "251 | 26/04/2026 244FT1D261168393 realy! clas sual! pes Network to 1.00 161,401.28 26/04/2026",
+   "balance_printed": 161401.28,
+   "tokens": [
+    1.0,
+    161401.28
+   ],
+   "used": "A",
+   "delta": -1.0,
+   "balance": 161401.28,
+   "attrib": "debit",
+   "amount": 1.0
+  },
+  {
+   "serial": 252,
+   "read_ser": 252,
+   "src": "walk",
+   "walk_i": 234,
+   "page": 13,
+   "date": "26/04/2026",
+   "desc": "252 | 26/04/2026 | 244FTID261168393 pel! chee tly! as 1,000.00 160,401.28 16/04/2026",
+   "balance_printed": 160401.28,
+   "tokens": [
+    1000.0,
+    160401.28
+   ],
+   "used": "A",
+   "delta": -1000.0,
+   "balance": 160401.28,
+   "attrib": "debit",
+   "amount": 1000.0
+  },
+  {
+   "serial": 253,
+   "read_ser": null,
+   "src": "walk",
+   "walk_i": 235,
+   "page": 13,
+   "date": "26/04/2026",
+   "desc": "non-fnanelal #00 160,400.78 26/04/2026",
+   "balance_printed": 160400.78,
+   "tokens": [
+    160400.78
+   ],
+   "used": "solver",
+   "delta": -0.5,
+   "balance": 160400.78,
+   "attrib": "debit",
+   "amount": 0.5
+  },
+  {
+   "serial": 254,
+   "read_ser": 284,
+   "src": "walk",
+   "walk_i": 236,
+   "page": 13,
+   "date": "27/04/2026",
+   "desc": "284 | 27/04/2026 | 244FTIDIGIIGAINF | Network to EID FARAG SAAD 9.00. 160,391.78 26/04/2026",
+   "balance_printed": 160391.78,
+   "tokens": [
+    9.0,
+    160391.78
+   ],
+   "used": "A",
+   "delta": -9.0,
+   "balance": 160391.78,
+   "attrib": "debit",
+   "amount": 9.0
+  },
+  {
+   "serial": 255,
+   "read_ser": 255,
+   "src": "walk",
+   "walk_i": 237,
+   "page": 13,
+   "date": "26/04/2026",
+   "desc": "255 | 27/042026 | 244FTID26116AINF EID FARAG SAAD 9,000.00 151,391.78 26/04/2026",
+   "balance_printed": 151391.78,
+   "tokens": [
+    9000.0,
+    151391.78
+   ],
+   "used": "A",
+   "delta": -9000.0,
+   "balance": 151391.78,
+   "attrib": "debit",
+   "amount": 9000.0
+  },
+  {
+   "serial": 256,
+   "read_ser": 256,
+   "src": "walk",
+   "walk_i": 238,
+   "page": 13,
+   "date": "27/04/2026",
+   "desc": "256 | 27/04/2026 | 244FTID2611GAINT Network to EID FARAG SAAD 2.00 151,389.78 27/04/2026",
+   "balance_printed": 151389.78,
+   "tokens": [
+    2.0,
+    151389.78
+   ],
+   "used": "A",
+   "delta": -2.0,
+   "balance": 151389.78,
+   "attrib": "debit",
+   "amount": 2.0
+  },
+  {
+   "serial": 257,
+   "src": "insert",
+   "walk_i": null,
+   "page": 13,
+   "date": null,
+   "desc": null,
+   "D": 2000.0,
+   "C": 0.0,
+   "balance_printed": null,
+   "tokens": [],
+   "source": "G9: p13 merge",
+   "balance": 149389.78,
+   "delta": -2000.0,
+   "attrib": "debit",
+   "amount": 2000.0
+  },
+  {
+   "serial": 258,
+   "src": "insert",
+   "walk_i": null,
+   "page": 13,
+   "date": null,
+   "desc": null,
+   "D": -2.0,
+   "C": 0.0,
+   "balance_printed": null,
+   "tokens": [],
+   "source": "G9: p13 fee reversal",
+   "balance": 149391.78,
+   "delta": 2.0,
+   "attrib": "reversal",
+   "amount": -2.0
+  },
+  {
+   "serial": 259,
+   "src": "insert",
+   "walk_i": null,
+   "page": 13,
+   "date": null,
+   "desc": null,
+   "D": -2000.0,
+   "C": 0.0,
+   "balance_printed": null,
+   "tokens": [],
+   "source": "G9: p13 transfer reversal",
+   "balance": 151391.78,
+   "delta": 2000.0,
+   "attrib": "reversal",
+   "amount": -2000.0
+  },
+  {
+   "serial": 260,
+   "read_ser": 260,
+   "src": "walk",
+   "walk_i": 239,
+   "page": 13,
+   "date": "27/04/2026",
+   "desc": "260 27/04/2026 244FT1D261168637 Network (o EID FARAG SAAD 1.64 151,390.14 27/04/2026",
+   "balance_printed": 151390.14,
+   "tokens": [
+    1.64,
+    151390.14
+   ],
+   "used": "solver",
+   "delta": -1.64,
+   "balance": 151390.14,
+   "attrib": "debit",
+   "amount": 1.64
+  },
+  {
+   "serial": 261,
+   "read_ser": 261,
+   "src": "walk",
+   "walk_i": 240,
+   "page": 13,
+   "date": "27/04/2026",
+   "desc": "261 | 27/04/2026 244FT1D261168637 EID FARAG SAAD 1,635.00 149,755.14 27/04/2026",
+   "balance_printed": 149755.14,
+   "tokens": [
+    1635.0,
+    149755.14
+   ],
+   "used": "A",
+   "delta": -1635.0,
+   "balance": 149755.14,
+   "attrib": "debit",
+   "amount": 1635.0
+  },
+  {
+   "serial": 262,
+   "read_ser": 262,
+   "src": "walk",
+   "walk_i": 241,
+   "page": 13,
+   "date": "28/04/2026",
+   "desc": "262 | 28/04/2026 | 244FTID26117A4NM Network do Mohamed Mahmoud 11.50 149,743.64 27/04/2026",
+   "balance_printed": 149743.64,
+   "tokens": [
+    11.5,
+    149743.64
+   ],
+   "used": "A",
+   "delta": -11.5,
+   "balance": 149743.64,
+   "attrib": "debit",
+   "amount": 11.5
+  },
+  {
+   "serial": 263,
+   "read_ser": 263,
+   "src": "walk",
+   "walk_i": 242,
+   "page": 13,
+   "date": "28/04/2026",
+   "desc": "263 | 28/04/2026 | 244FTID26117A4NM Mohamed Mahmoud 11,500.00 138,243.64 27/04/2026",
+   "balance_printed": 138243.64,
+   "tokens": [
+    0.52,
+    11500.0,
+    85440.02,
+    138243.64
+   ],
+   "used": "A",
+   "delta": -11500.0,
+   "balance": 138243.64,
+   "attrib": "debit",
+   "amount": 11500.0
+  },
+  {
+   "serial": 264,
+   "read_ser": 264,
+   "src": "walk",
+   "walk_i": 243,
+   "page": 13,
+   "date": "28/04/2026",
+   "desc": "264 | 28/04/2026 | 244FTID26117A0AN Network to EID FARAG 10,00 138,233.64 27/04/2026",
+   "balance_printed": 138233.64,
+   "tokens": [
+    10.0,
+    138233.64
+   ],
+   "used": "A",
+   "delta": -10.0,
+   "balance": 138233.64,
+   "attrib": "debit",
+   "amount": 10.0
+  },
+  {
+   "serial": 265,
+   "read_ser": 265,
+   "src": "walk",
+   "walk_i": 244,
+   "page": 13,
+   "date": "28/04/2026",
+   "desc": "265 | 28/04/2026 244FTID26117A0AN. EID FARAG 10,000.00 128,233.64 27/04/2026",
+   "balance_printed": 128233.64,
+   "tokens": [
+    10000.0,
+    128233.64
+   ],
+   "used": "A",
+   "delta": -10000.0,
+   "balance": 128233.64,
+   "attrib": "debit",
+   "amount": 10000.0
+  },
+  {
+   "serial": 266,
+   "read_ser": 266,
+   "src": "walk",
+   "walk_i": 245,
+   "page": 13,
+   "date": "28/04/2026",
+   "desc": "266 | 28/04/2026 244FTID261186020 Network to IBRAHEM GABER 0.50 128,233.14 28/04/2026",
+   "balance_printed": 128233.14,
+   "tokens": [
+    0.5,
+    128233.14
+   ],
+   "used": "A",
+   "delta": -0.5,
+   "balance": 128233.14,
+   "attrib": "debit",
+   "amount": 0.5
+  },
+  {
+   "serial": 267,
+   "read_ser": 267,
+   "src": "walk",
+   "walk_i": 246,
+   "page": 13,
+   "date": "28/04/2026",
+   "desc": "267 | 28/04/2026 244FT1ID261186020 IDRAIEM GABER 355.00 127,878.14 28/04/2026",
+   "balance_printed": 127878.14,
+   "tokens": [
+    355.0,
+    127878.14
+   ],
+   "used": "A",
+   "delta": -355.0,
+   "balance": 127878.14,
+   "attrib": "debit",
+   "amount": 355.0
+  },
+  {
+   "serial": 268,
+   "read_ser": 268,
+   "src": "walk",
+   "walk_i": 247,
+   "page": 13,
+   "date": "28/04/2026",
+   "desc": "268 | 28/04/2026 244FTID261188078 med ae mS aie Network to 20.00 127,858.14 28/04/2026",
+   "balance_printed": 127858.14,
+   "tokens": [
+    20.0,
+    127858.14
+   ],
+   "used": "A",
+   "delta": -20.0,
+   "balance": 127858.14,
+   "attrib": "debit",
+   "amount": 20.0
+  },
+  {
+   "serial": 269,
+   "read_ser": 269,
+   "src": "walk",
+   "walk_i": 248,
+   "page": 13,
+   "date": "28/04/2026",
+   "desc": "269 | 28/04/2026 244FTID261188078 wee ae te dye 20,000.00 107,858.14 28/04/2026",
+   "balance_printed": 107858.14,
+   "tokens": [
+    20000.0,
+    107858.14
+   ],
+   "used": "A",
+   "delta": -20000.0,
+   "balance": 107858.14,
+   "attrib": "debit",
+   "amount": 20000.0
+  },
+  {
+   "serial": 270,
+   "read_ser": 270,
+   "src": "walk",
+   "walk_i": 249,
+   "page": 13,
+   "date": "29/04/2026",
+   "desc": "270 | 29/04/2026 244FTID261 186298 Network to Ahmed El 4,80 107,853.34 28/04/2026",
+   "balance_printed": 107853.34,
+   "tokens": [
+    4.8,
+    570.0,
+    81881.95,
+    107853.34
+   ],
+   "used": "A",
+   "delta": -4.8,
+   "balance": 107853.34,
+   "attrib": "debit",
+   "amount": 4.8
+  },
+  {
+   "serial": 271,
+   "read_ser": 271,
+   "src": "walk",
+   "walk_i": 250,
+   "page": 13,
+   "date": "29/04/2026",
+   "desc": "271 29/04/2026 244FTID261186298 Ahmed El 4,800.00 103,053.34 28/04/2026",
+   "balance_printed": 103053.34,
+   "tokens": [
+    11.5,
+    4800.0,
+    81870.45,
+    103053.34
+   ],
+   "used": "A",
+   "delta": -4800.0,
+   "balance": 103053.34,
+   "attrib": "debit",
+   "amount": 4800.0
+  },
+  {
+   "serial": 272,
+   "read_ser": 272,
+   "src": "walk",
+   "walk_i": 251,
+   "page": 13,
+   "date": "29/04/2026",
+   "desc": "272 | 29/04/2026 244FTID261182294 Network to Ahmed El 0.50 103,052.84 28/04/2026",
+   "balance_printed": 103052.84,
+   "tokens": [
+    0.5,
+    103052.84
+   ],
+   "used": "A",
+   "delta": -0.5,
+   "balance": 103052.84,
+   "attrib": "debit",
+   "amount": 0.5
+  },
+  {
+   "serial": 273,
+   "read_ser": 273,
+   "src": "walk",
+   "walk_i": 252,
+   "page": 13,
+   "date": "29/04/2026",
+   "desc": "273 | 29/04/2026 244FTID261182294 Ahmed El 300.00 102,752.84 28/04/2026",
+   "balance_printed": 102752.84,
+   "tokens": [
+    300.0,
+    102752.84
+   ],
+   "used": "A",
+   "delta": -300.0,
+   "balance": 102752.84,
+   "attrib": "debit",
+   "amount": 300.0
+  },
+  {
+   "serial": 274,
+   "read_ser": 274,
+   "src": "walk",
+   "walk_i": 253,
+   "page": 13,
+   "date": "29/04/2026",
+   "desc": "274 | 29/04/2026 | 244FTID261192025 Network to Mohamed Mahmoud 11.00 102,741.84 29/04/2026",
+   "balance_printed": 102741.84,
+   "tokens": [
+    11.0,
+    102741.84
+   ],
+   "used": "A",
+   "delta": -11.0,
+   "balance": 102741.84,
+   "attrib": "debit",
+   "amount": 11.0
+  },
+  {
+   "serial": 275,
+   "read_ser": null,
+   "src": "walk",
+   "walk_i": 254,
+   "page": 14,
+   "date": "20/04/2026",
+   "desc": "17k 20/04/2026 244FT1D261192025 Mohnmed Mahmoud 11,000,00 91,741.84 29/04/2026",
+   "balance_printed": 91741.84,
+   "tokens": [
+    11000.0,
+    91741.84
+   ],
+   "used": "A",
+   "delta": -11000.0,
+   "balance": 91741.84,
+   "attrib": "debit",
+   "amount": 11000.0
+  },
+  {
+   "serial": 276,
+   "read_ser": null,
+   "src": "walk",
+   "walk_i": 255,
+   "page": 14,
+   "date": "29/04/2026",
+   "desc": "27% | 29/04/2026 sii —e may NAK ATM-SS0444******7001 | 5,000, a “ '",
+   "balance_printed": 86741.84,
+   "tokens": [
+    5000.0,
+    96741.84
+   ],
+   "used": "B",
+   "delta": -5000.0,
+   "balance": 86741.84,
+   "attrib": "debit",
+   "amount": 5000.0
+  },
+  {
+   "serial": 277,
+   "read_ser": 277,
+   "src": "walk",
+   "walk_i": 256,
+   "page": 14,
+   "date": "19/04/2026",
+   "desc": "277 | 2oa2026 | 244 TID 261190148 Network : am 1,30 86,740.54 19/04/2026",
+   "balance_printed": 86740.54,
+   "tokens": [
+    1.3,
+    86740.54,
+    96740.54
+   ],
+   "used": "B",
+   "delta": -1.3,
+   "balance": 86740.54,
+   "attrib": "debit",
+   "amount": 1.3
+  },
+  {
+   "serial": 278,
+   "read_ser": null,
+   "src": "walk",
+   "walk_i": 257,
+   "page": 14,
+   "date": "29/04/2026",
+   "desc": "27R | 29/04/2026 244FTID261190148 SALAH] FAWZY MOHMED 1,300.00 95,440.54 29/04/2026",
+   "balance_printed": 85440.54,
+   "tokens": [
+    1300.0,
+    95440.54
+   ],
+   "used": "A",
+   "delta": -1300.0,
+   "balance": 85440.54,
+   "attrib": "debit",
+   "amount": 1300.0
+  },
+  {
+   "serial": 279,
+   "read_ser": 279,
+   "src": "walk",
+   "walk_i": 258,
+   "page": 14,
+   "date": "19/04/2026",
+   "desc": "279 | s0/0472026 | 244FT1D261198105 ****Network to Waleed G 0.52 85,440.02 19/04/2026",
+   "balance_printed": 85440.02,
+   "tokens": [
+    0.52,
+    85440.02
+   ],
+   "used": "solver",
+   "delta": -0.52,
+   "balance": 85440.02,
+   "attrib": "debit",
+   "amount": 0.52
+  },
+  {
+   "serial": 280,
+   "read_ser": null,
+   "src": "walk",
+   "walk_i": 259,
+   "page": 14,
+   "date": "29/04/2026",
+   "desc": "2e0 | aonar2026 | 244F TTD 261198108 ****Walced G 520.00 84,920.02 29/04/2026",
+   "balance_printed": 84920.02,
+   "tokens": [
+    520.0,
+    84920.02
+   ],
+   "used": "A",
+   "delta": -520.0,
+   "balance": 84920.02,
+   "attrib": "debit",
+   "amount": 520.0
+  },
+  {
+   "serial": 281,
+   "read_ser": 281,
+   "src": "walk",
+   "walk_i": 260,
+   "page": 14,
+   "date": "30/04/2026",
+   "desc": "281 | 30/04/2026 244FTID261192389 ****Network to Sobhy A*** F 0.50 84,919.52 29/04/2026",
+   "balance_printed": 84919.52,
+   "tokens": [
+    0.5,
+    84919.52
+   ],
+   "used": "A",
+   "delta": -0.5,
+   "balance": 84919.52,
+   "attrib": "debit",
+   "amount": 0.5
+  },
+  {
+   "serial": 282,
+   "read_ser": 282,
+   "src": "walk",
+   "walk_i": 261,
+   "page": 14,
+   "date": "30/04/2026",
+   "desc": "282 | 30/04/2026 244FTID261192389 ****Sobhy At** F 465.00 84,454.52 29/04/2026",
+   "balance_printed": 84454.52,
+   "tokens": [
+    45.0,
+    465.0,
+    39739.45,
+    84454.52
+   ],
+   "used": "A",
+   "delta": -465.0,
+   "balance": 84454.52,
+   "attrib": "debit",
+   "amount": 465.0
+  },
+  {
+   "serial": 283,
+   "read_ser": 283,
+   "src": "walk",
+   "walk_i": 262,
+   "page": 14,
+   "date": "30/04/2026",
+   "desc": "283 | 30/04/2026 244FTID261200193 **» **J we Network to 2.00 84,452.52 30/04/2026",
+   "balance_printed": 84452.52,
+   "tokens": [
+    2.0,
+    39719.45,
+    84452.52
+   ],
+   "used": "A",
+   "delta": -2.0,
+   "balance": 84452.52,
+   "attrib": "debit",
+   "amount": 2.0
+  },
+  {
+   "serial": 284,
+   "read_ser": 284,
+   "src": "walk",
+   "walk_i": 263,
+   "page": 14,
+   "date": "30/04/2026",
+   "desc": "284 | 30/04/2026 244FTID261200193 HH HD ae 2,000.00 82,452.52 30/04/2026",
+   "balance_printed": 82452.52,
+   "tokens": [
+    2000.0,
+    82452.52
+   ],
+   "used": "A",
+   "delta": -2000.0,
+   "balance": 82452.52,
+   "attrib": "debit",
+   "amount": 2000.0
+  },
+  {
+   "serial": 285,
+   "read_ser": null,
+   "src": "walk",
+   "walk_i": 264,
+   "page": 14,
+   "date": "30/04/2026",
+   "desc": "30/04/2026 244FTID261200349 ****Network to Waleed G 0.57 82,451.95 30/04/2026",
+   "balance_printed": 82451.95,
+   "tokens": [
+    0.57,
+    2451.95,
+    3000.0,
+    26719.45,
+    82451.95
+   ],
+   "used": "A",
+   "delta": -0.57,
+   "balance": 82451.95,
+   "attrib": "debit",
+   "amount": 0.57
+  },
+  {
+   "serial": 286,
+   "read_ser": 286,
+   "src": "walk",
+   "walk_i": 265,
+   "page": 14,
+   "date": "30/04/2026",
+   "desc": "286 | 30/04/2026 244FTID261200349 ****Waleed G 570.00 $1,881.95 30/04/2026",
+   "balance_printed": 81881.95,
+   "tokens": [
+    1.5,
+    570.0,
+    26727.95
+   ],
+   "used": "solver",
+   "delta": -570.0,
+   "balance": 81881.95,
+   "attrib": "debit",
+   "amount": 570.0
+  },
+  {
+   "serial": 287,
+   "read_ser": 287,
+   "src": "walk",
+   "walk_i": 266,
+   "page": 14,
+   "date": "03/05/2026",
+   "desc": "287 | 03/05/2026 244FTID261232324 same 4}6 sam! 456 Network to 11.50 81,870.45 01/05/2026",
+   "balance_printed": 81870.45,
+   "tokens": [
+    11.5,
+    1500.0,
+    25227.95,
+    81870.45
+   ],
+   "used": "solver",
+   "delta": -11.5,
+   "balance": 81870.45,
+   "attrib": "debit",
+   "amount": 11.5
+  },
+  {
+   "serial": 288,
+   "read_ser": 288,
+   "src": "walk",
+   "walk_i": 267,
+   "page": 14,
+   "date": "03/05/2026",
+   "desc": "288 | 03/05/2026 244FT1ID261232324 sas (436 al te 11,500.00 70,370.45 01/05/2026",
+   "balance_printed": 70370.45,
+   "tokens": [
+    11500.0,
+    70370.45
+   ],
+   "used": "A",
+   "delta": -11500.0,
+   "balance": 70370.45,
+   "attrib": "debit",
+   "amount": 11500.0
+  },
+  {
+   "serial": 289,
+   "read_ser": 289,
+   "src": "walk",
+   "walk_i": 268,
+   "page": 14,
+   "date": "03/05/2026",
+   "desc": "289 | 03/05/2026 244FT1ID261236080 ****Notwork to Hamada S**** F 10,00 70,360.45 02/05/2026",
+   "balance_printed": 70360.45,
+   "tokens": [
+    10.0,
+    70360.45
+   ],
+   "used": "A",
+   "delta": -10.0,
+   "balance": 70360.45,
+   "attrib": "debit",
+   "amount": 10.0
+  },
+  {
+   "serial": 290,
+   "read_ser": 290,
+   "src": "walk",
+   "walk_i": 269,
+   "page": 14,
+   "date": "03/05/2026",
+   "desc": "290 | 03/05/2026 244FT1D2612360380 ****Hamada S**** F 10,000.00 60,360.45 02/05/2026",
+   "balance_printed": 60360.45,
+   "tokens": [
+    10000.0,
+    60360.45
+   ],
+   "used": "A",
+   "delta": -10000.0,
+   "balance": 60360.45,
+   "attrib": "debit",
+   "amount": 10000.0
+  },
+  {
+   "serial": 291,
+   "read_ser": null,
+   "src": "walk",
+   "walk_i": 270,
+   "page": 14,
+   "date": "03/05/2026",
+   "desc": "03/05/2026 244FTID261238199 ELSAYED 0.50 60,359.95 03/05/2026",
+   "balance_printed": 60359.95,
+   "tokens": [
+    0.5,
+    60359.95
+   ],
+   "used": "A",
+   "delta": -0.5,
+   "balance": 60359.95,
+   "attrib": "debit",
+   "amount": 0.5
+  },
+  {
+   "serial": 292,
+   "read_ser": null,
+   "src": "walk",
+   "walk_i": 271,
+   "page": 14,
+   "date": "03/05/2026",
+   "desc": "03/05/2026 244FTID261238199 MOHAMED ELSAYED 400.00 59,959.95 03/05/2026",
+   "balance_printed": 59959.95,
+   "tokens": [
+    400.0,
+    59959.95
+   ],
+   "used": "A",
+   "delta": -400.0,
+   "balance": 59959.95,
+   "attrib": "debit",
+   "amount": 400.0
+  },
+  {
+   "serial": 293,
+   "read_ser": null,
+   "src": "walk",
+   "walk_i": 272,
+   "page": 14,
+   "date": "04/05/2026",
+   "desc": "04/05/2026 | 244FTID26123A3GK Network to EID FARAG 10.00 59,949.95 04/05/2026",
+   "balance_printed": 59949.95,
+   "tokens": [
+    10.0,
+    59949.95
+   ],
+   "used": "A",
+   "delta": -10.0,
+   "balance": 59949.95,
+   "attrib": "debit",
+   "amount": 10.0
+  },
+  {
+   "serial": 294,
+   "read_ser": 294,
+   "src": "walk",
+   "walk_i": 273,
+   "page": 14,
+   "date": "04/05/2026",
+   "desc": "294 | 04/05/2026 | 244FTID26123A3GK EID FARAG 10,000.00 49,949.95 04/05/2026",
+   "balance_printed": 49949.95,
+   "tokens": [
+    10000.0,
+    49949.95
+   ],
+   "used": "A",
+   "delta": -10000.0,
+   "balance": 49949.95,
+   "attrib": "debit",
+   "amount": 10000.0
+  },
+  {
+   "serial": 295,
+   "read_ser": 295,
+   "src": "walk",
+   "walk_i": 274,
+   "page": 14,
+   "date": "04/05/2026",
+   "desc": "295 | 04/05/2026 244FTID261246095 seeeel #4 io Network to 0.50 49,949.45 04/05/2026",
+   "balance_printed": 49949.45,
+   "tokens": [
+    0.5,
+    49949.45
+   ],
+   "used": "A",
+   "delta": -0.5,
+   "balance": 49949.45,
+   "attrib": "debit",
+   "amount": 0.5
+  },
+  {
+   "serial": 296,
+   "read_ser": 296,
+   "src": "walk",
+   "walk_i": 275,
+   "page": 14,
+   "date": "04/05/2026",
+   "desc": "296 | 04/05/2026 244FTID261246095 wenee| eb yy 200.00 49,749.45 04/05/2026 ||WRAP-AMT:[{\"v\": 1131.0, \"cx\": 0.7608}]",
+   "balance_printed": 49749.45,
+   "tokens": [
+    200.0,
+    49749.45
+   ],
+   "used": "A",
+   "delta": -200.0,
+   "balance": 49749.45,
+   "attrib": "debit",
+   "amount": 200.0
+  },
+  {
+   "serial": 297,
+   "read_ser": 297,
+   "src": "walk",
+   "walk_i": 276,
+   "page": 15,
+   "date": "04/08/2026",
+   "desc": "297 | 04/08/2026 | 244FT1D261244337 anes te 00d ay it Network to 49,739.48 04/05/2026",
+   "balance_printed": 49739.45,
+   "tokens": [
+    10.0,
+    49739.45,
+    49739.48
+   ],
+   "used": "B",
+   "delta": -10.0,
+   "balance": 49739.45,
+   "attrib": "debit",
+   "amount": 10.0
+  },
+  {
+   "serial": 298,
+   "read_ser": 298,
+   "src": "walk",
+   "walk_i": 277,
+   "page": 15,
+   "date": "04/05/2026",
+   "desc": "298 | 04/05/2026 244FTID261244337 000 ORs 8 et 10,000.00 39,739,A5$ 04/05/2026",
+   "balance_printed": 39739.45,
+   "tokens": [
+    10000.0,
+    39739.45
+   ],
+   "used": "solver",
+   "delta": -10000.0,
+   "balance": 39739.45,
+   "attrib": "debit",
+   "amount": 10000.0
+  },
+  {
+   "serial": 299,
+   "read_ser": 299,
+   "src": "walk",
+   "walk_i": 278,
+   "page": 15,
+   "date": "08/05/2026",
+   "desc": "299 | 08/05/2026 | 244FTID261258105 Network to EID FARAG 10,00 39,729.45 05/05/2026",
+   "balance_printed": 39729.45,
+   "tokens": [
+    10.0,
+    39729.45
+   ],
+   "used": "solver",
+   "delta": -10.0,
+   "balance": 39729.45,
+   "attrib": "debit",
+   "amount": 10.0
+  },
+  {
+   "serial": 300,
+   "read_ser": 300,
+   "src": "walk",
+   "walk_i": 279,
+   "page": 15,
+   "date": "05/05/2016",
+   "desc": "300 | ON0N2026 244FTID261259105 EID FARAG 10,000.00 29,729.45 05/05/2016",
+   "balance_printed": 29729.45,
+   "tokens": [
+    10000.0,
+    29729.45
+   ],
+   "used": "A",
+   "delta": -10000.0,
+   "balance": 29729.45,
+   "attrib": "debit",
+   "amount": 10000.0
+  },
+  {
+   "serial": 301,
+   "read_ser": 301,
+   "src": "walk",
+   "walk_i": 280,
+   "page": 15,
+   "date": "06/05/2026",
+   "desc": "301 06/05/2026 244CATM26126131Z NOE ATM-5594442***\"*7901 3,000.00 26,719.45 06/05/2026",
+   "balance_printed": 26729.45,
+   "tokens": [
+    3000.0,
+    26719.45
+   ],
+   "used": "solver",
+   "delta": -3000.0,
+   "balance": 26729.45,
+   "attrib": "debit",
+   "amount": 3000.0
+  },
+  {
+   "serial": 302,
+   "read_ser": 302,
+   "src": "walk",
+   "walk_i": 281,
+   "page": 15,
+   "date": "06/05/2026",
+   "desc": "302 06/05/2026 244FTID 261264088 ee ted ally Network lo 1,50 16,727.95 06/05/2026",
+   "balance_printed": 26727.95,
+   "tokens": [
+    1.5,
+    16727.95
+   ],
+   "used": "solver",
+   "delta": -1.5,
+   "balance": 26727.95,
+   "attrib": "debit",
+   "amount": 1.5
+  },
+  {
+   "serial": 303,
+   "read_ser": 303,
+   "src": "walk",
+   "walk_i": 282,
+   "page": 15,
+   "date": "06/05/2026",
+   "desc": "303 | 06/05/2026 | 244FTID261264088 #8. eS all 1,500.00 25,227.95 06/05/2026",
+   "balance_printed": 25227.95,
+   "tokens": [
+    1500.0,
+    25227.95
+   ],
+   "used": "solver",
+   "delta": -1500.0,
+   "balance": 25227.95,
+   "attrib": "debit",
+   "amount": 1500.0
+  },
+  {
+   "serial": 304,
+   "read_ser": 304,
+   "src": "walk",
+   "walk_i": 283,
+   "page": 15,
+   "date": "10/05/2026",
+   "desc": "304 | 10/05/2026 244FT1D261304685 Network to ESLAM MOHSEN 0.50 25,227.45 08/05/2026",
+   "balance_printed": 25227.45,
+   "tokens": [
+    0.4,
+    0.5,
+    25117.45,
+    25227.45
+   ],
+   "used": "A",
+   "delta": -0.5,
+   "balance": 25227.45,
+   "attrib": "debit",
+   "amount": 0.5
+  },
+  {
+   "serial": 305,
+   "read_ser": 305,
+   "src": "walk",
+   "walk_i": 284,
+   "page": 15,
+   "date": "10/05/2026",
+   "desc": "305 | 10/05/2026 244FT1D261304685 ESLAM MOHSEN. 450.00 24,777.45 08/05/2026",
+   "balance_printed": 24777.45,
+   "tokens": [
+    450.0,
+    24777.45
+   ],
+   "used": "A",
+   "delta": -450.0,
+   "balance": 24777.45,
+   "attrib": "debit",
+   "amount": 450.0
+  },
+  {
+   "serial": 306,
+   "read_ser": 306,
+   "src": "walk",
+   "walk_i": 285,
+   "page": 15,
+   "date": "10/05/2026",
+   "desc": "306 | 10/05/2026 244FTID261302578 seep woe! sams Network fo 0.79 24,776.66 08/05/2026",
+   "balance_printed": 24776.66,
+   "tokens": [
+    0.79,
+    24776.66
+   ],
+   "used": "A",
+   "delta": -0.79,
+   "balance": 24776.66,
+   "attrib": "debit",
+   "amount": 0.79
+  },
+  {
+   "serial": 307,
+   "read_ser": 307,
+   "src": "walk",
+   "walk_i": 286,
+   "page": 15,
+   "date": "10/08/2026",
+   "desc": "307 | 10/08/2026 | 244FTID261302578 ase, seer] sans 790,00 23,986.66 08/05/2026",
+   "balance_printed": 23986.66,
+   "tokens": [
+    790.0,
+    23986.66
+   ],
+   "used": "A",
+   "delta": -790.0,
+   "balance": 23986.66,
+   "attrib": "debit",
+   "amount": 790.0
+  },
+  {
+   "serial": 308,
+   "read_ser": 308,
+   "src": "walk",
+   "walk_i": 287,
+   "page": 15,
+   "date": "10/05/2026",
+   "desc": "308 | 10/05/2026 244FTID261306410 Network to ESLAM MOISEN 1.80. 23,984,86 09/05/2026",
+   "balance_printed": 23984.86,
+   "tokens": [
+    0.5,
+    1.8,
+    17183.51,
+    23984.86
+   ],
+   "used": "A",
+   "delta": -1.8,
+   "balance": 23984.86,
+   "attrib": "debit",
+   "amount": 1.8
+  },
+  {
+   "serial": 309,
+   "read_ser": 309,
+   "src": "walk",
+   "walk_i": 288,
+   "page": 15,
+   "date": "10/05/2026",
+   "desc": "309 | 10/05/2026 244FTID261306410 ESLAM MOHSEN 1,800.00 22,184.86 09/05/2026",
+   "balance_printed": 22184.86,
+   "tokens": [
+    1800.0,
+    22184.86
+   ],
+   "used": "A",
+   "delta": -1800.0,
+   "balance": 22184.86,
+   "attrib": "debit",
+   "amount": 1800.0
+  },
+  {
+   "serial": 310,
+   "read_ser": 310,
+   "src": "walk",
+   "walk_i": 289,
+   "page": 15,
+   "date": "10/05/2026",
+   "desc": "310 | 10/05/2026 | 244FTID261306732 sas (tS aml (> Network to 1.00 22,183.86 10/05/2026",
+   "balance_printed": 22183.86,
+   "tokens": [
+    1.0,
+    22183.86
+   ],
+   "used": "A",
+   "delta": -1.0,
+   "balance": 22183.86,
+   "attrib": "debit",
+   "amount": 1.0
+  },
+  {
+   "serial": 311,
+   "read_ser": null,
+   "src": "walk",
+   "walk_i": 290,
+   "page": 15,
+   "date": "10/05/2026",
+   "desc": "Jil | 10/05/2026 244FTID261306732 Bares pth dar! 23 1,000.00 21,183.86 10/05/2026",
+   "balance_printed": 21183.86,
+   "tokens": [
+    1000.0,
+    21183.86
+   ],
+   "used": "A",
+   "delta": -1000.0,
+   "balance": 21183.86,
+   "attrib": "debit",
+   "amount": 1000.0
+  },
+  {
+   "serial": 312,
+   "read_ser": 312,
+   "src": "walk",
+   "walk_i": 291,
+   "page": 15,
+   "date": "11/05/2026",
+   "desc": "312 11/05/2026 244FTID261305567 een 5 a08s, oem! Network (to 0,70 21,183.16 11/05/2026",
+   "balance_printed": 21183.16,
+   "tokens": [
+    0.7,
+    21183.16
+   ],
+   "used": "A",
+   "delta": -0.7,
+   "balance": 21183.16,
+   "attrib": "debit",
+   "amount": 0.7
+  },
+  {
+   "serial": 313,
+   "read_ser": 313,
+   "src": "walk",
+   "walk_i": 292,
+   "page": 15,
+   "date": "11/08/2026",
+   "desc": "313. | 11/08/2026 244FTID261305567 eee tty aol 700,00 20,483.16",
+   "balance_printed": 20483.16,
+   "tokens": [
+    700.0,
+    20483.16
+   ],
+   "used": "A",
+   "delta": -700.0,
+   "balance": 20483.16,
+   "attrib": "debit",
+   "amount": 700.0
+  },
+  {
+   "serial": 314,
+   "read_ser": 314,
+   "src": "walk",
+   "walk_i": 293,
+   "page": 15,
+   "date": "11/08/2026",
+   "desc": "314 | 117082026 | 244F71D261303533 ee re 0.50 20,482.66 11/08/2026",
+   "balance_printed": 20482.66,
+   "tokens": [
+    0.5,
+    20482.66
+   ],
+   "used": "A",
+   "delta": -0.5,
+   "balance": 20482.66,
+   "attrib": "debit",
+   "amount": 0.5
+  },
+  {
+   "serial": 315,
+   "read_ser": 315,
+   "src": "walk",
+   "walk_i": 294,
+   "page": 15,
+   "date": "11/05/2026",
+   "desc": "315 11/05/2026 244FT1ID261303533 MOHAMED ELSAYED 250.00 20,232.66 11/05/2026",
+   "balance_printed": 20232.66,
+   "tokens": [
+    250.0,
+    20232.66
+   ],
+   "used": "A",
+   "delta": -250.0,
+   "balance": 20232.66,
+   "attrib": "debit",
+   "amount": 250.0
+  },
+  {
+   "serial": 316,
+   "read_ser": 316,
+   "src": "walk",
+   "walk_i": 295,
+   "page": 15,
+   "date": "11/05/2026",
+   "desc": "316 | 117082026 | 244FT1D261307143 Netw sn ee 0.50 20,232.16 11/05/2026",
+   "balance_printed": 20232.16,
+   "tokens": [
+    0.5,
+    20232.16
+   ],
+   "used": "A",
+   "delta": -0.5,
+   "balance": 20232.16,
+   "attrib": "debit",
+   "amount": 0.5
+  },
+  {
+   "serial": 317,
+   "read_ser": 317,
+   "src": "walk",
+   "walk_i": 296,
+   "page": 15,
+   "date": "11/05/2026",
+   "desc": "317 «| «11/05/2026 244FTID261307143 MOHAMED ELSAYED 150.00 20,082.16 11/05/2026",
+   "balance_printed": 20082.16,
+   "tokens": [
+    150.0,
+    20082.16
+   ],
+   "used": "A",
+   "delta": -150.0,
+   "balance": 20082.16,
+   "attrib": "debit",
+   "amount": 150.0
+  },
+  {
+   "serial": 318,
+   "read_ser": 334,
+   "src": "walk",
+   "walk_i": 297,
+   "page": 16,
+   "date": "11/05/1026",
+   "desc": "334 | rioaaode | 2adtTipzerareray | Newark to ae SAAD 0.65 20,081.51 11/05/1026",
+   "balance_printed": 20081.51,
+   "tokens": [
+    0.65,
+    6.65,
+    20081.51
+   ],
+   "used": "A",
+   "delta": -0.65,
+   "balance": 20081.51,
+   "attrib": "debit",
+   "amount": 0.65
+  },
+  {
+   "serial": 319,
+   "read_ser": 319,
+   "src": "walk",
+   "walk_i": 298,
+   "page": 16,
+   "date": "11/05/2026",
+   "desc": "319 | 11/05/2026 244FT1D261316139 HABASHY 650.00 19,431.51 11/05/2026",
+   "balance_printed": 19431.51,
+   "tokens": [
+    650.0,
+    19431.51
+   ],
+   "used": "A",
+   "delta": -650.0,
+   "balance": 19431.51,
+   "attrib": "debit",
+   "amount": 650.0
+  },
+  {
+   "serial": 320,
+   "read_ser": 320,
+   "src": "walk",
+   "walk_i": 299,
+   "page": 16,
+   "date": "12/05/2026",
+   "desc": "320 | 12/05/2026 244FT1D261324201 seeeNndtwork to nabll h 2,00 19,429.51 12/05/2026",
+   "balance_printed": 19429.51,
+   "tokens": [
+    2.0,
+    19429.51
+   ],
+   "used": "A",
+   "delta": -2.0,
+   "balance": 19429.51,
+   "attrib": "debit",
+   "amount": 2.0
+  },
+  {
+   "serial": 321,
+   "read_ser": null,
+   "src": "walk",
+   "walk_i": 300,
+   "page": 16,
+   "date": "12/05/2026",
+   "desc": "32\\ 12/05/2026 244FTID261324201 #8 °nnbil h 2,000.00 17,429.51 12/05/2026",
+   "balance_printed": 17429.51,
+   "tokens": [
+    2000.0,
+    17429.51
+   ],
+   "used": "A",
+   "delta": -2000.0,
+   "balance": 17429.51,
+   "attrib": "debit",
+   "amount": 2000.0
+  },
+  {
+   "serial": 322,
+   "read_ser": 322,
+   "src": "walk",
+   "walk_i": 301,
+   "page": 16,
+   "date": "14/05/2026",
+   "desc": "322 | 14/05/2026 | 244FTID26133A081 usr 5! a>! Notwork to 0.50 17,429.01 13/05/2026",
+   "balance_printed": 17429.01,
+   "tokens": [
+    0.5,
+    17429.01
+   ],
+   "used": "A",
+   "delta": -0.5,
+   "balance": 17429.01,
+   "attrib": "debit",
+   "amount": 0.5
+  },
+  {
+   "serial": 323,
+   "read_ser": 323,
+   "src": "walk",
+   "walk_i": 302,
+   "page": 16,
+   "date": "14/05/2026",
+   "desc": "323 | 14/05/2026 | 244FTID26133A081 Jeer cb ;51 a0>! 245.00 17,184.01 13/05/2026",
+   "balance_printed": 17184.01,
+   "tokens": [
+    245.0,
+    17184.01
+   ],
+   "used": "A",
+   "delta": -245.0,
+   "balance": 17184.01,
+   "attrib": "debit",
+   "amount": 245.0
+  },
+  {
+   "serial": 324,
+   "read_ser": 324,
+   "src": "walk",
+   "walk_i": 303,
+   "page": 16,
+   "date": "14/05/2026",
+   "desc": "324 | 14/05/2026 244FTID261348172 seens,,, 090900) +> Network to 17,183.51 14/05/2026",
+   "balance_printed": 17183.51,
+   "tokens": [
+    791.67,
+    11414.3,
+    17183.51
+   ],
+   "used": "solver",
+   "delta": -0.5,
+   "balance": 17183.51,
+   "attrib": "debit",
+   "amount": 0.5
+  },
+  {
+   "serial": 325,
+   "read_ser": 325,
+   "src": "walk",
+   "walk_i": 304,
+   "page": 16,
+   "date": "14/05/2026",
+   "desc": "325 | 14/05/2026 244FTID261348172 Htdty sennn,,, seeneel clue 370.00 16,813.51 14/05/2026",
+   "balance_printed": 16813.51,
+   "tokens": [
+    370.0,
+    16813.51
+   ],
+   "used": "A",
+   "delta": -370.0,
+   "balance": 16813.51,
+   "attrib": "debit",
+   "amount": 370.0
+  },
+  {
+   "serial": 326,
+   "read_ser": 326,
+   "src": "walk",
+   "walk_i": 305,
+   "page": 16,
+   "date": "17/05/2026",
+   "desc": "326 | 17/05/2026 244FT1D261374267 Network to 4.00 16,809.51 15/05/2026",
+   "balance_printed": 16809.51,
+   "tokens": [
+    4.0,
+    11348.3,
+    16809.51
+   ],
+   "used": "A",
+   "delta": -4.0,
+   "balance": 16809.51,
+   "attrib": "debit",
+   "amount": 4.0
+  },
+  {
+   "serial": 327,
+   "read_ser": 327,
+   "src": "walk",
+   "walk_i": 306,
+   "page": 16,
+   "date": "17/05/2026",
+   "desc": "327 | 17/05/2026 244FTID261374267 sandsabra~3F7E42A63B8F1FSE - 4,000.00 12,809.51 15/05/2026",
+   "balance_printed": 12809.51,
+   "tokens": [
+    205.0,
+    4000.0,
+    7433.18,
+    12809.51
+   ],
+   "used": "A",
+   "delta": -4000.0,
+   "balance": 12809.51,
+   "attrib": "debit",
+   "amount": 4000.0
+  },
+  {
+   "serial": 328,
+   "read_ser": 328,
+   "src": "walk",
+   "walk_i": 307,
+   "page": 16,
+   "date": "17/05/2026",
+   "desc": "328 | 17/05/2026 | 2441PNF261376083 To-Revenue from “#l+ an oi 0.50 12,809.01 17/05/2026",
+   "balance_printed": 12809.01,
+   "tokens": [
+    0.5,
+    6.54,
+    7232.64,
+    12809.01
+   ],
+   "used": "A",
+   "delta": -0.5,
+   "balance": 12809.01,
+   "attrib": "debit",
+   "amount": 0.5
+  },
+  {
+   "serial": 329,
+   "read_ser": 329,
+   "src": "walk",
+   "walk_i": 308,
+   "page": 16,
+   "date": "17/05/2026",
+   "desc": "329 | 17/05/2026 244FT1ID261370369 dams fylbs o>! 24 Network to 0.50 12,808.51 16/05/2026",
+   "balance_printed": 12808.51,
+   "tokens": [
+    0.5,
+    540.0,
+    6692.64,
+    12808.51
+   ],
+   "used": "A",
+   "delta": -0.5,
+   "balance": 12808.51,
+   "attrib": "debit",
+   "amount": 0.5
+  },
+  {
+   "serial": 330,
+   "read_ser": 330,
+   "src": "walk",
+   "walk_i": 309,
+   "page": 16,
+   "date": "17/05/2026",
+   "desc": "330 | 17/05/2026 244FT1D261370369 sass Gylhy 10>] isos 400.00 12,408,51 16/05/2026",
+   "balance_printed": 12408.51,
+   "tokens": [
+    400.0,
+    12408.51
+   ],
+   "used": "A",
+   "delta": -400.0,
+   "balance": 12408.51,
+   "attrib": "debit",
+   "amount": 400.0
+  },
+  {
+   "serial": 331,
+   "read_ser": 331,
+   "src": "walk",
+   "walk_i": 310,
+   "page": 16,
+   "date": "17/05/2026",
+   "desc": "331 | 17/05/2026 244FT1ID261376621 fawanenae wennl 55 Network to 0.88 12,407.63 17/05/2026",
+   "balance_printed": 12407.63,
+   "tokens": [
+    0.88,
+    12407.63
+   ],
+   "used": "A",
+   "delta": -0.88,
+   "balance": 12407.63,
+   "attrib": "debit",
+   "amount": 0.88
+  },
+  {
+   "serial": 332,
+   "read_ser": 332,
+   "src": "walk",
+   "walk_i": 311,
+   "page": 16,
+   "date": "17/05/2026",
+   "desc": "332 | 17/05/2026 244FTID261376621 maneennts KON Geb 880.00 11,527.63 17/05/2026",
+   "balance_printed": 11527.63,
+   "tokens": [
+    880.0,
+    11527.63
+   ],
+   "used": "A",
+   "delta": -880.0,
+   "balance": 11527.63,
+   "attrib": "debit",
+   "amount": 880.0
+  },
+  {
+   "serial": 333,
+   "read_ser": 333,
+   "src": "walk",
+   "walk_i": 312,
+   "page": 16,
+   "date": "17/05/2026",
+   "desc": "333 | 17/05/2026 244FT1D261376632 wee HAY aol Network to 0.50 11,527.13 17/05/2026",
+   "balance_printed": 11527.13,
+   "tokens": [
+    0.5,
+    11527.13
+   ],
+   "used": "A",
+   "delta": -0.5,
+   "balance": 11527.13,
+   "attrib": "debit",
+   "amount": 0.5
+  },
+  {
+   "serial": 334,
+   "read_ser": 334,
+   "src": "walk",
+   "walk_i": 313,
+   "page": 16,
+   "date": "17/05/2026",
+   "desc": "334 | 17/05/2026 244FT1D261376632 weep tim oul 140,00 11,387.13 17/05/2026",
+   "balance_printed": 11387.13,
+   "tokens": [
+    140.0,
+    11387.13
+   ],
+   "used": "A",
+   "delta": -140.0,
+   "balance": 11387.13,
+   "attrib": "debit",
+   "amount": 140.0
+  },
+  {
+   "serial": 335,
+   "read_ser": 335,
+   "src": "walk",
+   "walk_i": 314,
+   "page": 16,
+   "date": "19/05/2026",
+   "desc": "335 | 19/05/2026 | 244FTID261378273 Neves 0.50 11,386.63 17/05/2026",
+   "balance_printed": 11386.63,
+   "tokens": [
+    0.5,
+    11386.63
+   ],
+   "used": "A",
+   "delta": -0.5,
+   "balance": 11386.63,
+   "attrib": "debit",
+   "amount": 0.5
+  },
+  {
+   "serial": 336,
+   "read_ser": 336,
+   "src": "walk",
+   "walk_i": 315,
+   "page": 16,
+   "date": "18/05/2026",
+   "desc": "336 | 18/05/2026 244FT1D261378273 AYA AHMED ELSAYED 325.00 11,061.63 17/05/2026",
+   "balance_printed": 11061.63,
+   "tokens": [
+    325.0,
+    11061.63
+   ],
+   "used": "A",
+   "delta": -325.0,
+   "balance": 11061.63,
+   "attrib": "debit",
+   "amount": 325.0
+  },
+  {
+   "serial": 337,
+   "read_ser": 337,
+   "src": "walk",
+   "walk_i": 316,
+   "page": 16,
+   "date": "18/05/2026",
+   "desc": "337 | 18/05/2026 | 244FTID261378280 Jer 5)! a>! Network to 0,50 11,061.13 17/05/2026",
+   "balance_printed": 11061.13,
+   "tokens": [
+    0.5,
+    11061.13
+   ],
+   "used": "A",
+   "delta": -0.5,
+   "balance": 11061.13,
+   "attrib": "debit",
+   "amount": 0.5
+  },
+  {
+   "serial": 338,
+   "read_ser": 338,
+   "src": "walk",
+   "walk_i": 317,
+   "page": 16,
+   "date": "18/05/2026",
+   "desc": "338 | 18/05/2026 244FT1D261378280 eee bt! aa! 118,00 10,943.13 17/05/2026 ||WRAP-AMT:[{\"v\": 4.03, \"cx\": 0.7897}]",
+   "balance_printed": 10943.13,
+   "tokens": [
+    118.0,
+    10943.13
+   ],
+   "used": "A",
+   "delta": -118.0,
+   "balance": 10943.13,
+   "attrib": "debit",
+   "amount": 118.0
+  },
+  {
+   "serial": 339,
+   "src": "insert",
+   "walk_i": null,
+   "page": 17,
+   "date": null,
+   "desc": null,
+   "D": 0.5,
+   "C": 0.0,
+   "balance_printed": 10942.63,
+   "tokens": [],
+   "source": "p17 top crop",
+   "balance": 10942.63,
+   "delta": -0.5,
+   "attrib": "debit",
+   "amount": 0.5
+  },
+  {
+   "serial": 340,
+   "src": "insert",
+   "walk_i": null,
+   "page": 17,
+   "date": null,
+   "desc": null,
+   "D": 320.0,
+   "C": 0.0,
+   "balance_printed": 10622.63,
+   "tokens": [],
+   "source": "p17 top crop",
+   "balance": 10622.63,
+   "delta": -320.0,
+   "attrib": "debit",
+   "amount": 320.0
+  },
+  {
+   "serial": 341,
+   "read_ser": 7,
+   "src": "walk",
+   "walk_i": 318,
+   "page": 17,
+   "date": "18/05/2026",
+   "desc": "SSt 7, IAUNIULO | J44U INT EGP OUUU] —-2447480302432000021 | 791.67 11,414.30 18/05/2026",
+   "balance_printed": 11414.3,
+   "tokens": [
+    791.67,
+    11414.3
+   ],
+   "used": "solver",
+   "delta": 791.67,
+   "balance": 11414.3,
+   "attrib": "credit",
+   "amount": 791.67
+  },
+  {
+   "serial": 342,
+   "src": "insert",
+   "walk_i": null,
+   "page": 17,
+   "date": null,
+   "desc": null,
+   "D": 0.5,
+   "C": 0.0,
+   "balance_printed": 11413.8,
+   "tokens": [],
+   "source": "p17 crop",
+   "balance": 11413.8,
+   "delta": -0.5,
+   "attrib": "debit",
+   "amount": 0.5
+  },
+  {
+   "serial": 343,
+   "read_ser": 343,
+   "src": "walk",
+   "walk_i": 319,
+   "page": 17,
+   "date": "24/08/2026",
+   "desc": "343 | 24/08/2026 | 244FT1D261442150 ep 006 o> | — esteei Ficerlers",
+   "balance_printed": 11348.8,
+   "tokens": [
+    11348.8
+   ],
+   "used": "solver",
+   "delta": -65.0,
+   "balance": 11348.8,
+   "attrib": "debit",
+   "amount": 65.0
+  },
+  {
+   "serial": 344,
+   "read_ser": null,
+   "src": "walk",
+   "walk_i": 320,
+   "page": 17,
+   "date": "24/05/2026",
+   "desc": "oe | AUN LUO Sse 2014411495 re ee eee ee ae 0.50 11,348.30 24/05/2026",
+   "balance_printed": 11348.3,
+   "tokens": [
+    0.5,
+    11348.3
+   ],
+   "used": "A",
+   "delta": -0.5,
+   "balance": 11348.3,
+   "attrib": "debit",
+   "amount": 0.5
+  },
+  {
+   "serial": 345,
+   "read_ser": 345,
+   "src": "walk",
+   "walk_i": 321,
+   "page": 17,
+   "date": null,
+   "desc": "345 | 247082026 | 244FT1D261442664 Retwern te 1,00",
+   "balance_printed": 11347.3,
+   "tokens": [
+    1.0,
+    11347.3
+   ],
+   "used": "B",
+   "delta": -1.0,
+   "balance": 11347.3,
+   "attrib": "debit",
+   "amount": 1.0
+  },
+  {
+   "serial": 346,
+   "src": "insert",
+   "walk_i": null,
+   "page": 17,
+   "date": null,
+   "desc": null,
+   "D": 1000.0,
+   "C": 0.0,
+   "balance_printed": null,
+   "tokens": [],
+   "source": "G9: p17 absorbed",
+   "balance": 10347.3,
+   "delta": -1000.0,
+   "attrib": "debit",
+   "amount": 1000.0
+  },
+  {
+   "serial": 347,
+   "read_ser": 347,
+   "src": "walk",
+   "walk_i": 323,
+   "page": 17,
+   "date": "24/05/2026",
+   "desc": "347 | 24082026 | 244FTID261442976 | Network to ft i ha 1.50 10,345.80 24/05/2026 ||WRAP-AMT:[{\"v\": 59.0, \"cx\": 0.7678}]",
+   "balance_printed": 10345.8,
+   "tokens": [
+    1.5,
+    10345.8
+   ],
+   "used": "solver",
+   "delta": -1.5,
+   "balance": 10345.8,
+   "attrib": "debit",
+   "amount": 1.5
+  },
+  {
+   "serial": 348,
+   "src": "insert",
+   "walk_i": null,
+   "page": 17,
+   "date": null,
+   "desc": null,
+   "D": 1500.0,
+   "C": 0.0,
+   "balance_printed": null,
+   "tokens": [],
+   "source": "G9: p17 absorbed",
+   "balance": 8845.8,
+   "delta": -1500.0,
+   "attrib": "debit",
+   "amount": 1500.0
+  },
+  {
+   "serial": 349,
+   "read_ser": null,
+   "src": "walk",
+   "walk_i": 324,
+   "page": 17,
+   "date": "25/08/2026",
+   "desc": "| way [aera | SHS UUVUIEGPF VUUUT, 2447480302432000010 aly 205.83 9,051.63 | 25/08/2026 |",
+   "balance_printed": 9051.63,
+   "tokens": [
+    205.83,
+    9051.63
+   ],
+   "used": "solver",
+   "delta": 205.83,
+   "balance": 9051.63,
+   "attrib": "credit",
+   "amount": 205.83
+  },
+  {
+   "serial": 350,
+   "read_ser": null,
+   "src": "walk",
+   "walk_i": 325,
+   "page": 17,
+   "date": "25/05/2026",
+   "desc": "JaV SUM EV LO SHIPNEZOLIS ZI BAS OY OR i ee amy 8 agg Se nail 0.50 9,051.13 25/05/2026",
+   "balance_printed": 9051.13,
+   "tokens": [
+    0.5,
+    9051.13
+   ],
+   "used": "A",
+   "delta": -0.5,
+   "balance": 9051.13,
+   "attrib": "debit",
+   "amount": 0.5
+  },
+  {
+   "serial": 351,
+   "src": "insert",
+   "walk_i": null,
+   "page": 17,
+   "date": null,
+   "desc": null,
+   "D": 0.5,
+   "C": 0.0,
+   "balance_printed": null,
+   "tokens": [],
+   "source": "G9: p17 absorbed",
+   "balance": 9050.63,
+   "delta": -0.5,
+   "attrib": "debit",
+   "amount": 0.5
+  },
+  {
+   "serial": 352,
+   "src": "insert",
+   "walk_i": null,
+   "page": 17,
+   "date": null,
+   "desc": null,
+   "D": 290.0,
+   "C": 0.0,
+   "balance_printed": null,
+   "tokens": [],
+   "source": "G9: p17 absorbed",
+   "balance": 8760.63,
+   "delta": -290.0,
+   "attrib": "debit",
+   "amount": 290.0
+  },
+  {
+   "serial": 353,
+   "src": "insert",
+   "walk_i": null,
+   "page": 17,
+   "date": null,
+   "desc": null,
+   "D": 0.5,
+   "C": 0.0,
+   "balance_printed": null,
+   "tokens": [],
+   "source": "G9: p17 absorbed",
+   "balance": 8760.13,
+   "delta": -0.5,
+   "attrib": "debit",
+   "amount": 0.5
+  },
+  {
+   "serial": 354,
+   "read_ser": 354,
+   "src": "walk",
+   "walk_i": 326,
+   "page": 17,
+   "date": "01/06/2026",
+   "desc": "354 01/06/2026 244FTID261524317 feel anes sanl 70,00 $,690,13 26/05/2026 ||WRAP-AMT:[{\"v\": 6007106.0, \"cx\": 0.7779}]",
+   "balance_printed": 8690.13,
+   "tokens": [
+    70.0,
+    8690.13
+   ],
+   "used": "solver",
+   "delta": -70.0,
+   "balance": 8690.13,
+   "attrib": "debit",
+   "amount": 70.0
+  },
+  {
+   "serial": 355,
+   "src": "insert",
+   "walk_i": null,
+   "page": 17,
+   "date": null,
+   "desc": null,
+   "D": 0.95,
+   "C": 0.0,
+   "balance_printed": null,
+   "tokens": [],
+   "source": "G9: p17 absorbed",
+   "balance": 8689.18,
+   "delta": -0.95,
+   "attrib": "debit",
+   "amount": 0.95
+  },
+  {
+   "serial": 356,
+   "src": "insert",
+   "walk_i": null,
+   "page": 17,
+   "date": null,
+   "desc": null,
+   "D": 950.0,
+   "C": 0.0,
+   "balance_printed": null,
+   "tokens": [],
+   "source": "G9: p17 absorbed",
+   "balance": 7739.18,
+   "delta": -950.0,
+   "attrib": "debit",
+   "amount": 950.0
+  },
+  {
+   "serial": 357,
+   "read_ser": 357,
+   "src": "walk",
+   "walk_i": 327,
+   "page": 17,
+   "date": "01/06/2026",
+   "desc": "357 | 01/06/2026 244FT1D261522317 FARAHAT 0.50 7,738.68 26/05/2026",
+   "balance_printed": 7738.68,
+   "tokens": [
+    0.5,
+    7738.68
+   ],
+   "used": "solver",
+   "delta": -0.5,
+   "balance": 7738.68,
+   "attrib": "debit",
+   "amount": 0.5
+  },
+  {
+   "serial": 358,
+   "src": "insert",
+   "walk_i": null,
+   "page": 18,
+   "date": null,
+   "desc": null,
+   "D": 300.0,
+   "C": 0.0,
+   "balance_printed": null,
+   "tokens": [],
+   "source": "G9: p18 absorbed",
+   "balance": 7438.68,
+   "delta": -300.0,
+   "attrib": "debit",
+   "amount": 300.0
+  },
+  {
+   "serial": 359,
+   "src": "insert",
+   "walk_i": null,
+   "page": 18,
+   "date": null,
+   "desc": null,
+   "D": 0.5,
+   "C": 0.0,
+   "balance_printed": null,
+   "tokens": [],
+   "source": "G9: p18 absorbed",
+   "balance": 7438.18,
+   "delta": -0.5,
+   "attrib": "debit",
+   "amount": 0.5
+  },
+  {
+   "serial": 360,
+   "read_ser": 400,
+   "src": "walk",
+   "walk_i": 328,
+   "page": 18,
+   "date": "16/06/2026",
+   "desc": "400 | Di/00n036 JAP T1261 920998 MOUSTAPA-HDdICCADYSCD 74S 204.00 7,294.18 16/06/2026",
+   "balance_printed": 7233.18,
+   "tokens": [
+    204.0,
+    205.06,
+    7143.18,
+    7294.18
+   ],
+   "used": "solver",
+   "delta": -205.0,
+   "balance": 7233.18,
+   "attrib": "debit",
+   "amount": 205.0
+  },
+  {
+   "serial": 361,
+   "read_ser": null,
+   "src": "walk",
+   "walk_i": 329,
+   "page": 18,
+   "date": "47/05/2026",
+   "desc": "ai | diibemede | sade Tth261522946 Natty \"hans 0.54 7,132.64 47/05/2026",
+   "balance_printed": 7232.64,
+   "tokens": [
+    0.54,
+    6.54,
+    75.0,
+    4465.56,
+    7132.64,
+    7232.64
+   ],
+   "used": "solver",
+   "delta": -0.54,
+   "balance": 7232.64,
+   "attrib": "debit",
+   "amount": 0.54
+  },
+  {
+   "serial": 362,
+   "read_ser": 262,
+   "src": "walk",
+   "walk_i": 330,
+   "page": 18,
+   "date": "27/05/2026",
+   "desc": "262 | 01/062026 244FT1D261522346 MOHAMED ELSAYED 540.00 6,692.64 27/05/2026",
+   "balance_printed": 6692.64,
+   "tokens": [
+    540.0,
+    540.6,
+    6692.64
+   ],
+   "used": "solver",
+   "delta": -540.0,
+   "balance": 6692.64,
+   "attrib": "debit",
+   "amount": 540.0
+  },
+  {
+   "serial": 363,
+   "read_ser": 363,
+   "src": "walk",
+   "walk_i": 331,
+   "page": 18,
+   "date": "01/06/2026",
+   "desc": "363 01/06/2026 244FT1D261525437 Jee 5+! a>! Network to 0.54 6,692.10 31/05/2026",
+   "balance_printed": 6692.1,
+   "tokens": [
+    0.54,
+    6692.1
+   ],
+   "used": "A",
+   "delta": -0.54,
+   "balance": 6692.1,
+   "attrib": "debit",
+   "amount": 0.54
+  },
+  {
+   "serial": 364,
+   "read_ser": null,
+   "src": "walk",
+   "walk_i": 332,
+   "page": 18,
+   "date": "01/06/2026",
+   "desc": "36d | 01/06/2026 244FT1D261525437 Jeee 34 22>! 540.00 6,152.10 31/05/2026",
+   "balance_printed": 6152.1,
+   "tokens": [
+    540.0,
+    6152.1
+   ],
+   "used": "A",
+   "delta": -540.0,
+   "balance": 6152.1,
+   "attrib": "debit",
+   "amount": 540.0
+  },
+  {
+   "serial": 365,
+   "read_ser": 365,
+   "src": "walk",
+   "walk_i": 333,
+   "page": 18,
+   "date": "01/06/2026",
+   "desc": "365 | 01/06/2026 | 2441PNF261524573 To-Revenue from <6l+ a~ ei 0.50 6,151.60 01/06/2026",
+   "balance_printed": 6151.6,
+   "tokens": [
+    0.5,
+    6151.6,
+    9280.0,
+    22576.18
+   ],
+   "used": "A",
+   "delta": -0.5,
+   "balance": 6151.6,
+   "attrib": "debit",
+   "amount": 0.5
+  },
+  {
+   "serial": 366,
+   "read_ser": 366,
+   "src": "walk",
+   "walk_i": 334,
+   "page": 18,
+   "date": "01/06/2026",
+   "desc": "366 | 01/06/2026 244FTID261521378 ELSAYED 0,50 6,151.10 31/05/2026",
+   "balance_printed": 6151.1,
+   "tokens": [
+    0.5,
+    718.15,
+    6151.1,
+    25295.03
+   ],
+   "used": "A",
+   "delta": -0.5,
+   "balance": 6151.1,
+   "attrib": "debit",
+   "amount": 0.5
+  },
+  {
+   "serial": 367,
+   "read_ser": 367,
+   "src": "walk",
+   "walk_i": 335,
+   "page": 18,
+   "date": "01/06/2026",
+   "desc": "367 | 01/06/2026 244FTID261521378 MOHAMED ELSAYED 230,00 5,921.10 31/05/2026",
+   "balance_printed": 5921.1,
+   "tokens": [
+    2.0,
+    230.0,
+    5921.1,
+    23293.03
+   ],
+   "used": "A",
+   "delta": -230.0,
+   "balance": 5921.1,
+   "attrib": "debit",
+   "amount": 230.0
+  },
+  {
+   "serial": 368,
+   "read_ser": 368,
+   "src": "walk",
+   "walk_i": 336,
+   "page": 18,
+   "date": "09/06/2026",
+   "desc": "368 | 09/06/2026 | 244FTID261606194 RE ie ” 0.50 5,920.60 09/06/2026",
+   "balance_printed": 5920.6,
+   "tokens": [
+    0.5,
+    5920.6
+   ],
+   "used": "A",
+   "delta": -0.5,
+   "balance": 5920.6,
+   "attrib": "debit",
+   "amount": 0.5
+  },
+  {
+   "serial": 369,
+   "read_ser": 369,
+   "src": "walk",
+   "walk_i": 337,
+   "page": 18,
+   "date": "09/06/2026",
+   "desc": "369 | 09/06/2026 244FTID261606194 Hansh , wHnNAH ANS AHR Le 385.00 5,535.60 09/06/2026",
+   "balance_printed": 5535.6,
+   "tokens": [
+    385.0,
+    5535.6
+   ],
+   "used": "A",
+   "delta": -385.0,
+   "balance": 5535.6,
+   "attrib": "debit",
+   "amount": 385.0
+  },
+  {
+   "serial": 370,
+   "read_ser": 370,
+   "src": "walk",
+   "walk_i": 338,
+   "page": 18,
+   "date": "09/06/2026",
+   "desc": "370 | 09/06/2026 244FTID261606197 ****Network to eld f 1,00 5,534.60 09/06/2026",
+   "balance_printed": 5534.6,
+   "tokens": [
+    1.0,
+    5534.6
+   ],
+   "used": "A",
+   "delta": -1.0,
+   "balance": 5534.6,
+   "attrib": "debit",
+   "amount": 1.0
+  },
+  {
+   "serial": 371,
+   "read_ser": 371,
+   "src": "walk",
+   "walk_i": 339,
+   "page": 18,
+   "date": "09/06/2026",
+   "desc": "371 09/06/2026 244FTID261606197 seetold f 1,000,00 4,534.60 09/06/2026",
+   "balance_printed": 4534.6,
+   "tokens": [
+    1000.0,
+    4534.6
+   ],
+   "used": "A",
+   "delta": -1000.0,
+   "balance": 4534.6,
+   "attrib": "debit",
+   "amount": 1000.0
+  },
+  {
+   "serial": 372,
+   "read_ser": 372,
+   "src": "walk",
+   "walk_i": 340,
+   "page": 18,
+   "date": "09/06/2026",
+   "desc": "372 | 09/0206 | 244rTmD261606232 |“ chwork to Mlaivnoud Mi 0.54 4,534.06 09/06/2026",
+   "balance_printed": 4534.06,
+   "tokens": [
+    0.54,
+    4534.06
+   ],
+   "used": "A",
+   "delta": -0.54,
+   "balance": 4534.06,
+   "attrib": "debit",
+   "amount": 0.54
+  },
+  {
+   "serial": 373,
+   "read_ser": 373,
+   "src": "walk",
+   "walk_i": 341,
+   "page": 18,
+   "date": "09/06/2026",
+   "desc": "373 | 09/06/2026 | 244FTID261606232 ae . 540,00 3,994.06 09/06/2026",
+   "balance_printed": 3994.06,
+   "tokens": [
+    540.0,
+    3994.06
+   ],
+   "used": "A",
+   "delta": -540.0,
+   "balance": 3994.06,
+   "attrib": "debit",
+   "amount": 540.0
+  },
+  {
+   "serial": 374,
+   "read_ser": 374,
+   "src": "walk",
+   "walk_i": 342,
+   "page": 18,
+   "date": "21/06/2026",
+   "desc": "374 | 21/06/2026 | 244UD01EGP 00001 2447480302432000021 791.67 4,785.73 18/06/2026",
+   "balance_printed": 4785.73,
+   "tokens": [
+    791.67,
+    4785.73
+   ],
+   "used": "A",
+   "delta": 791.67,
+   "balance": 4785.73,
+   "attrib": "credit",
+   "amount": 791.67
+  },
+  {
+   "serial": 375,
+   "read_ser": 375,
+   "src": "walk",
+   "walk_i": 343,
+   "page": 18,
+   "date": "24/06/2026",
+   "desc": "375 | 24/06/2026 244FT1C261752069 from EID FARAG SAAD 50,000.00 54,785.73 24/06/2026",
+   "balance_printed": 54785.73,
+   "tokens": [
+    50000.0,
+    54785.73
+   ],
+   "used": "A",
+   "delta": 50000.0,
+   "balance": 54785.73,
+   "attrib": "credit",
+   "amount": 50000.0
+  },
+  {
+   "serial": 376,
+   "read_ser": 376,
+   "src": "walk",
+   "walk_i": 344,
+   "page": 18,
+   "date": "24/06/2026",
+   "desc": "376 | 24/06/2026 244FT1C261752070 from EID FARAG SAAD 50,000.00 104,785.73 24/06/2026",
+   "balance_printed": 104785.73,
+   "tokens": [
+    50000.0,
+    104785.73
+   ],
+   "used": "A",
+   "delta": 50000.0,
+   "balance": 104785.73,
+   "attrib": "credit",
+   "amount": 50000.0
+  },
+  {
+   "serial": 377,
+   "read_ser": 377,
+   "src": "walk",
+   "walk_i": 345,
+   "page": 18,
+   "date": "24/06/2026",
+   "desc": "377 24/06/2026 413FTNU261756001 ey} sale To Yy Uda 150,000.00 254,785.73 24/06/2026",
+   "balance_printed": 254785.73,
+   "tokens": [
+    205.83,
+    119441.36,
+    150000.0,
+    254785.73
+   ],
+   "used": "A",
+   "delta": 150000.0,
+   "balance": 254785.73,
+   "attrib": "credit",
+   "amount": 150000.0
+  },
+  {
+   "serial": 378,
+   "read_ser": 378,
+   "src": "walk",
+   "walk_i": 346,
+   "page": 19,
+   "date": "24/06/2026",
+   "desc": "378 | 2470672026 | 2441PNF261756002 aati ar oy 0.50, 254,788.23 24/06/2026",
+   "balance_printed": 254785.23,
+   "tokens": [
+    0.5,
+    254785.23,
+    254788.23
+   ],
+   "used": "B",
+   "delta": -0.5,
+   "balance": 254785.23,
+   "attrib": "debit",
+   "amount": 0.5
+  },
+  {
+   "serial": 379,
+   "read_ser": 379,
+   "src": "walk",
+   "walk_i": 347,
+   "page": 19,
+   "date": "24/06/2026",
+   "desc": "| 379 | 2006n03 | 244C1IWL261750016 | Cash withdrawal-2066 | 250,000.00 | | 4,785.23 | 24/06/2026 |",
+   "balance_printed": 4785.23,
+   "tokens": [
+    4785.23,
+    250000.0
+   ],
+   "used": "A",
+   "delta": -250000.0,
+   "balance": 4785.23,
+   "attrib": "debit",
+   "amount": 250000.0
+  },
+  {
+   "serial": 380,
+   "read_ser": null,
+   "src": "walk",
+   "walk_i": 348,
+   "page": 19,
+   "date": "4/06/2026",
+   "desc": "4/06/2026 244FTID261754172 ELSAYED 4,784.73 24/06/2026 ||WRAP-AMT:[{\"v\": 450.0, \"cx\": 0.5207}]",
+   "balance_printed": 4784.73,
+   "tokens": [
+    0.5,
+    4784.73
+   ],
+   "used": "B",
+   "delta": -0.5,
+   "balance": 4784.73,
+   "attrib": "debit",
+   "amount": 0.5
+  },
+  {
+   "serial": 381,
+   "read_ser": null,
+   "src": "walk",
+   "walk_i": 349,
+   "page": 19,
+   "date": "24/06/2026",
+   "desc": "i \"| — AB~3131D2D273C4E217 4,334.73 24/06/2026",
+   "balance_printed": 4334.73,
+   "tokens": [
+    450.0,
+    4334.73
+   ],
+   "used": "B",
+   "delta": -450.0,
+   "balance": 4334.73,
+   "attrib": "debit",
+   "amount": 450.0
+  },
+  {
+   "serial": 382,
+   "read_ser": 382,
+   "src": "walk",
+   "walk_i": 350,
+   "page": 19,
+   "date": "25/06/2026",
+   "desc": "382 | 28/06016 | 244UDOIEGP 00001 : 2447480302432000010 205.83 4,540.56 25/06/2026",
+   "balance_printed": 4540.56,
+   "tokens": [
+    205.83,
+    4540.56
+   ],
+   "used": "A",
+   "delta": 205.83,
+   "balance": 4540.56,
+   "attrib": "credit",
+   "amount": 205.83
+  },
+  {
+   "serial": 383,
+   "read_ser": 343,
+   "src": "walk",
+   "walk_i": 351,
+   "page": 19,
+   "date": "01/07/2026",
+   "desc": "| 343 | sanaone | 244SAHEGP 00001 | Admin fees | 75,00 | | 4465.56 | 01/07/2026 |",
+   "balance_printed": 4465.56,
+   "tokens": [
+    75.0,
+    465.56
+   ],
+   "used": "solver",
+   "delta": -75.0,
+   "balance": 4465.56,
+   "attrib": "debit",
+   "amount": 75.0
+  },
+  {
+   "serial": 384,
+   "read_ser": 384,
+   "src": "walk",
+   "walk_i": 352,
+   "page": 19,
+   "date": "01/07/2026",
+   "desc": "| 384 | ovoraone | 2445A22EGP 00001 | Account statement charges | 100,00 | | 4,365.56 | 01/07/2026 |",
+   "balance_printed": 4365.56,
+   "tokens": [
+    100.0,
+    4365.56
+   ],
+   "used": "solver",
+   "delta": -100.0,
+   "balance": 4365.56,
+   "attrib": "debit",
+   "amount": 100.0
+  },
+  {
+   "serial": 385,
+   "read_ser": null,
+   "src": "walk",
+   "walk_i": 353,
+   "page": 19,
+   "date": "08/07/2026",
+   "desc": "38S | 08/07/2026 | 244FTIC261894186 uF netly! Oa! from 27,500.00 31,865.56 08/07/2026",
+   "balance_printed": 31865.56,
+   "tokens": [
+    27500.0,
+    31865.56
+   ],
+   "used": "A",
+   "delta": 27500.0,
+   "balance": 31865.56,
+   "attrib": "credit",
+   "amount": 27500.0
+  },
+  {
+   "serial": 386,
+   "read_ser": 386,
+   "src": "walk",
+   "walk_i": 354,
+   "page": 19,
+   "date": "12/07/2026",
+   "desc": "386 | 12/07/2026 244FTID261932567 Network to EID FARAG SAAD 9.28 31 886.28 11/07/2026",
+   "balance_printed": 31856.28,
+   "tokens": [
+    9.28,
+    886.28,
+    31856.28
+   ],
+   "used": "B",
+   "delta": -9.28,
+   "balance": 31856.28,
+   "attrib": "debit",
+   "amount": 9.28
+  },
+  {
+   "serial": 387,
+   "read_ser": 397,
+   "src": "walk",
+   "walk_i": 355,
+   "page": 19,
+   "date": "12/07/2026",
+   "desc": "397 12/07/2026 244FTID261932567 EID FARAG SAAD 9,280.00 22,576.18 11/07/2026",
+   "balance_printed": 22576.28,
+   "tokens": [
+    9280.0,
+    22576.18
+   ],
+   "used": "solver",
+   "delta": -9280.0,
+   "balance": 22576.28,
+   "attrib": "debit",
+   "amount": 9280.0
+  },
+  {
+   "serial": 388,
+   "read_ser": 388,
+   "src": "walk",
+   "walk_i": 356,
+   "page": 19,
+   "date": "19/07/2026",
+   "desc": "388 | 19/07/2026 244UD01IEGP 00001 2447480302432000021 ave 718,75 25,295.03 18/07/2026",
+   "balance_printed": 23295.03,
+   "tokens": [
+    718.75,
+    25295.03
+   ],
+   "used": "solver",
+   "delta": 718.75,
+   "balance": 23295.03,
+   "attrib": "credit",
+   "amount": 718.75
+  },
+  {
+   "serial": 389,
+   "read_ser": 389,
+   "src": "walk",
+   "walk_i": 357,
+   "page": 19,
+   "date": "19/07/2026",
+   "desc": "389 | 19/07/2026 244FTID262006147 heyy tars Jae! 204 Network to 2.00 23,293.03 17/07/2026",
+   "balance_printed": 23293.03,
+   "tokens": [
+    2.0,
+    23293.03
+   ],
+   "used": "solver",
+   "delta": -2.0,
+   "balance": 23293.03,
+   "attrib": "debit",
+   "amount": 2.0
+  },
+  {
+   "serial": 390,
+   "read_ser": 390,
+   "src": "walk",
+   "walk_i": 358,
+   "page": 19,
+   "date": "19/07/2026",
+   "desc": "390 | 19/07/2026 | 244FTID262006147 hn yy tans SLs! sale 2,000.00 21,293.03 17/07/2026",
+   "balance_printed": 21293.03,
+   "tokens": [
+    2000.0,
+    21293.03
+   ],
+   "used": "A",
+   "delta": -2000.0,
+   "balance": 21293.03,
+   "attrib": "debit",
+   "amount": 2000.0
+  },
+  {
+   "serial": 391,
+   "read_ser": 391,
+   "src": "walk",
+   "walk_i": 359,
+   "page": 19,
+   "date": "19/07/2026",
+   "desc": "391 19/07/2026 | 244CATM2620013Zv NBDE ATM-559-444**°\"**790] 10,000.00 11,293.03 17/07/2026",
+   "balance_printed": 11293.03,
+   "tokens": [
+    10000.0,
+    11293.03
+   ],
+   "used": "A",
+   "delta": -10000.0,
+   "balance": 11293.03,
+   "attrib": "debit",
+   "amount": 10000.0
+  },
+  {
+   "serial": 392,
+   "read_ser": 392,
+   "src": "walk",
+   "walk_i": 360,
+   "page": 19,
+   "date": "19/07/2026",
+   "desc": "392 | 19/07/2026 | 244CATIM2620013Zw NBE ATM-559444******7901 10,000.00 1,293.03 17/07/2026",
+   "balance_printed": 1293.03,
+   "tokens": [
+    1293.03,
+    10000.0
+   ],
+   "used": "A",
+   "delta": -10000.0,
+   "balance": 1293.03,
+   "attrib": "debit",
+   "amount": 10000.0
+  },
+  {
+   "serial": 393,
+   "read_ser": 393,
+   "src": "walk",
+   "walk_i": 361,
+   "page": 19,
+   "date": "21/07/2026",
+   "desc": "393 | 21/07/2026 413FTNU262016013 gy) aus Tow Yall 80,000.00 81 03 20/07/2026",
+   "balance_printed": 81293.03,
+   "tokens": [
+    80000.0,
+    81293.03
+   ],
+   "used": "B",
+   "delta": 80000.0,
+   "balance": 81293.03,
+   "attrib": "credit",
+   "amount": 80000.0
+  },
+  {
+   "serial": 394,
+   "read_ser": 394,
+   "src": "walk",
+   "walk_i": 362,
+   "page": 19,
+   "date": "21/07/2026",
+   "desc": "394 | 21/07/2026 | 2441PNF26201A67N To-Revenue from <5 0 py) 0.50 81,292.53 20/07/2026",
+   "balance_printed": 81292.53,
+   "tokens": [
+    0.5,
+    81292.53
+   ],
+   "used": "A",
+   "delta": -0.5,
+   "balance": 81292.53,
+   "attrib": "debit",
+   "amount": 0.5
+  },
+  {
+   "serial": 395,
+   "read_ser": 395,
+   "src": "walk",
+   "walk_i": 363,
+   "page": 19,
+   "date": "21/07/2026",
+   "desc": "395 | 21/07/2026 | 244FTID262022295 whey tae LEI! 0b Network to 7.00 81,285.53 21/07/2026",
+   "balance_printed": 81285.53,
+   "tokens": [
+    7.0,
+    81285.53
+   ],
+   "used": "A",
+   "delta": -7.0,
+   "balance": 81285.53,
+   "attrib": "debit",
+   "amount": 7.0
+  },
+  {
+   "serial": 396,
+   "read_ser": 396,
+   "src": "walk",
+   "walk_i": 364,
+   "page": 19,
+   "date": "21/07/2026",
+   "desc": "396 | 21/07/2026 244FT1ID262022295 dey ams JIL! ub 7,000.00 74,285.53 21/07/2026",
+   "balance_printed": 74285.53,
+   "tokens": [
+    7000.0,
+    74285.53
+   ],
+   "used": "A",
+   "delta": -7000.0,
+   "balance": 74285.53,
+   "attrib": "debit",
+   "amount": 7000.0
+  },
+  {
+   "serial": 397,
+   "read_ser": 397,
+   "src": "walk",
+   "walk_i": 365,
+   "page": 19,
+   "date": "22/07/2026",
+   "desc": "397 | 22/07/2026 244FT1IC262038048 pel! paar am! from 44,950.00 119,235.53 22/07/2026",
+   "balance_printed": 119235.53,
+   "tokens": [
+    44950.0,
+    119235.53
+   ],
+   "used": "A",
+   "delta": 44950.0,
+   "balance": 119235.53,
+   "attrib": "credit",
+   "amount": 44950.0
+  },
+  {
+   "serial": 398,
+   "read_ser": 398,
+   "src": "walk",
+   "walk_i": 366,
+   "page": 19,
+   "date": "26/07/2026",
+   "desc": "398 | 26/07/2026 | 244UDOIEGP 00001! 2447480302432000010 a",
+   "balance_printed": 119441.36,
+   "tokens": [
+    205.83,
+    119441.36
+   ],
+   "used": "B",
+   "delta": 205.83,
+   "balance": 119441.36,
+   "attrib": "credit",
+   "amount": 205.83
+  },
+  {
+   "serial": 399,
+   "read_ser": 399,
+   "src": "walk",
+   "walk_i": 368,
+   "page": 19,
+   "date": "26/07/2026",
+   "desc": "399 | 26/07/2026 244FTID262072008 **Network to AILAS***eeee* A 0.50 119,440.86 23/07/2026",
+   "balance_printed": 119440.86,
+   "tokens": [
+    0.5,
+    1700.0,
+    7432.91,
+    119440.86
+   ],
+   "used": "A",
+   "delta": -0.5,
+   "balance": 119440.86,
+   "attrib": "debit",
+   "amount": 0.5
+  },
+  {
+   "serial": 400,
+   "read_ser": 400,
+   "src": "walk",
+   "walk_i": 369,
+   "page": 20,
+   "date": "26/07/2026",
+   "desc": "400 | 26/07/2026 244FTID262072008 CTA Atstsessee ) 500,00 118,940.86 23/07/2026",
+   "balance_printed": 118940.86,
+   "tokens": [
+    2.0,
+    500.0,
+    57430.91,
+    118940.86
+   ],
+   "used": "A",
+   "delta": -500.0,
+   "balance": 118940.86,
+   "attrib": "debit",
+   "amount": 500.0
+  },
+  {
+   "serial": 401,
+   "read_ser": 401,
+   "src": "walk",
+   "walk_i": 370,
+   "page": 20,
+   "date": "26/07/2026",
+   "desc": "401 | 26072026 | 2441PNF262070005 To-Revenuc from =#13 a zy 0.50 118,940.36 26/07/2026",
+   "balance_printed": 118940.36,
+   "tokens": [
+    0.5,
+    5430.91,
+    118940.36
+   ],
+   "used": "A",
+   "delta": -0.5,
+   "balance": 118940.36,
+   "attrib": "debit",
+   "amount": 0.5
+  },
+  {
+   "serial": 402,
+   "read_ser": 402,
+   "src": "walk",
+   "walk_i": 371,
+   "page": 20,
+   "date": "26/07/2026",
+   "desc": "402 | 26/07/2026 244FT1D262074479 mh py tans JIL! oo Network to 2.00 118,938.36 saianue",
+   "balance_printed": 118938.36,
+   "tokens": [
+    2.0,
+    125.0,
+    55305.91,
+    118938.36
+   ],
+   "used": "A",
+   "delta": -2.0,
+   "balance": 118938.36,
+   "attrib": "debit",
+   "amount": 2.0
+  },
+  {
+   "serial": 403,
+   "read_ser": 403,
+   "src": "walk",
+   "walk_i": 372,
+   "page": 20,
+   "date": "26/07/2026",
+   "desc": "403 | 26/07/2026 244FTID262074479 whe yy tay GL salt 2,000.00 116,938.36 24/07/2026",
+   "balance_printed": 116938.36,
+   "tokens": [
+    2000.0,
+    55305.41,
+    116938.36
+   ],
+   "used": "A",
+   "delta": -2000.0,
+   "balance": 116938.36,
+   "attrib": "debit",
+   "amount": 2000.0
+  },
+  {
+   "serial": 404,
+   "read_ser": 404,
+   "src": "walk",
+   "walk_i": 373,
+   "page": 20,
+   "date": "26/07/2026",
+   "desc": "404 | 26/07/2026 | 2441PNF262076283 To-Revenue from <b> saw <b 0.50 116,937.86 26/07/2026",
+   "balance_printed": 116937.86,
+   "tokens": [
+    0.5,
+    116937.86
+   ],
+   "used": "A",
+   "delta": -0.5,
+   "balance": 116937.86,
+   "attrib": "debit",
+   "amount": 0.5
+  },
+  {
+   "serial": 405,
+   "read_ser": 405,
+   "src": "walk",
+   "walk_i": 374,
+   "page": 20,
+   "date": "26/07/2026",
+   "desc": "405 | 26/07/2026 244FT1D262074997 ** ow erat ae Network to 2.25 116,935.61 25/07/2026",
+   "balance_printed": 116935.61,
+   "tokens": [
+    1.0,
+    2.25,
+    4904.41,
+    116935.61
+   ],
+   "used": "A",
+   "delta": -2.25,
+   "balance": 116935.61,
+   "attrib": "debit",
+   "amount": 2.25
+  },
+  {
+   "serial": 406,
+   "read_ser": 406,
+   "src": "walk",
+   "walk_i": 375,
+   "page": 20,
+   "date": "26/07/2026",
+   "desc": "406 | 26/07/2026 244FTID262074997 ee eed 2,250.00 114,685.61 25/07/2026",
+   "balance_printed": 114685.61,
+   "tokens": [
+    1000.0,
+    2250.0,
+    3904.41,
+    114685.61
+   ],
+   "used": "A",
+   "delta": -2250.0,
+   "balance": 114685.61,
+   "attrib": "debit",
+   "amount": 2250.0
+  },
+  {
+   "serial": 407,
+   "read_ser": 407,
+   "src": "walk",
+   "walk_i": 376,
+   "page": 20,
+   "date": "26/07/2026",
+   "desc": "407 | 26/07/2026 244FTID262073433 wel py tame ILS! 2b Network to 2.00 114,683.61 26/07/2026",
+   "balance_printed": 114683.61,
+   "tokens": [
+    2.0,
+    114683.61
+   ],
+   "used": "A",
+   "delta": -2.0,
+   "balance": 114683.61,
+   "attrib": "debit",
+   "amount": 2.0
+  },
+  {
+   "serial": 408,
+   "read_ser": 408,
+   "src": "walk",
+   "walk_i": 377,
+   "page": 20,
+   "date": "26/07/2026",
+   "desc": "408 | 26/072026 | 244FTID262073433 why tae JOLSII ast 2,000.00 112,683.61 26/07/2026",
+   "balance_printed": 112683.61,
+   "tokens": [
+    570.0,
+    2000.0,
+    3333.84,
+    112683.61
+   ],
+   "used": "A",
+   "delta": -2000.0,
+   "balance": 112683.61,
+   "attrib": "debit",
+   "amount": 2000.0
+  },
+  {
+   "serial": 409,
+   "read_ser": null,
+   "src": "walk",
+   "walk_i": 378,
+   "page": 20,
+   "date": "27/07/2026",
+   "desc": "4o9 | 27/0772026 | 2441PNF262084010 To-Revenue from sl 44 oJ 0.50 112,683.11 27/07/2026",
+   "balance_printed": 112683.11,
+   "tokens": [
+    0.5,
+    20.0,
+    112683.11
+   ],
+   "used": "A",
+   "delta": -0.5,
+   "balance": 112683.11,
+   "attrib": "debit",
+   "amount": 0.5
+  },
+  {
+   "serial": 410,
+   "read_ser": 410,
+   "src": "walk",
+   "walk_i": 379,
+   "page": 20,
+   "date": "27/07/2026",
+   "desc": "410. | 27/07/2026 244FTID262084252 Network (o EID FARAG §.00 112,678.11 27/07/2026",
+   "balance_printed": 112678.11,
+   "tokens": [
+    5.0,
+    112678.11
+   ],
+   "used": "B",
+   "delta": -5.0,
+   "balance": 112678.11,
+   "attrib": "debit",
+   "amount": 5.0
+  },
+  {
+   "serial": 411,
+   "read_ser": 411,
+   "src": "walk",
+   "walk_i": 380,
+   "page": 20,
+   "date": "27/07/2026",
+   "desc": "411 | 27/07/2026 244FTID262084252 EID FARAG 5,000.00 107,678.11 27/07/2026",
+   "balance_printed": 107678.11,
+   "tokens": [
+    5000.0,
+    107678.11
+   ],
+   "used": "A",
+   "delta": -5000.0,
+   "balance": 107678.11,
+   "attrib": "debit",
+   "amount": 5000.0
+  },
+  {
+   "serial": 412,
+   "read_ser": 412,
+   "src": "walk",
+   "walk_i": 381,
+   "page": 20,
+   "date": "28/07/2026",
+   "desc": "412 | 28/07/2026 244FT1ID262098016 ***Network to Hemida 11**** § 3.00 107,675.11 28/07/2026",
+   "balance_printed": 107675.11,
+   "tokens": [
+    3.0,
+    107675.11
+   ],
+   "used": "A",
+   "delta": -3.0,
+   "balance": 107675.11,
+   "attrib": "debit",
+   "amount": 3.0
+  },
+  {
+   "serial": 413,
+   "read_ser": 413,
+   "src": "walk",
+   "walk_i": 382,
+   "page": 20,
+   "date": "28/07/2026",
+   "desc": "413 28/07/2026 244FT1D262098016 **} [comida 11**** S*** A 3,000.00 104,675.11 28/07/2026",
+   "balance_printed": 104675.11,
+   "tokens": [
+    3000.0,
+    104675.11
+   ],
+   "used": "A",
+   "delta": -3000.0,
+   "balance": 104675.11,
+   "attrib": "debit",
+   "amount": 3000.0
+  },
+  {
+   "serial": 414,
+   "read_ser": 414,
+   "src": "walk",
+   "walk_i": 383,
+   "page": 20,
+   "date": "29/07/2026",
+   "desc": "414 | 29/07/2026 244FT1D262108113 heady wae) 5 Network to 0.50 104,674.61 29/07/2026",
+   "balance_printed": 104674.61,
+   "tokens": [
+    0.5,
+    104674.61
+   ],
+   "used": "A",
+   "delta": -0.5,
+   "balance": 104674.61,
+   "attrib": "debit",
+   "amount": 0.5
+  },
+  {
+   "serial": 415,
+   "read_ser": 415,
+   "src": "walk",
+   "walk_i": 384,
+   "page": 20,
+   "date": "29/07/2026",
+   "desc": "415 | 29/07/2026 244FT1D262108113 wanes weed 500.00 29/07/2026",
+   "balance_printed": 104174.61,
+   "tokens": [
+    500.0,
+    104174.61
+   ],
+   "used": "B",
+   "delta": -500.0,
+   "balance": 104174.61,
+   "attrib": "debit",
+   "amount": 500.0
+  },
+  {
+   "serial": 416,
+   "read_ser": 416,
+   "src": "walk",
+   "walk_i": 385,
+   "page": 20,
+   "date": "30/07/2026",
+   "desc": "416 | 30/07/2026 244FT1D262100454 Network to EID FARAG 20,00 104,154.61 29/07/2026",
+   "balance_printed": 104154.61,
+   "tokens": [
+    20.0,
+    104154.61
+   ],
+   "used": "A",
+   "delta": -20.0,
+   "balance": 104154.61,
+   "attrib": "debit",
+   "amount": 20.0
+  },
+  {
+   "serial": 417,
+   "read_ser": 417,
+   "src": "walk",
+   "walk_i": 386,
+   "page": 20,
+   "date": "30/07/2026",
+   "desc": "417 | 30/07/2026 244FTID262100454 EID FARAG 20,000.00 _ 84,154.61 29/07/2026",
+   "balance_printed": 84154.61,
+   "tokens": [
+    20000.0,
+    84154.61
+   ],
+   "used": "A",
+   "delta": -20000.0,
+   "balance": 84154.61,
+   "attrib": "debit",
+   "amount": 20000.0
+  },
+  {
+   "serial": 418,
+   "read_ser": 418,
+   "src": "walk",
+   "walk_i": 387,
+   "page": 20,
+   "date": "30/07/2026",
+   "desc": "418 | 30/07/2026 244FTID262114114 MAIMOUD MAHMOUD 20.00 84,134.61 30/07/2026",
+   "balance_printed": 84134.61,
+   "tokens": [
+    20.0,
+    84134.61
+   ],
+   "used": "A",
+   "delta": -20.0,
+   "balance": 84134.61,
+   "attrib": "debit",
+   "amount": 20.0
+  },
+  {
+   "serial": 419,
+   "read_ser": 419,
+   "src": "walk",
+   "walk_i": 388,
+   "page": 20,
+   "date": "30/07/2026",
+   "desc": "419 | 30/07/2026 244FTID262 114114 MAHMOUD 25,000.00 59,134.61 30/07/2026",
+   "balance_printed": 59134.61,
+   "tokens": [
+    0.5,
+    608.66,
+    25000.0,
+    59134.61
+   ],
+   "used": "A",
+   "delta": -25000.0,
+   "balance": 59134.61,
+   "attrib": "debit",
+   "amount": 25000.0
+  },
+  {
+   "serial": 420,
+   "read_ser": 420,
+   "src": "walk",
+   "walk_i": 389,
+   "page": 20,
+   "date": "30/07/2026",
+   "desc": "420 | 30/07/2026 244FT1D262110248 seeee*Network to Mohamed M 1.70; \\ $9,132.91 30/07/2026",
+   "balance_printed": 59132.91,
+   "tokens": [
+    1.7,
+    9132.91
+   ],
+   "used": "solver",
+   "delta": -1.7,
+   "balance": 59132.91,
+   "attrib": "debit",
+   "amount": 1.7
+  },
+  {
+   "serial": 421,
+   "read_ser": 421,
+   "src": "walk",
+   "walk_i": 390,
+   "page": 21,
+   "date": "30/07/2026",
+   "desc": "421 | 30072026 | 244FTID262110248 eeeeee\\ohamed M 1,700.00 $7,432.91 30/07/2026",
+   "balance_printed": 57432.91,
+   "tokens": [
+    1700.0,
+    57432.91
+   ],
+   "used": "solver",
+   "delta": -1700.0,
+   "balance": 57432.91,
+   "attrib": "debit",
+   "amount": 1700.0
+  },
+  {
+   "serial": 422,
+   "read_ser": 422,
+   "src": "walk",
+   "walk_i": 391,
+   "page": 21,
+   "date": "02/08/2026",
+   "desc": "422 | 02/08/2026 | 244FTID262142189 heyy tae LEI! pot Network fo 2,00 57,430.91 310772026",
+   "balance_printed": 57430.91,
+   "tokens": [
+    2.0,
+    57430.91
+   ],
+   "used": "solver",
+   "delta": -2.0,
+   "balance": 57430.91,
+   "attrib": "debit",
+   "amount": 2.0
+  },
+  {
+   "serial": 423,
+   "read_ser": null,
+   "src": "walk",
+   "walk_i": 392,
+   "page": 21,
+   "date": "31/07/2026",
+   "desc": "mite [ona rea Re So e , 2,000.00 $5,430.91 31/07/2026",
+   "balance_printed": 55430.91,
+   "tokens": [
+    2000.0,
+    5430.91
+   ],
+   "used": "solver",
+   "delta": -2000.0,
+   "balance": 55430.91,
+   "attrib": "debit",
+   "amount": 2000.0
+  },
+  {
+   "serial": 424,
+   "read_ser": 424,
+   "src": "walk",
+   "walk_i": 393,
+   "page": 21,
+   "date": "03/08/2026",
+   "desc": "| 424 | oxosaozs | 244PCOGEGP 00001 | MasterCard debit renewal fees | 125.00 | 55,305.91 03/08/2026 |",
+   "balance_printed": 55305.91,
+   "tokens": [
+    125.0,
+    55305.91
+   ],
+   "used": "solver",
+   "delta": -125.0,
+   "balance": 55305.91,
+   "attrib": "debit",
+   "amount": 125.0
+  },
+  {
+   "serial": 425,
+   "read_ser": 425,
+   "src": "walk",
+   "walk_i": 394,
+   "page": 21,
+   "date": "03/08/2026",
+   "desc": "425 03/08/2026 244FTID262152142 MOIAME~OBEDIS2EDF9DE7C oad 55,305.41 03/08/2026",
+   "balance_printed": 55305.41,
+   "tokens": [
+    55305.41
+   ],
+   "used": "solver",
+   "delta": -0.5,
+   "balance": 55305.41,
+   "attrib": "debit",
+   "amount": 0.5
+  },
+  {
+   "serial": 426,
+   "read_ser": 426,
+   "src": "walk",
+   "walk_i": 395,
+   "page": 21,
+   "date": "03/08/2026",
+   "desc": "426 | 03/08/2026 244FTID262152142 + MONAME~ODEDIS2EBF9DE7C 400.00 54,905.41 03/08/2026",
+   "balance_printed": 54905.41,
+   "tokens": [
+    400.0,
+    54905.41
+   ],
+   "used": "A",
+   "delta": -400.0,
+   "balance": 54905.41,
+   "attrib": "debit",
+   "amount": 400.0
+  },
+  {
+   "serial": 427,
+   "read_ser": 427,
+   "src": "walk",
+   "walk_i": 396,
+   "page": 21,
+   "date": "03/08/2026",
+   "desc": "427 | 03/08/2026 244FTID262154132 ame a ally Network lo 1.00 $4,904.41 03/08/2026",
+   "balance_printed": 54904.41,
+   "tokens": [
+    1.0,
+    4904.41
+   ],
+   "used": "solver",
+   "delta": -1.0,
+   "balance": 54904.41,
+   "attrib": "debit",
+   "amount": 1.0
+  },
+  {
+   "serial": 428,
+   "read_ser": 428,
+   "src": "walk",
+   "walk_i": 397,
+   "page": 21,
+   "date": "03/08/2026",
+   "desc": "428 | 03/08/2026 | 244FTID262154132 oe od all 1,000.00 53,904.41 03/08/2026",
+   "balance_printed": 53904.41,
+   "tokens": [
+    1000.0,
+    53904.41
+   ],
+   "used": "solver",
+   "delta": -1000.0,
+   "balance": 53904.41,
+   "attrib": "debit",
+   "amount": 1000.0
+  },
+  {
+   "serial": 429,
+   "read_ser": 429,
+   "src": "walk",
+   "walk_i": 398,
+   "page": 21,
+   "date": "03/08/2026",
+   "desc": "429 | 037082026 | 244FTID262152194 | ce pearly! oy Ba» Network to 0.57 53,903.84 03/08/2026",
+   "balance_printed": 53903.84,
+   "tokens": [
+    0.57,
+    53903.84
+   ],
+   "used": "A",
+   "delta": -0.57,
+   "balance": 53903.84,
+   "attrib": "debit",
+   "amount": 0.57
+  },
+  {
+   "serial": 430,
+   "read_ser": 430,
+   "src": "walk",
+   "walk_i": 399,
+   "page": 21,
+   "date": "03/08/2026",
+   "desc": "430 | 03/08/2026 244FTID262152194 Cte pearl pt Cmay Se 570,00 $3,333.84 03/08/2026",
+   "balance_printed": 53333.84,
+   "tokens": [
+    570.0,
+    3333.84
+   ],
+   "used": "solver",
+   "delta": -570.0,
+   "balance": 53333.84,
+   "attrib": "debit",
+   "amount": 570.0
+  },
+  {
+   "serial": 431,
+   "read_ser": 431,
+   "src": "walk",
+   "walk_i": 400,
+   "page": 21,
+   "date": "03/08/2026",
+   "desc": "431 | 03/08/2026 | 244FTID262156223 - a>! Network to 20.00 53,313.84 03/08/2026",
+   "balance_printed": 53313.84,
+   "tokens": [
+    20.0,
+    53313.84
+   ],
+   "used": "solver",
+   "delta": -20.0,
+   "balance": 53313.84,
+   "attrib": "debit",
+   "amount": 20.0
+  },
+  {
+   "serial": 432,
+   "read_ser": 432,
+   "src": "walk",
+   "walk_i": 401,
+   "page": 21,
+   "date": "03/08/2026",
+   "desc": "432 03/08/2026 244FT1D262156223 a>! 23,000.00 30,313.84 03/08/2026",
+   "balance_printed": 30313.84,
+   "tokens": [
+    23000.0,
+    30313.84
+   ],
+   "used": "A",
+   "delta": -23000.0,
+   "balance": 30313.84,
+   "attrib": "debit",
+   "amount": 23000.0
+  },
+  {
+   "serial": 433,
+   "read_ser": 433,
+   "src": "walk",
+   "walk_i": 402,
+   "page": 21,
+   "date": "03/08/2026",
+   "desc": "433 | 03/08/2026 244FTID262150329 ent wees she Network to 6.00. 30,307.84 03/08/2026",
+   "balance_printed": 30307.84,
+   "tokens": [
+    6.0,
+    30307.84
+   ],
+   "used": "A",
+   "delta": -6.0,
+   "balance": 30307.84,
+   "attrib": "debit",
+   "amount": 6.0
+  },
+  {
+   "serial": 434,
+   "read_ser": 434,
+   "src": "walk",
+   "walk_i": 403,
+   "page": 21,
+   "date": "03/08/2026",
+   "desc": "434 | 03/08/2026 244FT1D262150329 iba ahaa a 6,000.00 24,307.84 03/08/2026",
+   "balance_printed": 24307.84,
+   "tokens": [
+    6000.0,
+    24307.84
+   ],
+   "used": "A",
+   "delta": -6000.0,
+   "balance": 24307.84,
+   "attrib": "debit",
+   "amount": 6000.0
+  },
+  {
+   "serial": 435,
+   "read_ser": 435,
+   "src": "walk",
+   "walk_i": 404,
+   "page": 21,
+   "date": "03/08/2026",
+   "desc": "435 | 03/08/2026 | 244FTID262152422 taeeneel yams Network to 6.00 24,301.84 03/08/2026",
+   "balance_printed": 24301.84,
+   "tokens": [
+    6.0,
+    24301.84
+   ],
+   "used": "A",
+   "delta": -6.0,
+   "balance": 24301.84,
+   "attrib": "debit",
+   "amount": 6.0
+  },
+  {
+   "serial": 436,
+   "read_ser": 436,
+   "src": "walk",
+   "walk_i": 405,
+   "page": 21,
+   "date": "03/08/2026",
+   "desc": "436 | 03/08/2026 244FTID262152422 snared ryams 6,000.00 18,301.84 03/08/2026",
+   "balance_printed": 18301.84,
+   "tokens": [
+    6000.0,
+    18301.84
+   ],
+   "used": "A",
+   "delta": -6000.0,
+   "balance": 18301.84,
+   "attrib": "debit",
+   "amount": 6000.0
+  },
+  {
+   "serial": 437,
+   "read_ser": 437,
+   "src": "walk",
+   "walk_i": 406,
+   "page": 21,
+   "date": "04/08/2026",
+   "desc": "437 | 04/08/2026 244FT1D262156298 wananawes #% ) sao Network to 0.50 18,301.34 03/08/2026",
+   "balance_printed": 18301.34,
+   "tokens": [
+    0.5,
+    18301.34
+   ],
+   "used": "A",
+   "delta": -0.5,
+   "balance": 18301.34,
+   "attrib": "debit",
+   "amount": 0.5
+  },
+  {
+   "serial": 438,
+   "read_ser": 438,
+   "src": "walk",
+   "walk_i": 407,
+   "page": 21,
+   "date": "04/08/2026",
+   "desc": "438 04/08/2026 244FT1D262156298 paledgt lait lieth We 500,00 17,801.34 03/08/2026",
+   "balance_printed": 17801.34,
+   "tokens": [
+    500.0,
+    17801.34
+   ],
+   "used": "A",
+   "delta": -500.0,
+   "balance": 17801.34,
+   "attrib": "debit",
+   "amount": 500.0
+  },
+  {
+   "serial": 439,
+   "read_ser": 439,
+   "src": "walk",
+   "walk_i": 408,
+   "page": 21,
+   "date": "04/08/2026",
+   "desc": "439 | 04/08/2026 244FTID262150415 eeeeNciwork fo Hamada S**** F 10,00 17,791.34 03/08/2026",
+   "balance_printed": 17791.34,
+   "tokens": [
+    10.0,
+    17791.34
+   ],
+   "used": "A",
+   "delta": -10.0,
+   "balance": 17791.34,
+   "attrib": "debit",
+   "amount": 10.0
+  },
+  {
+   "serial": 440,
+   "read_ser": 440,
+   "src": "walk",
+   "walk_i": 409,
+   "page": 21,
+   "date": "04/08/2026",
+   "desc": "440 | 04/08/2026 244FTID262150415 ****I[amada S**** F 10,000,00 7,791.34 03/08/2026",
+   "balance_printed": 7791.34,
+   "tokens": [
+    7791.34,
+    10000.0
+   ],
+   "used": "A",
+   "delta": -10000.0,
+   "balance": 7791.34,
+   "attrib": "debit",
+   "amount": 10000.0
+  },
+  {
+   "serial": 441,
+   "src": "insert",
+   "walk_i": null,
+   "page": 21,
+   "date": null,
+   "desc": null,
+   "D": 5.08,
+   "C": 0.0,
+   "balance_printed": 7786.26,
+   "tokens": [],
+   "source": "p21 tail crop (was 0.50 in v4 draft)",
+   "balance": 7786.26,
+   "delta": -5.08,
+   "attrib": "debit",
+   "amount": 5.08
+  },
+  {
+   "serial": 442,
+   "src": "insert",
+   "walk_i": null,
+   "page": 22,
+   "date": null,
+   "desc": null,
+   "D": 5075.0,
+   "C": 0.0,
+   "balance_printed": 2711.26,
+   "tokens": [],
+   "source": "p22 head crop (was 5073.00)",
+   "balance": 2711.26,
+   "delta": -5075.0,
+   "attrib": "debit",
+   "amount": 5075.0
+  },
+  {
+   "serial": 443,
+   "src": "insert",
+   "walk_i": null,
+   "page": 22,
+   "date": null,
+   "desc": null,
+   "D": 0.6,
+   "C": 0.0,
+   "balance_printed": 2710.66,
+   "tokens": [],
+   "source": "p22 head crop (was 0.50)",
+   "balance": 2710.66,
+   "delta": -0.6,
+   "attrib": "debit",
+   "amount": 0.6
+  },
+  {
+   "serial": 444,
+   "src": "insert",
+   "walk_i": null,
+   "page": 22,
+   "date": null,
+   "desc": null,
+   "D": 600.0,
+   "C": 0.0,
+   "balance_printed": 2110.66,
+   "tokens": [],
+   "source": "p22 head crop",
+   "balance": 2110.66,
+   "delta": -600.0,
+   "attrib": "debit",
+   "amount": 600.0
+  },
+  {
+   "serial": 445,
+   "src": "insert",
+   "walk_i": null,
+   "page": 22,
+   "date": null,
+   "desc": null,
+   "D": 1.0,
+   "C": 0.0,
+   "balance_printed": 2109.66,
+   "tokens": [],
+   "source": "p22 head crop",
+   "balance": 2109.66,
+   "delta": -1.0,
+   "attrib": "debit",
+   "amount": 1.0
+  },
+  {
+   "serial": 446,
+   "src": "insert",
+   "walk_i": null,
+   "page": 22,
+   "date": null,
+   "desc": null,
+   "D": 1000.0,
+   "C": 0.0,
+   "balance_printed": 1109.66,
+   "tokens": [],
+   "source": "p22 head crop",
+   "balance": 1109.66,
+   "delta": -1000.0,
+   "attrib": "debit",
+   "amount": 1000.0
+  },
+  {
+   "serial": 447,
+   "src": "insert",
+   "walk_i": null,
+   "page": 22,
+   "date": null,
+   "desc": null,
+   "D": 0.5,
+   "C": 0.0,
+   "balance_printed": 1109.16,
+   "tokens": [],
+   "source": "p22 head crop",
+   "balance": 1109.16,
+   "delta": -0.5,
+   "attrib": "debit",
+   "amount": 0.5
+  },
+  {
+   "serial": 448,
+   "src": "insert",
+   "walk_i": null,
+   "page": 22,
+   "date": null,
+   "desc": null,
+   "D": 500.0,
+   "C": 0.0,
+   "balance_printed": 609.16,
+   "tokens": [],
+   "source": "p22 head crop",
+   "balance": 609.16,
+   "delta": -500.0,
+   "attrib": "debit",
+   "amount": 500.0
+  },
+  {
+   "serial": 449,
+   "read_ser": null,
+   "src": "walk",
+   "walk_i": 410,
+   "page": 22,
+   "date": "13/08/2026",
+   "desc": "$49 | 137082026 | 2441PNF262252007 To-Revenue from <#t+ saw oy 0.50 608.66 13/08/2026",
+   "balance_printed": 608.66,
+   "tokens": [
+    0.5,
+    608.66
+   ],
+   "used": "solver",
+   "delta": -0.5,
+   "balance": 608.66,
+   "attrib": "debit",
+   "amount": 0.5
+  },
+  {
+   "serial": 450,
+   "read_ser": 450,
+   "src": "walk",
+   "walk_i": 411,
+   "page": 22,
+   "date": "13/08/2026",
+   "desc": "450 | 13/08/2026 | 413FTNU262252025 cyl ae To tual $00,000.00 500,608.66 13/08/2026",
+   "balance_printed": 500608.66,
+   "tokens": [
+    500000.0,
+    500608.66
+   ],
+   "used": "B",
+   "delta": 500000.0,
+   "balance": 500608.66,
+   "attrib": "credit",
+   "amount": 500000.0
+  },
+  {
+   "serial": 451,
+   "read_ser": null,
+   "src": "walk",
+   "walk_i": 412,
+   "page": 22,
+   "date": "13/08/2026",
+   "desc": "4$1 | 13/08/2026 2441 PNF262256016 aac ary am oy 0.50 500,608.16 13/08/2026",
+   "balance_printed": 500608.16,
+   "tokens": [
+    0.5,
+    500608.16
+   ],
+   "used": "A",
+   "delta": -0.5,
+   "balance": 500608.16,
+   "attrib": "debit",
+   "amount": 0.5
+  },
+  {
+   "serial": 452,
+   "read_ser": 452,
+   "src": "walk",
+   "walk_i": 413,
+   "page": 22,
+   "date": "13/08/2026",
+   "desc": "452 | 13/08/2026 244DDRN262254001 Statement of account fee / ~—> 160.00 500,448.16 13/08/2026",
+   "balance_printed": 500448.16,
+   "tokens": [
+    160.0,
+    500448.16
+   ],
+   "used": "A",
+   "delta": -160.0,
+   "balance": 500448.16,
+   "attrib": "debit",
+   "amount": 160.0
+  },
+  {
+   "serial": 453,
+   "read_ser": 453,
+   "src": "walk",
+   "walk_i": 414,
+   "page": 22,
+   "date": "16/08/2026",
+   "desc": "453 | 16/08/2026 | 244DDRN262280003 Statement of account fec / ~— 100,00 500,348.16 16/08/2026",
+   "balance_printed": 500348.16,
+   "tokens": [
+    100.0,
+    500348.16
+   ],
+   "used": "A",
+   "delta": -100.0,
+   "balance": 500348.16,
+   "attrib": "debit",
+   "amount": 100.0
+  },
+  {
+   "serial": 454,
+   "read_ser": 454,
+   "src": "walk",
+   "walk_i": 415,
+   "page": 22,
+   "date": "16/08/2026",
+   "desc": "454 16/08/2026 413FTNU262286009 ey) sae Tos Yj 250,000.00 750,348.16 16/08/2026",
+   "balance_printed": 750348.16,
+   "tokens": [
+    250000.0,
+    750348.16
+   ],
+   "used": "A",
+   "delta": 250000.0,
+   "balance": 750348.16,
+   "attrib": "credit",
+   "amount": 250000.0
+  },
+  {
+   "serial": 455,
+   "read_ser": 455,
+   "src": "walk",
+   "walk_i": 416,
+   "page": 22,
+   "date": "16/08/2026",
+   "desc": "455 | 16/08/2026 | 2441PNF262286005 To-Reve eimai ae 0.50 750,347.66 16/08/2026",
+   "balance_printed": 750347.66,
+   "tokens": [
+    0.5,
+    750347.66
+   ],
+   "used": "A",
+   "delta": -0.5,
+   "balance": 750347.66,
+   "attrib": "debit",
+   "amount": 0.5
+  },
+  {
+   "serial": 456,
+   "read_ser": 456,
+   "src": "walk",
+   "walk_i": 417,
+   "page": 22,
+   "date": "18/08/2026",
+   "desc": "| 456 | wwosanns | 244UD01EGP 00001 | 2447480302432000021 | | 718.75 | 751,066.41 | 18/08/2026 |",
+   "balance_printed": 751066.41,
+   "tokens": [
+    118.15,
+    718.75,
+    751066.41
+   ],
+   "used": "A",
+   "delta": 718.75,
+   "balance": 751066.41,
+   "attrib": "credit",
+   "amount": 718.75
+  },
+  {
+   "serial": 457,
+   "read_ser": 457,
+   "src": "walk",
+   "walk_i": 418,
+   "page": 22,
+   "date": "25/08/2026",
+   "desc": "| 457 | asowaons | 244UD01 EGP 00001 | 2447480302432000010 | | 205.83 | 751,272.24 | 25/08/2026 |",
+   "balance_printed": 751272.24,
+   "tokens": [
+    205.83,
+    751272.24
+   ],
+   "used": "A",
+   "delta": 205.83,
+   "balance": 751272.24,
+   "attrib": "credit",
+   "amount": 205.83
+  },
+  {
+   "serial": 458,
+   "read_ser": 458,
+   "src": "walk",
+   "walk_i": 419,
+   "page": 22,
+   "date": "01/09/2026",
+   "desc": "| 458 | oxsn0r6 | 244CRMM262444001 | “IBAN letter Issuance Fees | 50.00 | | 751,222.24 | 01/09/2026 |",
+   "balance_printed": 751222.24,
+   "tokens": [
+    50.0,
+    751222.24,
+    781222.24
+   ],
+   "used": "A",
+   "delta": -50.0,
+   "balance": 751222.24,
+   "attrib": "debit",
+   "amount": 50.0
+  },
+  {
+   "serial": 459,
+   "read_ser": 459,
+   "src": "walk",
+   "walk_i": 420,
+   "page": 22,
+   "date": "06/09/2026",
+   "desc": "459 | 06/09/2026 244FT1ID262496379 eyo sams Network to 20.00 751,202.24 06/09/2026",
+   "balance_printed": 751202.24,
+   "tokens": [
+    20.0,
+    20.9,
+    751202.24
+   ],
+   "used": "A",
+   "delta": -20.0,
+   "balance": 751202.24,
+   "attrib": "debit",
+   "amount": 20.0
+  },
+  {
+   "serial": 460,
+   "read_ser": 460,
+   "src": "walk",
+   "walk_i": 421,
+   "page": 22,
+   "date": "06/09/2026",
+   "desc": "460 | 06/09/2026 244FTID262496379 aye sams 70,000.00 681,202.24 06/09/2026",
+   "balance_printed": 681202.24,
+   "tokens": [
+    70000.0,
+    681202.24
+   ],
+   "used": "A",
+   "delta": -70000.0,
+   "balance": 681202.24,
+   "attrib": "debit",
+   "amount": 70000.0
+  },
+  {
+   "serial": 461,
+   "read_ser": 461,
+   "src": "walk",
+   "walk_i": 422,
+   "page": 22,
+   "date": "06/09/2026",
+   "desc": "461 | 06/09/2026 | 244FT1D262498349 Ud)é 4s Network to 20.00 \\ 681,182.24 06/09/2026",
+   "balance_printed": 681182.24,
+   "tokens": [
+    20.0,
+    681182.24
+   ],
+   "used": "A",
+   "delta": -20.0,
+   "balance": 681182.24,
+   "attrib": "debit",
+   "amount": 20.0
+  },
+  {
+   "serial": 462,
+   "read_ser": 462,
+   "src": "walk",
+   "walk_i": 423,
+   "page": 23,
+   "date": "06/09/1026",
+   "desc": "462 | 06/09/1026 244FTID162498349 ubyh dams 50,000.00 631,182.24 06/09/2026 ||WRAP-AMT:[{\"v\": 431162.24, \"cx\": 0.2515}, {\"v\": 431162.24, \"cx\": 0.423},",
+   "balance_printed": 631182.24,
+   "tokens": [
+    50000.0,
+    631182.24
+   ],
+   "used": "A",
+   "delta": -50000.0,
+   "balance": 631182.24,
+   "attrib": "debit",
+   "amount": 50000.0
+  }
+ ],
+ "g3": {
+  "sumD": 1341824.35,
+  "sumC": 1505491.16
+ },
+ "reversals": 42,
+ "anomalies": [
+  [
+   38,
+   "no-token",
+   -6.5,
+   [
+    460837.53
+   ]
+  ],
+  [
+   59,
+   "no-token",
+   -0.5,
+   [
+    6.8,
+    335047.83,
+    344047.33,
+    344047.89
+   ]
+  ],
+  [
+   61,
+   "no-token",
+   -0.5,
+   [
+    0.58,
+    6.56,
+    333047.03
+   ]
+  ],
+  [
+   124,
+   "no-token",
+   -1500.0,
+   [
+    169535.9
+   ]
+  ],
+  [
+   129,
+   "no-token",
+   -0.5,
+   [
+    36.4,
+    500.0,
+    170036.4
+   ]
+  ],
+  [
+   166,
+   "no-token",
+   -50000.0,
+   [
+    40000.0,
+    98199.73
+   ]
+  ],
+  [
+   170,
+   "no-token",
+   -810.0,
+   [
+    97387.92
+   ]
+  ],
+  [
+   176,
+   "no-token",
+   -800.0,
+   [
+    400.0,
+    91111.68
+   ]
+  ],
+  [
+   198,
+   "no-token",
+   -500.0,
+   [
+    400.0,
+    69893.17,
+    69893.27
+   ]
+  ],
+  [
+   231,
+   "no-token",
+   -50000.0,
+   [
+    20000.0,
+    182743.95
+   ]
+  ],
+  [
+   253,
+   "no-token",
+   -0.5,
+   [
+    160400.78
+   ]
+  ],
+  [
+   324,
+   "no-token",
+   -0.5,
+   [
+    791.67,
+    11414.3,
+    17183.51
+   ]
+  ],
+  [
+   343,
+   "no-token",
+   -65.0,
+   [
+    11348.8
+   ]
+  ],
+  [
+   360,
+   "no-token",
+   -205.0,
+   [
+    204.0,
+    205.06,
+    7143.18,
+    7294.18
+   ]
+  ],
+  [
+   425,
+   "no-token",
+   -0.5,
+   [
+    55305.41
+   ]
+  ]
+ ]
+}

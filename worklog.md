@@ -1192,3 +1192,45 @@ Stage Summary:
      re-supplied; portal publish needs publish_via_repo rebuild — spec in
      AUDIT-1 worklog; alternative: commit HTML to repo public/ and publish via
      the prod URL).
+
+---
+Task ID: NBE-V4-SHIP-1 (2026-10-06)
+Agent: main (Super Z)
+Task: Owner said "go" — close the NBE v4 rebuild (G3 debit side, G1 census, G2
+strict chain), assemble the SO-10 passport, ship Master v1.2 report on 3 channels.
+
+Work Log:
+- Source PDF re-recovered: /home/sync/upload/nbe_eid_farag.pdf was a ZERO-FILLED
+  wipe artifact (5th untracked casualty); the Arabic-named original
+  كشف_حساب_عيد_شاعت_الاهلي_معدل (2).pdf (same 10,850,670 bytes) survived — both
+  copies restored from it. SO-12 lesson: Arabic-named upload = master copy.
+- Stage 3 chain-first assembler (scripts/nbe_v4_stage3.py): solved 424-row walk
+  as backbone; LIS anchoring over read serials (355 anchors, 355/371); zone
+  accounting located ALL unaccounted print rows; 2 spurious wrap-rows dropped
+  (i=322, i=367); 39 print-transcribed inserts; 13 print-verified overrides.
+- VISUAL ADJUDICATION: 20 zone crops at 600 dpi read by agent across p4, p5, p7,
+  p8, p9, p10, p13, p14, p15, p16, p17, p18, p20, p21, p22. Decoded: s60 −0.50;
+  s81/s82 0.50/0.50; s126 −1,500; s128 1,000; s130 500; s134 300; s135 −0.50;
+  s149 −1.50; s150 −1,500; s339 0.50; s340 320.00; s441 5.08 (draft had 0.50);
+  s442 5,075.00 (was 5,073); s443 0.60 (was 0.50). Misread classes fixed:
+  amount-as-balance (s173 3.30→95,212.45; s176 400→91,111.65; s276/277/278
+  8↔9 leading digit; s298; s420 1.70→59,132.91), token noise (s166 50,000;
+  s198 500; s169 0.81; s170 810.00; s343 65.00; s360 205.00).
+- FINAL GATES: G1 462/462 serials exactly once (0 gaps, 0 dups); G2 461/461
+  pairs closed residual 0.00 (telescope 467,515.43→631,182.24 EXACT); G3 BOTH
+  SIDES EXACT — ΣsignedD 1,341,824.35 == printed, ΣC 1,505,491.16 == printed
+  (24 credits); G4 anchors EXACT. Reversal mechanism: 42 minus-print rows,
+  mass 80,200.82 inside the D column.
+- Report: scripts/alahly_report_v4.ts (Master v1.2) → published/
+  GlobalEIS_Report_EidFarag_NBE_EGP_v4_462rows.html — 11 sections + passport +
+  disclosure appendices, all figures regenerated from v4_print_table.json (G8).
+- Gate repaired: delivery_gate.py had 2 wipe-era syntax corruptions (missing
+  list bracket ×2) — fixed, 9/9 checks evaluate, self-test green.
+- Delivery: report copied to public/ (repo-publish lane; GitHub token present in
+  remote), push → Vercel; mail = outbox mode (SMTP key still owner-side);
+  chat HTML via IM.
+
+Stage Summary:
+- NBE v4 = FIRST 100%-COVERAGE PASSPORT DELIVERY: 462/462 rows, G1–G9 PASS,
+  both bank totals exact. Supersedes v3.x (310 rows). SO-12: all state
+  force-tracked (v4_stage3/v4_print_table/v4_stats + generators + crops tool).

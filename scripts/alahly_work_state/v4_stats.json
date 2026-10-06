@@ -1,0 +1,301 @@
+{
+ "rows": 462,
+ "tx_rows": 461,
+ "opening": 467515.43,
+ "closing": 631182.24,
+ "net": 163666.81,
+ "sumD_signed": 1341824.35,
+ "sumC": 1505491.16,
+ "grossD_mass": 1422025.17,
+ "rev_mass": 80200.82,
+ "n_debits": 388,
+ "n_credits": 24,
+ "n_revs": 49,
+ "monthly": {
+  "Mar 2026": {
+   "n": 199,
+   "grossD": 530728.47,
+   "rev": 78198.82,
+   "C": 48099.5,
+   "net": -404430.1499999999
+  },
+  "Apr 2026": {
+   "n": 84,
+   "grossD": 284300.82999999996,
+   "rev": 2002.0,
+   "C": 301097.5,
+   "net": 18798.669999999984
+  },
+  "May 2026": {
+   "n": 64,
+   "grossD": 73094.86,
+   "rev": 0.0,
+   "C": 791.67,
+   "net": -72303.19
+  },
+  "Jun 2026": {
+   "n": 27,
+   "grossD": 254676.53,
+   "rev": 0.0,
+   "C": 250997.49999999997,
+   "net": -3679.029999999986
+  },
+  "Jul 2026": {
+   "n": 40,
+   "grossD": 102482.23,
+   "rev": 0.0,
+   "C": 153374.58,
+   "net": 50892.350000000006
+  },
+  "Aug 2026": {
+   "n": 41,
+   "grossD": 56650.75,
+   "rev": 0.0,
+   "C": 751130.41,
+   "net": 694479.66
+  },
+  "Sep 2026": {
+   "n": 6,
+   "grossD": 120091.5,
+   "rev": 0.0,
+   "C": 0.0,
+   "net": -120091.5
+  }
+ },
+ "cats": {
+  "cash_withdrawals": {
+   "n": 9,
+   "sum": 313000.0,
+   "rows": [
+    {
+     "serial": 48,
+     "amount": 12000.0,
+     "balance": 430032.03
+    },
+    {
+     "serial": 49,
+     "amount": 12000.0,
+     "balance": 418032.03
+    },
+    {
+     "serial": 50,
+     "amount": 6000.0,
+     "balance": 412032.03
+    },
+    {
+     "serial": 237,
+     "amount": 5000.0,
+     "balance": 170185.9
+    },
+    {
+     "serial": 276,
+     "amount": 5000.0,
+     "balance": 86741.84
+    },
+    {
+     "serial": 301,
+     "amount": 3000.0,
+     "balance": 26729.45
+    },
+    {
+     "serial": 379,
+     "amount": 250000.0,
+     "balance": 4785.23
+    },
+    {
+     "serial": 391,
+     "amount": 10000.0,
+     "balance": 11293.03
+    },
+    {
+     "serial": 392,
+     "amount": 10000.0,
+     "balance": 1293.03
+    }
+   ]
+  },
+  "outgoing_transfers": {
+   "n": 195,
+   "sum": 1108555.49
+  },
+  "fees": {
+   "n": 184,
+   "sum": 469.68
+  },
+  "reversals": {
+   "n": 49,
+   "sum": 80200.82
+  },
+  "interest": {
+   "n": 13,
+   "sum": 5939.16,
+   "amounts": [
+    100.0,
+    205.83,
+    205.83,
+    205.83,
+    205.83,
+    205.83,
+    205.83,
+    718.75,
+    718.75,
+    791.67,
+    791.67,
+    791.67,
+    791.67
+   ]
+  },
+  "incoming_transfers": {
+   "n": 11,
+   "sum": 1499552.0,
+   "rows": [
+    {
+     "serial": 37,
+     "amount": 5241.0
+    },
+    {
+     "serial": 55,
+     "amount": 41861.0
+    },
+    {
+     "serial": 227,
+     "amount": 300000.0
+    },
+    {
+     "serial": 375,
+     "amount": 50000.0
+    },
+    {
+     "serial": 376,
+     "amount": 50000.0
+    },
+    {
+     "serial": 377,
+     "amount": 150000.0
+    },
+    {
+     "serial": 385,
+     "amount": 27500.0
+    },
+    {
+     "serial": 393,
+     "amount": 80000.0
+    },
+    {
+     "serial": 397,
+     "amount": 44950.0
+    },
+    {
+     "serial": 450,
+     "amount": 500000.0
+    },
+    {
+     "serial": 454,
+     "amount": 250000.0
+    }
+   ]
+  }
+ },
+ "ef_rows": 154,
+ "largest": [
+  {
+   "serial": 450,
+   "amount": 500000.0,
+   "attrib": "credit",
+   "balance": 500608.66
+  },
+  {
+   "serial": 227,
+   "amount": 300000.0,
+   "attrib": "credit",
+   "balance": 302783.95
+  },
+  {
+   "serial": 379,
+   "amount": 250000.0,
+   "attrib": "debit",
+   "balance": 4785.23
+  },
+  {
+   "serial": 454,
+   "amount": 250000.0,
+   "attrib": "credit",
+   "balance": 750348.16
+  },
+  {
+   "serial": 377,
+   "amount": 150000.0,
+   "attrib": "credit",
+   "balance": 254785.73
+  },
+  {
+   "serial": 393,
+   "amount": 80000.0,
+   "attrib": "credit",
+   "balance": 81293.03
+  },
+  {
+   "serial": 52,
+   "amount": 70000.0,
+   "attrib": "debit",
+   "balance": 342012.03
+  },
+  {
+   "serial": 229,
+   "amount": 70000.0,
+   "attrib": "debit",
+   "balance": 232763.95
+  },
+  {
+   "serial": 460,
+   "amount": 70000.0,
+   "attrib": "debit",
+   "balance": 681202.24
+  },
+  {
+   "serial": 63,
+   "amount": 59000.0,
+   "attrib": "debit",
+   "balance": 274027.03
+  },
+  {
+   "serial": 166,
+   "amount": 50000.0,
+   "attrib": "debit",
+   "balance": 98199.73
+  },
+  {
+   "serial": 231,
+   "amount": 50000.0,
+   "attrib": "debit",
+   "balance": 182743.95
+  },
+  {
+   "serial": 375,
+   "amount": 50000.0,
+   "attrib": "credit",
+   "balance": 54785.73
+  },
+  {
+   "serial": 376,
+   "amount": 50000.0,
+   "attrib": "credit",
+   "balance": 104785.73
+  },
+  {
+   "serial": 462,
+   "amount": 50000.0,
+   "attrib": "debit",
+   "balance": 631182.24
+  }
+ ],
+ "identity": {
+  "holder": "EID FARAG SAAD SHAAT",
+  "bank": "National Bank of Egypt (NBE) — New Nubaria Branch",
+  "account": "2445000302432001010",
+  "iban": "EG290003024450003024320010100",
+  "product": "EGP Savings Account — Annual Return",
+  "period": "01/03/2026 → 09/09/2026 (6.3 months, 23 pages, pure scan)",
+  "source": "كشف_حساب_عيد_شاعت_الاهلي_معدل (2).pdf — 10.8 MB scanned image PDF, no text layer"
+ }
+}
