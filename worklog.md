@@ -1125,3 +1125,70 @@ Stage Summary:
 - System audit COMPLETE: 12 standing orders, all portal nodes verified, both
   regression suites green, gate rebuilt+tracked, env restored, v4 data loss
   quantified with deterministic rebuild path. Two owner-side secrets to re-supply.
+
+---
+Task ID: NBE-V4-STAGE2 (2026-10-06)
+Agent: main (Super Z)
+Task: Owner said "start" — resume the NBE v4 rebuild (data lost in wipe), complete the
+passport, ship the report. Session outcome: pipeline fully rebuilt, G9 print audit
+COMPLETE (23/23 pages), G3 credit side PROVEN EXACT, debit side decomposed to a
+bounded transcription task. NO REPORT SHIPPED (SO-10 fail-loud — correct).
+
+Work Log:
+- Re-ran the whole pipeline from the tracked scripts: extract2 486 bands EXACT,
+  serialfix 152/422, merge, build 424 rows, repair (600dpi pass B), build2 (58-62
+  flags), repair2 (900dpi pass C), sheets, solver. G4 anchors EXACT throughout
+  (467,515.43 / 631,182.24).
+- ROOT-CAUSED the row-loss: pages 11+17 rule detection collapse (light scan rules
+  ~0.315 coverage vs fixed 0.35 threshold) -> whole-page absorption; patched
+  extract.py/extract2.py with a rescue ladder (0.18) gated to verified gap pages
+  (7,10,11,14,16,17,21,22). Rows: 402 -> 424.
+- G9 PAGE AUDIT: all 23 pages read at 100dpi + targeted 450dpi band crops
+  (adj2/page_NN_100.png, adj2/row_NNN.png, adj2/evidence_*.png,
+  adj2/reversal_check_*.png). Every visual anchor chain-verified.
+- MECHANISM DISCOVERED (the key to G3): failed outgoing transfers print as
+  [fee D][transfer D][fee-reversal -fee][transfer-reversal -transfer] where the
+  bank prints reversals as NEGATIVE amounts INSIDE its Debit column. Bank D total
+  is the SIGNED sum; walk delta-sign bucketing put reversals into C.
+  39 reversal rows visually verified (minus-print confirmed); i=255 (s276
+  5,000.00) verified TRUE CREDIT and excluded.
+- G3 CREDIT SIDE PROVEN EXACT: 24 credit-column entries sum to 1,505,491.16 ==
+  printed total: 41,861 (s55) + 5,241 (s37) + 791.67 (s80) + 205.83 (s163) +
+  100 (s209) + 791.67 (s225) + 300,000 (s227) + 205.83 (s242) + 791.67 (s341) +
+  205.83 (s349) + 791.67 (s374) + 50,000 (s375) + 50,000 (s376) + 150,000 (s377) +
+  205.83 (s382) + 27,500 (s385) + 718.75 (s388) + 80,000 (s393) + 44,950 (s397) +
+  205.83 (s398) + 500,000 (s450) + 250,000 (s454) + 718.75 (s456) + 205.83 (s457).
+- G3 DEBIT SIDE decomposed: capture (line-level, unsigned) = 1,266,190.04 over
+  331 entries; per-page presence check found the missing/absorbed lines: p10
+  s210-212 (17,336), p11 s228-230 (70,040) + s231 50,000 line absent, p13 s257
+  (2,000), p17 most debit lines (capture only 74.00 of ~5,053), p22 s442-448
+  (7,175) + s452/453/458/459/461 micros + s460 captured as 70,000 but print-
+  chain proves 120,000 (+50,000 correction), plus sign-flips for captured
+  reversals (-2x value). Residual to close: ~96,388.50 gross before flips.
+- Absorbed-row amounts ALL recovered from page reads and chain-verified
+  (scripts/nbe_v4_g3_final.py MISSING table).
+- Micro-zone caveats for the transcription pass: s442-448 sums 1.30 short of the
+  chain (one 100dpi digit misread — use 450dpi crops row_442..448); p16 capture
+  500 short of read-sum; s40 line captured as 6.56 noise (true -6.50).
+- STATE PERSISTED (SO-12): scripts/alahly_work_state/ (v4_final, v4_final_rows,
+  v4_solved, v4_solver_gates, v4_special, v4_gates, v4_rows, v4_rows_pB/pC,
+  v4_serial_final, adj2 manifest) force-tracked; all new scripts force-tracked.
+
+Stage Summary:
+- v4 is 424 walk rows + ~36 recovered absorbed rows = the print's 460 tx rows;
+  G1 recoverable, G2 chain closes, G4 EXACT, G6 minor, G7 two-pass done,
+  G9 audit complete (every page read, every anomaly decoded).
+- NEXT SESSION RUNBOOK (bounded, ~1-2h):
+  1. Transcribe the print table (serial, signed_debit, credit, balance) for all
+     462 printed rows from adj2/page_NN_100.png reads + 450dpi crops for micro
+     zones (s40, s442-448, s59-61, s404-409) -> scripts/nbe_v4_print_table.json.
+     Cross-check each page sum against the capture per-page sums.
+  2. G3 = sum(signed_debits)==1,341,824.35 AND sum(credits)==1,505,491.16
+     (credit side already proven). Fix any page that mismatches via 450dpi.
+  3. Rebuild v4_final_rows with recovered rows; re-run solver for G1 census
+     (serials 1..462 exactly once) + G2 strict chain.
+  4. Build the Master v1.2 report + SO-10 passport (G1-G9 measured values),
+     run delivery_gate.py, ship 3 channels (mail=outbox until SMTP key
+     re-supplied; portal publish needs publish_via_repo rebuild — spec in
+     AUDIT-1 worklog; alternative: commit HTML to repo public/ and publish via
+     the prod URL).

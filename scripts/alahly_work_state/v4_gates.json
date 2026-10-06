@@ -1,0 +1,685 @@
+{
+ "G1": {
+  "rows_total": 424,
+  "serial_reads": 371,
+  "unresolved_lines": 53,
+  "dups": {
+   "2": 2,
+   "3": 3,
+   "6": 2,
+   "7": 2,
+   "18": 2,
+   "29": 2,
+   "46": 2,
+   "182": 2,
+   "284": 2,
+   "262": 2,
+   "334": 2,
+   "343": 2,
+   "400": 2,
+   "397": 2
+  },
+  "missing_n": 106,
+  "missing_first40": [
+   1,
+   11,
+   40,
+   41,
+   44,
+   59,
+   60,
+   61,
+   62,
+   63,
+   64,
+   65,
+   68,
+   81,
+   82,
+   83,
+   84,
+   85,
+   86,
+   126,
+   128,
+   129,
+   130,
+   133,
+   134,
+   135,
+   141,
+   142,
+   149,
+   150,
+   151,
+   152,
+   153,
+   154,
+   168,
+   179,
+   181,
+   194,
+   198,
+   201
+  ],
+  "non_increasing_breaks": 107
+ },
+ "G2": {
+  "chain_ok": 324,
+  "chain_bad": 96,
+  "flags_n": 99
+ },
+ "G3": {
+  "parsed_D": 780317.44,
+  "parsed_C": 984096.75,
+  "printed_D": 1341824.35,
+  "printed_C": 1505491.16,
+  "d_match": false,
+  "c_match": false
+ },
+ "G4": {
+  "first": 467515.43,
+  "last": 631182.24,
+  "opening_match": true,
+  "closing_match": true
+ },
+ "G6": {
+  "non_monotonic_or_bad": 37
+ },
+ "flags": [
+  {
+   "i": 9,
+   "serial": 10,
+   "why": "chain-gap 448096.03->448105.83 movs=[9.9]",
+   "text": "10 | 01/03/2026 | 244FTID260576310 Network to EID FARAG SAAD -9.90 448,105.83 26"
+  },
+  {
+   "i": 14,
+   "serial": 15,
+   "why": "chain-gap 456604.03->56603.03 movs=[1.0]",
+   "text": "15 01/03/2026 244FTID260604625 AIMED MOHAMED 1,00 56,603,03 6"
+  },
+  {
+   "i": 15,
+   "serial": 16,
+   "why": "chain-gap 56603.03->455603.03 movs=[1000.0]",
+   "text": "16 01/03/2026 244FT1D260604625 MOHAMED 1,000.00 455,603.03 28/02/2026"
+  },
+  {
+   "i": 36,
+   "serial": 37,
+   "why": "chain-gap 455603.03->460844.03 movs=[]",
+   "text": "37 | 01/03/2026 | 244FTIC26060A4MS 79> pS Lible from _ ew pty $1241.00 460,844.0"
+  },
+  {
+   "i": 37,
+   "serial": 38,
+   "why": "chain-gap 460844.03->460837.53 movs=[]",
+   "text": "38 | 01/03/2026 | 244FTID26060AIMC | Network to EID FARAG SAAD + 50%9V\" rh in 46"
+  },
+  {
+   "i": 38,
+   "serial": 39,
+   "why": "chain-gap 460837.53->484337.53 movs=[]",
+   "text": "39 | DIANa/2026 | 2dlFTTb260eDATMC EID FARAG SAAD 6500.00 484,337.53 O1/312046"
+  },
+  {
+   "i": 39,
+   "serial": null,
+   "why": "chain-gap 484337.53->44444.03 movs=[]",
+   "text": "ap | Vi/oaev2e | 244ETID2eDEVAIMC | Netwurkty EMD FARAG SAAD +56 44,444.03 01/03"
+  },
+  {
+   "i": 40,
+   "serial": null,
+   "why": "chain-gap 44444.03->460844.03 movs=[6500.0]",
+   "text": "a1 | 1/02/2026 | 2adFTTbD26D0DAIMC EID FARAG SAAD -6,500.00 460,844.03 01/03/202"
+  },
+  {
+   "i": 50,
+   "serial": 51,
+   "why": "chain-gap 412032.03->20.0 movs=[]",
+   "text": "51 08/03/2026 244FT1ID260674545 GAD ELRAB 20.00 \u2019"
+  },
+  {
+   "i": 51,
+   "serial": 52,
+   "why": "chain-gap 20.0->342012.03 movs=[70000.0]",
+   "text": "52 | 08/03/2026 244FTID260674545 RAMADAN NOBI GAD ELRAB 70,000.00 342,012.03 07/"
+  },
+  {
+   "i": 58,
+   "serial": null,
+   "why": "chain-gap 333047.53->344047.33 movs=[6.8]",
+   "text": "ao | 19/0aude | 2adtPRRZoU7a006E% TOF TOHH SULA a 5 6.80 344,047.33 16/3/2026"
+  },
+  {
+   "i": 59,
+   "serial": 6,
+   "why": "chain-gap 344047.33->333047.03 movs=[0.58]",
+   "text": "6) \u00ab| 19/0972026 | 2adtHAE26078HDon To-RWOHHe POH SLs ae pd 0.58 333,047.03 16/0"
+  },
+  {
+   "i": 61,
+   "serial": 3,
+   "why": "chain-gap 333027.03->274027.03 movs=[]",
+   "text": "03 17/03/2026 244FTID260758466 MOHAMED \u00a79,000.00 274,027.03 16/03/2026"
+  },
+  {
+   "i": 69,
+   "serial": 71,
+   "why": "chain-gap 274021.68->274027.03 movs=[]",
+   "text": "71 17/03/2026 | 244FTID26075A07N Network to EID FARAG SAAD -\u00a7,.35 274,027.03 16/"
+  },
+  {
+   "i": 79,
+   "serial": 3,
+   "why": "chain-gap 224793.7->224342.7 movs=[450.0]",
+   "text": "3 18/03/2026 | 244FTIN26077A1KI SALAH FAWZY MOHAMED 450.00 224,342.70 18/04/2016"
+  },
+  {
+   "i": 82,
+   "serial": 46,
+   "why": "chain-gap 214833.2->214832.7 movs=[]",
+   "text": "46 18/03/2026 2441PNF2607741 non-financial 214,832.70 19/03/2026"
+  },
+  {
+   "i": 97,
+   "serial": 101,
+   "why": "chain-gap 209327.2->209327.7 movs=[]",
+   "text": "101 | 24/03/2026 244FT1D260834793 Network to EID FARAG SAAD 209,327.70 21/03/202"
+  },
+  {
+   "i": 113,
+   "serial": 117,
+   "why": "chain-gap 185051.4->185049.4 movs=[]",
+   "text": "117 | 24/03/2026 244FTID260832777 Network to EID FARAG SAAD 185,049.40 23/03/202"
+  },
+  {
+   "i": 120,
+   "serial": 124,
+   "why": "chain-gap 171035.9->169535.9 movs=[]",
+   "text": "124 | 24/03/2026 244FTID260835286 EID FARAG SAAD , 1,500,00\u00b0 169,535.90 23/03/20"
+  },
+  {
+   "i": 122,
+   "serial": 127,
+   "why": "chain-gap 169537.4->171036.4 movs=[1.0]",
+   "text": "127. | 24/03/2026 244FT1ID260835287 Network to EID FARAG SAAD 1,00 171,036.40 23"
+  },
+  {
+   "i": 123,
+   "serial": 131,
+   "why": "chain-gap 171036.4->169536.4 movs=[0.5]",
+   "text": "131 24/03/2026 244FTID260835288 Network to EID FARAG SAAD -0.50 169,536.40 23/03"
+  },
+  {
+   "i": 124,
+   "serial": 132,
+   "why": "chain-gap 169536.4->500.0 movs=[]",
+   "text": "132 244FTID260835288 EID FARAG SAAD -500.00 170.036"
+  },
+  {
+   "i": 125,
+   "serial": null,
+   "why": "chain-gap 500.0->36.4 movs=[]",
+   "text": "SUAAT~517719997N47510C0 0,036.40 23/03/2026 ||WRAP-AMT:[{\"v\": 0.5, \"cx\": 0.5239}"
+  },
+  {
+   "i": 126,
+   "serial": null,
+   "why": "chain-gap 36.4->170035.9 movs=[]",
+   "text": "= SHAAT~CRIODITIIS9OSCF49 170,035.90 23/03/2016"
+  },
+  {
+   "i": 127,
+   "serial": 136,
+   "why": "chain-gap 170035.9->170036.4 movs=[300.0]",
+   "text": "136 | 24/03/2026 244FTID260835289 EID FARAG SAAD -300.00 170,036.40 23/03/2026"
+  },
+  {
+   "i": 140,
+   "serial": null,
+   "why": "chain-gap 165531.9->167030.9 movs=[2.5]",
+   "text": "1s) | 24/03/2026 | 244FT1D260832782 Network (o EID FARAG SAAD 2.50 167,030.90 23"
+  },
+  {
+   "i": 144,
+   "serial": 155,
+   "why": "chain-gap 162528.9->162530.9 movs=[1.0]",
+   "text": "155 24/03/2016 244FTID260832783 Network to EID FARAG SAAD -1,00 162,530.90 23/03"
+  },
+  {
+   "i": 145,
+   "serial": 156,
+   "why": "chain-gap 162530.9->164530.9 movs=[1000.0]",
+   "text": "156 | 24/03/2026 244FTID260832783 EID FARAG SAAD -1,000.00 164,530.90 23/03/2026"
+  },
+  {
+   "i": 152,
+   "serial": 163,
+   "why": "chain-gap 148014.4->148220.23 movs=[]",
+   "text": "163 | 28/03/2026 | 244UD0IEGP 00001 24.47480302432000010 - | sas 148,220.23 25/0"
+  },
+  {
+   "i": 155,
+   "serial": 166,
+   "why": "chain-gap 148199.73->98199.73 movs=[40000.0]",
+   "text": "166 | 26/03/2026 244FTID260854087 Eld Farag 40,000.00 98,199.73 26/03/2026"
+  },
+  {
+   "i": 159,
+   "serial": 170,
+   "why": "chain-gap 98197.92->97387.92 movs=[]",
+   "text": "170 | 26/03/2026 | 244FTID260852164 abe ely ayes taki ee | acer 2A 3 97,387.92 2"
+  },
+  {
+   "i": 162,
+   "serial": 173,
+   "why": "no-amounts",
+   "text": "173 29/03/2026 244FT1ID160852341 Network to Mohamed Mahmoud 330 95.212.45 27/03/"
+  },
+  {
+   "i": 163,
+   "serial": 174,
+   "why": "chain-gap 95215.75->91912.45 movs=[3300.0]",
+   "text": "174 | 29/03/2026 244FT1D260852341 Mohamed Mahmoud 3,300.00 91,912.45 27/03/2026"
+  },
+  {
+   "i": 165,
+   "serial": 176,
+   "why": "chain-gap 91911.65->400.0 movs=[]",
+   "text": "176 | 29/03/2026 244FTID160882182 ced Slag palm pacallige 400.00 O1,111.65 27/03"
+  },
+  {
+   "i": 166,
+   "serial": 177,
+   "why": "chain-gap 400.0->91110.37 movs=[1.28]",
+   "text": "177 29/03/2026 244FTID26088A047 eovereN ctwork to Elsald M 1,28, 91,110.37 28/03"
+  },
+  {
+   "i": 179,
+   "serial": 190,
+   "why": "chain-gap 73894.27->10894.27 movs=[3000.0]",
+   "text": "190 | 30/03/2026 244FT1ID260898267 EID FARAG SAAD 3,000.00 10,894.27 30/03/2026"
+  },
+  {
+   "i": 180,
+   "serial": 191,
+   "why": "chain-gap 10894.27->70897.27 movs=[3.0]",
+   "text": "191 | 30/03/2026 244FTID260898267 Network to EID FARAG SAAD -3.00 70,897.27 | 30"
+  },
+  {
+   "i": 187,
+   "serial": null,
+   "why": "chain-gap 70393.27->69893.27 movs=[]",
+   "text": "31/03/2026 244FTID260902214 SALAIL FAWZY MOIIMED $00.00 69,893.27 31/03/2026"
+  },
+  {
+   "i": 192,
+   "serial": 203,
+   "why": "chain-gap 66814.77->66814.27 movs=[0.4]",
+   "text": "203 01/04/2026 2441 PNN26090A4MP -To-Revenue from non = a 0.40 66,814.27 31/03/2"
+  },
+  {
+   "i": 198,
+   "serial": 213,
+   "why": "chain-gap 31463.77->10421.28 movs=[3806.49]",
+   "text": "| 213 ema 782NPMD260901bq] | ne eo 3,806.49 | | 10,421.28 | 31/03/2026"
+  },
+  {
+   "i": 203,
+   "serial": null,
+   "why": "chain-gap 8619.48->8613.98 movs=[0.5]",
+   "text": "| | 14/04/2026 | 244FTID26104A0MD | ELSAYED 0,50 8,613.98 14/04/2026"
+  },
+  {
+   "i": 204,
+   "serial": 219,
+   "why": "chain-gap 8613.98->8498.98 movs=[120.0]",
+   "text": "219 | 14/04/2026 | 244FTID2610SA0MD | AYA AIIMED ELSAYED | 120.00 8,498.98 14/04"
+  },
+  {
+   "i": 213,
+   "serial": null,
+   "why": "chain-gap 302783.95->182743.95 movs=[]",
+   "text": "\u00a351 | Se f54P LIDZOLIZALJM - EIBFBI8EE6F8ES79 | \u00a70,000.00 | 182,743.95 | 22/04/2"
+  },
+  {
+   "i": 215,
+   "serial": 233,
+   "why": "chain-gap 182743.45->182740.9 movs=[]",
+   "text": "233 | 204n026 | 244FTID26113A02A | Network to one SAAD 255 182,740.90 23/04/2026"
+  },
+  {
+   "i": 235,
+   "serial": null,
+   "why": "chain-gap 160401.28->160400.78 movs=[]",
+   "text": "non-fnanelal #00 160,400.78 26/04/2026"
+  },
+  {
+   "i": 239,
+   "serial": 260,
+   "why": "chain-gap 151389.78->151390.14 movs=[1.64]",
+   "text": "260 27/04/2026 244FT1D261168637 Network (o EID FARAG SAAD 1.64 151,390.14 27/04/"
+  },
+  {
+   "i": 255,
+   "serial": null,
+   "why": "chain-gap 91741.84->5000.0 movs=[]",
+   "text": "27% | 29/04/2026 sii \u2014e may NAK ATM-SS0444******7001 | 5,000, a \u201c '"
+  },
+  {
+   "i": 256,
+   "serial": 277,
+   "why": "chain-gap 5000.0->86740.54 movs=[1.3]",
+   "text": "277 | 2oa2026 | 244 TID 261190148 Network : am 1,30 86,740.54 19/04/2026"
+  },
+  {
+   "i": 257,
+   "serial": null,
+   "why": "chain-gap 86740.54->95440.54 movs=[1300.0]",
+   "text": "27R | 29/04/2026 244FTID261190148 SALAH] FAWZY MOHMED 1,300.00 95,440.54 29/04/2"
+  },
+  {
+   "i": 258,
+   "serial": 279,
+   "why": "chain-gap 95440.54->85440.02 movs=[0.52]",
+   "text": "279 | s0/0472026 | 244FT1D261198105 ****Network to Waleed G 0.52 85,440.02 19/04"
+  },
+  {
+   "i": 265,
+   "serial": 286,
+   "why": "chain-gap 82451.95->570.0 movs=[]",
+   "text": "286 | 30/04/2026 244FTID261200349 ****Waleed G 570.00 $1,881.95 30/04/2026"
+  },
+  {
+   "i": 266,
+   "serial": 287,
+   "why": "chain-gap 570.0->81870.45 movs=[11.5]",
+   "text": "287 | 03/05/2026 244FTID261232324 same 4}6 sam! 456 Network to 11.50 81,870.45 0"
+  },
+  {
+   "i": 276,
+   "serial": 297,
+   "why": "chain-gap 49749.45->49739.48 movs=[]",
+   "text": "297 | 04/08/2026 | 244FT1D261244337 anes te 00d ay it Network to 49,739.48 04/05"
+  },
+  {
+   "i": 277,
+   "serial": 298,
+   "why": "chain-gap 49739.48->10000.0 movs=[]",
+   "text": "298 | 04/05/2026 244FTID261244337 000 ORs 8 et 10,000.00 39,739,A5$ 04/05/2026"
+  },
+  {
+   "i": 278,
+   "serial": 299,
+   "why": "chain-gap 10000.0->39729.45 movs=[10.0]",
+   "text": "299 | 08/05/2026 | 244FTID261258105 Network to EID FARAG 10,00 39,729.45 05/05/2"
+  },
+  {
+   "i": 280,
+   "serial": 301,
+   "why": "chain-gap 29729.45->26719.45 movs=[3000.0]",
+   "text": "301 06/05/2026 244CATM26126131Z NOE ATM-5594442***\"*7901 3,000.00 26,719.45 06/0"
+  },
+  {
+   "i": 281,
+   "serial": 302,
+   "why": "chain-gap 26719.45->16727.95 movs=[1.5]",
+   "text": "302 06/05/2026 244FTID 261264088 ee ted ally Network lo 1,50 16,727.95 06/05/202"
+  },
+  {
+   "i": 282,
+   "serial": 303,
+   "why": "chain-gap 16727.95->25227.95 movs=[1500.0]",
+   "text": "303 | 06/05/2026 | 244FTID261264088 #8. eS all 1,500.00 25,227.95 06/05/2026"
+  },
+  {
+   "i": 303,
+   "serial": 324,
+   "why": "chain-gap 17184.01->17183.51 movs=[]",
+   "text": "324 | 14/05/2026 244FTID261348172 seens,,, 090900) +> Network to 17,183.51 14/05"
+  },
+  {
+   "i": 318,
+   "serial": 7,
+   "why": "chain-gap 10943.13->11414.3 movs=[791.67]",
+   "text": "SSt 7, IAUNIULO | J44U INT EGP OUUU] \u2014-2447480302432000021 | 791.67 11,414.30 18"
+  },
+  {
+   "i": 319,
+   "serial": 343,
+   "why": "no-amounts",
+   "text": "343 | 24/08/2026 | 244FT1D261442150 ep 006 o> | \u2014 esteei Ficerlers"
+  },
+  {
+   "i": 320,
+   "serial": null,
+   "why": "chain-gap 11414.3->11348.3 movs=[0.5]",
+   "text": "oe | AUN LUO Sse 2014411495 re ee eee ee ae 0.50 11,348.30 24/05/2026"
+  },
+  {
+   "i": 321,
+   "serial": 345,
+   "why": "chain-gap 11348.3->1.0 movs=[]",
+   "text": "345 | 247082026 | 244FT1D261442664 Retwern te 1,00"
+  },
+  {
+   "i": 322,
+   "serial": null,
+   "why": "chain-gap 1.0->11347.3 movs=[]",
+   "text": "DS9338D8B13D7F ke Lys 11,347.30 23/08/2026"
+  },
+  {
+   "i": 323,
+   "serial": 347,
+   "why": "chain-gap 11347.3->10345.8 movs=[1.5]",
+   "text": "347 | 24082026 | 244FTID261442976 | Network to ft i ha 1.50 10,345.80 24/05/2026"
+  },
+  {
+   "i": 324,
+   "serial": null,
+   "why": "chain-gap 10345.8->9051.63 movs=[205.83]",
+   "text": "| way [aera | SHS UUVUIEGPF VUUUT, 2447480302432000010 aly 205.83 9,051.63 | 25/"
+  },
+  {
+   "i": 326,
+   "serial": 354,
+   "why": "chain-gap 9051.13->70.0 movs=[]",
+   "text": "354 01/06/2026 244FTID261524317 feel anes sanl 70,00 $,690,13 26/05/2026 ||WRAP-"
+  },
+  {
+   "i": 327,
+   "serial": 357,
+   "why": "chain-gap 70.0->7738.68 movs=[0.5]",
+   "text": "357 | 01/06/2026 244FT1D261522317 FARAHAT 0.50 7,738.68 26/05/2026"
+  },
+  {
+   "i": 328,
+   "serial": 400,
+   "why": "chain-gap 7738.68->7294.18 movs=[204.0]",
+   "text": "400 | Di/00n036 JAP T1261 920998 MOUSTAPA-HDdICCADYSCD 74S 204.00 7,294.18 16/06"
+  },
+  {
+   "i": 329,
+   "serial": null,
+   "why": "chain-gap 7294.18->7132.64 movs=[0.54]",
+   "text": "ai | diibemede | sade Tth261522946 Natty \"hans 0.54 7,132.64 47/05/2026"
+  },
+  {
+   "i": 330,
+   "serial": 262,
+   "why": "chain-gap 7132.64->6692.64 movs=[540.0]",
+   "text": "262 | 01/062026 244FT1D261522346 MOHAMED ELSAYED 540.00 6,692.64 27/05/2026"
+  },
+  {
+   "i": 346,
+   "serial": 378,
+   "why": "chain-gap 254785.73->254788.23 movs=[0.5]",
+   "text": "378 | 2470672026 | 2441PNF261756002 aati ar oy 0.50, 254,788.23 24/06/2026"
+  },
+  {
+   "i": 347,
+   "serial": 379,
+   "why": "chain-gap 254788.23->4785.23 movs=[250000.0]",
+   "text": "| 379 | 2006n03 | 244C1IWL261750016 | Cash withdrawal-2066 | 250,000.00 | | 4,78"
+  },
+  {
+   "i": 348,
+   "serial": null,
+   "why": "chain-gap 4785.23->4784.73 movs=[]",
+   "text": "4/06/2026 244FTID261754172 ELSAYED 4,784.73 24/06/2026 ||WRAP-AMT:[{\"v\": 450.0, "
+  },
+  {
+   "i": 349,
+   "serial": null,
+   "why": "chain-gap 4784.73->4334.73 movs=[]",
+   "text": "i \"| \u2014 AB~3131D2D273C4E217 4,334.73 24/06/2026"
+  },
+  {
+   "i": 351,
+   "serial": 343,
+   "why": "chain-gap 4540.56->75.0 movs=[]",
+   "text": "| 343 | sanaone | 244SAHEGP 00001 | Admin fees | 75,00 | | 4465.56 | 01/07/2026 "
+  },
+  {
+   "i": 352,
+   "serial": 384,
+   "why": "chain-gap 75.0->4365.56 movs=[100.0]",
+   "text": "| 384 | ovoraone | 2445A22EGP 00001 | Account statement charges | 100,00 | | 4,3"
+  },
+  {
+   "i": 354,
+   "serial": 386,
+   "why": "chain-gap 31865.56->886.28 movs=[9.28]",
+   "text": "386 | 12/07/2026 244FTID261932567 Network to EID FARAG SAAD 9.28 31 886.28 11/07"
+  },
+  {
+   "i": 355,
+   "serial": 397,
+   "why": "chain-gap 886.28->22576.18 movs=[9280.0]",
+   "text": "397 12/07/2026 244FTID261932567 EID FARAG SAAD 9,280.00 22,576.18 11/07/2026"
+  },
+  {
+   "i": 356,
+   "serial": 388,
+   "why": "chain-gap 22576.18->25295.03 movs=[718.75]",
+   "text": "388 | 19/07/2026 244UD01IEGP 00001 2447480302432000021 ave 718,75 25,295.03 18/0"
+  },
+  {
+   "i": 357,
+   "serial": 389,
+   "why": "chain-gap 25295.03->23293.03 movs=[2.0]",
+   "text": "389 | 19/07/2026 244FTID262006147 heyy tars Jae! 204 Network to 2.00 23,293.03 1"
+  },
+  {
+   "i": 361,
+   "serial": 393,
+   "why": "chain-gap 1293.03->80000.0 movs=[]",
+   "text": "393 | 21/07/2026 413FTNU262016013 gy) aus Tow Yall 80,000.00 81 03 20/07/2026"
+  },
+  {
+   "i": 362,
+   "serial": 394,
+   "why": "chain-gap 80000.0->81292.53 movs=[0.5]",
+   "text": "394 | 21/07/2026 | 2441PNF26201A67N To-Revenue from <5 0 py) 0.50 81,292.53 20/0"
+  },
+  {
+   "i": 366,
+   "serial": 398,
+   "why": "no-amounts",
+   "text": "398 | 26/07/2026 | 244UDOIEGP 00001! 2447480302432000010 a"
+  },
+  {
+   "i": 379,
+   "serial": 410,
+   "why": "chain-gap 112683.11->112678.11 movs=[]",
+   "text": "410. | 27/07/2026 244FTID262084252 Network (o EID FARAG \u00a7.00 112,678.11 27/07/20"
+  },
+  {
+   "i": 384,
+   "serial": 415,
+   "why": "chain-gap 104674.61->500.0 movs=[]",
+   "text": "415 | 29/07/2026 244FT1D262108113 wanes weed 500.00 29/07/2026"
+  },
+  {
+   "i": 385,
+   "serial": 416,
+   "why": "chain-gap 500.0->104154.61 movs=[20.0]",
+   "text": "416 | 30/07/2026 244FT1D262100454 Network to EID FARAG 20,00 104,154.61 29/07/20"
+  },
+  {
+   "i": 389,
+   "serial": 420,
+   "why": "chain-gap 59134.61->1.7 movs=[]",
+   "text": "420 | 30/07/2026 244FT1D262110248 seeee*Network to Mohamed M 1.70; \\ $9,132.91 3"
+  },
+  {
+   "i": 390,
+   "serial": 421,
+   "why": "chain-gap 1.7->1700.0 movs=[]",
+   "text": "421 | 30072026 | 244FTID262110248 eeeeee\\ohamed M 1,700.00 $7,432.91 30/07/2026"
+  },
+  {
+   "i": 391,
+   "serial": 422,
+   "why": "chain-gap 1700.0->57430.91 movs=[2.0]",
+   "text": "422 | 02/08/2026 | 244FTID262142189 heyy tae LEI! pot Network fo 2,00 57,430.91 "
+  },
+  {
+   "i": 392,
+   "serial": null,
+   "why": "chain-gap 57430.91->2000.0 movs=[]",
+   "text": "mite [ona rea Re So e , 2,000.00 $5,430.91 31/07/2026"
+  },
+  {
+   "i": 393,
+   "serial": 424,
+   "why": "chain-gap 2000.0->55305.91 movs=[125.0]",
+   "text": "| 424 | oxosaozs | 244PCOGEGP 00001 | MasterCard debit renewal fees | 125.00 | 5"
+  },
+  {
+   "i": 394,
+   "serial": 425,
+   "why": "chain-gap 55305.91->55305.41 movs=[]",
+   "text": "425 03/08/2026 244FTID262152142 MOIAME~OBEDIS2EDF9DE7C oad 55,305.41 03/08/2026"
+  },
+  {
+   "i": 396,
+   "serial": 427,
+   "why": "chain-gap 54905.41->1.0 movs=[]",
+   "text": "427 | 03/08/2026 244FTID262154132 ame a ally Network lo 1.00 $4,904.41 03/08/202"
+  },
+  {
+   "i": 397,
+   "serial": 428,
+   "why": "chain-gap 1.0->53904.41 movs=[1000.0]",
+   "text": "428 | 03/08/2026 | 244FTID262154132 oe od all 1,000.00 53,904.41 03/08/2026"
+  },
+  {
+   "i": 399,
+   "serial": 430,
+   "why": "chain-gap 53903.84->570.0 movs=[]",
+   "text": "430 | 03/08/2026 244FTID262152194 Cte pearl pt Cmay Se 570,00 $3,333.84 03/08/20"
+  },
+  {
+   "i": 400,
+   "serial": 431,
+   "why": "chain-gap 570.0->53313.84 movs=[20.0]",
+   "text": "431 | 03/08/2026 | 244FTID262156223 - a>! Network to 20.00 53,313.84 03/08/2026"
+  },
+  {
+   "i": 410,
+   "serial": null,
+   "why": "chain-gap 7791.34->608.66 movs=[0.5]",
+   "text": "$49 | 137082026 | 2441PNF262252007 To-Revenue from <#t+ saw oy 0.50 608.66 13/08"
+  },
+  {
+   "i": 411,
+   "serial": 450,
+   "why": "chain-gap 608.66->500608.66 movs=[]",
+   "text": "450 | 13/08/2026 | 413FTNU262252025 cyl ae To tual $00,000.00 500,608.66 13/08/2"
+  }
+ ]
+}

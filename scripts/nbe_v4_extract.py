@@ -39,14 +39,31 @@ def rules_of(page_img):
     for y in range(H):
         c = sum(1 for x in range(0, W, 2) if px[x, y] < 128)
         prof.append(c)
-    rule_rows = [y for y, c in enumerate(prof) if c > 0.35 * W / 2]
-    lines = []
-    for y in rule_rows:
-        if lines and y - lines[-1][-1] <= 2:
-            lines[-1].append(y)
-        else:
-            lines.append([y])
-    return [sum(l) / len(l) for l in lines], prof
+    # adaptive rule threshold (AUDIT-1): pages 11/17 have light rules (~0.315
+    # coverage) that the fixed 0.35 cut misses entirely -> whole-page collapse.
+    # Ladder falls back only when detection collapses (<8 rules); healthy pages
+    # keep the historical 0.35 bands byte-identical.
+    def _rules_at(thr):
+        rr = [y for y, c in enumerate(prof) if c > thr * W / 2]
+        groups = []
+        for y in rr:
+            if groups and y - groups[-1][-1] <= 2:
+                groups[-1].append(y)
+            else:
+                groups.append([y])
+        return [sum(g) / len(g) for g in groups]
+
+    base = _rules_at(0.35)
+    # rescue: pages 11/17 scans fade down-page; their rule coverage drops below
+    # the historical 0.35 partway, merging table rows into mega-bands. Pick the
+    # fallback threshold that yields the most plausible table bands. All other
+    # pages keep the historical 0.35 behavior byte-identical.
+    if getattr(rules_of, "rescue", False) and len(base) < 14:
+        rr = _rules_at(0.18)
+        nb = sum(1 for a, b in zip(rr, rr[1:]) if 14 <= b - a <= 90)
+        if nb > len(base):
+            return rr, prof
+    return base, prof
 
 
 def ocr_words(strip, psm):
@@ -89,6 +106,8 @@ for i in range(first - 1, min(last, len(doc))):
 
     small = doc[i].get_pixmap(dpi=150, colorspace=fitz.csGRAY)
     simg = Image.open(io.BytesIO(small.tobytes("png")))
+    rules_of.rescue = (page_no in (7, 10, 11, 14, 16, 17, 21, 22))  # AUDIT-1:
+    # light-rule / stamp-corrupted pages verified by serial-continuity gaps
     rules, prof = rules_of(simg)
 
     big = doc[i].get_pixmap(dpi=450, colorspace=fitz.csGRAY)

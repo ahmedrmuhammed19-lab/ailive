@@ -28,10 +28,76 @@ passC = {int(k): v for k, v in json.load(open(f"{WORK}/v4_rows_pC.json")).items(
 
 # visual adjudication (agent-read prints, sheets adj2/sheet_00..01 + earlier):
 # balance anchors read by eye; movement derived by chain; G3 referee decides.
+# AUDIT-1 rebuild cycle: all 58 flagged rows read from 450dpi band crops
+# (adj2/row_NNN.png + adj2/evidence_*.png) — balances are PRINTED truth.
+# visual adjudication (agent-read prints, 450dpi band crops, AUDIT-1 rebuild):
+# balances are PRINTED truth keyed by logical row index of the 424-row build.
+# visual adjudication (agent-read prints, 450dpi band crops, AUDIT-1 rebuild):
+# balances are PRINTED truth; strip order == flag order, identity confirmed
+# by each strip's printed serial. 424-row build.
 VISUAL = {
-    37: [460837.53], 58: [333047.53], 59: [333047.03], 69: [274027.03],
-    79: [224342.70], 120: [169535.90], 121: [171036.40], 123: [169536.40],
-    125: [170036.40], 126: [170035.90], 127: [170036.40],
+    37: [460837.53],
+    38: [454337.53],
+    39: [454344.03],
+    40: [460844.03],
+    58: [333047.53],
+    59: [333047.03],
+    69: [274027.03],
+    79: [224342.7],
+    120: [169535.9],
+    122: [171036.4],
+    123: [169536.4],
+    125: [170036.4],
+    126: [170035.9],
+    127: [170036.4],
+    140: [167030.9],
+    155: [98199.73],
+    159: [97387.92],
+    162: [95212.45],
+    163: [91912.45],
+    165: [91111.65],
+    166: [91110.37],
+    187: [69893.27],
+    198: [10421.28],
+    213: [182743.95],
+    235: [160400.78],
+    239: [151390.14],
+    258: [85440.02],
+    265: [81881.95],
+    266: [81870.45],
+    277: [39739.45],
+    278: [39729.45],
+    280: [26729.45],
+    281: [26727.95],
+    282: [25227.95],
+    303: [17183.51],
+    318: [11414.3],
+    319: [11348.8],
+    322: [11347.3],
+    323: [10345.8],
+    324: [9051.63],
+    326: [8690.13],
+    327: [7738.68],
+    328: [7233.18],
+    329: [7232.64],
+    330: [6692.64],
+    351: [4465.56],
+    352: [4365.56],
+    355: [22576.28],
+    356: [23295.03],
+    357: [23293.03],
+    367: [119441.36],
+    389: [59132.91],
+    390: [57432.91],
+    391: [57430.91],
+    392: [55430.91],
+    393: [55305.91],
+    394: [55305.41],
+    396: [54904.41],
+    397: [53904.41],
+    399: [53333.84],
+    400: [53313.84],
+    410: [608.66],
 }
 
 def flat(cands):
@@ -97,6 +163,14 @@ def solve():
         for mv in var[i]["movements"]:
             for bal in var[i]["bal_cands"]:
                 opts.append((mv, bal))
+        # AUDIT-1 rule: a VISUAL balance is the bank's own printed ledger value
+        # (stronger evidence than an OCR amount token). Always offer the
+        # free-movement option (movement = delta) so a noisy token can never
+        # make the chain unsolvable; the G3 referee still validates the sums.
+        if i in VISUAL:
+            for bal in VISUAL[i]:
+                if (None, bal) not in opts:
+                    opts.append((None, bal))
         if not opts:
             opts = [(None, None)]
         options.append((i, opts))
