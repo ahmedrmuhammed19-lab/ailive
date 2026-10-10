@@ -1299,3 +1299,22 @@ Stage Summary:
 - SO-12: parser/verifier/g9/final/generator/deliverer + all state JSONs + source
   PDFs force-tracked; mirrors in /home/sync/upload. Gate first run FAILed on
   missing worklog rows (SO-6, by design) — rows added, gate re-run below.
+
+---
+Task ID: DL-1 (2026-10-11)
+Agent: main (Super Z)
+Task: Owner: "send it here to download html" — place current report HTMLs in the
+chat download area.
+
+Work Log:
+- Located current-gen reports in public/ (repo-publish lane copies, prod-verified).
+- Integrity check: all 4 files have intact <!DOCTYPE html> head and </html> tail.
+- Copied 4 files to /home/z/my-project/download/ (user-facing download dir):
+  Saving 382rows (50,673 B), Current 18rows (38,974 B), USD 44rows (40,264 B),
+  NBE v4 462rows (48,861 B). SHA256 recorded for receipt.
+
+Stage Summary:
+- Chat download lane fulfilled: 4 Master v1.2 reports now downloadable from
+  /home/z/my-project/download/. No regeneration needed — files byte-identical
+  to prod-published copies. Older v3.x NBE reports intentionally excluded
+  (superseded by v4).
