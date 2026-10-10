@@ -1388,3 +1388,21 @@ Work Log:
 Stage Summary:
 - Direct-download lane now live: one tap on a .zip link saves the file on any
   device. Bola trio and the full 75-file task corpus both downloadable.
+
+---
+Task ID: DL-4b
+Agent: Super Z (main)
+Task: "add all reports on /downloads" + "add all reports of bola on /downloads" — flatten ALL reports at download root for direct chat download
+
+Work Log:
+- Extended scripts/dl2_deliver_all.py with DL-4 flat-root section: copies every file from 01_reports/ and 05_legacy_task_files/ to download/ root, registered as [00_ALL_REPORTS_FLAT] first section in MANIFEST
+- Reran generator: 106 files total (31 flat reports + 9 reports + 12 templates + 2 governance + 30 evidence + 22 legacy) + MANIFEST.txt
+- Verified Bola reports at root byte-identical to production public/: cmp PASS for Saving_EGP_382rows (50,673 B), Current_EGP_18rows (38,974 B), USD_44rows (40,264 B)
+- Root now holds 31 report files: Bola x3 (v1.2), Bola old merged (pre-v1.2), NBE EidFarag v4 + v1/v3/v3.1/v3.2 audit chain, Notice v3.3 correction, Attia EGP/EUR/USD HTML+PDF, Attia merged HTML+PDF, Elgarayadli EGP HTML+PDF, 10 client merged reports, 3 SelfTest reports
+- MANIFEST refreshed with SHA256 receipts for all 106 entries
+
+Stage Summary:
+- download/ root = one-stop report shelf: every report downloadable directly from chat panel, no subfolder navigation needed
+- Bola user ask fully covered: 3 statement-level v1.2 reports (382/18/44 rows) at root + evidence in 04_evidence/BolaAyad_3stmts (16 JSON)
+- Bonus: rebuilt 2 direct-download ZIP bundles at root: GlobalEIS_BolaAyad_Reports_v12.zip (3 members, 37,450 B) + GlobalEIS_All_Files_2026-10-11.zip (46 members incl MANIFEST, 1,240,542 B), CRC verified
+- SO-12 closed: force-added dl2_deliver_all.py + dl3_restore_legacy.py + dl4_make_zips.py to git (regeneration chain now tracked)
