@@ -1342,3 +1342,31 @@ Stage Summary:
   versions), every template, governance docs, and both statements' verification
   evidence now owner-downloadable. Nothing regenerated; all byte-identical to
   prod/gate-approved copies.
+
+---
+Task ID: DL-3 (2026-10-11)
+Agent: main (Super Z)
+Task: Owner screenshot of chat "All files in task" panel (32 files: HaythamAttia
+EGP/EUR/USD, AbdelrahmanElgarayadli, etc.) — "can you send it here". Files were
+not on disk (pre-SO-12 era, lost to wipes / security-untrack d88bfbb).
+
+Work Log:
+- Confirmed 0 hits on disk for Attia/Elgarayadli; worklog already noted "Attia
+  HTML not on disk (email-only copy)".
+- Found old-lineage git objects: T42/T45 commits + tip caf615d (2026-09-26)
+  holding the full historical download/ client-report corpus.
+- scripts/dl3_restore_legacy.py: per-file newest-blob restore across --all refs.
+  RESTORED 22/22 -> download/05_legacy_task_files/: HaythamAttia EGP/EUR/USD
+  HTML+PDF (8) + consolidated Haytham_Mohamed_Attia (2) + AbdelrahmanElgarayadli
+  EGP (2) + 10 client consolidated reports (Ahmed Abdelhameed, Bola Ayad Gerges,
+  Ibrahim Mossad Moussa Aouda, Mahmoud Adel Fathy, Mohamed Abdelfattah, Mohamed
+  Ibrahim Ahmed + 6M, Mohamed Soliman Saad Soliman, Salah Beshr Mohamed) +
+  3 SelfTest reports.
+- Integrity: DOCTYPE/</html> verified on spot-checks. MANIFEST regenerated:
+  75 files, 4.3 MB total. dl2_deliver_all.py extended to include 05 folder.
+- SO-12: dl3_restore_legacy.py force-tracked.
+
+Stage Summary:
+- The complete historical client-report library (the 32-file panel) is back in
+  the owner download area under 05_legacy_task_files/ — recovered from git
+  lineage commit caf615d, NOT regenerated. Current v1.2 corpus (01-04) intact.
