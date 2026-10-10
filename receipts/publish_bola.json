@@ -1,0 +1,20 @@
+{
+ "ok": true,
+ "published": [
+  {
+   "name": "GlobalEIS_Report_BolaAyad_Saving_EGP_382rows.html",
+   "sizeBytes": 50673
+  },
+  {
+   "name": "GlobalEIS_Report_BolaAyad_Current_EGP_18rows.html",
+   "sizeBytes": 38974
+  },
+  {
+   "name": "GlobalEIS_Report_BolaAyad_USD_44rows.html",
+   "sizeBytes": 40264
+  }
+ ],
+ "skipped": [],
+ "note": "Bola Ayad 3-statement delivery via repo lane",
+ "at": "2026-10-10T16:06:15.261197+00:00"
+}

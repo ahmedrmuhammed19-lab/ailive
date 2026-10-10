@@ -1,0 +1,10 @@
+{
+ "task_id": "BOLA-1-USD",
+ "report_html": "published/GlobalEIS_Report_BolaAyad_USD_44rows.html",
+ "chain_required": true,
+ "publish_receipt": "receipts/publish_bola.json",
+ "mail_receipt": "receipts/mail_bola_usd.json",
+ "forbidden": [
+  "a.imam@beta.com.eg"
+ ]
+}

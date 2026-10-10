@@ -1241,3 +1241,61 @@ Delivery evidence (NBE-V4-SHIP-1):
 - Prod URL: https://ailive-three.vercel.app/GlobalEIS_Report_EidFarag_NBE_EGP_v4_462rows.html (HTTP 200)
 - Commits: cabfdaa (report+state+gate fix), 7f916e5 (receipts). Mail: outbox
   queued (SMTP key owner-side). Chat: live link delivered.
+
+---
+Task ID: BOLA-1-SAVING / BOLA-1-CURRENT / BOLA-1-USD (2026-10-10)
+Agent: main (Super Z)
+Task: Owner delivered 3 new bank statements — "new bank statements, 1 report for
+each bankstatement" (saving.pdf, current check.pdf, USD.pdf). Full SO-11 pipeline
+per statement: parse → SO-10 G1–G9 → Master v1.2 report → SO-9 gate → 3 channels.
+
+Work Log:
+- Sources: 3 bank-issued DIGITAL PDFs (Apache FOP text layer, glyph-exact), one
+  customer (Bola Ayad Salama Awad Gerges, ID 14023025): Savings 0765001402302501019
+  EGP 28pp; Current 2083011402302500010 EGP 2pp; USD 2115001402302500012 USD 4pp.
+  Mirrored to /home/sync/upload + force-tracked (SO-12; Arabic-name lesson applied).
+- Parser (scripts/bola_parse.py): pdfplumber positional engine; column assignment
+  by right-edge x1 (D 380-440 / C 440-505 / Bal ≥505 — measured via bola_probe.py).
+  Fixed ref-bucket bounds (refs start x0≈167) and header-strayer 'No.' lines.
+  → 382 + 18 + 44 = 444 rows; every row: date+ref+balance+exactly one amount.
+- Verification (scripts/bola_verify.py): G2 STRICT CHAIN 382/382, 18/18, 44/44 —
+  residual 0.00 EXACT on every row; telescopes exact (1,743.24 / -0.00 / 9,153.42).
+  G4 anchors exact ×3. G6 0 date violations ×3. G7 two-pass (pdfplumber vs
+  pdftotext -layout): multisets EQUAL 1:1 ×3 (fixed wrapped-date cells '30-' +
+  'September-2026' that had cost pass B 72/1/7 rows).
+- G9 adversarial (scripts/bola_g9.py): 31 cross-statement ref bindings — 27
+  USD→EGP conversions with implied FX 48.9-53.4 smooth (statements mutually
+  corroborate), 3 sweeps value-date EXACT, 1 saving→current A2A. Reversal family
+  (ref 076FTID261732396): 1,500 transfer + 1.50 fee printed back NEGATIVE inside
+  Debit column — same mechanism as NBE v4, nets zero. 2 same-day flow-throughs
+  disclosed. Shared instrument card 491495••••••9510 in 2 accounts.
+- Data integrity: discovered own Arabic char-reconstruction corrupted mixed tokens
+  ('~PC1483794205183' → '3815024973841CP' artifact). RESOLVED: desc overlay from
+  pdftotext bidi text (authoritative), matched 1:1 to positional rows by signature
+  (scripts/bola_final.py, 0 unmatched ×3). No 'Gerges related-party inbound'
+  exists — all big saving credits are own-account conversions (binding-proven).
+- Beneficiary layer (saving): 30 successful IPN remittances + 1 reversed; top:
+  sally ebied 91,300 / Rojer Talaat Fakhry Mousa 25,000 / حسن ايمان السيد محمد
+  20,000 / Global wallet 13,800 / embassy of India 6,475 (visa fee, 21/05/2026).
+  Inbound: 23 family IPN receipts 15,779. USD: 6 Geostream SWIFT 14,773.26 +
+  interest 892.44 — the family's external income source.
+- Reports (scripts/bola_report.ts, Master v1.2 verbatim, bun): 3 files with §1-11
+  + Appendix A passport (G1-G9 measured, G3 adapted: format prints no totals —
+  disclosed) + Appendix B (bindings tables, reversals, -0.00 glyph, Arabic note).
+  G8 double-lock: TS re-derives headline sums from rows and asserts vs verifier.
+- Delivery (scripts/bola_deliver.py): repo-publish lane (commit d06a802 pushed),
+  prod URLs 200 ×3, outbox mail ×3 (SMTP still owner-side), gate manifests ×3.
+
+Stage Summary:
+- 444/444 rows glyph-exact across 3 statements; all gates PASS; 3 Master v1.2
+  reports published. New findings logged: current account runs an intentional
+  swept-to-zero policy (closing printed '-0.00', negative-zero glyph); current
+  inflows 100% internal; USD account = the family reservoir (+38.8% in period);
+  embassy-of-India fee ties the corpus to a visa application trail.
+- Prod:
+  https://ailive-three.vercel.app/GlobalEIS_Report_BolaAyad_Saving_EGP_382rows.html
+  https://ailive-three.vercel.app/GlobalEIS_Report_BolaAyad_Current_EGP_18rows.html
+  https://ailive-three.vercel.app/GlobalEIS_Report_BolaAyad_USD_44rows.html
+- SO-12: parser/verifier/g9/final/generator/deliverer + all state JSONs + source
+  PDFs force-tracked; mirrors in /home/sync/upload. Gate first run FAILed on
+  missing worklog rows (SO-6, by design) — rows added, gate re-run below.

@@ -1,0 +1,12 @@
+{
+ "kind": "report_bola_current",
+ "to": "ahmedr.muhammed19@gmail.com",
+ "subject": "Global EIS \u2014 Bank Statement Analysis (Current 2083\u2026010 EGP \u00b7 18/18 rows \u00b7 full SO-10 passport)",
+ "hasHtml": true,
+ "status": "QUEUED",
+ "error": "SMTP credentials not re-supplied after wipe \u2014 outbox mode (SO-3 lock intact)",
+ "at": "2026-10-10T16:06:15.261197+00:00",
+ "note": "outbox mode; flush_outbox.py replays when SMTP key returns; recipient locked to TEST_MAIL_TO",
+ "queued": true,
+ "sent": false
+}

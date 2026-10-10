@@ -140,6 +140,8 @@ restores .env + DB + seeds after any wipe; run it before working.
 
 | ORD-1006-ALL1 | 2026-10-06 | "i'll depend on you for all my work, you will work on every bank statement i have" — standing mandate | ACCEPTED | SO-11 codified; corpus inventoried; NBE v4 running as first passport-flagship (worklog MANDATE-1) |
 
+| ORD-1010-B1 | 2026-10-10 | "new bank statements, 1 report for each bankstatement" — saving.pdf, current check.pdf, USD.pdf (Bola Ayad, Customer 14023025) | DONE | 3 Master v1.2 reports · 444/444 rows glyph-exact · strict chains 382/382, 18/18, 44/44 residual 0.00 · SO-10 passports G1–G9 (G3 adapted, disclosed) · 31 cross-statement ref bindings · gate PASS ×3 · worklog BOLA-1-* · commit d06a802 |
+
 **Open items (owner side, no pressure — listed once):**
 - Bank-issued **digital PDF** for this account → glyph-exact fast-lane confirmation AND closes the two open v3.2 disclosures (S2 fee mass reclassification, S3 counterparty/sign fix).
 - Branch explanation of the **EGP 200,020.00 gap** — UPDATED by v4 print evidence (2026-10-06): p23 summary box prints Hold = 0.00 and the words-match 431,162.24 at snapshot 10/09/2026 7:16:30 PM (after period end); the 631,182.24 ledger close vs 431,162.24 snapshot gap is REAL but the bank does NOT label it as hold. v4 reports printed truth; branch clarification still welcome.
