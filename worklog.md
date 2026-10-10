@@ -1318,3 +1318,27 @@ Stage Summary:
   /home/z/my-project/download/. No regeneration needed — files byte-identical
   to prod-published copies. Older v3.x NBE reports intentionally excluded
   (superseded by v4).
+
+---
+Task ID: DL-2 (2026-10-11)
+Agent: main (Super Z)
+Task: Owner: "send it in all files in task" — deliver ALL task artifacts to the
+chat download area, organized.
+
+Work Log:
+- Enumerated full deliverable catalog: 23 published HTMLs + NBE v4 work-state
+  (scripts/alahly_work_state, 14 JSONs) + Bola work-state (scripts/bola_work,
+  16 JSONs).
+- Generator: scripts/dl2_deliver_all.py (force-tracked, SO-12) copies byte-
+  identical files into download/ with SHA256 receipt manifest.
+- Structure: 01_reports (9: 4 current reports + 3 superseded NBE versions + v1
+  + correction notice) / 02_templates (12: v1.2 governing set + legacy retired)
+  / 03_governance (2: Standing Orders SO-1..SO-12 + Ops Report) / 04_evidence
+  (30 verification JSONs). Removed DL-1 flat dupes. TOTAL 53 files, 2.3 MB.
+- MANIFEST.txt: per-file size + sha256(16) + provenance note.
+
+Stage Summary:
+- Full-task download delivery complete: every report (current + audit-trail
+  versions), every template, governance docs, and both statements' verification
+  evidence now owner-downloadable. Nothing regenerated; all byte-identical to
+  prod/gate-approved copies.
