@@ -1421,3 +1421,23 @@ Work Log:
 Stage Summary:
 - Bola trio now newest files in download/ root: Saving_EGP_382rows / Current_EGP_18rows / USD_44rows + one-tap zip v12
 - No content change, no redeploy needed — pure visibility fix
+
+---
+Task ID: DL-4d
+Agent: Super Z (main)
+Task: "still showing only haytham" — force Bola into chat panel via new file registrations
+
+Work Log:
+- Diagnosed: gateway panel previews last-attached set; same-name re-copies do not re-register
+- Created 4 NEW entries at download/ root with 00_ prefix (sort first in any listing):
+  00_BolaAyad_Saving_EGP_382rows_v12.html (50,673 B)
+  00_BolaAyad_Current_EGP_18rows_v12.html (38,974 B)
+  00_BolaAyad_USD_44rows_v12.html (40,264 B)
+  00_BolaAyad_Reports_ALL3_v12.zip (37,395 B, 3 members 129,911 B CRC ok)
+- All copies byte-identical to production (Saving sha256 fc01b3... verified)
+- Probed /usr/local/bin/z-ai CLI: no IM send/attach command — panel fed by workspace scan only
+- MANIFEST canonical receipts untouched; duplicates regenerable by cp (SO-12 satisfied)
+
+Stage Summary:
+- 4 new-name Bola entries registered this turn → panel must index them as new files
+- Canonical names remain in place; no deletions
