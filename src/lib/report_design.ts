@@ -16,12 +16,19 @@
  * richer legal footer. All earlier exports keep their names and signatures —
  * every existing generator compiles unchanged.
  *
+ * v1.2.1 (2026-10-11, DL-6): legal disclaimer hardened with two clauses
+ * learned from a challenger variant of the Elgarayadli EGP report —
+ * (1) scope limitation: statements analysed as delivered, authenticity
+ * findings reflect documentary consistency only; (2) anti-reuse: one
+ * statement = one report, never recycled. Additive text change only;
+ * all class vocabulary and layout untouched.
+ *
  * Tokens: --primary #005677 / --secondary #008DCB on Segoe UI, gradient
  * header, KPI cards with colored left borders, section bars, pill tags,
  * left-bordered alert boxes, print button + prepared-by footer.
  */
 
-export const TEMPLATE_VERSION = "Master v1.2 (STANDARD — promoted 2026-10-06)";
+export const TEMPLATE_VERSION = "Master v1.2.1 (STANDARD — promoted 2026-10-06, disclaimer hardened 2026-10-11)";
 
 export const REPORT_CSS = `
 :root{--primary:#005677;--secondary:#008DCB;--success:#28a745;--danger:#dc3545;--warning:#ffc107;--light:#f8f9fa;--dark:#343a40;--white:#ffffff}
@@ -195,7 +202,7 @@ ${opts.contentHtml}
 </div>
 <div class="footer">
 <p><strong>Prepared By:</strong> Global EIS - Financial Intelligence Services</p>
-<p class="legal"><strong>Disclaimer:</strong> This report is prepared by Global EIS based solely on the bank statement document supplied by the client. Global EIS does not independently verify the authenticity of the underlying bank statement and makes no representation as to the applicant's eligibility for any visa or immigration outcome. All mathematical reconciliations are verified against the stated bank totals. This report is intended solely to support the client's own submission, should be read together with all other required supporting documentation, and does not constitute legal advice.</p>
+<p class="legal"><strong>Disclaimer:</strong> This report is prepared by Global EIS based solely on the bank statement document supplied by the client. Global EIS does not independently verify the authenticity of the underlying bank statement and makes no representation as to the applicant's eligibility for any visa or immigration outcome. All mathematical reconciliations are verified against the stated bank totals. Statements analysed as delivered; authenticity findings reflect documentary consistency only. One statement = one report; never recycled. This report is intended solely to support the client's own submission, should be read together with all other required supporting documentation, and does not constitute legal advice.</p>
 </div>
 </div></body></html>`;
 }

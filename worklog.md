@@ -1458,3 +1458,20 @@ Work Log:
 Stage Summary:
 - Verdict: Master v1.2 retains title 6-1-1 (upload's only round: +309 B footprint, spent on dead classes)
 - Battle page top-placed (00_ prefix) for chat panel visibility; standalone receipts in signoff
+
+---
+Task ID: DL-6
+Agent: Super Z (main)
+Task: "is there any lessons can we add from abdulrahman report that i attached to add on our template?"
+
+Work Log:
+- Autopsied all 74 diff lines between canonical Elgarayadli (Master v1.2) and uploaded challenger
+- Categorized: 11x phantom .section class (REJECT), KPI value-first ordering w/ dropped semantic colors (REJECT as-is, offered as option), ALL-CAPS prepared-by + denser signoff (REJECT — template sig-lines superior), date-in-signoff (already present), 2 legal clauses (ADOPT)
+- ADOPTED into src/lib/report_design.ts: "Statements analysed as delivered; authenticity findings reflect documentary consistency only." + "One statement = one report; never recycled."
+- TEMPLATE_VERSION bumped: Master v1.2 → Master v1.2.1 (STANDARD — promoted 2026-10-06, disclaimer hardened 2026-10-11); lineage comment added
+- Additive text-only change: zero class/layout/CSS changes, every existing generator compiles unchanged (tsc --noEmit PASS)
+
+Stage Summary:
+- Master v1.2.1 live as template source of truth; all future reports inherit hardened disclaimer
+- 9 already-delivered reports keep v1.2 text (G1-G9 PASS intact); rebuild on request only
+- Challenger archived as study piece; lesson banked in template lineage
