@@ -1441,3 +1441,20 @@ Work Log:
 Stage Summary:
 - 4 new-name Bola entries registered this turn → panel must index them as new files
 - Canonical names remain in place; no deletions
+
+---
+Task ID: DL-5
+Agent: Super Z (main)
+Task: "make a battle between our template vs attached" — Master v1.2 vs uploaded Elgarayadli variant
+
+Work Log:
+- Forensics: download copy 40,083 B sha 4ae75c9c8812b06d... vs upload 40,392 B sha e6a650c9afe8436c...; 74 changed lines
+- Data identical both sides: 440/440 chain, 24/24 checkpoints, closing 2,537,761.72 EGP, credits 11,693,311.11 (21), debits 9,411,768.85 (419)
+- Upload violations: invents kpi-value x6 / kpi-label x6 / section x11 — zero CSS definitions anywhere; .sig-line confirmed template-defined (downloads build fully clean)
+- Built scripts/dl5_battle_report.py: battle page from verbatim Master <style> (SO-9), live render arena recreating both corners, 8 rounds, scorecard 6-1-1
+- Output: download/00_BATTLE_Master_v12_vs_Upload_Variant.html (18,164 B, sha 254dc15b8bfa9ba6...)
+- Class audit PASS: challenger classes present in markup only, zero new CSS selectors
+
+Stage Summary:
+- Verdict: Master v1.2 retains title 6-1-1 (upload's only round: +309 B footprint, spent on dead classes)
+- Battle page top-placed (00_ prefix) for chat panel visibility; standalone receipts in signoff
