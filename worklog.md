@@ -1406,3 +1406,18 @@ Stage Summary:
 - Bola user ask fully covered: 3 statement-level v1.2 reports (382/18/44 rows) at root + evidence in 04_evidence/BolaAyad_3stmts (16 JSON)
 - Bonus: rebuilt 2 direct-download ZIP bundles at root: GlobalEIS_BolaAyad_Reports_v12.zip (3 members, 37,450 B) + GlobalEIS_All_Files_2026-10-11.zip (46 members incl MANIFEST, 1,240,542 B), CRC verified
 - SO-12 closed: force-added dl2_deliver_all.py + dl3_restore_legacy.py + dl4_make_zips.py to git (regeneration chain now tracked)
+
+---
+Task ID: DL-4c
+Agent: Super Z (main)
+Task: "it's showing only haytham, where's bola?" — re-surface Bola reports in chat file panel
+
+Work Log:
+- Verified Bola 3 reports already at download/ root, byte-identical to production public/ (sha256 fc01b3/79f2d7/164d40 = MANIFEST lines 9-11)
+- Root cause: panel preview showed last message's attachments (Haytham trio); Bola files were below in the 32-file list
+- Re-copied Bola 3 reports from public/ (fresh mtimes, bytes unchanged) + touched GlobalEIS_BolaAyad_Reports_v12.zip to top the panel recency order
+- MANIFEST still valid (bytes unchanged → all sha256 receipts intact); git tree clean
+
+Stage Summary:
+- Bola trio now newest files in download/ root: Saving_EGP_382rows / Current_EGP_18rows / USD_44rows + one-tap zip v12
+- No content change, no redeploy needed — pure visibility fix
