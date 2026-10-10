@@ -1,0 +1,40 @@
+{
+ "g1": {
+  "gate": "G1",
+  "rows_passA": 44,
+  "rows_passB": 44,
+  "per_row_ok": true,
+  "multiset_equal": true,
+  "diffs_sample": []
+ },
+ "g2": {
+  "gate": "G2",
+  "pairs": 44,
+  "residual_bad": [],
+  "pairs_closed": 44,
+  "sum_debits": 13107.97,
+  "sum_credits": 15665.7,
+  "telescope": 9153.42,
+  "closing_printed": 9153.42,
+  "telescope_exact": true,
+  "chain_resid_exact": true
+ },
+ "g4": {
+  "gate": "G4",
+  "opening_printed": 6595.69,
+  "oldest_row_balance": 5361.94,
+  "oldest_matches": true,
+  "closing_printed": 9153.42,
+  "newest_row_balance": 9153.42,
+  "closing_matches": true
+ },
+ "g6": {
+  "gate": "G6",
+  "date_violations": [],
+  "single_currency": true,
+  "currency": "USD",
+  "reversal_rows": [],
+  "n_reversals": 0,
+  "reversal_mass": 0
+ }
+}

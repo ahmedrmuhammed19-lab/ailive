@@ -1,0 +1,563 @@
+{
+ "bindings": [
+  {
+   "ref": "076FTNU262098015",
+   "out_stmt": "saving",
+   "out_amt": 8200.0,
+   "in_stmt": "current",
+   "in_amt": 8200.0,
+   "out_date": "28-July-2026",
+   "in_date": "28-July-2026",
+   "direction_ok": true,
+   "implied_fx": null,
+   "desc_out": "Account to Account Transfer- 3815024973841CP~ﺟﺮﺟﺲ ﺑﻮﻻ ﻋﻴﺎد ﺳﻼﻣﻪ To-ﻋﻮض",
+   "desc_in": "Account to Account Transfer- 3815024973841CP~ﺟﺮﺟﺲ ﺑﻮﻻ ﻋﻴﺎد ﺳﻼﻣﻪ To-ﻋﻮض"
+  },
+  {
+   "ref": "208OSWP2618103HT",
+   "out_stmt": "saving",
+   "out_amt": 39.19,
+   "in_stmt": "current",
+   "in_amt": 39.19,
+   "out_date": "01-July-2026",
+   "in_date": "30-June-2026",
+   "direction_ok": true,
+   "implied_fx": null,
+   "desc_out": "Account balance coverage - Automatic sweeping instructions",
+   "desc_in": "Account balance coverage - Automatic sweeping instructions"
+  },
+  {
+   "ref": "208OSWP2618206EG",
+   "out_stmt": "saving",
+   "out_amt": 100.0,
+   "in_stmt": "current",
+   "in_amt": 100.0,
+   "out_date": "05-July-2026",
+   "in_date": "01-July-2026",
+   "direction_ok": true,
+   "implied_fx": null,
+   "desc_out": "Account balance coverage - Automatic sweeping instructions",
+   "desc_in": "Account balance coverage - Automatic sweeping instructions"
+  },
+  {
+   "ref": "208OSWP2627406JA",
+   "out_stmt": "saving",
+   "out_amt": 5.94,
+   "in_stmt": "current",
+   "in_amt": 5.94,
+   "out_date": "04-October-2026",
+   "in_date": "01-October-2026",
+   "direction_ok": true,
+   "implied_fx": null,
+   "desc_out": "Account balance coverage - Automatic sweeping instructions",
+   "desc_in": "Account balance coverage - Automatic sweeping instructions"
+  },
+  {
+   "ref": "211FTNU261040049",
+   "out_stmt": "usd",
+   "out_amt": 1233.75,
+   "in_stmt": "current",
+   "in_amt": 65500.0,
+   "out_date": "14-April-2026",
+   "in_date": "14-April-2026",
+   "direction_ok": true,
+   "implied_fx": 0.0188,
+   "desc_out": "Account to Account Transfer- 5352728829421CP~ﺟﺮﺟﺲ ﺑﻮﻻ ﻋﻴﺎد ﺳﻼﻣﻪ To-ﻋﻮض",
+   "desc_in": "Account to Account Transfer- 5352728829421CP~ﺟﺮﺟﺲ ﺑﻮﻻ ﻋﻴﺎد ﺳﻼﻣﻪ To-ﻋﻮض"
+  },
+  {
+   "ref": "211FTNU26104A34I",
+   "out_stmt": "usd",
+   "out_amt": 1524.68,
+   "in_stmt": "current",
+   "in_amt": 80000.0,
+   "out_date": "15-April-2026",
+   "in_date": "15-April-2026",
+   "direction_ok": true,
+   "implied_fx": 0.0191,
+   "desc_out": "Account to Account Transfer- 5541612344521CP~ﺟﺮﺟﺲ ﺑﻮﻻ ﻋﻴﺎد ﺳﻼﻣﻪ To-ﻋﻮض",
+   "desc_in": "Account to Account Transfer- 5541612344521CP~ﺟﺮﺟﺲ ﺑﻮﻻ ﻋﻴﺎد ﺳﻼﻣﻪ To-ﻋﻮض"
+  },
+  {
+   "ref": "211FTNU261160041",
+   "out_stmt": "usd",
+   "out_amt": 190.22,
+   "in_stmt": "saving",
+   "in_amt": 10000.0,
+   "out_date": "26-April-2026",
+   "in_date": "26-April-2026",
+   "direction_ok": true,
+   "implied_fx": 0.019,
+   "desc_out": "Account to Account Transfer- 96273711479621CP~ﺟﺮﺟﺲ ﺑﻮﻻ ﻋﻴﺎد ﺳﻼﻣﻪ To-ﻋﻮ",
+   "desc_in": "Account to Account Transfer- 96273711479621CP~ﺟﺮﺟﺲ ﺑﻮﻻ ﻋﻴﺎد ﺳﻼﻣﻪ To-ﻋﻮ"
+  },
+  {
+   "ref": "211FTNU261190068",
+   "out_stmt": "usd",
+   "out_amt": 660.75,
+   "in_stmt": "saving",
+   "in_amt": 35000.0,
+   "out_date": "29-April-2026",
+   "in_date": "29-April-2026",
+   "direction_ok": true,
+   "implied_fx": 0.0189,
+   "desc_out": "Account to Account Transfer- 1964128197721CP~ﺟﺮﺟﺲ ﺑﻮﻻ ﻋﻴﺎد ﺳﻼﻣﻪ To-ﻋﻮض",
+   "desc_in": "Account to Account Transfer- 1964128197721CP~ﺟﺮﺟﺲ ﺑﻮﻻ ﻋﻴﺎد ﺳﻼﻣﻪ To-ﻋﻮض"
+  },
+  {
+   "ref": "211FTNU261304075",
+   "out_stmt": "usd",
+   "out_amt": 132.9,
+   "in_stmt": "saving",
+   "in_amt": 7000.0,
+   "out_date": "10-May-2026",
+   "in_date": "10-May-2026",
+   "direction_ok": true,
+   "implied_fx": 0.019,
+   "desc_out": "Account to Account Transfer- 9687084707921CP~ﺟﺮﺟﺲ ﺑﻮﻻ ﻋﻴﺎد ﺳﻼﻣﻪ To-ﻋﻮض",
+   "desc_in": "Account to Account Transfer- 9687084707921CP~ﺟﺮﺟﺲ ﺑﻮﻻ ﻋﻴﺎد ﺳﻼﻣﻪ To-ﻋﻮض"
+  },
+  {
+   "ref": "211FTNU261412027",
+   "out_stmt": "usd",
+   "out_amt": 189.21,
+   "in_stmt": "saving",
+   "in_amt": 10000.0,
+   "out_date": "21-May-2026",
+   "in_date": "21-May-2026",
+   "direction_ok": true,
+   "implied_fx": 0.0189,
+   "desc_out": "Account to Account Transfer- 9497919676231CP~ﺟﺮﺟﺲ ﺑﻮﻻ ﻋﻴﺎد ﺳﻼﻣﻪ To-ﻋﻮض",
+   "desc_in": "Account to Account Transfer- 9497919676231CP~ﺟﺮﺟﺲ ﺑﻮﻻ ﻋﻴﺎد ﺳﻼﻣﻪ To-ﻋﻮض"
+  },
+  {
+   "ref": "211FTNU261414027",
+   "out_stmt": "usd",
+   "out_amt": 123.66,
+   "in_stmt": "saving",
+   "in_amt": 6600.0,
+   "out_date": "21-May-2026",
+   "in_date": "21-May-2026",
+   "direction_ok": true,
+   "implied_fx": 0.0187,
+   "desc_out": "Account to Account Transfer- 9907761575231CP~ﺟﺮﺟﺲ ﺑﻮﻻ ﻋﻴﺎد ﺳﻼﻣﻪ To-ﻋﻮض",
+   "desc_in": "Account to Account Transfer- 9907761575231CP~ﺟﺮﺟﺲ ﺑﻮﻻ ﻋﻴﺎد ﺳﻼﻣﻪ To-ﻋﻮض"
+  },
+  {
+   "ref": "211FTNU261520255",
+   "out_stmt": "usd",
+   "out_amt": 574.38,
+   "in_stmt": "saving",
+   "in_amt": 30000.0,
+   "out_date": "01-June-2026",
+   "in_date": "01-June-2026",
+   "direction_ok": true,
+   "implied_fx": 0.0191,
+   "desc_out": "Account to Account Transfer- 3339728287431CP~ﺟﺮﺟﺲ ﺑﻮﻻ ﻋﻴﺎد ﺳﻼﻣﻪ To-ﻋﻮض",
+   "desc_in": "Account to Account Transfer- 3339728287431CP~ﺟﺮﺟﺲ ﺑﻮﻻ ﻋﻴﺎد ﺳﻼﻣﻪ To-ﻋﻮض"
+  },
+  {
+   "ref": "211FTNU261522529",
+   "out_stmt": "usd",
+   "out_amt": 423.32,
+   "in_stmt": "saving",
+   "in_amt": 22000.0,
+   "out_date": "02-June-2026",
+   "in_date": "02-June-2026",
+   "direction_ok": true,
+   "implied_fx": 0.0192,
+   "desc_out": "Account to Account Transfer- 8234935456531CP~ﺟﺮﺟﺲ ﺑﻮﻻ ﻋﻴﺎد ﺳﻼﻣﻪ To-ﻋﻮض",
+   "desc_in": "Account to Account Transfer- 8234935456531CP~ﺟﺮﺟﺲ ﺑﻮﻻ ﻋﻴﺎد ﺳﻼﻣﻪ To-ﻋﻮض"
+  },
+  {
+   "ref": "211FTNU261654079",
+   "out_stmt": "usd",
+   "out_amt": 231.08,
+   "in_stmt": "saving",
+   "in_amt": 12000.0,
+   "out_date": "14-June-2026",
+   "in_date": "14-June-2026",
+   "direction_ok": true,
+   "implied_fx": 0.0193,
+   "desc_out": "Account to Account Transfer- 3493327763831CP~ﺟﺮﺟﺲ ﺑﻮﻻ ﻋﻴﺎد ﺳﻼﻣﻪ To-ﻋﻮض",
+   "desc_in": "Account to Account Transfer- 3493327763831CP~ﺟﺮﺟﺲ ﺑﻮﻻ ﻋﻴﺎد ﺳﻼﻣﻪ To-ﻋﻮض"
+  },
+  {
+   "ref": "211FTNU261760024",
+   "out_stmt": "usd",
+   "out_amt": 403.14,
+   "in_stmt": "saving",
+   "in_amt": 20000.0,
+   "out_date": "25-June-2026",
+   "in_date": "25-June-2026",
+   "direction_ok": true,
+   "implied_fx": 0.0202,
+   "desc_out": "Account to Account Transfer- 1600614378041CP~ﺟﺮﺟﺲ ﺑﻮﻻ ﻋﻴﺎد ﺳﻼﻣﻪ To-ﻋﻮض",
+   "desc_in": "Account to Account Transfer- 1600614378041CP~ﺟﺮﺟﺲ ﺑﻮﻻ ﻋﻴﺎد ﺳﻼﻣﻪ To-ﻋﻮض"
+  },
+  {
+   "ref": "211FTNU261804063",
+   "out_stmt": "usd",
+   "out_amt": 1219.76,
+   "in_stmt": "saving",
+   "in_amt": 60000.0,
+   "out_date": "29-June-2026",
+   "in_date": "29-June-2026",
+   "direction_ok": true,
+   "implied_fx": 0.0203,
+   "desc_out": "Account to Account Transfer- 8099176747141CP~ﺟﺮﺟﺲ ﺑﻮﻻ ﻋﻴﺎد ﺳﻼﻣﻪ To-ﻋﻮض",
+   "desc_in": "Account to Account Transfer- 8099176747141CP~ﺟﺮﺟﺲ ﺑﻮﻻ ﻋﻴﺎد ﺳﻼﻣﻪ To-ﻋﻮض"
+  },
+  {
+   "ref": "211FTNU26186A4MR",
+   "out_stmt": "usd",
+   "out_amt": 204.42,
+   "in_stmt": "saving",
+   "in_amt": 10000.0,
+   "out_date": "05-July-2026",
+   "in_date": "05-July-2026",
+   "direction_ok": true,
+   "implied_fx": 0.0204,
+   "desc_out": "Account to Account Transfer- 4131919045341CP~ﺟﺮﺟﺲ ﺑﻮﻻ ﻋﻴﺎد ﺳﻼﻣﻪ To-ﻋﻮض",
+   "desc_in": "Account to Account Transfer- 4131919045341CP~ﺟﺮﺟﺲ ﺑﻮﻻ ﻋﻴﺎد ﺳﻼﻣﻪ To-ﻋﻮض"
+  },
+  {
+   "ref": "211FTNU261904087",
+   "out_stmt": "usd",
+   "out_amt": 1329.31,
+   "in_stmt": "current",
+   "in_amt": 66000.0,
+   "out_date": "09-July-2026",
+   "in_date": "09-July-2026",
+   "direction_ok": true,
+   "implied_fx": 0.0201,
+   "desc_out": "Account to Account Transfer- 3564429966441CP~ﺟﺮﺟﺲ ﺑﻮﻻ ﻋﻴﺎد ﺳﻼﻣﻪ To-ﻋﻮض",
+   "desc_in": "Account to Account Transfer- 3564429966441CP~ﺟﺮﺟﺲ ﺑﻮﻻ ﻋﻴﺎد ﺳﻼﻣﻪ To-ﻋﻮض"
+  },
+  {
+   "ref": "211FTNU26200A4NL",
+   "out_stmt": "usd",
+   "out_amt": 58.74,
+   "in_stmt": "saving",
+   "in_amt": 3000.0,
+   "out_date": "19-July-2026",
+   "in_date": "19-July-2026",
+   "direction_ok": true,
+   "implied_fx": 0.0196,
+   "desc_out": "Account to Account Transfer- 2065721575641CP~ﺟﺮﺟﺲ ﺑﻮﻻ ﻋﻴﺎد ﺳﻼﻣﻪ To-ﻋﻮض",
+   "desc_in": "Account to Account Transfer- 2065721575641CP~ﺟﺮﺟﺲ ﺑﻮﻻ ﻋﻴﺎد ﺳﻼﻣﻪ To-ﻋﻮض"
+  },
+  {
+   "ref": "211FTNU262086051",
+   "out_stmt": "usd",
+   "out_amt": 296.03,
+   "in_stmt": "saving",
+   "in_amt": 15000.0,
+   "out_date": "27-July-2026",
+   "in_date": "27-July-2026",
+   "direction_ok": true,
+   "implied_fx": 0.0197,
+   "desc_out": "Account to Account Transfer- 8340774731841CP~ﺟﺮﺟﺲ ﺑﻮﻻ ﻋﻴﺎد ﺳﻼﻣﻪ To-ﻋﻮض",
+   "desc_in": "Account to Account Transfer- 8340774731841CP~ﺟﺮﺟﺲ ﺑﻮﻻ ﻋﻴﺎد ﺳﻼﻣﻪ To-ﻋﻮض"
+  },
+  {
+   "ref": "211FTNU262110115",
+   "out_stmt": "usd",
+   "out_amt": 587.08,
+   "in_stmt": "saving",
+   "in_amt": 30000.0,
+   "out_date": "30-July-2026",
+   "in_date": "30-July-2026",
+   "direction_ok": true,
+   "implied_fx": 0.0196,
+   "desc_out": "Account to Account Transfer- 1123549358841CP~ﺟﺮﺟﺲ ﺑﻮﻻ ﻋﻴﺎد ﺳﻼﻣﻪ To-ﻋﻮض",
+   "desc_in": "Account to Account Transfer- 1123549358841CP~ﺟﺮﺟﺲ ﺑﻮﻻ ﻋﻴﺎد ﺳﻼﻣﻪ To-ﻋﻮض"
+  },
+  {
+   "ref": "211FTNU262244032",
+   "out_stmt": "usd",
+   "out_amt": 398.88,
+   "in_stmt": "saving",
+   "in_amt": 20000.0,
+   "out_date": "12-August-2026",
+   "in_date": "12-August-2026",
+   "direction_ok": true,
+   "implied_fx": 0.0199,
+   "desc_out": "Account to Account Transfer- 2513424890251CP~ﺟﺮﺟﺲ ﺑﻮﻻ ﻋﻴﺎد ﺳﻼﻣﻪ To-ﻋﻮض",
+   "desc_in": "Account to Account Transfer- 2513424890251CP~ﺟﺮﺟﺲ ﺑﻮﻻ ﻋﻴﺎد ﺳﻼﻣﻪ To-ﻋﻮض"
+  },
+  {
+   "ref": "211FTNU262370038",
+   "out_stmt": "usd",
+   "out_amt": 197.08,
+   "in_stmt": "saving",
+   "in_amt": 10000.0,
+   "out_date": "25-August-2026",
+   "in_date": "25-August-2026",
+   "direction_ok": true,
+   "implied_fx": 0.0197,
+   "desc_out": "Account to Account Transfer- 0287119634451CP~ﺟﺮﺟﺲ ﺑﻮﻻ ﻋﻴﺎد ﺳﻼﻣﻪ To-ﻋﻮض",
+   "desc_in": "Account to Account Transfer- 0287119634451CP~ﺟﺮﺟﺲ ﺑﻮﻻ ﻋﻴﺎد ﺳﻼﻣﻪ To-ﻋﻮض"
+  },
+  {
+   "ref": "211FTNU262422177",
+   "out_stmt": "usd",
+   "out_amt": 498.31,
+   "in_stmt": "saving",
+   "in_amt": 25000.0,
+   "out_date": "30-August-2026",
+   "in_date": "30-August-2026",
+   "direction_ok": true,
+   "implied_fx": 0.0199,
+   "desc_out": "Account to Account Transfer- 7996019711551CP~ﺟﺮﺟﺲ ﺑﻮﻻ ﻋﻴﺎد ﺳﻼﻣﻪ To-ﻋﻮض",
+   "desc_in": "Account to Account Transfer- 7996019711551CP~ﺟﺮﺟﺲ ﺑﻮﻻ ﻋﻴﺎد ﺳﻼﻣﻪ To-ﻋﻮض"
+  },
+  {
+   "ref": "211FTNU262424080",
+   "out_stmt": "usd",
+   "out_amt": 199.32,
+   "in_stmt": "saving",
+   "in_amt": 10000.0,
+   "out_date": "30-August-2026",
+   "in_date": "30-August-2026",
+   "direction_ok": true,
+   "implied_fx": 0.0199,
+   "desc_out": "Account to Account Transfer- 7800973499451CP~ﺟﺮﺟﺲ ﺑﻮﻻ ﻋﻴﺎد ﺳﻼﻣﻪ To-ﻋﻮض",
+   "desc_in": "Account to Account Transfer- 7800973499451CP~ﺟﺮﺟﺲ ﺑﻮﻻ ﻋﻴﺎد ﺳﻼﻣﻪ To-ﻋﻮض"
+  },
+  {
+   "ref": "211FTNU262446143",
+   "out_stmt": "usd",
+   "out_amt": 600.0,
+   "in_stmt": "saving",
+   "in_amt": 30522.0,
+   "out_date": "01-September-2026",
+   "in_date": "01-September-2026",
+   "direction_ok": true,
+   "implied_fx": 0.0197,
+   "desc_out": "Account to Account Transfer- 5832515131651CP~ﺟﺮﺟﺲ ﺑﻮﻻ ﻋﻴﺎد ﺳﻼﻣﻪ To-ﻋﻮض",
+   "desc_in": "Account to Account Transfer- 5832515131651CP~ﺟﺮﺟﺲ ﺑﻮﻻ ﻋﻴﺎد ﺳﻼﻣﻪ To-ﻋﻮض"
+  },
+  {
+   "ref": "211FTNU262490115",
+   "out_stmt": "usd",
+   "out_amt": 200.0,
+   "in_stmt": "saving",
+   "in_amt": 10176.0,
+   "out_date": "06-September-2026",
+   "in_date": "06-September-2026",
+   "direction_ok": true,
+   "implied_fx": 0.0197,
+   "desc_out": "Account to Account Transfer- 7463412640751CP~ﺟﺮﺟﺲ ﺑﻮﻻ ﻋﻴﺎد ﺳﻼﻣﻪ To-ﻋﻮض",
+   "desc_in": "Account to Account Transfer- 7463412640751CP~ﺟﺮﺟﺲ ﺑﻮﻻ ﻋﻴﺎد ﺳﻼﻣﻪ To-ﻋﻮض"
+  },
+  {
+   "ref": "211FTNU26256A1RI",
+   "out_stmt": "usd",
+   "out_amt": 200.0,
+   "in_stmt": "saving",
+   "in_amt": 10264.0,
+   "out_date": "13-September-2026",
+   "in_date": "13-September-2026",
+   "direction_ok": true,
+   "implied_fx": 0.0195,
+   "desc_out": "Account to Account Transfer- 3499119327851CP~ﺟﺮﺟﺲ ﺑﻮﻻ ﻋﻴﺎد ﺳﻼﻣﻪ To-ﻋﻮض",
+   "desc_in": "Account to Account Transfer- 3499119327851CP~ﺟﺮﺟﺲ ﺑﻮﻻ ﻋﻴﺎد ﺳﻼﻣﻪ To-ﻋﻮض"
+  },
+  {
+   "ref": "211FTNU262574039",
+   "out_stmt": "usd",
+   "out_amt": 200.0,
+   "in_stmt": "saving",
+   "in_amt": 10312.0,
+   "out_date": "14-September-2026",
+   "in_date": "14-September-2026",
+   "direction_ok": true,
+   "implied_fx": 0.0194,
+   "desc_out": "Account to Account Transfer- 8335611338851CP~ﺟﺮﺟﺲ ﺑﻮﻻ ﻋﻴﺎد ﺳﻼﻣﻪ To-ﻋﻮض",
+   "desc_in": "Account to Account Transfer- 8335611338851CP~ﺟﺮﺟﺲ ﺑﻮﻻ ﻋﻴﺎد ﺳﻼﻣﻪ To-ﻋﻮض"
+  },
+  {
+   "ref": "211FTNU262770178",
+   "out_stmt": "usd",
+   "out_amt": 220.0,
+   "in_stmt": "saving",
+   "in_amt": 11499.4,
+   "out_date": "04-October-2026",
+   "in_date": "04-October-2026",
+   "direction_ok": true,
+   "implied_fx": 0.0191,
+   "desc_out": "Account to Account Transfer- 4942713329261CP~ﺟﺮﺟﺲ ﺑﻮﻻ ﻋﻴﺎد ﺳﻼﻣﻪ To-ﻋﻮض",
+   "desc_in": "Account to Account Transfer- 4942713329261CP~ﺟﺮﺟﺲ ﺑﻮﻻ ﻋﻴﺎد ﺳﻼﻣﻪ To-ﻋﻮض"
+  },
+  {
+   "ref": "211FTNU262784104",
+   "out_stmt": "usd",
+   "out_amt": 300.0,
+   "in_stmt": "saving",
+   "in_amt": 15714.0,
+   "out_date": "05-October-2026",
+   "in_date": "05-October-2026",
+   "direction_ok": true,
+   "implied_fx": 0.0191,
+   "desc_out": "Account to Account Transfer- 4438686216361CP~ﺟﺮﺟﺲ ﺑﻮﻻ ﻋﻴﺎد ﺳﻼﻣﻪ To-ﻋﻮض",
+   "desc_in": "Account to Account Transfer- 4438686216361CP~ﺟﺮﺟﺲ ﺑﻮﻻ ﻋﻴﺎد ﺳﻼﻣﻪ To-ﻋﻮض"
+  }
+ ],
+ "n_cross_refs": 31,
+ "reversal_pairs": [
+  {
+   "neg_row": {
+    "idx": 243,
+    "page": 18,
+    "tdate": "22-June-2026",
+    "ref": "076FTID261732396",
+    "printed": -1500.0,
+    "desc": "outgoing transfer IPN network to 1~اﻟﺸﻬﺪاءDE3157CFDEA9C67 ﻣﺮﻗﺲ اﻟﺮﺳﻮل و ﺑﻄﺮس ﺧﺎﺗ"
+   },
+   "siblings": [
+    {
+     "idx": 241,
+     "tdate": "22-June-2026",
+     "debit": 1500.0,
+     "credit": null,
+     "desc": "outgoing transfer IPN network to 1~اﻟﺸﻬﺪاءDE3157CFDEA9C67 ﻣﺮ"
+    },
+    {
+     "idx": 242,
+     "tdate": "22-June-2026",
+     "debit": 1.5,
+     "credit": null,
+     "desc": "Outgoing Transfer Fees IPN Network to 1~اﻟﺸﻬﺪاءDE3157CFDEA9C"
+    },
+    {
+     "idx": 244,
+     "tdate": "22-June-2026",
+     "debit": -1.5,
+     "credit": null,
+     "desc": "Outgoing Transfer Fees IPN Network to 1~اﻟﺸﻬﺪاءDE3157CFDEA9C"
+    }
+   ]
+  },
+  {
+   "neg_row": {
+    "idx": 244,
+    "page": 18,
+    "tdate": "22-June-2026",
+    "ref": "076FTID261732396",
+    "printed": -1.5,
+    "desc": "Outgoing Transfer Fees IPN Network to 1~اﻟﺸﻬﺪاءDE3157CFDEA9C67 ﻣﺮﻗﺲ اﻟﺮﺳﻮل و ﺑﻄﺮ"
+   },
+   "siblings": [
+    {
+     "idx": 241,
+     "tdate": "22-June-2026",
+     "debit": 1500.0,
+     "credit": null,
+     "desc": "outgoing transfer IPN network to 1~اﻟﺸﻬﺪاءDE3157CFDEA9C67 ﻣﺮ"
+    },
+    {
+     "idx": 242,
+     "tdate": "22-June-2026",
+     "debit": 1.5,
+     "credit": null,
+     "desc": "Outgoing Transfer Fees IPN Network to 1~اﻟﺸﻬﺪاءDE3157CFDEA9C"
+    },
+    {
+     "idx": 243,
+     "tdate": "22-June-2026",
+     "debit": -1500.0,
+     "credit": null,
+     "desc": "outgoing transfer IPN network to 1~اﻟﺸﻬﺪاءDE3157CFDEA9C67 ﻣﺮ"
+    }
+   ]
+  }
+ ],
+ "flow_through": [
+  {
+   "stmt": "saving",
+   "in_idx": 277,
+   "in_date": "02-June-2026",
+   "in_amt": 22000.0,
+   "in_desc": "Account to Account Transfer- 8234935456531CP~ﺟﺮﺟﺲ ﺑﻮﻻ ﻋﻴﺎد ﺳ",
+   "in_ref": "211FTNU261522529",
+   "out_idx": 275,
+   "out_date": "02-June-2026",
+   "out_desc": "outgoing transfer IPN network to sally ebied~6B950642EEE6F73",
+   "out_ref": "076FTID26152A71S",
+   "days": 0
+  },
+  {
+   "stmt": "saving",
+   "in_idx": 119,
+   "in_date": "25-August-2026",
+   "in_amt": 10000.0,
+   "in_desc": "Account to Account Transfer- 0287119634451CP~ﺟﺮﺟﺲ ﺑﻮﻻ ﻋﻴﺎد ﺳ",
+   "in_ref": "211FTNU262370038",
+   "out_idx": 117,
+   "out_date": "25-August-2026",
+   "out_desc": "outgoing transfer IPN network to sally ebied~A5B84F43E5D78E4",
+   "out_ref": "076FTID262376016",
+   "days": 0
+  }
+ ],
+ "sweep_cover": [
+  {
+   "current_sweep": {
+    "idx": 1,
+    "tdate": "01-October-2026",
+    "credit": 5.94,
+    "ref": "208OSWP2627406JA"
+   },
+   "saving_debit_match": []
+  },
+  {
+   "current_sweep": {
+    "idx": 10,
+    "tdate": "01-July-2026",
+    "credit": 100.0,
+    "ref": "208OSWP2618206EG"
+   },
+   "saving_debit_match": [
+    {
+     "idx": 223,
+     "tdate": "01-July-2026",
+     "debit": 100.0,
+     "ref": "076SA22EGP 00001",
+     "desc": "Account statement charges"
+    }
+   ]
+  },
+  {
+   "current_sweep": {
+    "idx": 12,
+    "tdate": "30-June-2026",
+    "credit": 39.19,
+    "ref": "208OSWP2618103HT"
+   },
+   "saving_debit_match": []
+  }
+ ],
+ "instruments": {
+  "credit_card": [
+   [
+    "491495******9510",
+    "current"
+   ],
+   [
+    "491495******9510",
+    "saving"
+   ]
+  ],
+  "certificate_accounts": [
+   [
+    "076798",
+    "saving"
+   ],
+   [
+    "211621",
+    "usd"
+   ]
+  ]
+ }
+}

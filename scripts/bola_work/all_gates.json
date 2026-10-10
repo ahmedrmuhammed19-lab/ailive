@@ -1,0 +1,141 @@
+{
+ "saving": {
+  "g1": {
+   "gate": "G1",
+   "rows_passA": 382,
+   "rows_passB": 382,
+   "per_row_ok": true,
+   "multiset_equal": true,
+   "diffs_sample": []
+  },
+  "g2": {
+   "gate": "G2",
+   "pairs": 382,
+   "residual_bad": [],
+   "pairs_closed": 382,
+   "sum_debits": 460527.01,
+   "sum_credits": 444596.4,
+   "telescope": 1743.24,
+   "closing_printed": 1743.24,
+   "telescope_exact": true,
+   "chain_resid_exact": true
+  },
+  "g4": {
+   "gate": "G4",
+   "opening_printed": 17673.85,
+   "oldest_row_balance": 16733.85,
+   "oldest_matches": true,
+   "closing_printed": 1743.24,
+   "newest_row_balance": 1743.24,
+   "closing_matches": true
+  },
+  "g6": {
+   "gate": "G6",
+   "date_violations": [],
+   "single_currency": true,
+   "currency": "EGP",
+   "reversal_rows": [
+    {
+     "page": 18,
+     "idx": 243,
+     "tdate": "22-June-2026",
+     "ref": "076FTID261732396",
+     "column": "D",
+     "printed": -1500.0,
+     "desc": "outgoing transfer IPN network to \ufee6\ufef4\ufeb4\ufef3\ufeaa\ufed8\ufedf\u0627 \ufeea\ufeb4\ufef4\ufee8\ufedb \ufee2\ufe97\ufe8e\ufea7 \u0633\ufeae\ufec4\ufe91 \u0648 \u0644\ufeee\ufeb3\ufeae\ufedf\u0627 \ufeb2\ufed7\ufeae\ufee3 1~\u0621\u0627\ufeaa\ufeec\ufeb8\ufedf\u0627DE3157CFD"
+    },
+    {
+     "page": 18,
+     "idx": 244,
+     "tdate": "22-June-2026",
+     "ref": "076FTID261732396",
+     "column": "D",
+     "printed": -1.5,
+     "desc": "Outgoing Transfer Fees IPN Network to \ufee6\ufef4\ufeb4\ufef3\ufeaa\ufed8\ufedf\u0627 \ufeea\ufeb4\ufef4\ufee8\ufedb \ufee2\ufe97\ufe8e\ufea7 \u0633\ufeae\ufec4\ufe91 \u0648 \u0644\ufeee\ufeb3\ufeae\ufedf\u0627 \ufeb2\ufed7\ufeae\ufee3 1~\u0621\u0627\ufeaa\ufeec\ufeb8\ufedf\u0627DE31"
+    }
+   ],
+   "n_reversals": 2,
+   "reversal_mass": 1501.5
+  }
+ },
+ "current": {
+  "g1": {
+   "gate": "G1",
+   "rows_passA": 18,
+   "rows_passB": 18,
+   "per_row_ok": true,
+   "multiset_equal": true,
+   "diffs_sample": []
+  },
+  "g2": {
+   "gate": "G2",
+   "pairs": 18,
+   "residual_bad": [],
+   "pairs_closed": 18,
+   "sum_debits": 220042.29,
+   "sum_credits": 219845.13,
+   "telescope": 0.0,
+   "closing_printed": -0.0,
+   "telescope_exact": true,
+   "chain_resid_exact": true
+  },
+  "g4": {
+   "gate": "G4",
+   "opening_printed": 197.16,
+   "oldest_row_balance": 65697.16,
+   "oldest_matches": true,
+   "closing_printed": -0.0,
+   "newest_row_balance": -0.0,
+   "closing_matches": true
+  },
+  "g6": {
+   "gate": "G6",
+   "date_violations": [],
+   "single_currency": true,
+   "currency": "EGP",
+   "reversal_rows": [],
+   "n_reversals": 0,
+   "reversal_mass": 0
+  }
+ },
+ "usd": {
+  "g1": {
+   "gate": "G1",
+   "rows_passA": 44,
+   "rows_passB": 44,
+   "per_row_ok": true,
+   "multiset_equal": true,
+   "diffs_sample": []
+  },
+  "g2": {
+   "gate": "G2",
+   "pairs": 44,
+   "residual_bad": [],
+   "pairs_closed": 44,
+   "sum_debits": 13107.97,
+   "sum_credits": 15665.7,
+   "telescope": 9153.42,
+   "closing_printed": 9153.42,
+   "telescope_exact": true,
+   "chain_resid_exact": true
+  },
+  "g4": {
+   "gate": "G4",
+   "opening_printed": 6595.69,
+   "oldest_row_balance": 5361.94,
+   "oldest_matches": true,
+   "closing_printed": 9153.42,
+   "newest_row_balance": 9153.42,
+   "closing_matches": true
+  },
+  "g6": {
+   "gate": "G6",
+   "date_violations": [],
+   "single_currency": true,
+   "currency": "USD",
+   "reversal_rows": [],
+   "n_reversals": 0,
+   "reversal_mass": 0
+  }
+ }
+}

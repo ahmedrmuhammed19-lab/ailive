@@ -1,0 +1,274 @@
+{
+ "header": {
+  "customer_id": "14023025",
+  "account": "2083011402302500010",
+  "currency": "EGP",
+  "opening": 197.16,
+  "closing_raw": "-0.00",
+  "closing": -0.0,
+  "from": "10-April-2026",
+  "to": "11-October-2026"
+ },
+ "n_rows": 18,
+ "sum_debits": 220042.29,
+ "sum_credits": 219845.13,
+ "net": -197.16,
+ "n_debits": 11,
+ "n_credits": 7,
+ "monthly": {
+  "04/2026": {
+   "c": 145500.0,
+   "d": 145500.0,
+   "n": 4,
+   "close": 197.16
+  },
+  "05/2026": {
+   "c": 0.0,
+   "d": 111.35,
+   "n": 1,
+   "close": 85.81
+  },
+  "06/2026": {
+   "c": 39.19,
+   "d": 125.0,
+   "n": 2,
+   "close": 0.0
+  },
+  "07/2026": {
+   "c": 74300.0,
+   "d": 73708.44,
+   "n": 6,
+   "close": 591.56
+  },
+  "08/2026": {
+   "c": 0.0,
+   "d": 70.5,
+   "n": 1,
+   "close": 521.06
+  },
+  "09/2026": {
+   "c": 0.0,
+   "d": 125.0,
+   "n": 1,
+   "close": 396.06
+  },
+  "10/2026": {
+   "c": 5.94,
+   "d": 402.0,
+   "n": 3,
+   "close": 0.0
+  }
+ },
+ "categories": {
+  "Own-account sweep": {
+   "n": 3,
+   "sum": 145.13
+  },
+  "Fees & charges": {
+   "n": 4,
+   "sum": 450.0
+  },
+  "Credit card payment": {
+   "n": 4,
+   "sum": 8592.29
+  },
+  "Cheque clearing": {
+   "n": 2,
+   "sum": 131000.0
+  },
+  "Own-account transfer": {
+   "n": 4,
+   "sum": 219700.0
+  },
+  "ATM/branch cash withdrawal": {
+   "n": 1,
+   "sum": 80000.0
+  }
+ },
+ "min_balance": -100.0,
+ "max_balance": 145697.16,
+ "top_debits": [
+  {
+   "page": 1,
+   "idx_print": 15,
+   "tdate": "28-April-2026",
+   "vdate": "28-April-2026",
+   "ref": "233CHWL261184004",
+   "desc": "Cash withdrawal-Cash Withdrawal 28",
+   "debit": 80000.0,
+   "credit": null,
+   "balance": 197.16,
+   "balance_raw": "197.16"
+  },
+  {
+   "page": 1,
+   "idx_print": 6,
+   "tdate": "29-July-2026",
+   "vdate": "29-July-2026",
+   "ref": "599CGIN262102679",
+   "desc": "Inward cheque clearing-20817000184853",
+   "debit": 65500.0,
+   "credit": null,
+   "balance": 591.56,
+   "balance_raw": "591.56"
+  },
+  {
+   "page": 1,
+   "idx_print": 16,
+   "tdate": "27-April-2026",
+   "vdate": "27-April-2026",
+   "ref": "599CGIN261174700",
+   "desc": "Inward cheque clearing-20817000184852",
+   "debit": 65500.0,
+   "credit": null,
+   "balance": 80197.16,
+   "balance_raw": "80,197.16"
+  },
+  {
+   "page": 1,
+   "idx_print": 8,
+   "tdate": "27-July-2026",
+   "vdate": "27-July-2026",
+   "ref": "208DBCP262088019",
+   "desc": "Credit Card Payment via Internet Banking-4914954513439510",
+   "debit": 8108.44,
+   "credit": null,
+   "balance": 57891.56,
+   "balance_raw": "57,891.56"
+  },
+  {
+   "page": 1,
+   "idx_print": 3,
+   "tdate": "01-October-2026",
+   "vdate": "01-October-2026",
+   "ref": "208DBCP262744139",
+   "desc": "Credit Card Payment via Internet Banking-4914954513439510",
+   "debit": 302.0,
+   "credit": null,
+   "balance": 94.06,
+   "balance_raw": "94.06"
+  },
+  {
+   "page": 1,
+   "idx_print": 4,
+   "tdate": "30-September-2026",
+   "vdate": "01-October-2026",
+   "ref": "208CB21EGP 00001",
+   "desc": "Admin fees",
+   "debit": 125.0,
+   "credit": null,
+   "balance": 396.06,
+   "balance_raw": "396.06"
+  },
+  {
+   "page": 1,
+   "idx_print": 13,
+   "tdate": "30-June-2026",
+   "vdate": "01-July-2026",
+   "ref": "208CB21EGP 00001",
+   "desc": "Admin fees",
+   "debit": 125.0,
+   "credit": null,
+   "balance": -39.19,
+   "balance_raw": "-39.19"
+  },
+  {
+   "page": 1,
+   "idx_print": 14,
+   "tdate": "04-May-2026",
+   "vdate": "03-May-2026",
+   "ref": "208DBCP26123A007",
+   "desc": "Credit Card Payment via Internet Banking-4914954513439510",
+   "debit": 111.35,
+   "credit": null,
+   "balance": 85.81,
+   "balance_raw": "85.81"
+  }
+ ],
+ "top_credits": [
+  {
+   "page": 2,
+   "idx_print": 17,
+   "tdate": "15-April-2026",
+   "vdate": "14-April-2026",
+   "ref": "211FTNU26104A34I",
+   "desc": "Account to Account Transfer- From-ضﻮﻋ ﻪﻣﻼﺳ دﺎﻴﻋ ﻻﻮﺑ ﺲﺟﺮﺟ To-ضﻮﻋ ﻪﻣﻼﺳ دﺎﻴﻋ ﻻﻮﺑ ﺲﺟﺮﺟ~PC1254432161455",
+   "debit": null,
+   "credit": 80000.0,
+   "balance": 145697.16,
+   "balance_raw": "145,697.16"
+  },
+  {
+   "page": 1,
+   "idx_print": 9,
+   "tdate": "09-July-2026",
+   "vdate": "09-July-2026",
+   "ref": "211FTNU261904087",
+   "desc": "Account to Account Transfer- From-ضﻮﻋ ﻪﻣﻼﺳ دﺎﻴﻋ ﻻﻮﺑ ﺲﺟﺮﺟ To-ضﻮﻋ ﻪﻣﻼﺳ دﺎﻴﻋ ﻻﻮﺑ ﺲﺟﺮﺟ~PC1446699244653",
+   "debit": null,
+   "credit": 66000.0,
+   "balance": 66000.0,
+   "balance_raw": "66,000.00"
+  },
+  {
+   "page": 2,
+   "idx_print": 18,
+   "tdate": "14-April-2026",
+   "vdate": "10-April-2026",
+   "ref": "211FTNU261040049",
+   "desc": "Account to Account Transfer- From-ضﻮﻋ ﻪﻣﻼﺳ دﺎﻴﻋ ﻻﻮﺑ ﺲﺟﺮﺟ To-ضﻮﻋ ﻪﻣﻼﺳ دﺎﻴﻋ ﻻﻮﺑ ﺲﺟﺮﺟ~PC1249288272535",
+   "debit": null,
+   "credit": 65500.0,
+   "balance": 65697.16,
+   "balance_raw": "65,697.16"
+  },
+  {
+   "page": 1,
+   "idx_print": 7,
+   "tdate": "28-July-2026",
+   "vdate": "28-July-2026",
+   "ref": "076FTNU262098015",
+   "desc": "Account to Account Transfer- From-ضﻮﻋ ﻪﻣﻼﺳ دﺎﻴﻋ ﻻﻮﺑ ﺲﺟﺮﺟ To-ضﻮﻋ ﻪﻣﻼﺳ دﺎﻴﻋ ﻻﻮﺑ ﺲﺟﺮﺟ~PC1483794205183",
+   "debit": null,
+   "credit": 8200.0,
+   "balance": 66091.56,
+   "balance_raw": "66,091.56"
+  },
+  {
+   "page": 1,
+   "idx_print": 10,
+   "tdate": "01-July-2026",
+   "vdate": "01-July-2026",
+   "ref": "208OSWP2618206EG",
+   "desc": "Account balance coverage - Automatic sweeping instructions",
+   "debit": null,
+   "credit": 100.0,
+   "balance": 0.0,
+   "balance_raw": "0.00"
+  },
+  {
+   "page": 1,
+   "idx_print": 12,
+   "tdate": "30-June-2026",
+   "vdate": "30-June-2026",
+   "ref": "208OSWP2618103HT",
+   "desc": "Account balance coverage - Automatic sweeping instructions",
+   "debit": null,
+   "credit": 39.19,
+   "balance": 0.0,
+   "balance_raw": "0.00"
+  },
+  {
+   "page": 1,
+   "idx_print": 1,
+   "tdate": "01-October-2026",
+   "vdate": "01-October-2026",
+   "ref": "208OSWP2627406JA",
+   "desc": "Account balance coverage - Automatic sweeping instructions",
+   "debit": null,
+   "credit": 5.94,
+   "balance": -0.0,
+   "balance_raw": "-0.00"
+  }
+ ]
+}

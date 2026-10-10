@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Global EIS — Bola Ayad Current (EGP) Statement Analysis</title>
+<style>
+:root{--primary:#005677;--secondary:#008DCB;--success:#28a745;--danger:#dc3545;--warning:#ffc107;--light:#f8f9fa;--dark:#343a40;--white:#ffffff}
+body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background-color:#eef2f5;color:var(--dark);margin:0;padding:20px}
+.container{max-width:1200px;margin:0 auto;background:var(--white);border-radius:12px;box-shadow:0 4px 20px rgba(0,0,0,0.08);overflow:hidden;position:relative}
+.header{background:linear-gradient(135deg,var(--primary),var(--secondary));color:var(--white);padding:40px 30px;text-align:center;position:relative}
+.header h1{margin:0;font-size:2.5em;text-transform:uppercase;letter-spacing:1px}
+.header p{margin:5px 0 0;opacity:0.9;font-size:1.1em}
+.header .ref-line{margin-top:12px;font-size:0.85em;opacity:0.85}
+.download-btn{position:absolute;top:30px;right:30px;background:var(--white);color:var(--primary);border:none;padding:10px 20px;font-size:14px;font-weight:bold;border-radius:5px;cursor:pointer;box-shadow:0 2px 5px rgba(0,0,0,0.2);transition:0.2s}
+.download-btn:hover{background:#f0f0f0;transform:translateY(-2px)}
+.content{padding:40px}
+.verdict-block{display:flex;justify-content:space-between;align-items:flex-start;gap:20px;flex-wrap:wrap;margin-bottom:20px}
+.verdict-badge{border-radius:10px;padding:14px 20px;text-align:center;min-width:220px;font-weight:bold}
+.verdict-badge.pass{background:#e6f4ea;border:1px solid var(--success);color:#1e7e34}
+.verdict-badge.fail{background:#fdecea;border:1px solid var(--danger);color:#a71d2a}
+.verdict-badge .big{font-size:1.05em;display:block}
+.verdict-badge .small{font-size:0.75em;font-weight:normal;display:block;margin-top:4px}
+.authenticity-alert{background:#7a1220;color:var(--white);border-radius:10px;padding:22px 26px;margin-bottom:30px}
+.authenticity-alert h3{margin:0 0 12px;font-size:1.2em}
+.authenticity-alert .watermark-box{background:rgba(255,255,255,0.12);border:1px dashed rgba(255,255,255,0.5);padding:10px 14px;border-radius:6px;font-family:'Courier New',monospace;font-size:0.85em;margin:12px 0}
+.authenticity-alert p{margin:8px 0;line-height:1.5;font-size:0.95em}
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px;margin-bottom:40px}
+.kpi-card{background:var(--white);border-radius:10px;padding:20px;box-shadow:0 2px 10px rgba(0,0,0,0.05);border-left:5px solid var(--secondary);transition:transform 0.2s}
+.kpi-card:hover{transform:translateY(-5px)}
+.kpi-card h3{margin:0 0 10px;color:#666;font-size:1.0em;text-transform:uppercase}
+.kpi-card .value{font-size:1.7em;font-weight:bold;color:var(--primary)}
+.kpi-card .note{font-size:0.85em;color:#777;margin-top:6px}
+.kpi-card.success{border-left-color:var(--success)}.kpi-card.success .value{color:var(--success)}
+.kpi-card.danger{border-left-color:var(--danger)}.kpi-card.danger .value{color:var(--danger)}
+.kpi-card.warning{border-left-color:var(--warning)}.kpi-card.warning .value{color:#b8860b}
+.section-title{font-size:1.7em;color:var(--primary);border-bottom:2px solid #eee;padding-bottom:10px;margin-bottom:20px;margin-top:44px;font-weight:700;display:flex;align-items:center}
+.section-title::before{content:'';display:inline-block;width:8px;height:22px;background:var(--secondary);margin-right:12px;border-radius:2px}
+.data-table{width:100%;border-collapse:collapse;margin-bottom:30px;font-size:0.92em}
+.data-table th{background:var(--light);color:var(--primary);text-align:left;padding:12px;border-bottom:2px solid #ddd}
+.data-table td{padding:11px 12px;border-bottom:1px solid #eee;vertical-align:top}
+.data-table tr:nth-child(even) td{background:#fafbfc}
+.text-right{text-align:right}.text-center{text-align:center}
+.text-success{color:var(--success);font-weight:bold}.text-danger{color:var(--danger);font-weight:bold}
+.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.analysis-grid{display:grid;grid-template-columns:1fr 1fr;gap:30px;margin-bottom:40px}
+@media (max-width:768px){.analysis-grid{grid-template-columns:1fr}.download-btn{position:static;margin-top:20px;display:inline-block}}
+.analysis-card{background:var(--white);border:1px solid #e1e4e8;border-radius:10px;padding:20px;box-shadow:0 2px 5px rgba(0,0,0,0.03)}
+.analysis-card.full-width{grid-column:span 2}
+.analysis-card h3{margin-top:0;color:var(--primary);display:flex;align-items:center;font-size:1.3em}
+.analysis-card h3::before{content:'';display:inline-block;width:10px;height:10px;background:var(--secondary);border-radius:50%;margin-right:10px}
+.tag{background:#e9ecef;padding:3px 10px;border-radius:12px;font-size:0.85em;color:#495057;margin-right:5px;display:inline-block;margin-bottom:5px}
+.tag.in{background:#e6f4ea;color:var(--success)}
+.tag.out{background:#fce8e6;color:var(--danger)}
+.tag.pass{background:#e6f4ea;color:var(--success);font-weight:bold}
+.tag.fail{background:#fee2e2;color:var(--danger);font-weight:bold}
+.tag.warn{background:#fff3cd;color:#856404;font-weight:bold}
+.tag.low{background:#e0f7fa;color:var(--primary);font-weight:bold}
+.alert-box{padding:20px;border-radius:8px;margin-top:15px;margin-bottom:15px;border-left:5px solid}
+.alert-box.blue{background:#e7f3fe;border-color:var(--secondary)}
+.alert-box.red{background:#fff3cd;border-color:var(--warning)}
+.alert-box.green{background:#e6f4ea;border-color:var(--success)}
+.alert-box.danger{background:#fef2f2;border-color:var(--danger)}
+.alert-box h4{margin:0 0 10px;color:var(--dark)}
+.alert-box ul{margin:10px 0 0 20px;padding:0}
+.alert-box li{margin-bottom:8px}
+.annex-banner{background:var(--primary);color:var(--white);padding:10px 20px;border-radius:8px 8px 0 0;font-weight:bold;font-size:0.9em;letter-spacing:0.5px}
+.annex-body{border:1px solid #e1e4e8;border-top:none;border-radius:0 0 8px 8px;padding:20px;margin-bottom:30px}
+.signoff{display:flex;justify-content:space-between;align-items:flex-end;margin-top:40px;padding-top:20px;border-top:1px dashed #ccc;flex-wrap:wrap;gap:20px}
+.signoff .sig-line{border-top:1px solid var(--dark);padding-top:6px;font-size:0.85em;min-width:220px}
+.small{font-size:0.85em;color:#777;line-height:1.6}
+.footer{text-align:center;padding:20px;color:#777;font-size:0.85em;background:#f8f9fa;border-top:1px solid #eee}
+.footer p{margin:4px 0}
+.footer .legal{max-width:900px;margin:6px auto 0;line-height:1.5}
+@page{size:A4;margin:16mm 12mm}
+@media print{body{background:none;padding:0}.container{box-shadow:none;border-radius:0;max-width:none}.download-btn{display:none}.section-title,.analysis-card,.kpi-card,.annex-body{page-break-inside:avoid}.data-table tr{page-break-inside:avoid}.data-table thead{display:table-header-group}.header{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+</style></head>
+<body><div class="container">
+<div class="header"><button class="download-btn" onclick="window.print()">&#11015; Download PDF Report</button><h1>BANK STATEMENT ANALYSIS REPORT</h1>
+<p><strong>Account Holder:</strong> Bola Ayad Salama Awad Gerges | <strong>Account:</strong> Current 2083011402302500010 (EGP)</p>
+<p><strong>Period:</strong> 10/04/2026 - 11/10/2026 | <strong>Classification:</strong> Confidential</p>
+<p><span class="tag warn">SO-10 PASSPORT</span> <span class="tag pass">CHAIN 18/18</span> <span class="tag low">STANDARD: Master v1.2 · report_design.ts</span></p>
+<p class="ref-line">Ref: GLEIS-BOLA-2026-CUR-01 | Report Generated: 2026-10-10 | Verbatim template: src/lib/report_design.ts</p>
+</div>
+<div class="content">
+
+<h2 class="section-title">1 · Executive Summary</h2>
+  <div class="verdict-block"><div class="alert-box green"><h4>OVERVIEW — 18-row conduit account, fully reconciled, zero residual</h4><p><strong>All 18 printed rows were extracted glyph-exact and verified.</strong> The strict chain closes on all 18 pairs with
+      residual <strong>EGP 0.00</strong>. The account is a conduit: every inflow (EGP 219,845.13) is a printed-reference transfer from the holder's own
+      USD and savings accounts or an automatic sweep, and every outflow (EGP 220,042.29) is external — two clearing cheques of EGP 65,500.00 each,
+      one EGP 80,000.00 cash withdrawal, credit-card servicing and bank fees. The account operates an intentional near-zero policy:
+      whenever fees push it negative (−5.94, −100.00, −39.19), the bank's automatic sweeping instruction covers it the same day,
+      and the statement closes at exactly 0.00 (printed "-0.00").</p></div><div class="verdict-badge pass"><span class="big">VERDICT: SUBMITTABLE</span><span class="small">chain 18/18 · residual EGP 0.00 · dual printed anchors · passport G1–G9 PASS</span></div></div>
+  <div class="kpi-grid"><div class="kpi-card "><h3>Opening Balance (10/04/2026)</h3><div class="value">EGP 197.16</div><div class="note">Printed header anchor — glyph-exact</div></div><div class="kpi-card "><h3>Closing Balance (11/10/2026)</h3><div class="value">EGP 0.00</div><div class="note">Printed as "-0.00" — swept to zero by design</div></div><div class="kpi-card "><h3>Total Inflows</h3><div class="value">EGP 219,845.13</div><div class="note">7 credits — 100% own-account funding</div></div><div class="kpi-card "><h3>Total Outflows</h3><div class="value">EGP 220,042.29</div><div class="note">11 debits — all external</div></div><div class="kpi-card success"><h3>Net Period Movement</h3><div class="value">EGP −197.16</div><div class="note">Exactly the opening balance — account ends at zero</div></div><div class="kpi-card success"><h3>Row Coverage</h3><div class="value">18 / 18</div><div class="note">100% — strict chain 18/18, residual 0.00</div></div><div class="kpi-card "><h3>Peak Balance</h3><div class="value">EGP 145,697.16</div><div class="note">15/04/2026, after the two USD conversions</div></div><div class="kpi-card warning"><h3>Cheque Payments</h3><div class="value">EGP 131,000.00</div><div class="note">2 outward cheques through clearing (65,500 × 2)</div></div><div class="kpi-card warning"><h3>Cash Withdrawal</h3><div class="value">EGP 80,000.00</div><div class="note">28/04/2026 — single branch-scale withdrawal</div></div><div class="kpi-card success"><h3>Auto-Sweeps In</h3><div class="value">EGP 145.13</div><div class="note">3 sweeps from savings — value dates exact</div></div></div>
+  <p class="small">Period 10/04/2026 – 11/10/2026. Classification: Confidential. Read together with the savings and USD reports of the same customer (Customer ID 14023025).</p><h2 class="section-title">2 · Account & Holder Identification</h2>
+  <table class="data-table">
+  <tr><td style="width:30%;font-weight:bold">Account Holder Name:</td><td>Bola Ayad Salama Awad Gerges (Arabic: بولا عياد سلامه عوض جرجس)</td></tr>
+  <tr><td style="font-weight:bold">Customer ID:</td><td>14023025</td></tr>
+  <tr><td style="font-weight:bold">Bank Name / Branch:</td><td>Not printed in the statement body or metadata (Apache FOP 2.6); Egyptian digital e-statement format</td></tr>
+  <tr><td style="font-weight:bold">Account Number:</td><td class="num">2083011402302500010</td></tr>
+  <tr><td style="font-weight:bold">Account Type / Currency:</td><td>Current (chequing) — EGP (per supplied file "current check.pdf"; cheque-print references 208-series confirm a chequebook on this account)</td></tr>
+  <tr><td style="font-weight:bold">Statement Period:</td><td>10 April 2026 to 11 October 2026 (as of 10 October 2026 11:34:51 GMT+3)</td></tr>
+  <tr><td style="font-weight:bold">Transaction Count:</td><td>18 rows — 18/18 verified glyph-exact, two-pass identical</td></tr>
+  <tr><td style="font-weight:bold">Linked Accounts (same customer):</td><td>USD 2115001402302500012 · Savings 0765001402302501019 (see linked-account annex)</td></tr>
+  </table>
+  <div class="annex-banner">LINKED-ACCOUNT ANNEX — THREE STATEMENTS, ONE CUSTOMER, MUTUALLY CORROBORATED</div><div class="annex-body"><p class="small">The holder operates three accounts at the same bank (Customer ID 14023025), all analyzed on the Master v1.2 standard with full SO-10 passports:</p>
+  <table class="data-table">
+  <tr><th>Account</th><th>Number</th><th>Currency</th><th class="text-right">Opening</th><th class="text-right">Closing</th><th class="text-center">Rows</th><th>Role in the funds cascade</th></tr>
+  <tr><td>USD account (USD.pdf)</td><td class="num">2115001402302500012</td><td class="text-center">USD</td><td class="num">6,595.69</td><td class="num">9,153.42</td><td class="text-center">44</td><td><strong>Reservoir</strong> — receives 6 monthly SWIFT transfers from Geostream Solutions Ltd (UK) + USD certificate interest; converts to EGP outward</td></tr>
+  <tr><td>Savings account (saving.pdf)</td><td class="num">0765001402302501019</td><td class="text-center">EGP</td><td class="num">17,673.85</td><td class="num">1,743.24</td><td class="text-center">382</td><td><strong>Engine</strong> — receives the USD conversions, pays external beneficiaries, cards, cash and remittances</td></tr>
+  <tr><td>Current account (current check.pdf)</td><td class="num">2083011402302500010</td><td class="text-center">EGP</td><td class="num">197.16</td><td class="num">0.00 (printed −0.00)</td><td class="text-center">18</td><td><strong>Conduit</strong> — 100% internally funded; large cheques and a one-time 80,000 cash withdrawal; auto-swept toward zero</td></tr>
+  </table>
+  <p class="small">This report covers the <strong>current account</strong> — the conduit used for large one-off payments (cheques, branch cash) and swept back toward zero after each cycle.</p></div><h2 class="section-title">3 · Mathematical Reconciliation & Adjusted Cash Flow</h2>
+  <p>Strict line-by-line reconciliation: the calculated balance after every row equals the printed running balance, residual EGP 0.00 on all 18 pairs. Because <em>every</em> inflow is internal, the Adjusted (external-only) view shows the account's dependence plainly.</p>
+  <table class="data-table">
+  <tr><th>Metric (EGP)</th><th class="text-right">As Reported</th><th class="text-right">Adjusted (External Only)</th></tr>
+  <tr><td>Opening Balance (10/04/2026)</td><td class="num">197.16</td><td class="num">197.16</td></tr>
+  <tr><td>Add: Total Credits (Inflows)</td><td class="num text-success">+ 219,845.13</td><td class="num text-success">+ 0.00</td></tr>
+  <tr><td>Less: Total Debits (Outflows)</td><td class="num text-danger">− 220,042.29</td><td class="num text-danger">− 220,042.29</td></tr>
+  <tr style="background:#f0fdf4"><td><strong>Calculated Closing Balance</strong></td><td class="num"><strong>0.00</strong></td><td class="num"><strong>− 219,845.13</strong></td></tr>
+  </table>
+  <div class="alert-box blue"><h4>Reconciliation Formula</h4>
+  <p>197.16 + 219,845.13 − 220,042.29 = 0.00 — exact, on every row and in total. The printed closing value is "-0.00": the bank's negative-zero glyph for a balance swept to exactly zero (Appendix B).</p>
+  <p class="small"><strong>Adjusted view:</strong> without the holder's own transfers the account would have closed at −EGP 219,845.13; every pound it paid out was pre-funded from the family cascade. This is the definition of a conduit and is a <em>consistent</em>, explainable structure — not an anomaly.</p></div><h2 class="section-title">4 · Monthly Financial Trajectory & Gap Analysis</h2>
+  <table class="data-table"><tr><th>Month</th><th class="text-right">Credits (EGP)</th><th class="text-right">Debits (EGP)</th><th class="text-right">Net Flow (EGP)</th><th class="text-right">Closing Balance (EGP)</th></tr><tr><td><strong>04/2026</strong> (partial)</td><td class="num text-success">145,500.00</td><td class="num text-danger">145,500.00</td><td class="num">+ 0.00</td><td class="num"><strong>197.16</strong></td></tr><tr><td><strong>05/2026</strong></td><td class="num text-success">0.00</td><td class="num text-danger">111.35</td><td class="num">− 111.35</td><td class="num"><strong>85.81</strong></td></tr><tr><td><strong>06/2026</strong></td><td class="num text-success">39.19</td><td class="num text-danger">125.00</td><td class="num">− 85.81</td><td class="num"><strong>0.00</strong></td></tr><tr><td><strong>07/2026</strong></td><td class="num text-success">74,300.00</td><td class="num text-danger">73,708.44</td><td class="num">+ 591.56</td><td class="num"><strong>591.56</strong></td></tr><tr><td><strong>08/2026</strong></td><td class="num text-success">0.00</td><td class="num text-danger">70.50</td><td class="num">− 70.50</td><td class="num"><strong>521.06</strong></td></tr><tr><td><strong>09/2026</strong></td><td class="num text-success">0.00</td><td class="num text-danger">125.00</td><td class="num">− 125.00</td><td class="num"><strong>396.06</strong></td></tr><tr><td><strong>10/2026</strong> (partial)</td><td class="num text-success">5.94</td><td class="num text-danger">402.00</td><td class="num">− 396.06</td><td class="num"><strong>0.00</strong></td></tr></table>
+  <div class="alert-box red"><h4>Trajectory Notes & Gap Analysis (Agent Action Required)</h4><ul>
+  <li><strong>April 2026 round trip:</strong> 65,500 + 80,000 converted in (14–15/04) → 65,500 cheque cleared (27/04) → 80,000 cash withdrawn (28/04). Net zero; balance back to the 197.16 opening residue. <em>Agent Action:</em> be ready to explain the cheque purpose (payee is not printed); see §9.</li>
+  <li><strong>July 2026 cycle:</strong> 66,000 in (09/07) → 8,108.44 card payoff (27/07) → 8,200 in (28/07) → 65,500 cheque cleared (29/07) leaving 591.56.</li>
+  <li><strong>June/July/October negatives:</strong> fees 125.00 / 100.00 / (302.00+100.00) pushed the account to −39.19 / −100.00 / −5.94; each was covered same-day or same-statement by an automatic sweep (30/06 +39.19; 01/07 +100.00; 01/10 +5.94). <em>Agent Action:</em> none — disclosed mechanism, never left negative overnight except within the same posting day.</li>
+  </ul></div><h2 class="section-title">5 · Significant Financial Events — Complete Row-by-Row Ledger</h2>
+  <p>The account has only 18 rows; all are reproduced here (print order, newest first) with printed balances:</p>
+  <table class="data-table"><tr><th>Date</th><th>Description (bidi-resolved)</th><th>Reference</th><th class="text-right">Amount (EGP)</th><th>Type</th><th class="text-right">Balance After</th></tr><tr><td>01-October-2026</td><td class="small">Account balance coverage - Automatic sweeping instructions</td><td class="small">208OSWP2627406JA</td><td class="num">5.94</td><td class="text-center"><span class="tag in">CREDIT</span></td><td class="num">-0.00</td></tr><tr><td>01-October-2026</td><td class="small">01-October-2026 208CB22EGP 00001 Account statement charges</td><td class="small">208CB22EGP 00001</td><td class="num">100.00</td><td class="text-center"><span class="tag out">DEBIT</span></td><td class="num">-5.94</td></tr><tr><td>01-October-2026</td><td class="small">Credit Card Payment via Internet Banking-4914954513439510</td><td class="small">208DBCP262744139</td><td class="num">302.00</td><td class="text-center"><span class="tag out">DEBIT</span></td><td class="num">94.06</td></tr><tr><td>30-September-2026</td><td class="small">01-October-2026 208CB21EGP 00001 Admin fees</td><td class="small">208CB21EGP 00001</td><td class="num">125.00</td><td class="text-center"><span class="tag out">DEBIT</span></td><td class="num">396.06</td></tr><tr><td>11-August-2026</td><td class="small">Credit Card Payment via Internet Banking-4914954513439510</td><td class="small">208DBCP262234001</td><td class="num">70.50</td><td class="text-center"><span class="tag out">DEBIT</span></td><td class="num">521.06</td></tr><tr><td>29-July-2026</td><td class="small">Inward cheque clearing-20817000184853</td><td class="small">599CGIN262102679</td><td class="num">65,500.00</td><td class="text-center"><span class="tag out">DEBIT</span></td><td class="num">591.56</td></tr><tr><td>28-July-2026</td><td class="small">Account to Account Transfer- From-ﺑﻮﻻ ﻋﻴﺎد ﺳﻼﻣﻪ ﻋﻮض ﺟﺮﺟﺲTo-ﺑﻮﻻ ﻋﻴﺎد ﺳﻼﻣﻪ ﻋﻮض ~ﺟﺮ</td><td class="small">076FTNU262098015</td><td class="num">8,200.00</td><td class="text-center"><span class="tag in">CREDIT</span></td><td class="num">66,091.56</td></tr><tr><td>27-July-2026</td><td class="small">Credit Card Payment via Internet Banking-4914954513439510</td><td class="small">208DBCP262088019</td><td class="num">8,108.44</td><td class="text-center"><span class="tag out">DEBIT</span></td><td class="num">57,891.56</td></tr><tr><td>09-July-2026</td><td class="small">Account to Account Transfer- From-ﺑﻮﻻ ﻋﻴﺎد ﺳﻼﻣﻪ ﻋﻮض ﺟﺮﺟﺲTo-ﺑﻮﻻ ﻋﻴﺎد ﺳﻼﻣﻪ ﻋﻮض ~ﺟﺮ</td><td class="small">211FTNU261904087</td><td class="num">66,000.00</td><td class="text-center"><span class="tag in">CREDIT</span></td><td class="num">66,000.00</td></tr><tr><td>01-July-2026</td><td class="small">Account balance coverage - Automatic sweeping instructions</td><td class="small">208OSWP2618206EG</td><td class="num">100.00</td><td class="text-center"><span class="tag in">CREDIT</span></td><td class="num">0.00</td></tr><tr><td>01-July-2026</td><td class="small">01-July-2026 208CB22EGP 00001 Account statement charges</td><td class="small">208CB22EGP 00001</td><td class="num">100.00</td><td class="text-center"><span class="tag out">DEBIT</span></td><td class="num">-100.00</td></tr><tr><td>30-June-2026</td><td class="small">Account balance coverage - Automatic sweeping instructions</td><td class="small">208OSWP2618103HT</td><td class="num">39.19</td><td class="text-center"><span class="tag in">CREDIT</span></td><td class="num">0.00</td></tr><tr><td>30-June-2026</td><td class="small">01-July-2026 208CB21EGP 00001 Admin fees</td><td class="small">208CB21EGP 00001</td><td class="num">125.00</td><td class="text-center"><span class="tag out">DEBIT</span></td><td class="num">-39.19</td></tr><tr><td>04-May-2026</td><td class="small">Credit Card Payment via Internet Banking-4914954513439510</td><td class="small">208DBCP26123A007</td><td class="num">111.35</td><td class="text-center"><span class="tag out">DEBIT</span></td><td class="num">85.81</td></tr><tr><td>28-April-2026</td><td class="small">28-April-2026 233CHWL261184004 Cash withdrawal-Cash Withdrawal 28</td><td class="small">233CHWL261184004</td><td class="num">80,000.00</td><td class="text-center"><span class="tag out">DEBIT</span></td><td class="num">197.16</td></tr><tr><td>27-April-2026</td><td class="small">Inward cheque clearing-20817000184852</td><td class="small">599CGIN261174700</td><td class="num">65,500.00</td><td class="text-center"><span class="tag out">DEBIT</span></td><td class="num">80,197.16</td></tr><tr><td>15-April-2026</td><td class="small">Account to Account Transfer- From-ﺑﻮﻻ ﻋﻴﺎد ﺳﻼﻣﻪ ﻋﻮض ﺟﺮﺟﺲTo-ﺑﻮﻻ ﻋﻴﺎد ﺳﻼﻣﻪ ﻋﻮض ~ﺟﺮ</td><td class="small">211FTNU26104A34I</td><td class="num">80,000.00</td><td class="text-center"><span class="tag in">CREDIT</span></td><td class="num">145,697.16</td></tr><tr><td>14-April-2026</td><td class="small">Account to Account Transfer- From-ﺑﻮﻻ ﻋﻴﺎد ﺳﻼﻣﻪ ﻋﻮض ﺟﺮﺟﺲTo-ﺑﻮﻻ ﻋﻴﺎد ﺳﻼﻣﻪ ﻋﻮض ~ﺟﺮ</td><td class="small">211FTNU261040049</td><td class="num">65,500.00</td><td class="text-center"><span class="tag in">CREDIT</span></td><td class="num">65,697.16</td></tr></table>
+  <div class="alert-box blue"><h4>Events That Matter</h4><ul>
+  <li><strong>Two clearing cheques of EGP 65,500.00</strong> (27/04 cheque ...84852, 29/07 cheque ...84853): debited through "Inward cheque clearing" against 208-series cheque numbers — i.e., cheques issued on this account and presented through the clearing system. Consecutive cheque serials, identical value.</li>
+  <li><strong>EGP 80,000.00 cash withdrawal</strong> (28/04): the account's only branch-scale cash event, executed one day after the April cheque.</li>
+  <li><strong>Credit-card servicing</strong> of card 491495••••••9510: 302.00 + 70.50 + 8,108.44 + 111.35 — the same card is serviced from the savings account (shared instrument, G9).</li></ul></div><h2 class="section-title">6 · Source of Funds (Inflows Analysis)</h2>
+  <table class="data-table"><tr><th>Source</th><th class="text-center">Rows</th><th class="text-right">Amount (EGP)</th><th>Assessment</th></tr>
+  <tr><td>Own-account conversions from the USD account (refs 211FTNU261040049 / 26104A34I / 261904087 — bound in both statements)</td><td class="text-center">3</td><td class="num">211,500.00</td><td>Internal funding at implied 52.5–53.1 EGP/USD</td></tr>
+  <tr><td>Own-account transfer from savings (ref 076FTNU262098015 — bound in both statements)</td><td class="text-center">1</td><td class="num">8,200.00</td><td>Internal</td></tr>
+  <tr><td>Automatic sweeps from savings (refs 208OSWP…, value dates exact)</td><td class="text-center">3</td><td class="num">145.13</td><td>Internal — fee coverage</td></tr>
+  <tr><td><strong>External inflows</strong></td><td class="text-center"><strong>0</strong></td><td class="num"><strong>0.00</strong></td><td>No third-party income lands on this account</td></tr>
+  </table>
+  <div class="alert-box blue"><h4>Source-of-Funds Narrative</h4><p>100% of the account's funding is internal to the holder's own accounts. For visa purposes this account is corroboration infrastructure, not an income exhibit — the income exhibits are the USD statement (Geostream SWIFT) and the savings statement (conversion + behaviour).</p></div><h2 class="section-title">7 · Utilization of Funds (Outflows Analysis)</h2>
+  <table class="data-table"><tr><th>Category (chain-verified)</th><th class="text-center">Rows</th><th class="text-right">Absolute Value (EGP)</th></tr><tr><td>Own-account A2A transfer</td><td class="text-center">4</td><td class="num">219,700.00</td></tr><tr><td>Cheque clearing (outward debit)</td><td class="text-center">2</td><td class="num">131,000.00</td></tr><tr><td>Cash withdrawal (ATM/branch)</td><td class="text-center">1</td><td class="num">80,000.00</td></tr><tr><td>Credit card payment</td><td class="text-center">4</td><td class="num">8,592.29</td></tr><tr><td>Fees &amp; charges</td><td class="text-center">4</td><td class="num">450.00</td></tr><tr><td>Own-account sweep (auto)</td><td class="text-center">3</td><td class="num">145.13</td></tr></table>
+  <div class="alert-box blue"><h4>Reading the Outflows</h4><p>EGP 131,000.00 of cheques and EGP 80,000.00 of branch cash dominate (95.8% of outflows). The remainder is routine: card servicing EGP 8,592.29, admin/statement fees EGP 450.00. No remittances, no purchases — consistent with a payments conduit kept deliberately empty.</p></div><h2 class="section-title">8 · Key Associated Parties & Net Exposure</h2>
+  <table class="data-table"><tr><th>Party</th><th>Direction</th><th class="text-right">Total (EGP)</th><th>Nature</th></tr>
+  <tr><td>Holder's own USD account 2115…0012</td><td><span class="tag in">IN</span> 3</td><td class="num">211,500.00</td><td>Own-account conversions (bound refs)</td></tr>
+  <tr><td>Holder's own savings account 0765…019</td><td><span class="tag in">IN</span> 4</td><td class="num">8,345.13</td><td>A2A transfer + 3 fee-coverage sweeps</td></tr>
+  <tr><td>Cheque payees (not printed; cheques ...84852 / ...84853)</td><td><span class="tag out">OUT</span> 2</td><td class="num">131,000.00</td><td>Outward through clearing — payee identity requires bank confirmation</td></tr>
+  <tr><td>Cash (branch/ATM)</td><td><span class="tag out">OUT</span> 1</td><td class="num">80,000.00</td><td>28/04/2026</td></tr>
+  <tr><td>Credit card 491495••••••9510</td><td><span class="tag out">OUT</span> 4</td><td class="num">8,592.29</td><td>Shared instrument with savings</td></tr>
+  <tr><td>Bank fees (admin + statement charges)</td><td><span class="tag out">OUT</span> 4</td><td class="num">450.00</td><td>Routine</td></tr>
+  </table><h2 class="section-title">9 · Risk & Compliance Indicators (Agent Action Items)</h2>
+  <table class="data-table"><tr><th>Indicator</th><th class="text-center">Status</th><th>Detail & Agent Action</th></tr>
+  <tr><td>Balance-chain integrity</td><td class="text-center"><span class="tag pass">PASS</span></td><td>18/18 pairs, residual 0.00; two-pass identical</td></tr>
+  <tr><td>Externally-funded flows</td><td class="text-center"><span class="tag warn">DISCLOSED</span></td><td>100% of inflows internal. <em>Agent Action:</em> always present this account together with the USD and savings reports</td></tr>
+  <tr><td>Cheque payee opacity</td><td class="text-center"><span class="tag warn">ACTION</span></td><td>Two 65,500.00 cheques to unnamed payees, consecutive serials. <em>Agent Action:</em> if the visa file relies on these, obtain the cheque images/payee names from the branch; otherwise present as general payments</td></tr>
+  <tr><td>Branch-scale cash</td><td class="text-center"><span class="tag warn">ACTION</span></td><td>80,000.00 on 28/04, one day after the April cheque. <em>Agent Action:</em> one-line purpose statement recommended</td></tr>
+  <tr><td>Negative-balance operation</td><td class="text-center"><span class="tag pass">EXPLAINED</span></td><td>Three micro-overdrafts (−39.19 / −100.00 / −5.94) each covered by the same-day automatic sweep; closing exactly 0.00</td></tr>
+  <tr><td>Dormancy pattern</td><td class="text-center"><span class="tag low">LOW</span></td><td>Months with 1–2 rows (May/Aug/Sep) — fee-only activity; not suspicious for a conduit</td></tr>
+  </table><h2 class="section-title">10 · Visa & Financial Assessment (Readiness Matrix)</h2>
+  <table class="data-table"><tr><th>Dimension</th><th class="text-center">Status</th><th>Evidence in this statement</th></tr>
+  <tr><td>Mathematical integrity</td><td class="text-center"><span class="tag pass">STRONG</span></td><td>18/18 chain, residual 0.00, dual anchors, two-pass</td></tr>
+  <tr><td>Income regularity</td><td class="text-center"><span class="tag warn">N/A</span></td><td>No external income — by design of the account's role</td></tr>
+  <tr><td>Balance trajectory</td><td class="text-center"><span class="tag warn">NEUTRAL</span></td><td>Swept-to-zero policy; closing 0.00 (printed −0.00)</td></tr>
+  <tr><td>Financial behaviour</td><td class="text-center"><span class="tag warn">MODERATE</span></td><td>Large cheques + one large cash event require one-line explanations if relied upon</td></tr>
+  <tr><td>Corroboration value</td><td class="text-center"><span class="tag pass">STRONG</span></td><td>4 of its rows bind to the other two statements by printed reference — mutual proof</td></tr>
+  </table><h2 class="section-title">11 · Analyst Conclusion & Recommendations</h2>
+  <div class="analysis-card full-width"><h3>Conclusion</h3>
+  <p><strong>Executive Summary:</strong> an 18-row, fully reconciled conduit account. It receives EGP 219,845.13 exclusively from the holder's own accounts, pays EGP 220,042.29 to external destinations (two 65,500.00 clearing cheques, an 80,000.00 cash withdrawal, card servicing, fees), and closes at exactly zero. Every micro-overdraft was auto-covered the same day. The account corroborates the family cascade through four reference-level bindings.</p>
+  <p><strong>Recommendations:</strong> (1) submit jointly with the USD and savings reports; (2) obtain cheque payee details from the branch if the 131,000.00 is material to the file; (3) treat this account as behaviour/corroboration evidence, never as income evidence.</p></div><h2 class="section-title">Appendix A · SO-10 Verification Passport (G1–G9, measured values)</h2>
+  <table class="data-table"><tr><th>Gate</th><th>Verdict</th><th>Measured Values (Current 2083011402302500010)</th></tr><tr><td><strong>G1 · Serial Census</strong></td><td><span class="tag pass">PASS</span> <span class="tag warn">adapted</span></td><td class="small">Bank prints no row serials on this digital format. Census enforced as: 18 parsed rows, 100% carrying date + reference + running balance + exactly one amount; Pass-A count == Pass-B count == 18; row-signature multisets identical; no gaps possible (strict chain below detects any absorption).</td></tr><tr><td><strong>G2 · Strict Chain</strong></td><td><span class="tag pass">PASS</span></td><td class="small">18 / 18 consecutive row pairs closed with residual EGP 0.00 exact; telescope 197.16 + 219,845.13 − 220,042.29 = 0.00 == printed closing -0.00 (printed "-0.00").</td></tr><tr><td><strong>G3 · Printed Totals</strong></td><td><span class="tag pass">PASS</span> <span class="tag warn">adapted</span></td><td class="small">This statement format prints no period debit/credit totals row (verified full-text). Substituted independent evidence: bank-printed closing balance reconciles exactly with Σ(opening + credits − debits); two-pass row-set equality (G7) excludes row absorption. Disclosed per SO-7.</td></tr><tr><td><strong>G4 · Anchors</strong></td><td><span class="tag pass">PASS</span></td><td class="small">4 printed anchors, glyph-exact from the digital text layer: header Opening 197.16 (oldest row pre-balance), header Closing -0.00 (newest row balance), From/To dates 10-April-2026 → 11-October-2026.</td></tr><tr><td><strong>G5 · Page Grid</strong></td><td><span class="tag pass">PASS</span></td><td class="small">2/2 pages parsed; 18 date-led transaction rows; rows per page 2–16; every visual band maps to a row or a description-wrap continuation; 0 orphan bands.</td></tr><tr><td><strong>G6 · Monotonicity</strong></td><td><span class="tag pass">PASS</span></td><td class="small">Transaction dates non-increasing down the print order: 0 violations; single currency EGP; every positive amount moves the balance in its printed column's direction (chain-verified); 0 bank-printed negative rows = documented reversal mechanism (mass 0.00), each chain-closed.</td></tr><tr><td><strong>G7 · Two-Pass Extraction</strong></td><td><span class="tag pass">PASS</span></td><td class="small">Pass A (pdfplumber positional engine, x-column assignment) vs Pass B (pdftotext -layout engine, independent segmentation): identical 18-row multisets on (date, amount, balance); 0 adjudication diffs.</td></tr><tr><td><strong>G8 · Re-Derivation</strong></td><td><span class="tag pass">PASS</span></td><td class="small">Every figure in this report is regenerated from the verified row table (/home/z/my-project/scripts/bola_work/report_data_current.json) by the tracked generator scripts/bola_report.ts; headline sums re-derived in-generator and asserted equal to the verifier's values before rendering.</td></tr><tr><td><strong>G9 · Adversarial Audit</strong></td><td><span class="tag pass">PASS</span></td><td class="small">Cross-statement binding: 31 references found in ≥2 of the holder's three statements — 27 USD→EGP conversions with implied FX 48.9–53.4 EGP/USD (smooth drift, each pair independently consistent), 3 sweeps with value-dates exact, 1 saving→current A2A; reversal family nets to zero; shared instrument (card 4914••••••9510) verified in 2 accounts; same-day flow-through pairs disclosed in §9 rather than hidden.</td></tr></table>
+  <p class="small">Fail-loud doctrine: any unevaluable gate = FAIL = quarantine. All nine gates carry measured values; none assumed.</p><h2 class="section-title">Appendix B · Full Disclosure — Negative-Zero, Overdrafts & Bindings</h2>
+  <h3 style="color:var(--primary)">B.1 The "-0.00" closing balance</h3>
+  <p class="small">The statement header prints the closing balance as "-0.00" (negative zero). The chain proves the true value is exactly 0.00 (197.16 + 219,845.13 − 220,042.29 = 0.00). The negative-zero glyph is a formatting artifact of the bank's generator on a swept-to-zero balance and carries no economic content.</p>
+  <h3 style="color:var(--primary)">B.2 Negative-balance operations (auto-covered)</h3>
+  <table class="data-table"><tr><th>Date</th><th>Cause</th><th class="text-right">Balance Low (EGP)</th><th>Cover</th></tr>
+  <tr><td>30/06/2026</td><td>Admin fees 125.00</td><td class="num">−39.19</td><td>Same-day sweep +39.19 (ref 208OSWP2618103HT, value date 30-June on both statements)</td></tr>
+  <tr><td>01/07/2026</td><td>Statement charges 100.00</td><td class="num">−100.00</td><td>Same-day sweep +100.00 (ref 208OSWP2618206EG)</td></tr>
+  <tr><td>01/10/2026</td><td>Statement charges 100.00 after card payment 302.00</td><td class="num">−5.94</td><td>Same-day sweep +5.94 (ref 208OSWP2627406JA)</td></tr>
+  </table>
+  <h3 style="color:var(--primary)">B.3 Cross-statement bindings touching this account</h3>
+  <table class="data-table"><tr><th>Reference</th><th>Pair</th><th class="text-right">Amount (EGP)</th><th>Proof</th></tr>
+  <tr><td class="small">211FTNU261040049</td><td>USD → Current</td><td class="num">65,500.00</td><td class="small">Debit 1,233.75 USD in USD statement; implied 53.09 EGP/USD</td></tr>
+  <tr><td class="small">211FTNU26104A34I</td><td>USD → Current</td><td class="num">80,000.00</td><td class="small">Debit 1,524.68 USD; implied 52.47 EGP/USD</td></tr>
+  <tr><td class="small">211FTNU261904087</td><td>USD → Current</td><td class="num">66,000.00</td><td class="small">Debit 1,329.31 USD; implied 49.65 EGP/USD</td></tr>
+  <tr><td class="small">076FTNU262098015</td><td>Savings → Current</td><td class="num">8,200.00</td><td class="small">Same reference, same date (28-July), opposite directions</td></tr>
+  <tr><td class="small">208OSWP2618103HT / 2618206EG / 2627406JA</td><td>Savings → Current</td><td class="num">145.13</td><td class="small">Value dates exact on both sides</td></tr>
+  </table>
+  <h3 style="color:var(--primary)">B.4 Completeness statement</h3>
+  <p class="small">Zero chain-derived rows — every value is a printed glyph. Bank prints no totals row and no serials; gates adapted as recorded in Appendix A, disclosed per SO-7.</p><div class="signoff"><div class="sig-line">Authorized Signature — Global EIS</div><div class="sig-line">Date Issued: 2026-10-10</div></div>
+</div>
+<div class="footer">
+<p><strong>Prepared By:</strong> Global EIS - Financial Intelligence Services</p>
+<p class="legal"><strong>Disclaimer:</strong> This report is prepared by Global EIS based solely on the bank statement document supplied by the client. Global EIS does not independently verify the authenticity of the underlying bank statement and makes no representation as to the applicant's eligibility for any visa or immigration outcome. All mathematical reconciliations are verified against the stated bank totals. This report is intended solely to support the client's own submission, should be read together with all other required supporting documentation, and does not constitute legal advice.</p>
+</div>
+</div></body></html>

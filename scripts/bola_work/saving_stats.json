@@ -1,0 +1,302 @@
+{
+ "header": {
+  "customer_id": "14023025",
+  "account": "0765001402302501019",
+  "currency": "EGP",
+  "opening": 17673.85,
+  "closing_raw": "1,743.24",
+  "closing": 1743.24,
+  "from": "10-April-2026",
+  "to": "11-October-2026"
+ },
+ "n_rows": 382,
+ "sum_debits": 460527.01,
+ "sum_credits": 444596.4,
+ "net": -15930.61,
+ "n_debits": 327,
+ "n_credits": 55,
+ "monthly": {
+  "04/2026": {
+   "c": 47900.0,
+   "d": 30476.7,
+   "n": 33,
+   "close": 35097.15
+  },
+  "05/2026": {
+   "c": 28930.5,
+   "d": 61995.99,
+   "n": 58,
+   "close": 2031.66
+  },
+  "06/2026": {
+   "c": 147038.5,
+   "d": 142083.51,
+   "n": 64,
+   "close": 6986.65
+  },
+  "07/2026": {
+   "c": 60802.5,
+   "d": 36437.19,
+   "n": 50,
+   "close": 31351.96
+  },
+  "08/2026": {
+   "c": 67389.5,
+   "d": 90439.36,
+   "n": 76,
+   "close": 8302.1
+  },
+  "09/2026": {
+   "c": 63636.5,
+   "d": 71135.01000000001,
+   "n": 72,
+   "close": 803.59
+  },
+  "10/2026": {
+   "c": 28898.9,
+   "d": 27959.25,
+   "n": 29,
+   "close": 1743.24
+  }
+ },
+ "categories": {
+  "Fees & charges": {
+   "n": 40,
+   "sum": 735.11
+  },
+  "Card purchases": {
+   "n": 194,
+   "sum": 86150.4
+  },
+  "Interest earned": {
+   "n": 6,
+   "sum": 2415.0
+  },
+  "ATM/branch cash withdrawal": {
+   "n": 38,
+   "sum": 104340.0
+  },
+  "Credit card payment": {
+   "n": 15,
+   "sum": 63428.87
+  },
+  "Other transfers": {
+   "n": 58,
+   "sum": 215123.0
+  },
+  "Own-account transfer": {
+   "n": 25,
+   "sum": 432287.4
+  },
+  "Own-account sweep": {
+   "n": 3,
+   "sum": 145.13
+  },
+  "Other": {
+   "n": 1,
+   "sum": 2000.0
+  },
+  "Reversals (bank-printed negatives)": {
+   "n": 2,
+   "sum": -1501.5
+  }
+ },
+ "min_balance": 21.28,
+ "max_balance": 66683.6,
+ "top_debits": [
+  {
+   "page": 17,
+   "idx_print": 231,
+   "tdate": "29-June-2026",
+   "vdate": "29-June-2026",
+   "ref": "076FTID261806286",
+   "desc": "outgoing transfer IPN network to sally ebied~2B983721B66DCBAD",
+   "debit": 58000.0,
+   "credit": null,
+   "balance": 8663.6,
+   "balance_raw": "8,663.60"
+  },
+  {
+   "page": 20,
+   "idx_print": 275,
+   "tdate": "02-June-2026",
+   "vdate": "02-June-2026",
+   "ref": "076FTID26152A71S",
+   "desc": "outgoing transfer IPN network to sally ebied~6B950642EEE6F73E",
+   "debit": 22000.0,
+   "credit": null,
+   "balance": 19434.31,
+   "balance_raw": "19,434.31"
+  },
+  {
+   "page": 8,
+   "idx_print": 107,
+   "tdate": "30-August-2026",
+   "vdate": "28-August-2026",
+   "ref": "076FTID262426316",
+   "desc": "outgoing transfer IPN network to ﺪﻤﺤﻣ ﺪﻴﺴﻟا نﺎﻤﻳا ﻦﺴﺣ~DDF67464B10DADEF",
+   "debit": 20000.0,
+   "credit": null,
+   "balance": 9133.04,
+   "balance_raw": "9,133.04"
+  },
+  {
+   "page": 24,
+   "idx_print": 324,
+   "tdate": "14-May-2026",
+   "vdate": "14-May-2026",
+   "ref": "076DBCP261348007",
+   "desc": "Credit Card Payment via Internet Banking-4914954513439510",
+   "debit": 16195.31,
+   "credit": null,
+   "balance": 11465.58,
+   "balance_raw": "11,465.58"
+  },
+  {
+   "page": 5,
+   "idx_print": 60,
+   "tdate": "14-September-2026",
+   "vdate": "14-September-2026",
+   "ref": "224CATM2625713RZ",
+   "desc": "Cash withdrawal from debit card - NBE ATM-521977******4808 22240005 625711308956",
+   "debit": 14000.0,
+   "credit": null,
+   "balance": 7693.21,
+   "balance_raw": "7,693.21"
+  },
+  {
+   "page": 1,
+   "idx_print": 8,
+   "tdate": "06-October-2026",
+   "vdate": "05-October-2026",
+   "ref": "782NPAO262781iAs",
+   "desc": "Purchases using debit card- FAWRY*RASHD AUTO PAR ALEX EG",
+   "debit": 12000.0,
+   "credit": null,
+   "balance": 5497.74,
+   "balance_raw": "5,497.74"
+  },
+  {
+   "page": 7,
+   "idx_print": 91,
+   "tdate": "06-September-2026",
+   "vdate": "03-September-2026",
+   "ref": "243CATM2624613ha",
+   "desc": "Cash withdrawal from debit card - NBE ATM-521977******4808 22430004 624619308590",
+   "debit": 12000.0,
+   "credit": null,
+   "balance": 12479.97,
+   "balance_raw": "12,479.97"
+  },
+  {
+   "page": 17,
+   "idx_print": 235,
+   "tdate": "28-June-2026",
+   "vdate": "28-June-2026",
+   "ref": "076DBCP261796046",
+   "desc": "Credit Card Payment via Internet Banking-4914954513439510",
+   "debit": 11631.56,
+   "credit": null,
+   "balance": 8683.6,
+   "balance_raw": "8,683.60"
+  }
+ ],
+ "top_credits": [
+  {
+   "page": 17,
+   "idx_print": 233,
+   "tdate": "29-June-2026",
+   "vdate": "29-June-2026",
+   "ref": "211FTNU261804063",
+   "desc": "Account to Account Transfer- From-ضﻮﻋ ﻪﻣﻼﺳ دﺎﻴﻋ ﻻﻮﺑ ﺲﺟﺮﺟ To-ضﻮﻋ ﻪﻣﻼﺳ دﺎﻴﻋ ﻻﻮﺑ ﺲﺟﺮﺟ~PC1417476719908",
+   "debit": null,
+   "credit": 60000.0,
+   "balance": 66683.6,
+   "balance_raw": "66,683.60"
+  },
+  {
+   "page": 26,
+   "idx_print": 351,
+   "tdate": "29-April-2026",
+   "vdate": "29-April-2026",
+   "ref": "211FTNU261190068",
+   "desc": "Account to Account Transfer- From-ضﻮﻋ ﻪﻣﻼﺳ دﺎﻴﻋ ﻻﻮﺑ ﺲﺟﺮﺟ To-ضﻮﻋ ﻪﻣﻼﺳ دﺎﻴﻋ ﻻﻮﺑ ﺲﺟﺮﺟ~PC1277918214691",
+   "debit": null,
+   "credit": 35000.0,
+   "balance": 35162.15,
+   "balance_raw": "35,162.15"
+  },
+  {
+   "page": 8,
+   "idx_print": 98,
+   "tdate": "01-September-2026",
+   "vdate": "01-September-2026",
+   "ref": "211FTNU262446143",
+   "desc": "Account to Account Transfer- From-ضﻮﻋ ﻪﻣﻼﺳ دﺎﻴﻋ ﻻﻮﺑ ﺲﺟﺮﺟ To-ضﻮﻋ ﻪﻣﻼﺳ دﺎﻴﻋ ﻻﻮﺑ ﺲﺟﺮﺟ~PC1561315152385",
+   "debit": null,
+   "credit": 30522.0,
+   "balance": 31353.31,
+   "balance_raw": "31,353.31"
+  },
+  {
+   "page": 13,
+   "idx_print": 178,
+   "tdate": "30-July-2026",
+   "vdate": "30-July-2026",
+   "ref": "211FTNU262110115",
+   "desc": "Account to Account Transfer- From-ضﻮﻋ ﻪﻣﻼﺳ دﺎﻴﻋ ﻻﻮﺑ ﺲﺟﺮﺟ To-ضﻮﻋ ﻪﻣﻼﺳ دﺎﻴﻋ ﻻﻮﺑ ﺲﺟﺮﺟ~PC1488539453211",
+   "debit": null,
+   "credit": 30000.0,
+   "balance": 31351.96,
+   "balance_raw": "31,351.96"
+  },
+  {
+   "page": 21,
+   "idx_print": 284,
+   "tdate": "01-June-2026",
+   "vdate": "29-May-2026",
+   "ref": "211FTNU261520255",
+   "desc": "Account to Account Transfer- From-ضﻮﻋ ﻪﻣﻼﺳ دﺎﻴﻋ ﻻﻮﺑ ﺲﺟﺮﺟ To-ضﻮﻋ ﻪﻣﻼﺳ دﺎﻴﻋ ﻻﻮﺑ ﺲﺟﺮﺟ~PC1347828279333",
+   "debit": null,
+   "credit": 30000.0,
+   "balance": 30409.66,
+   "balance_raw": "30,409.66"
+  },
+  {
+   "page": 8,
+   "idx_print": 109,
+   "tdate": "30-August-2026",
+   "vdate": "28-August-2026",
+   "ref": "211FTNU262422177",
+   "desc": "Account to Account Transfer- From-ضﻮﻋ ﻪﻣﻼﺳ دﺎﻴﻋ ﻻﻮﺑ ﺲﺟﺮﺟ To-ضﻮﻋ ﻪﻣﻼﺳ دﺎﻴﻋ ﻻﻮﺑ ﺲﺟﺮﺟ~PC1551179106997",
+   "debit": null,
+   "credit": 25000.0,
+   "balance": 29153.04,
+   "balance_raw": "29,153.04"
+  },
+  {
+   "page": 21,
+   "idx_print": 277,
+   "tdate": "02-June-2026",
+   "vdate": "02-June-2026",
+   "ref": "211FTNU261522529",
+   "desc": "Account to Account Transfer- From-ضﻮﻋ ﻪﻣﻼﺳ دﺎﻴﻋ ﻻﻮﺑ ﺲﺟﺮﺟ To-ضﻮﻋ ﻪﻣﻼﺳ دﺎﻴﻋ ﻻﻮﺑ ﺲﺟﺮﺟ~PC1356545394328",
+   "debit": null,
+   "credit": 22000.0,
+   "balance": 41454.31,
+   "balance_raw": "41,454.31"
+  },
+  {
+   "page": 11,
+   "idx_print": 146,
+   "tdate": "12-August-2026",
+   "vdate": "12-August-2026",
+   "ref": "211FTNU262244032",
+   "desc": "Account to Account Transfer- From-ضﻮﻋ ﻪﻣﻼﺳ دﺎﻴﻋ ﻻﻮﺑ ﺲﺟﺮﺟ To-ضﻮﻋ ﻪﻣﻼﺳ دﺎﻴﻋ ﻻﻮﺑ ﺲﺟﺮﺟ~PC1520984243152",
+   "debit": null,
+   "credit": 20000.0,
+   "balance": 23142.1,
+   "balance_raw": "23,142.10"
+  }
+ ]
+}

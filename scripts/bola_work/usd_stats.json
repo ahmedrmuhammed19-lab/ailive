@@ -1,0 +1,282 @@
+{
+ "header": {
+  "customer_id": "14023025",
+  "account": "2115001402302500012",
+  "currency": "USD",
+  "opening": 6595.69,
+  "closing_raw": "9,153.42",
+  "closing": 9153.42,
+  "from": "10-April-2026",
+  "to": "11-October-2026"
+ },
+ "n_rows": 44,
+ "sum_debits": 13107.97,
+ "sum_credits": 15665.7,
+ "net": 2557.73,
+ "n_debits": 32,
+ "n_credits": 12,
+ "monthly": {
+  "04/2026": {
+   "c": 2121.33,
+   "d": 3609.4,
+   "n": 5,
+   "close": 5107.62
+  },
+  "05/2026": {
+   "c": 151.01,
+   "d": 445.77,
+   "n": 4,
+   "close": 4812.86
+  },
+  "06/2026": {
+   "c": 5626.4,
+   "d": 3555.6800000000003,
+   "n": 10,
+   "close": 6883.58
+  },
+  "07/2026": {
+   "c": 2454.48,
+   "d": 2477.62,
+   "n": 8,
+   "close": 6860.44
+  },
+  "08/2026": {
+   "c": 2538.1099999999997,
+   "d": 1293.59,
+   "n": 6,
+   "close": 8104.96
+  },
+  "09/2026": {
+   "c": 2629.08,
+   "d": 1204.0,
+   "n": 7,
+   "close": 9530.04
+  },
+  "10/2026": {
+   "c": 145.29,
+   "d": 521.91,
+   "n": 4,
+   "close": 9153.42
+  }
+ },
+ "categories": {
+  "Interest earned": {
+   "n": 6,
+   "sum": 892.44
+  },
+  "Own-account transfer": {
+   "n": 27,
+   "sum": 12396.02
+  },
+  "Fees & charges": {
+   "n": 4,
+   "sum": 11.95
+  },
+  "Other transfers": {
+   "n": 6,
+   "sum": 14773.26
+  },
+  "ATM/branch cash withdrawal": {
+   "n": 1,
+   "sum": 700.0
+  }
+ },
+ "min_balance": 3647.04,
+ "max_balance": 9534.04,
+ "top_debits": [
+  {
+   "page": 4,
+   "idx_print": 43,
+   "tdate": "15-April-2026",
+   "vdate": "14-April-2026",
+   "ref": "211FTNU26104A34I",
+   "desc": "Account to Account Transfer- From-ضﻮﻋ ﻪﻣﻼﺳ دﺎﻴﻋ ﻻﻮﺑ ﺲﺟﺮﺟ To-ضﻮﻋ ﻪﻣﻼﺳ دﺎﻴﻋ ﻻﻮﺑ ﺲﺟﺮﺟ~PC1254432161455",
+   "debit": 1524.68,
+   "credit": null,
+   "balance": 3837.26,
+   "balance_raw": "3,837.26"
+  },
+  {
+   "page": 3,
+   "idx_print": 22,
+   "tdate": "09-July-2026",
+   "vdate": "09-July-2026",
+   "ref": "211FTNU261904087",
+   "desc": "Account to Account Transfer- From-ضﻮﻋ ﻪﻣﻼﺳ دﺎﻴﻋ ﻻﻮﺑ ﺲﺟﺮﺟ To-ضﻮﻋ ﻪﻣﻼﺳ دﺎﻴﻋ ﻻﻮﺑ ﺲﺟﺮﺟ~PC1446699244653",
+   "debit": 1329.31,
+   "credit": null,
+   "balance": 5496.95,
+   "balance_raw": "5,496.95"
+  },
+  {
+   "page": 4,
+   "idx_print": 44,
+   "tdate": "14-April-2026",
+   "vdate": "10-April-2026",
+   "ref": "211FTNU261040049",
+   "desc": "Account to Account Transfer- From-ضﻮﻋ ﻪﻣﻼﺳ دﺎﻴﻋ ﻻﻮﺑ ﺲﺟﺮﺟ To-ضﻮﻋ ﻪﻣﻼﺳ دﺎﻴﻋ ﻻﻮﺑ ﺲﺟﺮﺟ~PC1249288272535",
+   "debit": 1233.75,
+   "credit": null,
+   "balance": 5361.94,
+   "balance_raw": "5,361.94"
+  },
+  {
+   "page": 3,
+   "idx_print": 27,
+   "tdate": "29-June-2026",
+   "vdate": "29-June-2026",
+   "ref": "211FTNU261804063",
+   "desc": "Account to Account Transfer- From-ضﻮﻋ ﻪﻣﻼﺳ دﺎﻴﻋ ﻻﻮﺑ ﺲﺟﺮﺟ To-ضﻮﻋ ﻪﻣﻼﺳ دﺎﻴﻋ ﻻﻮﺑ ﺲﺟﺮﺟ~PC1417476719908",
+   "debit": 1219.76,
+   "credit": null,
+   "balance": 6887.58,
+   "balance_raw": "6,887.58"
+  },
+  {
+   "page": 3,
+   "idx_print": 32,
+   "tdate": "03-June-2026",
+   "vdate": "03-June-2026",
+   "ref": "208CHWL261542005",
+   "desc": "Cash withdrawal-Cash Withdrawal",
+   "debit": 700.0,
+   "credit": null,
+   "balance": 5555.87,
+   "balance_raw": "5,555.87"
+  },
+  {
+   "page": 4,
+   "idx_print": 40,
+   "tdate": "29-April-2026",
+   "vdate": "29-April-2026",
+   "ref": "211FTNU261190068",
+   "desc": "Account to Account Transfer- From-ضﻮﻋ ﻪﻣﻼﺳ دﺎﻴﻋ ﻻﻮﺑ ﺲﺟﺮﺟ To-ضﻮﻋ ﻪﻣﻼﺳ دﺎﻴﻋ ﻻﻮﺑ ﺲﺟﺮﺟ~PC1277918214691",
+   "debit": 660.75,
+   "credit": null,
+   "balance": 5107.62,
+   "balance_raw": "5,107.62"
+  },
+  {
+   "page": 1,
+   "idx_print": 11,
+   "tdate": "01-September-2026",
+   "vdate": "01-September-2026",
+   "ref": "211FTNU262446143",
+   "desc": "Account to Account Transfer- From-ضﻮﻋ ﻪﻣﻼﺳ دﺎﻴﻋ ﻻﻮﺑ ﺲﺟﺮﺟ To-ضﻮﻋ ﻪﻣﻼﺳ دﺎﻴﻋ ﻻﻮﺑ ﺲﺟﺮﺟ~PC1561315152385",
+   "debit": 600.0,
+   "credit": null,
+   "balance": 7504.96,
+   "balance_raw": "7,504.96"
+  },
+  {
+   "page": 2,
+   "idx_print": 18,
+   "tdate": "30-July-2026",
+   "vdate": "30-July-2026",
+   "ref": "211FTNU262110115",
+   "desc": "Account to Account Transfer- From-ضﻮﻋ ﻪﻣﻼﺳ دﺎﻴﻋ ﻻﻮﺑ ﺲﺟﺮﺟ To-ضﻮﻋ ﻪﻣﻼﺳ دﺎﻴﻋ ﻻﻮﺑ ﺲﺟﺮﺟ~PC1488539453211",
+   "debit": 587.08,
+   "credit": null,
+   "balance": 6860.44,
+   "balance_raw": "6,860.44"
+  }
+ ],
+ "top_credits": [
+  {
+   "page": 3,
+   "idx_print": 28,
+   "tdate": "29-June-2026",
+   "vdate": "29-June-2026",
+   "ref": "599FTI4261803047",
+   "desc": "Incoming transfer - SWIFT- GEOSTREAM SOLUTIONS LTD-SUITE 17 BRUNTS BUSINESS CENTRE MA- NSFIELD NG18 2A~2081384179JS",
+   "debit": null,
+   "credit": 3040.07,
+   "balance": 8107.34,
+   "balance_raw": "8,107.34"
+  },
+  {
+   "page": 1,
+   "idx_print": 6,
+   "tdate": "28-September-2026",
+   "vdate": "28-September-2026",
+   "ref": "599FTI4262712738",
+   "desc": "Incoming transfer - SWIFT-1/ Geostream Solutions Ltd-2/Suite 17 Brunts Business Centre N-2/G18 2AH~2087898270JS",
+   "debit": null,
+   "credit": 2473.96,
+   "balance": 9534.04,
+   "balance_raw": "9,534.04"
+  },
+  {
+   "page": 4,
+   "idx_print": 35,
+   "tdate": "01-June-2026",
+   "vdate": "26-May-2026",
+   "ref": "599FTI4261520267",
+   "desc": "Incoming transfer - SWIFT- GEOSTREAM SOLUTIONS LTD-SUITE 17 BRUNTS BUSINESS CENTRE MA- NSFIELD NG18 2A~2173286145JS",
+   "debit": null,
+   "credit": 2440.71,
+   "balance": 7253.57,
+   "balance_raw": "7,253.57"
+  },
+  {
+   "page": 2,
+   "idx_print": 12,
+   "tdate": "30-August-2026",
+   "vdate": "28-August-2026",
+   "ref": "599FTI4262423870",
+   "desc": "Incoming transfer - SWIFT-1/ Geostream Solutions Ltd-2/Suite 17 Brunts Business Centre N-2/G18 2AH~2367822239JS",
+   "debit": null,
+   "credit": 2391.85,
+   "balance": 8104.96,
+   "balance_raw": "8,104.96"
+  },
+  {
+   "page": 2,
+   "idx_print": 19,
+   "tdate": "28-July-2026",
+   "vdate": "28-July-2026",
+   "ref": "599FTI4262095049",
+   "desc": "Incoming transfer - SWIFT- Geostream Solutions Ltd-Suite 17 Brunts Business Centre Ma-nsfield NG18 2A~2370323208JS",
+   "debit": null,
+   "credit": 2305.34,
+   "balance": 7447.52,
+   "balance_raw": "7,447.52"
+  },
+  {
+   "page": 4,
+   "idx_print": 41,
+   "tdate": "28-April-2026",
+   "vdate": "28-April-2026",
+   "ref": "599FTI4261183755",
+   "desc": "Incoming transfer - SWIFT- GEOSTREAM SOLUTIONS LTD SUITE 17 BR-UNTS BUSINESS CENTRE MANSFIELD NG18-2A~2385140117JS",
+   "debit": null,
+   "credit": 2121.33,
+   "balance": 5768.37,
+   "balance_raw": "5,768.37"
+  },
+  {
+   "page": 1,
+   "idx_print": 9,
+   "tdate": "08-September-2026",
+   "vdate": "08-September-2026",
+   "ref": "211TE03USD 00002",
+   "desc": "Certificate/term deposit interest-2116211402302500019",
+   "debit": null,
+   "credit": 155.12,
+   "balance": 7460.08,
+   "balance_raw": "7,460.08"
+  },
+  {
+   "page": 4,
+   "idx_print": 39,
+   "tdate": "04-May-2026",
+   "vdate": "04-May-2026",
+   "ref": "211TE03USD 00002",
+   "desc": "Certificate/term deposit interest-2116211402302500019",
+   "debit": null,
+   "credit": 151.01,
+   "balance": 5258.63,
+   "balance_raw": "5,258.63"
+  }
+ ]
+}
