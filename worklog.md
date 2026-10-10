@@ -1475,3 +1475,20 @@ Stage Summary:
 - Master v1.2.1 live as template source of truth; all future reports inherit hardened disclaimer
 - 9 already-delivered reports keep v1.2 text (G1-G9 PASS intact); rebuild on request only
 - Challenger archived as study piece; lesson banked in template lineage
+
+---
+Task ID: DL-7
+Agent: Super Z (main)
+Task: "can we take an advantages points from this template to our master?" (same challenger file re-attached, sha e6a650c9 confirmed)
+
+Work Log:
+- Verified upload identical to DL-5/DL-6 challenger (sha e6a650c9, 40,392 B) — lessons ledger stands
+- Claimed the last remaining advantage: value-first KPI layout, rebuilt properly
+- Master v1.2.2 in src/lib/report_design.ts: .kpi-card.value-first flex-column modifier (value order 1, h3 order 2, note order 3) — success/danger/warning accents untouched; opt-in per card, zero impact on existing renders
+- TEMPLATE_VERSION bumped to Master v1.2.2; lineage comment added; tsc --noEmit PASS
+- Built scripts/dl7_kpi_specimen.py: specimen page from REPORT_CSS extracted verbatim from source (SO-9)
+- Output: download/00_Specimen_KPI_Styles_Master_v122.html (10,059 B, sha 26658da32110fdef...) — default vs value-first side-by-side + usage guidance
+
+Stage Summary:
+- Challenger fully mined: 2 advantages adopted (v1.2.1 disclaimer clauses, v1.2.2 value-first option), 5 rejected with reasons
+- Both upgrades additive — all 9 delivered reports remain valid; future generators may opt in per card

@@ -23,12 +23,17 @@
  * statement = one report, never recycled. Additive text change only;
  * all class vocabulary and layout untouched.
  *
+ * v1.2.2 (2026-10-11, DL-7): value-first KPI option adopted from the same
+ * challenger — .kpi-card.value-first renders the big value above the label
+ * via flex ordering while keeping success/danger/warning accents intact.
+ * Opt-in per card; default cards and every existing report render unchanged.
+ *
  * Tokens: --primary #005677 / --secondary #008DCB on Segoe UI, gradient
  * header, KPI cards with colored left borders, section bars, pill tags,
  * left-bordered alert boxes, print button + prepared-by footer.
  */
 
-export const TEMPLATE_VERSION = "Master v1.2.1 (STANDARD — promoted 2026-10-06, disclaimer hardened 2026-10-11)";
+export const TEMPLATE_VERSION = "Master v1.2.2 (STANDARD — promoted 2026-10-06, disclaimer hardened + value-first KPI option 2026-10-11)";
 
 export const REPORT_CSS = `
 :root{--primary:#005677;--secondary:#008DCB;--success:#28a745;--danger:#dc3545;--warning:#ffc107;--light:#f8f9fa;--dark:#343a40;--white:#ffffff}
@@ -60,6 +65,10 @@ body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background-color:#e
 .kpi-card.success{border-left-color:var(--success)}.kpi-card.success .value{color:var(--success)}
 .kpi-card.danger{border-left-color:var(--danger)}.kpi-card.danger .value{color:var(--danger)}
 .kpi-card.warning{border-left-color:var(--warning)}.kpi-card.warning .value{color:#b8860b}
+.kpi-card.value-first{display:flex;flex-direction:column}
+.kpi-card.value-first .value{order:1}
+.kpi-card.value-first h3{order:2;margin:6px 0 0}
+.kpi-card.value-first .note{order:3}
 .section-title{font-size:1.7em;color:var(--primary);border-bottom:2px solid #eee;padding-bottom:10px;margin-bottom:20px;margin-top:44px;font-weight:700;display:flex;align-items:center}
 .section-title::before{content:'';display:inline-block;width:8px;height:22px;background:var(--secondary);margin-right:12px;border-radius:2px}
 .data-table{width:100%;border-collapse:collapse;margin-bottom:30px;font-size:0.92em}
