@@ -1370,3 +1370,21 @@ Stage Summary:
 - The complete historical client-report library (the 32-file panel) is back in
   the owner download area under 05_legacy_task_files/ — recovered from git
   lineage commit caf615d, NOT regenerated. Current v1.2 corpus (01-04) intact.
+
+---
+Task ID: DL-4 (2026-10-11)
+Agent: main (Super Z)
+Task: Owner: "can i download html directly here" — provide one-tap direct
+download instead of inline paste.
+
+Work Log:
+- Built 2 ZIP bundles in public/: GlobalEIS_BolaAyad_Reports_v12.zip (3 Bola
+  v1.2 reports, 37,455 B) and GlobalEIS_All_Files_2026-10-11.zip (entire
+  75-file corpus incl. 05_legacy_task_files, 1,461,500 B).
+- Commit + push; Vercel live after ~100s. Prod verified: both zips 200 with
+  byte-exact sizes. ZIP content-type forces device download (no inline render).
+- Individual report HTMLs remain live at their existing prod URLs (200).
+
+Stage Summary:
+- Direct-download lane now live: one tap on a .zip link saves the file on any
+  device. Bola trio and the full 75-file task corpus both downloadable.
