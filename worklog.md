@@ -1692,3 +1692,21 @@ Work Log:
 
 Stage Summary:
 - Mail pipeline fully restored: every branch of the zero-tap flow (green auto-delivery, yellow draft, red unrecognized alert) can now reach the operator inbox from BOTH prod (Vercel env) and local sandbox. Last open readiness item closed; awaiting the new bank statement.
+
+---
+Task ID: DL-10
+Agent: Super Z (main)
+Task: Owner: "redesign portal to be matched in 2026" — portal UI redesign.
+
+Work Log:
+- Surveyed the full UI surface (page.tsx shell + 5 panels + globals.css 572-line theme). Panels are fully token-driven (eis-* vars + GH), so the redesign executed at the design-system layer with ZERO panel/logic changes.
+- SKILL INIT DEVIATION (documented): fullstack-dev init script downloads a scaffold tarball and cp -a overwrites /home/z/my-project — running it would have destroyed the production portal. Inspected the script first and skipped it.
+- New design language "Petrol Teal — Crisp" (2026): calm static brand mesh + fading hairline grid replaces the RGB aurora (hue-cycling orbs, twinkling stars, spinning conic edge lights, breathing CTA all retired); crisp elevated surfaces (hairline border, single top highlight, layered soft shadow); gradient reserved for brand mark/CTA/active states; typography-led hero with 2026 edition badge; Geist-first font stack for the product shell (report document keeps Segoe-first); viewport themeColor; eis-skeleton primitive added; reduced-motion switch updated.
+- ALL --eis-* variable NAMES and class names preserved -> dashboard/queue/upload/reports/accounts panels inherit the new look automatically; STATUS_META/GH untouched.
+- Verification: tsc src-tree 0 errors; eslint clean; next build exit 0 (pre-push gate).
+- Browser (agent-browser) end-to-end: sign-in gate light mode, login op.eis (HTTP 200 operator), workspace Upload/Queue/Dashboard tabs + dark mode — all render clean; queue API 200; screenshots in download/04_evidence/DL10_Portal2026/ (5 shots).
+- ENV REAPER (chronic): .env + mail creds + db users get reverted by the sandbox continuously (not just at resets). DL-9e/9f recovery re-applied 3x during this task; final recovery + server restart + verification done in ONE mega-call (documented sandbox behavior: background servers reaped at call end).
+- Pushed 985b1a7 -> Vercel rebuild.
+
+Stage Summary:
+- Portal wears the 2026 design system: same firm brand (#005677/#008DCB shared with Master v1.2.6 reports), calm confident surfaces, functional-only motion, zero logic drift. Prod deploys on push; local verified end-to-end.
