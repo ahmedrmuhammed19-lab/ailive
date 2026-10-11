@@ -1603,3 +1603,33 @@ Work Log:
 Stage Summary:
 - The mix is now contractual: 11-section canon with the matrix guaranteed at S10 in EVERY report
   (engine draft + analyst final); Master v1.2.4 pushed -> Vercel rebuild.
+
+---
+Task ID: DL-9c
+Agent: Super Z (main)
+Task: Owner clarified "make sure s09 or 10 contain" = SO-9/SO-10 of BALANCE CHAIN VERIFICATION (not section numbers)
+
+Work Log:
+- Template -> Master v1.2.5: Appendix A (SO-10 Verification Passport, G1-G9 measured values)
+  added to STANDARD_SECTIONS as FIXED; Appendix B (Full Disclosure) added as analyst-judgement;
+  StandardSection gained label override (stdTitle(90) -> "Appendix A · SO-10 Verification
+  Passport (G1–G9, measured values)").
+- Canonical renderer so10Passport(gates, accountLabel): Gate | Verdict | Measured Values rows,
+  PASS/FAIL/adapted/PENDING pills (PENDING = draft-stage, never a silent PASS), fail-loud
+  doctrine note; open-gate counter in the note.
+- Engine draft wiring (analyze.ts): passport lists ALL nine gates honestly — G2 Strict Chain
+  (per-leg matched/txCount pairs), G4 Anchors (printed opening/closing parsed), G8 Re-Derivation
+  (true by construction) engine-measured; G1/G3/G5/G6/G7/G9 PENDING until analyst final. chainClean
+  const shared with S10 authenticity row. Delivery itself stays blocked behind SO-9 until full PASS.
+- SO-9 proof: scripts/delivery_gate.py receipts/manifest_dl8.json -> 9/9 PASS (TEMPLATE.markers
+  intact with the new template code; CHAIN.block, MAIL lock, PORTAL, WORKLOG all evidenced).
+- Gates: tsc src-tree ZERO errors; next build exit 0 (mandatory pre-push); SO-9 class audit on
+  specimen PASS 21/47 defined; specimen self-audit green (13 contract rows, Appendix A title,
+  PENDING pills, fail-loud note, no button).
+- Deliverable: download/00_Specimen_Section_Contract_Master_v125.html (15,865 B,
+  sha256 73947ccd4e9da65b...); evidence download/04_evidence/DL9c_Passport_v125/ (receipt +
+  aux + passport screenshot).
+
+Stage Summary:
+- The balance-chain guarantee is contractual: Appendix A FIXED + single renderer; engine drafts
+  carry honest provisional passports; SO-9 gate re-verified 9/9. Master v1.2.5 pushed -> Vercel.

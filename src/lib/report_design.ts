@@ -50,13 +50,22 @@
  * from the case's live benchmark data — every report, draft or delivered,
  * carries the matrix section.
  *
+ * v1.2.5 (2026-10-11, DL-9c): owner clarified the guarantee targets the
+ * BALANCE-CHAIN GATES — SO-9 (pre-delivery gate) / SO-10 (Verification
+ * Passport G1–G9, measured values, fail-loud). The passport appendix is now
+ * FIXED in the section contract (Appendix A) and rendered canonically via
+ * so10Passport() — gate rows carry measured values, PASS/FAIL/PENDING
+ * pills, and the fail-loud doctrine line. The engine draft lists all nine
+ * gates: automated gates show engine-measured values, analyst gates show
+ * PENDING until the final build (delivery itself stays blocked behind SO-9).
+ *
  * Tokens: --primary #005677 / --secondary #008DCB on Segoe UI, gradient
  * header, KPI cards with colored left borders, section bars, pill tags,
  * left-bordered alert boxes, readiness matrix + action gates, prepared-by
  * footer.
  */
 
-export const TEMPLATE_VERSION = "Master v1.2.4 (STANDARD — promoted 2026-10-06; disclaimer hardened 2026-10-11, value-first KPI option 2026-10-11, visa readiness matrix + action gates + PDF button hidden 2026-10-11, standard section order contract 2026-10-11)";
+export const TEMPLATE_VERSION = "Master v1.2.5 (STANDARD — promoted 2026-10-06; disclaimer hardened 2026-10-11, value-first KPI option 2026-10-11, visa readiness matrix + action gates + PDF button hidden 2026-10-11, section order contract 2026-10-11, SO-10 passport appendix fixed 2026-10-11)";
 
 export const REPORT_CSS = `
 :root{--primary:#005677;--secondary:#008DCB;--success:#28a745;--danger:#dc3545;--warning:#ffc107;--light:#f8f9fa;--dark:#343a40;--white:#ffffff}
@@ -261,6 +270,8 @@ export interface StandardSection {
   title: string;
   /** true = present in EVERY statement report; false = analyst judgement. */
   fixed: boolean;
+  /** Canonical label override, e.g. "Appendix A" (rendered instead of the number). */
+  label?: string;
 }
 
 /**
@@ -281,12 +292,15 @@ export const STANDARD_SECTIONS: StandardSection[] = [
   { no: 9, title: "Risk & Compliance Advisory Flags", fixed: true },
   { no: 10, title: "Visa Readiness Matrix", fixed: true },
   { no: 11, title: "Conclusion & Required Client Actions", fixed: true },
+  { no: 90, label: "Appendix A", title: "SO-10 Verification Passport (G1–G9, measured values)", fixed: true },
+  { no: 91, label: "Appendix B", title: "Full Disclosure — Cross-Statement Bindings, Reversals & Reconstruction", fixed: false },
 ];
 
-/** Canonical numbered section title, e.g. stdTitle(10) → "10 · Visa Readiness Matrix". */
+/** Canonical section title, e.g. stdTitle(10) → "10 · Visa Readiness Matrix", stdTitle(90) → "Appendix A · SO-10 Verification Passport …". */
 export function stdTitle(no: number): string {
   const s = STANDARD_SECTIONS.find((x) => x.no === no);
-  return s ? `${no} · ${s.title}` : String(no);
+  if (!s) return String(no);
+  return `${s.label ?? s.no} · ${s.title}`;
 }
 
 /**
@@ -297,6 +311,54 @@ export function stdTitle(no: number): string {
  */
 export function visaReadinessSection(rows: ReadinessRow[], resultHtml = ""): string {
   return `${sectionTitle(stdTitle(10))}${visaReadinessMatrix(rows)}${resultHtml}`;
+}
+
+/* ---------------- Master v1.2.5: SO-10 VERIFICATION PASSPORT (DL-9c) ---------------- */
+
+/** One gate row of the SO-10 Verification Passport. */
+export interface PassportGate {
+  /** e.g. "G1". */
+  id: string;
+  /** e.g. "Serial Census". */
+  name: string;
+  /** The ACTUAL measured value(s) — SO-10 forbids a bare "PASS". */
+  measured: string;
+  /** true/false → PASS/FAIL pill; pending=true renders the amber PENDING pill (draft stage). */
+  pass: boolean;
+  /** Gate evaluated with an adapted, disclosed methodology (e.g. G3 on formats without printed totals). */
+  adapted?: boolean;
+  /** Draft-stage gate awaiting analyst measurement — renders PENDING, never a silent PASS. */
+  pending?: boolean;
+}
+
+function passportPill(g: PassportGate): string {
+  if (g.pending) return tag("PENDING", "warn");
+  return tag(g.pass ? "PASS" : "FAIL", g.pass ? "pass" : "fail") + (g.adapted ? ` ${tag("adapted", "warn")}` : "");
+}
+
+/**
+ * The GUARANTEED Appendix A (Master v1.2.5): SO-10 Verification Passport —
+ * gates G1–G9 with measured values, fail-loud. Every statement report
+ * renders its passport through this one call; a report ships only when all
+ * gates pass (SO-9 delivery gate enforces it), any unevaluable gate = FAIL
+ * = quarantine, never a silent best guess.
+ */
+export function so10Passport(gates: PassportGate[], accountLabel?: string): string {
+  const rows = gates
+    .map(
+      (g) =>
+        `<tr><td><strong>${escHtml(g.id)} · ${escHtml(g.name)}</strong></td>` +
+        `<td>${passportPill(g)}</td>` +
+        `<td class="small">${g.measured}</td></tr>`
+    )
+    .join("");
+  const open = gates.filter((g) => g.pending).length;
+  const note =
+    `<p class="small">Fail-loud doctrine: any unevaluable gate = FAIL = quarantine; a PENDING gate` +
+    ` blocks delivery until measured. All measured values above come from the verification run of` +
+    ` this exact statement — none is assumed.${open ? ` ${open} gate(s) pending analyst measurement in this draft.` : ""}</p>`;
+  const label = accountLabel ? ` — ${escHtml(accountLabel)}` : "";
+  return `${sectionTitle(`${stdTitle(90)}${label}`)}<table class="data-table"><tr><th>Gate</th><th>Verdict</th><th>Measured Values</th></tr>${rows}</table>${note}`;
 }
 
 export interface ReportShellOpts {

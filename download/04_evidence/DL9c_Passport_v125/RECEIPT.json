@@ -1,0 +1,18 @@
+{
+  "task": "DL-9c",
+  "date": "2026-10-11",
+  "action": "Master v1.2.5: owner clarified S09/S10 = SO-9/SO-10 balance-chain gates. Appendix A (SO-10 Verification Passport G1-G9) FIXED in section contract; canonical so10Passport() renderer (PASS/FAIL/adapted/PENDING pills + measured values + fail-loud note); engine draft lists all nine gates honestly (G2/G4/G8 engine-measured, rest PENDING). SO-9 gate re-run on DL-8 manifest: 9/9 PASS.",
+  "verification": {
+    "so9_gate_dl8_manifest": "PASS 9/9 (MANIFEST, report_exists, TEMPLATE.markers, CHAIN.block, MAIL recipient/delivered/forbidden_absent, PORTAL.published, WORKLOG.row)",
+    "next_build": "PASS exit 0 (mandatory pre-push)",
+    "tsc_src_tree": "ZERO errors",
+    "so9_class_audit": "PASS - NONE missing (21 used / 47 defined)",
+    "specimen_self_audit": {"no_download_button": true, "appendix_title": true, "contract_rows": 13, "pending_pills": true, "fail_loud_note": true}
+  },
+  "deliverable": {
+    "file": "download/00_Specimen_Section_Contract_Master_v125.html",
+    "sha256": "73947ccd4e9da65b5e6bb0d1c084216998314d95acb3beb152a8cab5b3a6a7f0",
+    "bytes": 15865
+  },
+  "redline_check": "no mail sent; a.imam@beta.com.eg absent"
+}
