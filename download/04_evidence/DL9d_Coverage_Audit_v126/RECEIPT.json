@@ -1,0 +1,23 @@
+{
+  "task": "DL-9d — three-way template coverage audit",
+  "owner_request": "checking previous template, abdulrahman template and current template — have all sections of the two been covered in the new template",
+  "template_version": "Master v1.2.6",
+  "audited_parents": {
+    "A_previous_template": "pre-v1.2 Master canon as shipped in Gehad Abdelwahab Banque Misr report (11 sections, Master v1.2.2 era)",
+    "B_abdulrahman": "GlobalEIS_Report_AbdelrahmanElgarayadli_EGP.html (upload sha256 e6a650c9afe8436c..., identical to canonical git d88bfbb^)",
+    "C_current": "STANDARD_SECTIONS in src/lib/report_design.ts (17 entries after recovery)"
+  },
+  "verdict": "FULL COVERAGE — Abdulrahman 11/11 COVERED; previous template 11/11 (7 direct + 4 RECOVERED: S12 Fee Structure Verification, S13 Balance & Liquidity Profile, S14 Document Integrity OCR Methodology & Disclosures, Annex C Complete Chain-Verified Ledger)",
+  "guarantees_untouched": ["S09 title", "S10 Visa Readiness Matrix GUARANTEED", "Appendix A SO-10 Passport GUARANTEED", "published report numbering (recovery appended after S11, additive)"],
+  "gates": {
+    "specimen_self_audit": "17/17 PASS",
+    "so9_class_audit": "used=37 defined=47 MISSING: none",
+    "tsc_src_tree": "0 errors",
+    "next_build": "exit 0 (pre-push gate, DL-9a lesson)"
+  },
+  "deliverable": {
+    "path": "download/00_Template_Coverage_Audit_Master_v126.html",
+    "bytes": 22702,
+    "sha256": "4d91bfac53e3acf58b3c1c81f184746856fcd30f825696868dc37e2e6ba3b661"
+  }
+}

@@ -59,13 +59,28 @@
  * gates: automated gates show engine-measured values, analyst gates show
  * PENDING until the final build (delivery itself stays blocked behind SO-9).
  *
+ * v1.2.6 (2026-10-11, DL-9d): three-way template coverage audit (owner:
+ * "checking previous template, abdulrahman template and current template —
+ * have all sections of the two been covered in the new template").
+ * Abdulrahman/Elgarayadli canon: covered 11/11 (S10 generalized, case
+ * specifics live in matrix rows). Pre-v1.2 Master canon (Gehad-era): 7/11
+ * direct, and FOUR sections had no contract home — Fee Structure
+ * Verification, Balance & Liquidity Profile, Document Integrity / OCR
+ * Methodology & Disclosures, and the Complete Chain-Verified Ledger annex.
+ * All four are RECOVERED additively as S12/S13/S14 + Annex C
+ * (analyst-judgement), appended AFTER S11 so every published report keeps
+ * its ratified numbering (no renumber; S09/S10 and appendices A/B
+ * untouched). Appendix A's fixed passport + the shell's hardened disclaimer
+ * remain the fixed disclosure baseline; the recovered entries guarantee the
+ * VOCABULARY and canonical numbering, deployed when the case warrants.
+ *
  * Tokens: --primary #005677 / --secondary #008DCB on Segoe UI, gradient
  * header, KPI cards with colored left borders, section bars, pill tags,
  * left-bordered alert boxes, readiness matrix + action gates, prepared-by
  * footer.
  */
 
-export const TEMPLATE_VERSION = "Master v1.2.5 (STANDARD — promoted 2026-10-06; disclaimer hardened 2026-10-11, value-first KPI option 2026-10-11, visa readiness matrix + action gates + PDF button hidden 2026-10-11, section order contract 2026-10-11, SO-10 passport appendix fixed 2026-10-11)";
+export const TEMPLATE_VERSION = "Master v1.2.6 (STANDARD — promoted 2026-10-06; disclaimer hardened 2026-10-11, value-first KPI option 2026-10-11, visa readiness matrix + action gates + PDF button hidden 2026-10-11, section order contract 2026-10-11, SO-10 passport appendix fixed 2026-10-11, three-way coverage audit: pre-v1.2 canon recovered as S12–S14 + Annex C 2026-10-11)";
 
 export const REPORT_CSS = `
 :root{--primary:#005677;--secondary:#008DCB;--success:#28a745;--danger:#dc3545;--warning:#ffc107;--light:#f8f9fa;--dark:#343a40;--white:#ffffff}
@@ -276,9 +291,15 @@ export interface StandardSection {
 
 /**
  * The firm's canonical statement-report skeleton — the ratified mix of the
- * pre-v1.2 Master canon and the Elgarayadli build. S10 carries the Visa
- * Readiness Matrix (owner: "make sure s09 or 10 contains"), S11 the action
- * gates. Numbered via stdTitle(); matrix section via visaReadinessSection().
+ * pre-v1.2 Master canon and the Elgarayadli build (DL-9d three-way coverage
+ * audit: both parent canons fully covered). S10 carries the Visa Readiness
+ * Matrix (owner: "make sure s09 or 10 contains"), S11 the action gates.
+ * S12–S14 + Annex C are the pre-v1.2 Master sections recovered additively
+ * (no renumbering — published reports keep their ratified numbering);
+ * analyst-judgement: deployed when the case warrants (fee-bearing
+ * statements, liquidity narratives, scanned/OCR sources, full-ledger
+ * annexes). Numbered via stdTitle(); matrix section via
+ * visaReadinessSection(); passport via so10Passport().
  */
 export const STANDARD_SECTIONS: StandardSection[] = [
   { no: 1, title: "Executive Dashboard", fixed: true },
@@ -292,8 +313,13 @@ export const STANDARD_SECTIONS: StandardSection[] = [
   { no: 9, title: "Risk & Compliance Advisory Flags", fixed: true },
   { no: 10, title: "Visa Readiness Matrix", fixed: true },
   { no: 11, title: "Conclusion & Required Client Actions", fixed: true },
+  /* --- recovered pre-v1.2 Master canon (DL-9d coverage audit, additive) --- */
+  { no: 12, title: "Fee Structure Verification", fixed: false },
+  { no: 13, title: "Balance & Liquidity Profile", fixed: false },
+  { no: 14, title: "Document Integrity, OCR Methodology & Disclosures", fixed: false },
   { no: 90, label: "Appendix A", title: "SO-10 Verification Passport (G1–G9, measured values)", fixed: true },
   { no: 91, label: "Appendix B", title: "Full Disclosure — Cross-Statement Bindings, Reversals & Reconstruction", fixed: false },
+  { no: 92, label: "Annex C", title: "Complete Chain-Verified Ledger", fixed: false },
 ];
 
 /** Canonical section title, e.g. stdTitle(10) → "10 · Visa Readiness Matrix", stdTitle(90) → "Appendix A · SO-10 Verification Passport …". */
