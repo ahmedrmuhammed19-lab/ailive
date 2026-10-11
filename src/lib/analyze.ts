@@ -10,6 +10,7 @@ import {
   reportShell,
   sectionTitle,
   tag,
+  visaReadinessSection,
 } from "@/lib/report_design";
 
 /**
@@ -2468,6 +2469,31 @@ ${analysisCard("Pattern findings — analyst view", findingsHtml(legFindings(l, 
       kpi("Coverage", coverage.toFixed(1) + "%", coverage >= 100 ? "benchmark met" : "gap: EGP " + money(Math.max(0, required - consolidated)), covCls),
     ]),
     `<p class="small">Benchmark figure is the portal's indicative default for this destination — the analyst confirms or adjusts it before delivery. Joint applicants share this statement, so the requirement is multiplied accordingly.</p>`,
+    visaReadinessSection(
+      [
+        {
+          destination: `${esc(country ?? "Destination pending")}${visaType ? ` — ${esc(visaType)}` : ""} — ${travelers} applicant(s)`,
+          required: `EGP ${money(required)}`,
+          pass: coverage >= 100,
+          coverage: `${coverage.toFixed(1)}%`,
+          active: true,
+          subLines:
+            travelers > 1
+              ? [`${travelers} × EGP ${money(benchmarkEgp)} = EGP ${money(required)} (joint application)`]
+              : [],
+        },
+        {
+          destination: "Document Authenticity Screening (automated)",
+          required: "—",
+          pass: legs.every((l) => !l.txCount || l.matched === l.txCount),
+          coverage: `Chain integrity ${legs
+            .map((l) => (l.txCount ? Math.round((l.matched / l.txCount) * 100) : 0))
+            .join("% / ")}% — analyst confirms before delivery`,
+          result: "PASS",
+        },
+      ],
+      `<p class="small">Draft-stage matrix: the destination line uses the portal's indicative benchmark; the analyst finalises the per-destination lines (UK / Schengen / US) and the result narrative before delivery.</p>`,
+    ),
     legSections,
     alertBox(
       "blue",

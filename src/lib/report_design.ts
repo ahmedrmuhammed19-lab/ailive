@@ -39,13 +39,24 @@
  * is unaffected (the button never printed). One additive CSS class
  * (.data-table tr.row-active) carries the benchmark-row highlight.
  *
+ * v1.2.4 (2026-10-11, DL-9b): owner ratified the v1.2.3 direction — "it's a
+ * mix between the Abdulrahman report and the previous template; make sure
+ * section 09/10 contains" the matrix. The STANDARD SECTION ORDER CONTRACT is
+ * now encoded in the template: STANDARD_SECTIONS fixes the 11-section canon
+ * (S09 Risk & Compliance Advisory Flags, S10 Visa Readiness Matrix, S11
+ * Conclusion & Required Client Actions), stdTitle(n) emits the canonical
+ * numbered title, and visaReadinessSection() renders the guaranteed S10 in
+ * one call. The engine auto-draft (src/lib/analyze.ts) now builds its S10
+ * from the case's live benchmark data — every report, draft or delivered,
+ * carries the matrix section.
+ *
  * Tokens: --primary #005677 / --secondary #008DCB on Segoe UI, gradient
  * header, KPI cards with colored left borders, section bars, pill tags,
  * left-bordered alert boxes, readiness matrix + action gates, prepared-by
  * footer.
  */
 
-export const TEMPLATE_VERSION = "Master v1.2.3 (STANDARD — promoted 2026-10-06; disclaimer hardened 2026-10-11, value-first KPI option 2026-10-11, visa readiness matrix + action gates + PDF button hidden by default 2026-10-11)";
+export const TEMPLATE_VERSION = "Master v1.2.4 (STANDARD — promoted 2026-10-06; disclaimer hardened 2026-10-11, value-first KPI option 2026-10-11, visa readiness matrix + action gates + PDF button hidden 2026-10-11, standard section order contract 2026-10-11)";
 
 export const REPORT_CSS = `
 :root{--primary:#005677;--secondary:#008DCB;--success:#28a745;--danger:#dc3545;--warning:#ffc107;--light:#f8f9fa;--dark:#343a40;--white:#ffffff}
@@ -241,6 +252,51 @@ export function visaReadinessMatrix(rows: ReadinessRow[]): string {
  */
 export function actionGate(n: number, title: string, bodyHtml: string): string {
   return `<div class="analysis-card"><b>Gate ${n} — ${escHtml(title)}.</b> ${bodyHtml}</div>`;
+}
+
+/* ---------------- Master v1.2.4: STANDARD SECTION ORDER CONTRACT (DL-9b) ---------------- */
+
+export interface StandardSection {
+  no: number;
+  title: string;
+  /** true = present in EVERY statement report; false = analyst judgement. */
+  fixed: boolean;
+}
+
+/**
+ * The firm's canonical statement-report skeleton — the ratified mix of the
+ * pre-v1.2 Master canon and the Elgarayadli build. S10 carries the Visa
+ * Readiness Matrix (owner: "make sure s09 or 10 contains"), S11 the action
+ * gates. Numbered via stdTitle(); matrix section via visaReadinessSection().
+ */
+export const STANDARD_SECTIONS: StandardSection[] = [
+  { no: 1, title: "Executive Dashboard", fixed: true },
+  { no: 2, title: "Account & Holder Identification", fixed: true },
+  { no: 3, title: "Mathematical Reconciliation & Chain Audit", fixed: true },
+  { no: 4, title: "Monthly Financial Trajectory & Gap Analysis", fixed: true },
+  { no: 5, title: "Significant Financial Events", fixed: true },
+  { no: 6, title: "Source of Funds Analysis", fixed: true },
+  { no: 7, title: "Funds Utilization Analysis", fixed: true },
+  { no: 8, title: "Associated Parties Register", fixed: false },
+  { no: 9, title: "Risk & Compliance Advisory Flags", fixed: true },
+  { no: 10, title: "Visa Readiness Matrix", fixed: true },
+  { no: 11, title: "Conclusion & Required Client Actions", fixed: true },
+];
+
+/** Canonical numbered section title, e.g. stdTitle(10) → "10 · Visa Readiness Matrix". */
+export function stdTitle(no: number): string {
+  const s = STANDARD_SECTIONS.find((x) => x.no === no);
+  return s ? `${no} · ${s.title}` : String(no);
+}
+
+/**
+ * The GUARANTEED section 10 (Master v1.2.4): canonical title + readiness
+ * matrix (+ optional result narrative). Every statement report — engine
+ * draft or analyst final — renders its matrix through this one call so the
+ * section number, title and table contract can never drift.
+ */
+export function visaReadinessSection(rows: ReadinessRow[], resultHtml = ""): string {
+  return `${sectionTitle(stdTitle(10))}${visaReadinessMatrix(rows)}${resultHtml}`;
 }
 
 export interface ReportShellOpts {

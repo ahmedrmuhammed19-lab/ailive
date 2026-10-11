@@ -1575,3 +1575,31 @@ Stage Summary:
 - Build blocker removed at the exact reproduction point; push triggers Vercel rebuild.
 - Lesson: environment-reset clobbers can hide in the app tree until the next production build —
   next build now part of pre-push verification for portal-touching changes.
+
+---
+Task ID: DL-9b
+Agent: Super Z (main)
+Task: Owner ratified the direction: "it's a mix between abdulrahman report and previous template, make sure s09 or 10 contain" (the readiness matrix)
+
+Work Log:
+- Template -> Master v1.2.4: STANDARD SECTION ORDER CONTRACT encoded as STANDARD_SECTIONS
+  (11 sections; S09 Risk & Compliance Advisory Flags, S10 Visa Readiness Matrix, S11 Conclusion
+  & Required Client Actions; only S08 Associated Parties is analyst-judgement). stdTitle(n) emits
+  canonical numbered titles; visaReadinessSection(rows, resultHtml) is the single S10 renderer.
+- Engine wiring (src/lib/analyze.ts): buildReportHtml now emits S10 via visaReadinessSection()
+  with live case data — destination line (country/visaType x travelers, required = benchmarkEgp x
+  travelers, ACTIVE BENCHMARK highlight, joint subLine math), automated chain-integrity screening
+  line, draft-stage analyst note. Matrix appears in engine drafts the moment a statement parses.
+- Canonical numbering adopted across the canon: S10 title generalized to "Visa Readiness Matrix";
+  case specifics (UK/joint/etc.) live in matrix rows. Bola canon S10 title aligns on next rebuild.
+- Mandatory pre-push gate (DL-9a lesson): bunx next build exit 0 (full route table); tsc src-tree
+  ZERO errors (cleaner than pre-DL-9 baseline which carried the verify-code error).
+- Specimen: scripts/dl9b_section_contract_specimen.ts rendered THROUGH the module (zero drift) ->
+  download/00_Specimen_Section_Contract_Master_v124.html (13,264 B, sha256 bd0462c44ca8f866...);
+  self-audit green (no button, S10 guaranteed title, 11 contract rows, GUARANTEED pill);
+  SO-9 class audit PASS 25/47; playwright shot of contract table in evidence dir.
+- Evidence: download/04_evidence/DL9b_Section_Contract_v124/ (RECEIPT.json + aux + screenshot)
+
+Stage Summary:
+- The mix is now contractual: 11-section canon with the matrix guaranteed at S10 in EVERY report
+  (engine draft + analyst final); Master v1.2.4 pushed -> Vercel rebuild.
