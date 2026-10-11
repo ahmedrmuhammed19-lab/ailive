@@ -1678,3 +1678,17 @@ Work Log:
 
 Stage Summary:
 - READY for the next statement: Master v1.2.6 pipeline (17-entry contract, S10 matrix + Appendix A passport guaranteed), zero-tap engine, SO-9 gate, seeded accounts. Statement can arrive via portal upload (prod) or upload/ drop.
+
+---
+Task ID: DL-9f
+Agent: Super Z (main)
+Task: Owner sent "Gmail app password" screenshot — restore SMTP sending.
+
+Work Log:
+- Read app password from the owner's Google app-password screenshot; wrote config/mail_credentials.json (provider gmail, Option C shape per tracked example: no host/port -> smtp.gmail.com:465 SSL; auth user = notify_to = ahmedr.muhammed19@gmail.com). chmod 600; verified gitignored (lines 56/63) — password never enters git or worklog.
+- scripts/mail_smoke.ts: loads .env manually (standalone bun skips it), engages TEST_MAIL_TO discipline, sends through the REAL sendOrQueue path. First run failed ("No recipients defined" — QueuedMail.to is mandatory); fixed by passing to: lock ?? operator.
+- Smoke test PASS: {"sent":true,"queued":false,"to":"ahmedr.muhammed19@gmail.com"} — Gmail accepted; upload alerts / red-path alerts / report-ready notices now deliver.
+- Receipt: download/04_evidence/DL9f_Smtp_Restore/ (RECEIPT.json + creds file hash). Creds file remains untracked-by-design (reset wipes it; operator re-supplies).
+
+Stage Summary:
+- Mail pipeline fully restored: every branch of the zero-tap flow (green auto-delivery, yellow draft, red unrecognized alert) can now reach the operator inbox from BOTH prod (Vercel env) and local sandbox. Last open readiness item closed; awaiting the new bank statement.

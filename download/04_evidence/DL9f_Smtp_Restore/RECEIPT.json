@@ -1,0 +1,14 @@
+{
+  "task": "DL-9f — SMTP credentials restored (Gmail app password from owner screenshot)",
+  "creds_file": "config/mail_credentials.json (gitignored, chmod 600 — NEVER committed)",
+  "provider": "gmail (Option C: smtp.gmail.com:465 SSL implicit)",
+  "smtp_auth_user": "ahmedr.muhammed19@gmail.com",
+  "password_source": "owner screenshot upload/Screenshot_2026-10-08-17-49-40-61_*.jpg (Google generated app password)",
+  "password_in_git": false,
+  "smoke_test": {
+    "path": "scripts/mail_smoke.ts (real sendOrQueue mailer)",
+    "result": {"sent": true, "queued": false, "to": "ahmedr.muhammed19@gmail.com"},
+    "recipient_lock": "ahmedr.muhammed19@gmail.com only; a.imam@beta.com.eg absent everywhere"
+  },
+  "durability_note": "creds file is untracked by design; a future sandbox reset wipes it and the operator must re-supply the app password (google-account generated)"
+}
