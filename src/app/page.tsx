@@ -156,7 +156,7 @@ export default function PortalPage() {
 
   return (
     <div className="flex min-h-screen flex-col" style={{ color: GH.fg }}>
-      {/* Ambient aurora backdrop — live RGB scene */}
+      {/* Royal Aurora backdrop — three drifting curtains over the indigo stage */}
       <div className="eis-aurora" aria-hidden="true">
         <span className="eis-orb eis-orb-a" />
         <span className="eis-orb eis-orb-b" />
@@ -220,9 +220,9 @@ export default function PortalPage() {
           >
             {/* Hero strip — 2026: typography leads */}
             <div className="mb-6 text-center">
-              <p className="mb-3 inline-flex items-center gap-1.5 rounded-full border border-[var(--eis-border)] bg-[var(--eis-canvas-glass)] px-3 py-1 text-[11px] font-medium tracking-wide text-[var(--eis-muted)] backdrop-blur">
+              <p className="eis-foil mb-3 inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-[11px] font-semibold tracking-wide backdrop-blur">
                 <span className="h-1.5 w-1.5 rounded-full bg-[var(--eis-online)] eis-dot-live" aria-hidden="true" />
-                SECURE CLIENT PORTAL · 2026 EDITION
+                SECURE CLIENT PORTAL · ROYAL AURORA · 2026 EDITION
               </p>
               <h2 className="text-balance text-3xl font-semibold leading-[1.1] tracking-tight sm:text-4xl" style={{ color: GH.fg }}>
                 Secure statement <span className="eis-gradient-text">intelligence</span>
