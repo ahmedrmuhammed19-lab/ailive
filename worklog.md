@@ -1710,3 +1710,19 @@ Work Log:
 
 Stage Summary:
 - Portal wears the 2026 design system: same firm brand (#005677/#008DCB shared with Master v1.2.6 reports), calm confident surfaces, functional-only motion, zero logic drift. Prod deploys on push; local verified end-to-end.
+
+---
+Task ID: DL-10b
+Agent: Super Z (main)
+Task: Owner: "i suggest royal aurora 2026 on portal" — re-theme the 2026 portal redesign to a Royal Aurora direction.
+
+Work Log:
+- Owner steered DL-10's "Petrol Teal — Crisp" toward "Royal Aurora 2026". Panels are fully token-driven (--eis-* vars + GH), so the re-theme again executed at the design-system layer: src/app/globals.css rewritten, page.tsx 3-line cosmetic edit (badge text + comment), layout.tsx themeColor swap. ZERO panel/logic changes.
+- New language "Royal Aurora": royal indigo canvas in dark (#0a0715) / lavender porcelain in light (#f8f6fd); THREE slow-drifting aurora curtains re-armed (violet #8b5cf6 top-right, fuchsia #d946ef bottom-left, teal #2dd4bf mid-left) on 74-90s ease-in-out alternate transforms — elegant, not the retired chaotic RGB spin; fine royal-tinted engineering grid; crisp violet-tinted glass; violet-fuchsia brand/CTA spectrum; NEW .eis-foil royal-gold treatment reserved for the "ROYAL AURORA · 2026 EDITION" badge; shadcn base tokens retinted to the violet family.
+- Discipline kept: ALL --eis-* variable NAMES + class names unchanged; status semantics (green/amber/red, .eis-dot-live) untouched; report_design.ts (Master v1.2.6) untouched — reports keep the firm #005677/#008DCB identity, the portal wears the owner's Royal Aurora; no forbidden address anywhere.
+- Gates: tsc src-tree 0 errors; next build exit 0. DEPLOY NOTE: standalone server 404'd its CSS — root cause .next/standalone missing the manual .next/static copy (standard Next.js standalone step, not a CSS regression); fixed with cp -r and verified css-status=200.
+- Browser walkthrough (agent-browser): login gate light+dark, op.eis workspace Upload/Queue/Dashboard/Reports/Accounts + workspace light — all render clean with aurora curtains, gold badge, violet pills; status colors correct. 8 screenshots + RECEIPT in download/04_evidence/DL10b_RoyalAurora2026/ (committed -f).
+- Pushed ff6aa5c (+evidence commit) -> Vercel auto-deploy.
+
+Stage Summary:
+- Portal wears the owner's Royal Aurora 2026: regal indigo stage, slow elegant aurora, gold-foil ceremonial badge — same zero-logic-drift discipline as DL-10, Master v1.2.6 report canon untouched, pipeline (zero-tap, SO-9, mail) unaffected. Ready for the incoming bank statement.
