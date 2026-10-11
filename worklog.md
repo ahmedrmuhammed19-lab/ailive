@@ -1726,3 +1726,14 @@ Work Log:
 
 Stage Summary:
 - Portal wears the owner's Royal Aurora 2026: regal indigo stage, slow elegant aurora, gold-foil ceremonial badge — same zero-logic-drift discipline as DL-10, Master v1.2.6 report canon untouched, pipeline (zero-tap, SO-9, mail) unaffected. Ready for the incoming bank statement.
+
+---
+Task ID: DL-10c
+Agent: Super Z (main)
+Task: Owner: "https://translation-portal-eg.vercel.app/ — check this design" — design review of the owner's reference portal.
+
+Work Log:
+- Browsed all 4 states (agent-browser): AR/EN × light/dark; login-gated so review covers the gate + design language. 4 screenshots + token extraction -> download/04_evidence/DL10c_DesignReference/.
+- Read its palette from source: navy night ramp #070d1c/#0e1c3f/#12234d + 4-step gold #b8892c->#f3d588 + violet/teal/blue accents. "Desert-night royal" language: navy app tile with gold arch monogram, Arabic calligraphy wordmark (gold glow) / serif EN wordmark (gold->navy split), letter-spaced 2026 kicker with gold diamond ornament, cream+pastel mesh (light) / navy night + starfield + dual wash (dark), fine grid both modes, crisp-white vs blue-glow glass cards, true RTL/LTR mirroring.
+- Compared with Global EIS Royal Aurora (DL-10b): same royal family (ceremonial badge, grid, glass, calm motion); difference is ours = "northern lights" (indigo+violet/fuchsia/teal drift) vs theirs = "desert night" (navy+gold+stars). Their unique assets we lack: monogram app tile, gold diamond divider, dark-mode starfield, serif display pairing, bilingual RTL.
+- NO changes made to the Global EIS portal — awaiting owner's direction (adopt elements / keep as-is).

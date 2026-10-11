@@ -1,0 +1,7 @@
+{
+  "task": "DL-10c design reference check — owner: 'check this design' (translation-portal-eg.vercel.app)",
+  "date": "2026-10-12",
+  "shots": ["ref_01_landing.png (AR light)", "ref_02_login_dark.png (AR dark)", "ref_03_login_dark_en.png (EN dark)", "ref_04_login_light_en.png (EN light)"],
+  "tokens_extracted": {"navy_ramp": ["#070d1c", "#0e1c3f", "#12234d"], "gold_ramp": ["#b8892c", "#d9a83a", "#e8c25f", "#f3d588"], "accents": ["#a78bfa violet", "#2dd4bf teal", "#5b8cff blue"]},
+  "note": "login-gated; review covers gate + design language only. No Global EIS portal changes made without owner direction."
+}
