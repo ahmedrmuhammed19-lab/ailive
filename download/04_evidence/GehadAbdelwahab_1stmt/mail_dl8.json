@@ -1,0 +1,10 @@
+{
+ "to": "ahmedr.muhammed19@gmail.com",
+ "sent": false,
+ "queued": true,
+ "kind": "operator_alert",
+ "submissionId": "DL-8-GEHAD",
+ "subject": "Global EIS Report \u2014 Gehad M. Abdelwahab \u2014 Banque Misr EGP (299 rows, chain 299/299)",
+ "note": "outbox fallback \u2014 config/mail_credentials.json absent after sandbox reset; TEST_MAIL_TO lock applied",
+ "at": "2026-10-11T11:15:19.219002+00:00"
+}

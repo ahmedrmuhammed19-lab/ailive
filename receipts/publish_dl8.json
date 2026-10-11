@@ -1,0 +1,12 @@
+{
+ "ok": true,
+ "published": [
+  {
+   "name": "00_GlobalEIS_Report_GehadAbdelwahab_BanqueMisr_EGP_299rows.html",
+   "sizeBytes": 95061
+  }
+ ],
+ "skipped": [],
+ "note": "DL-8 Gehad Abdelwahab Banque Misr EGP 299-row report \u2014 portal lane (REPORTS_DIR=download/) + legacy published/ copy",
+ "at": "2026-10-11T11:14:58.862604+00:00"
+}

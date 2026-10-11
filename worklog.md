@@ -1492,3 +1492,27 @@ Work Log:
 Stage Summary:
 - Challenger fully mined: 2 advantages adopted (v1.2.1 disclaimer clauses, v1.2.2 value-first option), 5 rejected with reasons
 - Both upgrades additive — all 9 delivered reports remain valid; future generators may opt in per card
+
+---
+Task ID: DL-8-GEHAD
+Agent: Super Z (main)
+Task: "new bank statement" — Last Bank statement (1).pdf arrived in upload/ (CamScanner scan, 13pp)
+
+Work Log:
+- SO-10 intake receipt: sha256 1ec432045e733cf6439a02e6923f2a54e35418d48bcaf85f8754ea239d1ed6cc, 9,441,296 bytes, 13 pages A4, CamScanner, no text layer
+- Identified: Banque Misr, Branch 740 Beni Suef — GEHAD MOHAMED MUAWWAD ABDELWAHAB, acct 7400333000036538 EGP, Customer ID 27979957, window 01/02/2026–08/09/2026, printed previous balance 62,686.10
+- OCR ladder: full-page reads + 300-DPI renders + 3x zoom crops (scripts/gehad_work/crop_bands.py, find_rows.py); band-verified pages 4/5/6/8/12 completely, remaining pages chain-checked
+- Ledger solved as constraint system (printed balances = ground truth): 299 rows, chain 299/299 closed, ZERO breaks, telescope residual EGP 0.00 (62,686.10 + 313,888.07 − 138,407.91 = 238,166.26 exact)
+- Low-res misreads caught by chain + fixed at zoom: credit interest 1,106.42 (not 1,108.42), POS 42.95, transfer 25.00, ATM 605.00, page-4 mid-block dates 14–23/04, p8 end 148,334.31
+- Bank-specific law induced & verified: IPN fee = max(ceil(0.1%×transfer), 0.50) — 77 fee rows, printed mass 86.84 = law mass 86.84 EXACT (19 direct ref-pairs + aggregate identity)
+- 3 printed reversal rows disclosed (negative amounts printed by bank): ATM dep −6,000 (09/04), Purchase-IPN −71.43 (29/06), settlement interest −29.51 (30/06)
+- Date-blur note: p5 rows 19–23 print month digit blurred 04/05; resolved to 30/04 via channel-495 ref monotonicity (5650–5659 between 5643@30/04 and 5663@03/05) + gapless month coverage + 7/7 monthly interest cadence
+- Report built from Master v1.2.2 (REPORT_CSS extracted verbatim from src/lib/report_design.ts; zero hand CSS; class audit = NONE missing): 11 sections + full 299-row annex ledger; value-first KPI option live; verdict SUBMITTABLE (closing 95.3% of 250k baseline, 154.6% Schengen, 115.9% UK)
+- Dual audit 24/24 PASS after self-caught footing fix: monthly/channel tables switched to signed convention so every column foots to 313,888.07 / 138,407.91 (audit A2 off-by-one + S6 entity also fixed in audit script)
+- Sandbox reset losses found & worked around: download/MANIFEST + 04_evidence + zips untracked-gone; scripts/publish_via_repo.py untracked-gone; .env stripped to DATABASE_URL/PORTAL_ACCESS_CODE — rebuilt publish as REPORTS_DIR lane (download/ IS the portal dir per src/lib/portal.ts) + outbox mail mode (creds absent, queue accepted by gate)
+- Deliverables: download/00_GlobalEIS_Report_GehadAbdelwahab_BanqueMisr_EGP_299rows.html (95,061 B, sha256 f13b4c754c575520...) + published/ copy + receipts/{publish_dl8,mail_dl8,manifest_dl8}.json
+- Mail: sendOrQueue → {"sent":false,"queued":true,"to":"ahmedr.muhammed19@gmail.com"} — TEST_MAIL_TO lock verified; a.imam@beta.com.eg scanned absent from report+receipts+manifest
+
+Stage Summary:
+- Gehad Abdelwahab 299-row Banque Misr EGP report shipped from Master v1.2.2, chain 299/299 residual 0.00, dual audit 24/24, gate pending this entry
+- Evidence archive rebuilt at download/04_evidence/GehadAbdelwahab_1stmt (receipts + QA crops)
