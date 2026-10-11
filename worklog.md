@@ -1663,3 +1663,18 @@ Work Log:
 
 Stage Summary:
 - Master v1.2.6 confirmed SUPERSET of ALL previous statement-report families: Abdulrahman 11/11, Gehad 11/11, Bola 3x13/13, EidFarag 13/13, Haytham fully mapped. Older reports remain valid as delivered; every future report renders from the 17-entry contract.
+
+---
+Task ID: DL-9e-READY
+Agent: Super Z (main)
+Task: Owner: "be ready for new bank statement" — full pipeline readiness sweep.
+
+Work Log:
+- Readiness audit found reset #5 damage: .env stripped to DATABASE_URL, config/mail_credentials.json gone, prisma client unresolved (bun fell back to global cache 7.10.0), db/custom.db wiped (0 cases).
+- Recovered per doctrine: bun install + prisma generate (6.19.2 client restored); scripts/restore_env.sh -> .env (SESSION_SECRET fresh, TEST_MAIL_TO=ahmedr.muhammed19@gmail.com lock, PORTAL_BASE_URL), db push + seed (op.eis, client.workq, client.other, abdo); fresh PORTAL_ACCESS_CODE appended (local gate parity). Mail creds CANNOT be self-restored (SMTP secret) -> local outbox/queue mode until operator re-supplies; prod Vercel env unaffected.
+- Verified: queue empty locally (real queue lives in prod/Neon); template HEAD = Master v1.2.6 (96ff75f) with next build exit 0 from DL-9d; SO-9 delivery gate + class audit scripts tracked and ready.
+- Screenshot in upload/ identified as the OLD DL-9a Vercel failure (00b40fe deploy, fixed by d986eff) — historical, not a new incident. HEAD builds green locally; no Vercel token available to query deploy status remotely.
+- New ops tool: scripts/queue_check.ts (prisma-based queue probe; correct Submission/StatementFile/ParseLog shape).
+
+Stage Summary:
+- READY for the next statement: Master v1.2.6 pipeline (17-entry contract, S10 matrix + Appendix A passport guaranteed), zero-tap engine, SO-9 gate, seeded accounts. Statement can arrive via portal upload (prod) or upload/ drop.
