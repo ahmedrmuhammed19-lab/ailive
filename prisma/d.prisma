@@ -1,0 +1,98 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgres"
+  url      = env("DATABASE_URL")
+}
+
+model Submission {
+  id         String          @id @default(cuid())
+  userId     String? // short human queue ID shown in the queue (e.g. 1024 / AHMED-01)
+  status     String          @default("WAITING") // WAITING | ANALYZING | DONE
+  clientName String? // customer name — attached later by operator
+  caseRef    String?
+  country    String?
+  visaType   String?
+  travelers  Int     @default(1) // joint applicants sharing this bank statement
+  email      String?
+  notes      String? // free-form case notes
+  submittedBy String? // portal account (ID) that uploaded this statement
+  analyzedAt DateTime? // set when status -> DONE (dashboard "analyzed today")
+  files      StatementFile[]
+  createdAt  DateTime        @default(now())
+}
+
+/** Portal login accounts (ID + password). Managed via scripts/add-user.mjs. */
+model PortalUser {
+  id           String    @id @default(cuid())
+  username     String    @unique // login ID (lowercase)
+  passwordHash String // scrypt$salt$hash — see src/lib/session.ts
+  label        String? // optional display name (client or operator)
+  role         String    @default("client") // client | operator
+  active       Boolean   @default(true)
+  createdAt    DateTime  @default(now())
+  lastLoginAt  DateTime?
+}
+
+/** Report files published to the portal (DB bytes in production, local dir in dev). */
+model ReportFile {
+  id           String   @id @default(cuid())
+  submissionId String? // queue item this report belongs to
+  queueId      String? // human queue ID (EIS-XXXXX)
+  name         String
+  url          String // blob URL (blob mode); empty in local fs mode
+  data         Bytes? // file bytes in DB storage mode (postgres bytea)
+  sizeBytes    Int
+  createdAt    DateTime @default(now())
+}
+
+model StatementFile {
+  id           String     @id @default(cuid())
+  submissionId String
+  submission   Submission @relation(fields: [submissionId], references: [id])
+  originalName String
+  storedPath   String // fs path (dev) or blob key (production)
+  storedUrl    String? // blob URL (blob mode); null in local fs / DB mode
+  data         Bytes? // file bytes in DB storage mode (postgres bytea)
+  sizeBytes    Int
+  md5          String
+  createdAt    DateTime   @default(now())
+}
+
+/**
+ * Chunked-upload staging — lets the browser send statements of ANY size as a
+ * sequence of <4.5 MB requests (Vercel serverless body limit), reassembled
+ * server-side on the final chunk. Rows are deleted after successful assembly;
+ * abandoned sessions are swept when they age past 2 hours.
+ */
+model UploadChunk {
+  id         String   @id @default(cuid())
+  uploadId   String // client-generated batch session id (uuid)
+  fileIdx    Int // position of the file within the batch
+  chunkIndex Int // position of this chunk within the file
+  name       String // original file name (informational; manifest is authoritative)
+  data       Bytes
+  createdAt  DateTime @default(now())
+
+  @@unique([uploadId, fileIdx, chunkIndex])
+}
+
+/** Self-improvement telemetry — one row per auto-analysis attempt (see /api/engine/logs). */
+model ParseLog {
+  id            String   @id @default(cuid())
+  submissionId  String? // portal submission (cuid) if one exists
+  queueId       String? // human queue label (e.g. AHMED-01)
+  outcome       String // auto-delivered | draft-review | unrecognized | no-files | error
+  modes         String? // layout family per leg, comma-joined (B-internet, C-digital, D-glued, A-branch)
+  parserVersion String // engine identity (eis-ts/x.y)
+  legs          Int      @default(0)
+  integrityMin  Int? // lowest per-leg chain integrity % (0-100)
+  integrityAvg  Int? // mean per-leg chain integrity %
+  unmatched     String? // JSON — rows that failed chain verification (training evidence)
+  textSample    String? // raw PDF text preview when the layout was unrecognized
+  lessonKey     String? // failure-pattern fingerprint — set only when this row was emailed as a NEW lesson (dedupe marker, see src/lib/lessons.ts)
+  lessonSentAt  DateTime? // when the "new lesson learned" operator email went out for this row
+  createdAt     DateTime @default(now())
+}
