@@ -1,0 +1,7 @@
+{
+  "task": "DL-10b Royal Aurora 2026 portal theme (owner: 'i suggest royal aurora 2026 on portal')",
+  "date": "2026-10-12",
+  "files": ["01_login_gate_light.png","02_login_gate_dark.png","03_workspace_upload_dark.png","04_queue_dark.png","05_dashboard_dark.png","06_reports_dark.png","07_accounts_dark.png","08_workspace_upload_light.png"],
+  "scope": "src/app/globals.css + src/app/page.tsx + src/app/layout.tsx ONLY; report_design.ts untouched (Master v1.2.6); all --eis-* variable names and class names preserved; status semantics (green/amber/red) unchanged",
+  "gates": ["tsc src-tree 0 errors", "eslint clean", "next build exit 0", "browser walkthrough 8 shots light+dark, 5 tabs"]
+}
