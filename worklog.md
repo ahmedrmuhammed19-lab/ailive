@@ -1650,3 +1650,16 @@ Work Log:
 
 Stage Summary:
 - Master v1.2.6 is now a verified SUPERSET of both parent canons: the ratified 11-section mix + SO-10 passport (fixed) + the pre-v1.2 depth sections (S12-S14 + Annex C) available to every generator under canonical numbering. Nothing from either parent was left outside the template.
+
+---
+Task ID: DL-9d-ADDENDUM
+Agent: Super Z (main)
+Task: Owner follow-up: "all previous abdulrahman, gehad and all previous = current template, is it right?" — extend the coverage audit to ALL previous report families.
+
+Work Log:
+- Inventoried every delivered report family: Abdulrahman Elgarayadli (11 sections), Gehad pre-v1.2 Master canon (11), Bola Ayad x3 (Current/Saving/USD, 13 entries each incl. Appendix A/B), EidFarag NBE v4 lineage (13 entries), Haytham Elsayed EGP+USD (older all-caps generation, ~15 headings via pdftotext scan).
+- Mapping verified family by family: Bola 13/13 COVERED per report (case-specific titles like "Executive Summary"/"Visa & Financial Assessment" are phrasings of the canon; align on next rebuild per DL-9b). EidFarag 13/13 COVERED (reconstruction log -> S03+S14+App B; printed-totals/reversals -> App A G3 + App B; flow composition -> S06/S07). Haytham: all headings mapped (FX activity -> App B instrument notes; investment certificates -> S05/App B; adjusted view -> S03; recommendations -> S11).
+- Scope note recorded: Ops Reports + NBE Notices are separate template families by design (retired gallery), not governed by the statement-report contract.
+
+Stage Summary:
+- Master v1.2.6 confirmed SUPERSET of ALL previous statement-report families: Abdulrahman 11/11, Gehad 11/11, Bola 3x13/13, EidFarag 13/13, Haytham fully mapped. Older reports remain valid as delivered; every future report renders from the 17-entry contract.
