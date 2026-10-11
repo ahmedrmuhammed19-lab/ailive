@@ -1633,3 +1633,20 @@ Work Log:
 Stage Summary:
 - The balance-chain guarantee is contractual: Appendix A FIXED + single renderer; engine drafts
   carry honest provisional passports; SO-9 gate re-verified 9/9. Master v1.2.5 pushed -> Vercel.
+
+---
+Task ID: DL-9d
+Agent: Super Z (main)
+Task: Owner: "checking previous template, abdulrahman template and current template — have all sections of the two been covered in the new template" (three-way coverage audit)
+
+Work Log:
+- Inventoried all three canons from primary sources: A=pre-v1.2 Master canon as shipped in Gehad report (11 sections, v1.2.2 era), B=Abdulrahman Elgarayadli challenger (upload sha e6a650c9, 11 sections + verdict-badge/annex-banner/signoff, identical to canonical d88bfbb^), C=STANDARD_SECTIONS (Master v1.2.5).
+- Audit result: B covered 11/11 (S10 generalized at DL-9b, structural blocks in v1.2 vocabulary). A covered 7/11 direct; FOUR sections had no contract home: Fee Structure Verification, Balance & Liquidity Profile, Document Integrity/OCR Methodology & Disclosures, Complete Chain-Verified Ledger annex.
+- Template -> Master v1.2.6: four recoveries added ADDITIVELY as S12/S13/S14 + Annex C(92), all analyst-judgement, appended AFTER S11 — zero renumbering, S09/S10 + Appendices A/B + published report numbering untouched. Lineage comment documents the full mapping.
+- Engine stance: S12-S14/Annex C are analyst-build sections (engine cannot measure fee law/liquidity narrative honestly) — contract guarantees vocabulary + numbering for finals; no fake placeholders in drafts.
+- Specimen THROUGH the real module: download/00_Template_Coverage_Audit_Master_v126.html (22,702 B, sha256 4d91bfac53e3acf5...) — coverage verdict KPIs, 3-way matrix (17 rows, RECOVERED pills + row-active highlights), 17-entry contract table, live render proofs of all four recovered sections + challenger structural blocks. Self-audit 17/17 PASS.
+- Gates: SO-9 class audit used=37/47 defined, NONE missing; tsc src tree 0 errors; next build exit 0 (mandatory pre-push).
+- Evidence: download/04_evidence/DL9d_Coverage_Audit_v126/ (RECEIPT.json + aux hashes + 2 screenshots). Committed 96ff75f, pushed origin/main.
+
+Stage Summary:
+- Master v1.2.6 is now a verified SUPERSET of both parent canons: the ratified 11-section mix + SO-10 passport (fixed) + the pre-v1.2 depth sections (S12-S14 + Annex C) available to every generator under canonical numbering. Nothing from either parent was left outside the template.
