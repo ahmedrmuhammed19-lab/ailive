@@ -1551,3 +1551,27 @@ Stage Summary:
   standard vocabulary every generator can mix in; on-screen PDF button retired by owner order.
 - All previously delivered reports remain valid (additive change); future reports render
   button-less by default and may call visaReadinessMatrix()/actionGate() directly.
+
+---
+Task ID: DL-9a (vercel build fix)
+Agent: Super Z (main)
+Task: Owner: "vercel Build Failed ... exited with 1 fix" (sed -> prisma generate -> db push -> next build chain)
+
+Work Log:
+- Reproduced locally: failure is the NEXT BUILD step, not prisma (generate exits 0; models
+  provider-agnostic). Turbopack static-export check hard-fails: src/app/api/verify-code/route.ts:2
+  imports accessCodeValid from @/lib/portal — export lost from portal.ts in the a3fde09
+  environment-reset lineage (present at f97ab54 snapshot, gone from a3fde09 onward). Note:
+  typescript.ignoreBuildErrors does NOT cover Turbopack bundler errors — only TS type errors.
+- Fix: restored accessCodeValid() verbatim from f97ab54 (constant-time PORTAL_ACCESS_CODE compare
+  via timingSafeEqual; import added to existing crypto import line). .env still carries
+  PORTAL_ACCESS_CODE (DL-8 receipt) so the endpoint stays functional.
+- Verification: bunx next build -> exit 0, full route table compiled incl. /api/verify-code;
+  local prisma client regenerated from sqlite schema (dev intact).
+- Root-cause note: verify-code has no client-side caller since the 66961ca password-auth rework;
+  route kept (harmless, gate-ready) rather than deleted — minimal-diff doctrine for hotfixes.
+
+Stage Summary:
+- Build blocker removed at the exact reproduction point; push triggers Vercel rebuild.
+- Lesson: environment-reset clobbers can hide in the app tree until the next production build —
+  next build now part of pre-push verification for portal-touching changes.

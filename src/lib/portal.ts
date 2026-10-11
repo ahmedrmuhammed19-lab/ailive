@@ -1,10 +1,20 @@
-import { createHash } from "crypto";
+import { createHash, timingSafeEqual } from "crypto";
 import path from "path";
 
 /** Root directories (workspace-relative, outside Next source tree). */
 export const WORKSPACE_ROOT = "/home/z/my-project";
 export const PORTAL_UPLOAD_DIR = path.join(WORKSPACE_ROOT, "upload", "portal");
 export const REPORTS_DIR = path.join(WORKSPACE_ROOT, "download");
+
+/** Returns true when the submitted access code matches the configured one (constant-time). */
+export function accessCodeValid(code: string | null | undefined): boolean {
+  const expected = process.env.PORTAL_ACCESS_CODE;
+  if (!expected || !code) return false;
+  const a = Buffer.from(code.trim());
+  const b = Buffer.from(expected.trim());
+  if (a.length !== b.length) return false;
+  return timingSafeEqual(a, b);
+}
 
 /** Allowed statement file extensions. */
 const ALLOWED_EXT = new Set([".pdf", ".png", ".jpg", ".jpeg"]);
