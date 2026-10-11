@@ -6,9 +6,9 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  /* Client brand font first (report_design.ts uses the same stack) —
-     Geist remains the fallback outside Windows/Office environments. */
-  --font-sans: 'Segoe UI', var(--font-geist-sans);
+  /* 2026 portal: Geist leads the product shell (the report document keeps
+     its own Segoe-first stack in report_design.ts — different medium). */
+  --font-sans: var(--font-geist-sans), 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   --font-mono: var(--font-geist-mono);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
@@ -120,40 +120,48 @@
   }
   body {
     /* Canvas color lives on the BODY so it propagates to the root
-       canvas — painted below the negative-z fixed aurora, letting the
-       live RGB orbs and star dust show through the app shell. */
+       canvas — painted below the negative-z fixed backdrop, letting
+       the brand mesh and fine grid show through the app shell. */
     @apply text-foreground;
     background-color: var(--eis-canvas);
   }
 }
 
 /* ============================================================
-   Global EIS portal — 2026 design system ("Petrol Teal — Live",
-   2026 edition). Brand anchor: the client's own identity
-   (#005677 primary → #008DCB secondary — the SAME tokens as
-   report_design.ts, so the portal chrome and every generated
-   report share one brand). Light: deep petrol on white; dark:
-   brighter secondary on a deep petrol canvas. Live layer:
-   in-brand cyan/petrol companions (--eis-live-1/2/3) drift,
-   twinkle and cycle behind glass surfaces. Online/success states
-   are GREEN (--eis-success / --eis-online) with a pulsing glow
-   (.eis-dot-live). GH tokens in src/lib/format.ts reference these
-   variables, so inline styles and SVG props flip with the .dark
-   class too.
+   Global EIS portal — 2026 design system ("Petrol Teal — Crisp",
+   2026.10 redesign). Brand anchor UNCHANGED: #005677 primary →
+   #008DCB secondary — the SAME tokens as report_design.ts, so the
+   portal chrome and every generated report share one firm identity.
+
+   The 2026 language (typography-led, calm confidence):
+   • Canvas — quiet brand mesh (two soft petrol/cyan glows) over a
+     fine hairline grid; no hue-cycling, no twinkle, no noise-show.
+   • Surfaces — crisp elevated cards: translucent white/petrol glass,
+     hairline border, one inner top highlight, layered soft shadow.
+     The spinning conic edge light is retired.
+   • Gradient used SELECTIVELY — brand mark, CTA, active states —
+     never as wallpaper.
+   • Motion is functional only: spring tab pill, status pulse,
+     hover lifts, CTA sheen on interaction. One switch (prefers-
+     reduced-motion) still kills every effect.
+   ALL --eis-* variable NAMES and class names are unchanged, so the
+   panels, GH tokens (src/lib/format.ts) and STATUS_META inherit
+   this redesign with zero logic changes.
    ============================================================ */
 :root {
   color-scheme: light;
-  --eis-canvas: #ffffff;
-  --eis-canvas-subtle: #f0f5f8;
-  --eis-canvas-glass: rgba(255, 255, 255, 0.72);
+  --eis-canvas: #f6f9fb;
+  --eis-canvas-subtle: #edf3f7;
+  --eis-canvas-glass: rgba(255, 255, 255, 0.82);
   --eis-live-1: #00a8d6;
   --eis-live-2: #0077b0;
   --eis-live-3: #004a66;
+  --eis-grid-line: rgba(0, 86, 119, 0.055);
   --eis-hover: #e9f0f5;
-  --eis-border: #dde8ee;
-  --eis-border-muted: #e4edf2;
-  --eis-fg: #0e2029;
-  --eis-muted: #4f6672;
+  --eis-border: #dbe6ed;
+  --eis-border-muted: #e3ecf1;
+  --eis-fg: #0c1f2a;
+  --eis-muted: #4c6470;
   --eis-accent: #005677;
   --eis-accent-2: #008dcb;
   --eis-accent-subtle: #e7f3fe;
@@ -167,30 +175,33 @@
   --eis-danger-strong: #b91c1c;
   --eis-danger-subtle: #fdeeee;
   --eis-neutral: #94a3b8;
-  --eis-cell-empty: #e9f0f5;
+  --eis-cell-empty: #e8eff4;
   --eis-btn-green: #005677;
   --eis-btn-green-hover: #00405a;
-  --eis-divide: #e8eff4;
+  --eis-divide: #e6edf3;
   --eis-scale-1: #cfe6f2;
   --eis-scale-2: #66b5d6;
   --eis-scale-3: #008dcb;
   --eis-scale-4: #003d54;
-  --eis-glow: 0 0 0 1px rgba(0, 86, 119, 0.16), 0 8px 30px -6px rgba(0, 141, 203, 0.3);
-  --eis-card-shadow: 0 1px 2px rgba(15, 23, 42, 0.04), 0 8px 24px -12px rgba(15, 23, 42, 0.12);
+  --eis-glow: 0 0 0 1px rgba(0, 86, 119, 0.14), 0 10px 32px -8px rgba(0, 141, 203, 0.35);
+  --eis-card-shadow:
+    0 1px 2px rgba(12, 31, 42, 0.05),
+    0 12px 32px -16px rgba(0, 61, 84, 0.16);
 }
 
 .dark {
   color-scheme: dark;
-  /* Deep petrol canvas: teal-cast near-black — matte soft-touch feel */
-  --eis-canvas: #06131b;
+  /* Deep petrol canvas — matte near-black with a teal cast */
+  --eis-canvas: #071219;
   --eis-canvas-subtle: #0a1c27;
-  --eis-canvas-glass: rgba(6, 17, 24, 0.74);
+  --eis-canvas-glass: rgba(10, 26, 36, 0.78);
   --eis-live-1: #3fc0ee;
   --eis-live-2: #22a7d4;
   --eis-live-3: #0e6f95;
+  --eis-grid-line: rgba(122, 215, 255, 0.05);
   --eis-hover: #0f2431;
-  --eis-border: #143240;
-  --eis-border-muted: #102a37;
+  --eis-border: #16333f;
+  --eis-border-muted: #112b38;
   --eis-fg: #e6f1f6;
   --eis-muted: #8aa6b4;
   --eis-accent: #4db7e8;
@@ -214,12 +225,12 @@
   --eis-scale-2: #0a5a7d;
   --eis-scale-3: #008dcb;
   --eis-scale-4: #4db7e8;
-  --eis-glow: 0 0 0 1px rgba(0, 141, 203, 0.2), 0 8px 32px -6px rgba(0, 141, 203, 0.28);
-  /* Rubber panel depth: faint top sheen (soft-touch), deep diffuse drop */
+  --eis-glow: 0 0 0 1px rgba(0, 141, 203, 0.22), 0 10px 34px -8px rgba(0, 141, 203, 0.3);
+  /* Crisp panel depth: faint inner top sheen + deep diffuse drop */
   --eis-card-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.045),
-    0 1px 2px rgba(0, 0, 0, 0.45),
-    0 14px 36px -16px rgba(0, 0, 0, 0.6);
+    inset 0 1px 0 rgba(255, 255, 255, 0.05),
+    0 1px 2px rgba(0, 0, 0, 0.5),
+    0 16px 40px -18px rgba(0, 0, 0, 0.62);
 }
 
 /* --- Dark overrides for hardcoded light-only utilities --- */
@@ -252,138 +263,89 @@
 .dark .divide-\[\#eaeef2\] > :not(:last-child) { border-color: var(--eis-divide); }
 
 /* ============================================================
-   2026 primitives — LIVE aurora canvas, glass surfaces, accents
+   2026 primitives — calm brand mesh, fine grid, crisp surfaces
    ============================================================ */
 
-/* Live aurora backdrop: three blurred orbs drift on independent paths
-   while a per-orb hue oscillation cycles them through the cool RGB
-   spectrum (cyan → azure → indigo → violet) around the navy anchor.
-   A tiled star-dust layer twinkles on top. Purely decorative. */
+/* Backdrop: fixed brand mesh (two soft in-brand glows) + a fine
+   hairline grid that fades toward the edges. Entirely static —
+   calm confidence; the page's motion budget is spent on the
+   interaction layer instead of the wallpaper. */
 .eis-aurora {
   position: fixed;
   inset: 0;
   z-index: -1;
   overflow: hidden;
   pointer-events: none;
+  background:
+    radial-gradient(52rem 34rem at 82% -8%, rgba(0, 141, 203, 0.1), transparent 62%),
+    radial-gradient(46rem 30rem at -12% 108%, rgba(0, 86, 119, 0.09), transparent 60%),
+    var(--eis-canvas);
 }
 .eis-orb {
   position: absolute;
   border-radius: 9999px;
-  filter: blur(80px);
-  will-change: transform, filter;
+  filter: blur(90px);
 }
 .eis-orb-a {
-  width: 46rem;
-  height: 46rem;
-  top: -20rem;
-  right: -14rem;
-  background:
-    radial-gradient(closest-side, rgba(0, 141, 203, 0.4), transparent 70%),
-    radial-gradient(closest-side, rgba(0, 168, 214, 0.22), transparent 75%);
-  opacity: 0.58;
-  animation:
-    eis-drift-a 34s ease-in-out infinite alternate,
-    eis-hue-a 21s ease-in-out infinite alternate;
+  width: 40rem;
+  height: 40rem;
+  top: -16rem;
+  right: -12rem;
+  background: radial-gradient(closest-side, rgba(0, 141, 203, 0.16), transparent 70%);
+  opacity: 0.8;
 }
 .eis-orb-b {
-  width: 42rem;
-  height: 42rem;
-  bottom: -18rem;
-  left: -12rem;
-  background:
-    radial-gradient(closest-side, rgba(0, 141, 203, 0.26), transparent 72%),
-    radial-gradient(closest-side, rgba(0, 119, 176, 0.26), transparent 76%);
-  opacity: 0.52;
-  animation:
-    eis-drift-b 44s ease-in-out infinite alternate,
-    eis-hue-b 27s ease-in-out infinite alternate;
+  width: 36rem;
+  height: 36rem;
+  bottom: -16rem;
+  left: -10rem;
+  background: radial-gradient(closest-side, rgba(0, 86, 119, 0.14), transparent 72%);
+  opacity: 0.8;
 }
-.eis-orb-c {
-  width: 30rem;
-  height: 30rem;
-  top: 32%;
-  left: 36%;
-  background:
-    radial-gradient(closest-side, rgba(0, 74, 102, 0.26), transparent 70%),
-    radial-gradient(closest-side, rgba(0, 86, 119, 0.22), transparent 76%);
-  opacity: 0.44;
-  animation:
-    eis-drift-c 39s ease-in-out infinite alternate,
-    eis-hue-c 33s ease-in-out infinite alternate;
-}
+.eis-orb-c { display: none; }
+/* The former star-dust layer now carries the fine engineering grid —
+   a quiet 2026 signature that fades out toward the bottom. */
 .eis-stars {
   position: absolute;
   inset: 0;
-  --eis-star-lo: 0.22;
-  --eis-star-hi: 0.55;
   background-image:
-    radial-gradient(1px 1px at 18% 22%, rgba(96, 165, 250, 0.5), transparent 55%),
-    radial-gradient(1px 1px at 72% 12%, rgba(129, 140, 248, 0.42), transparent 55%),
-    radial-gradient(1.5px 1.5px at 44% 64%, rgba(56, 189, 248, 0.4), transparent 55%),
-    radial-gradient(1px 1px at 86% 48%, rgba(167, 139, 250, 0.36), transparent 55%),
-    radial-gradient(1px 1px at 10% 78%, rgba(96, 165, 250, 0.32), transparent 55%),
-    radial-gradient(1.5px 1.5px at 62% 88%, rgba(129, 140, 248, 0.3), transparent 55%);
-  background-repeat: repeat;
-  background-size: 640px 640px;
-  animation: eis-twinkle 9s ease-in-out infinite alternate;
-  opacity: 0.4;
+    linear-gradient(var(--eis-grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--eis-grid-line) 1px, transparent 1px);
+  background-size: 44px 44px;
+  -webkit-mask-image: radial-gradient(120% 90% at 50% 0%, #000 38%, transparent 82%);
+  mask-image: radial-gradient(120% 90% at 50% 0%, #000 38%, transparent 82%);
+  opacity: 1;
 }
-.dark .eis-orb-a { opacity: 0.42; }
-.dark .eis-orb-b { opacity: 0.38; }
-.dark .eis-orb-c { opacity: 0.32; }
-.dark .eis-stars {
-  opacity: 0.75;
-  --eis-star-lo: 0.4;
-  --eis-star-hi: 0.85;
+.dark .eis-aurora {
+  background:
+    radial-gradient(52rem 34rem at 82% -8%, rgba(0, 141, 203, 0.12), transparent 62%),
+    radial-gradient(46rem 30rem at -12% 108%, rgba(14, 111, 149, 0.14), transparent 60%),
+    var(--eis-canvas);
 }
-@keyframes eis-drift-a {
-  from { transform: translate3d(0, 0, 0) rotate(0deg) scale(1); }
-  to { transform: translate3d(-7rem, 6rem, 0) rotate(28deg) scale(1.14); }
-}
-@keyframes eis-drift-b {
-  from { transform: translate3d(0, 0, 0) scale(1); }
-  to { transform: translate3d(8rem, -5rem, 0) scale(1.16); }
-}
-@keyframes eis-drift-c {
-  from { transform: translate3d(0, 0, 0) scale(1); }
-  to { transform: translate3d(-6rem, -7rem, 0) rotate(-18deg) scale(1.2); }
-}
-/* Hue cycles are tuned per orb so every stop stays in the cool
-   navy-indigo-violet-cyan band (never green/amber) while cycling. */
-@keyframes eis-hue-a {
-  from { filter: blur(80px) hue-rotate(0deg); }
-  to { filter: blur(80px) hue-rotate(60deg); }
-}
-@keyframes eis-hue-b {
-  from { filter: blur(80px) hue-rotate(-35deg); }
-  to { filter: blur(80px) hue-rotate(35deg); }
-}
-@keyframes eis-hue-c {
-  from { filter: blur(80px) hue-rotate(-30deg); }
-  to { filter: blur(80px) hue-rotate(30deg); }
-}
-@keyframes eis-twinkle {
-  from { opacity: var(--eis-star-lo); }
-  to { opacity: var(--eis-star-hi); }
-}
+.dark .eis-orb-a { opacity: 0.5; }
+.dark .eis-orb-b { opacity: 0.5; }
 
-/* Rotating RGB edge for glass surfaces: @property registers the custom
-   angle so the conic gradient can animate. Browsers without @property
-   support simply render a static edge light — graceful degradation. */
-@property --eis-angle {
-  syntax: "<angle>";
-  inherits: false;
-  initial-value: 0deg;
+/* Rubber grain: ultra-fine fractal noise — kept barely-there for the
+   matte soft-touch finish (static, decorative). */
+.eis-grain {
+  position: absolute;
+  inset: 0;
+  opacity: 0.025;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='280' height='280'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.7'/%3E%3C/svg%3E");
+  background-size: 280px 280px;
+  pointer-events: none;
 }
+.dark .eis-grain { opacity: 0.04; }
 
-/* Glass surface: translucent panel with a live RGB edge light.
-   Rubber finish — matte blur, subtle inner top sheen, soft depth.
-   Panels keep their semantic token colors; this adds depth. */
+/* Crisp glass surface — the ONE surface treatment of the 2026 system:
+   translucent panel, hairline border, single inner top highlight,
+   layered soft shadow. No rotating edge light, no noise, no sheen
+   animation; depth comes from shadow craft, not moving parts. */
 .eis-glass {
   position: relative;
   background: var(--eis-canvas-glass);
-  backdrop-filter: blur(16px) saturate(1.15);
-  -webkit-backdrop-filter: blur(16px) saturate(1.15);
+  backdrop-filter: blur(20px) saturate(1.35);
+  -webkit-backdrop-filter: blur(20px) saturate(1.35);
   border: 1px solid var(--eis-border);
   box-shadow: var(--eis-card-shadow);
 }
@@ -392,54 +354,27 @@
   position: absolute;
   inset: 0;
   border-radius: inherit;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.05), transparent 22%);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.07), transparent 18%);
   pointer-events: none;
 }
-.dark .eis-glass::before { background: linear-gradient(180deg, rgba(148, 178, 255, 0.055), transparent 24%); }
+.dark .eis-glass::before { background: linear-gradient(180deg, rgba(173, 216, 255, 0.06), transparent 20%); }
 
-/* Rubber grain: ultra-fine fractal noise tiled over the aurora —
-   gives the canvas its matte, soft-touch rubber texture. */
-.eis-grain {
-  position: absolute;
-  inset: 0;
-  opacity: 0.032;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='280' height='280'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.7'/%3E%3C/svg%3E");
-  background-size: 280px 280px;
-  pointer-events: none;
+/* Hairline header rule for panel headers — static brand-tinted
+   gradient line (was: animated RGB sweep). */
+.eis-sheen {
+  position: relative;
 }
-.dark .eis-grain { opacity: 0.05; }
-.eis-glass::after {
+.eis-sheen::before {
   content: "";
   position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  padding: 1px;
-  background: conic-gradient(
-    from var(--eis-angle),
-    transparent 0deg,
-    rgba(0, 141, 203, 0.55) 55deg,
-    rgba(0, 168, 214, 0.5) 105deg,
-    transparent 170deg,
-    transparent 205deg,
-    rgba(0, 119, 176, 0.5) 275deg,
-    rgba(139, 92, 246, 0.42) 315deg,
-    transparent 360deg
-  );
-  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-  -webkit-mask-composite: xor;
-  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-  mask-composite: exclude;
-  animation: eis-spin 16s linear infinite;
-  opacity: 0.4;
+  inset: 0 0 auto 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(0, 141, 203, 0.5) 30%, rgba(0, 141, 203, 0.28) 55%, transparent);
   pointer-events: none;
 }
-.dark .eis-glass::after { opacity: 0.6; }
-@keyframes eis-spin {
-  to { --eis-angle: 360deg; }
-}
 
-/* Online status: live green dot with a pulsing glow ring — the classic
-   "online" effect. Pair with color var(--eis-online). */
+/* Online status: live green dot with a pulsing glow ring — functional
+   motion that communicates state (kept from the previous system). */
 .eis-dot-live {
   animation: eis-online-pulse 2.2s ease-out infinite;
 }
@@ -461,45 +396,28 @@
   }
 }
 
-/* Live gradient brand mark — navy core with an indigo tail, slowly panning */
+/* Brand mark: solid petrol→cyan identity gradient (static). */
 .eis-gradient-brand {
-  background: linear-gradient(135deg, var(--eis-accent) 0%, var(--eis-accent-2) 45%, var(--eis-live-2) 100%);
-  background-size: 200% 200%;
-  animation: eis-pan-soft 12s ease-in-out infinite;
-}
-@keyframes eis-pan-soft {
-  0%, 100% { background-position: 0% 30%; }
-  50% { background-position: 100% 70%; }
+  background: linear-gradient(135deg, var(--eis-accent) 0%, var(--eis-accent-2) 100%);
 }
 
-/* Live gradient headline text — navy → blue → cyan shimmer */
+/* Headline accent: brand gradient text (static; shimmer retired). */
 .eis-gradient-text {
-  background: linear-gradient(120deg, var(--eis-accent), var(--eis-accent-2) 35%, var(--eis-live-1) 55%, var(--eis-accent-2) 80%, var(--eis-accent));
-  background-size: 250% 250%;
+  background: linear-gradient(120deg, var(--eis-accent), var(--eis-accent-2) 55%, var(--eis-live-1));
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
-  animation: eis-pan 9s ease-in-out infinite;
-}
-@keyframes eis-pan {
-  0%, 100% { background-position: 0% 40%; }
-  50% { background-position: 100% 60%; }
 }
 
-/* Primary button: breathing gradient + glow, sheen sweep on hover */
+/* Primary button: solid brand gradient + glow; the sheen sweep fires
+   on INTERACTION (hover) only — no idle breathing animation. */
 .eis-cta {
   position: relative;
   overflow: hidden;
-  background: linear-gradient(135deg, var(--eis-accent) 0%, var(--eis-accent-2) 50%, var(--eis-accent) 100%);
-  background-size: 220% 220%;
+  background: linear-gradient(135deg, var(--eis-accent) 0%, var(--eis-accent-2) 100%);
   color: #ffffff;
   box-shadow: var(--eis-glow);
-  animation: eis-cta-pan 7s ease-in-out infinite;
   transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease;
-}
-@keyframes eis-cta-pan {
-  0%, 100% { background-position: 0% 30%; }
-  50% { background-position: 100% 70%; }
 }
 .eis-cta::after {
   content: "";
@@ -520,24 +438,25 @@
 .eis-cta:disabled { opacity: 0.55; transform: none; filter: none; }
 .eis-cta:disabled::after { display: none; }
 
-/* Hairline top shine for panel headers — a violet-blue light slowly
-   sweeps left → right along the top edge */
-.eis-sheen {
+/* Skeleton shimmer — 2026 loading state (opt-in per element). */
+.eis-skeleton {
   position: relative;
+  overflow: hidden;
+  background: var(--eis-canvas-subtle);
 }
-.eis-sheen::before {
+.eis-skeleton::after {
   content: "";
   position: absolute;
-  inset: 0 0 auto 0;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(96, 165, 250, 0.55) 35%, rgba(139, 92, 246, 0.45) 50%, rgba(96, 165, 250, 0.55) 65%, transparent);
-  background-size: 200% 100%;
-  animation: eis-sheen-slide 8s linear infinite;
-  pointer-events: none;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.45), transparent);
+  animation: eis-skeleton-slide 1.6s ease infinite;
 }
-@keyframes eis-sheen-slide {
-  from { background-position: 200% 0; }
-  to { background-position: -200% 0; }
+.dark .eis-skeleton::after {
+  background: linear-gradient(90deg, transparent, rgba(173, 216, 255, 0.09), transparent);
+}
+@keyframes eis-skeleton-slide {
+  to { transform: translateX(100%); }
 }
 
 /* Modern scrollbar */
@@ -554,19 +473,18 @@
 }
 ::-webkit-scrollbar-thumb:hover { background-color: var(--eis-neutral); }
 ::selection {
-  background: rgba(0, 141, 203, 0.32);
+  background: rgba(0, 141, 203, 0.3);
 }
 
-/* Accessibility: one switch kills every live/decorative motion */
+/* Accessibility: one switch kills every remaining motion effect */
 @media (prefers-reduced-motion: reduce) {
-  .eis-orb,
-  .eis-stars,
-  .eis-glass::after,
-  .eis-gradient-brand,
-  .eis-gradient-text,
-  .eis-cta,
   .eis-dot-live,
-  .eis-sheen::before {
+  .eis-skeleton::after,
+  .eis-cta::after {
     animation: none !important;
+  }
+  .eis-cta,
+  .eis-glass {
+    transition: none !important;
   }
 }

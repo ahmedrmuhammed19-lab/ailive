@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
@@ -19,6 +19,13 @@ export const metadata: Metadata = {
   description:
     "Confidential intake portal: submit bank statements for Global EIS financial-intelligence assessment and collect finished reports. Arrival handshake (size + MD5) verified server-side.",
   robots: { index: false, follow: false },
+};
+
+export const viewport: Viewport = {
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#f6f9fb" },
+    { media: "(prefers-color-scheme: dark)", color: "#071219" },
+  ],
 };
 
 export default function RootLayout({

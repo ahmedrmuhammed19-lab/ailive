@@ -218,12 +218,16 @@ export default function PortalPage() {
             transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
             className="mx-auto mt-8 max-w-md"
           >
-            {/* Hero strip */}
-            <div className="mb-5 text-center">
-              <h2 className="text-2xl font-semibold tracking-tight" style={{ color: GH.fg }}>
+            {/* Hero strip — 2026: typography leads */}
+            <div className="mb-6 text-center">
+              <p className="mb-3 inline-flex items-center gap-1.5 rounded-full border border-[var(--eis-border)] bg-[var(--eis-canvas-glass)] px-3 py-1 text-[11px] font-medium tracking-wide text-[var(--eis-muted)] backdrop-blur">
+                <span className="h-1.5 w-1.5 rounded-full bg-[var(--eis-online)] eis-dot-live" aria-hidden="true" />
+                SECURE CLIENT PORTAL · 2026 EDITION
+              </p>
+              <h2 className="text-balance text-3xl font-semibold leading-[1.1] tracking-tight sm:text-4xl" style={{ color: GH.fg }}>
                 Secure statement <span className="eis-gradient-text">intelligence</span>
               </h2>
-              <p className="mt-1.5 text-sm text-[var(--eis-muted)]">
+              <p className="mx-auto mt-2.5 max-w-sm text-pretty text-sm leading-relaxed text-[var(--eis-muted)]">
                 100% balance-chain verified reports — every format, text or scan.
               </p>
               <div className="mt-3 flex flex-wrap items-center justify-center gap-1.5">
@@ -456,6 +460,7 @@ export default function PortalPage() {
               ahmedr.muhammed19@gmail.com
             </a>
           </p>
+          <p className="mt-1 text-[10px] tracking-wide text-[var(--eis-neutral)]">© 2026 Global EIS · Master v1.2.6 report standard</p>
         </div>
       </footer>
     </div>
