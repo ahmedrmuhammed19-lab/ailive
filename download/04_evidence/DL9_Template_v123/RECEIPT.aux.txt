@@ -1,0 +1,3 @@
+74233d3dcadc31fcad163daaed7a476822053c7ec5cc17cb1d3e97a328d0e0a9  src/lib/report_design.ts
+18e721f05e205aba518bbdfc320bb02e19e2e7c9830d974c01f525dca83e2adb  scripts/dl9_visa_specimen.ts
+b84560f47096e70d5fd1b2648c335353286f0a81128a202e3d8b9d304077b6f7  scripts/so9_class_audit.py

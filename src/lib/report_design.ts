@@ -28,12 +28,24 @@
  * via flex ordering while keeping success/danger/warning accents intact.
  * Opt-in per card; default cards and every existing report render unchanged.
  *
+ * v1.2.3 (2026-10-11, DL-9): the Elgarayadli one-off build's strongest
+ * section — its quantitative visa readiness matrix (UK / Schengen / US
+ * per-applicant lines, joint-traveller line with active-benchmark highlight,
+ * authenticity-screening line, coverage multiples) — is promoted into
+ * standard template vocabulary as visaReadinessMatrix() + actionGate()
+ * (numbered client action gates). Owner order same day: the on-screen
+ * "Download PDF Report" button is HIDDEN by default from v1.2.3 on;
+ * pass downloadButton:true to reportShell to restore it. Print/PDF output
+ * is unaffected (the button never printed). One additive CSS class
+ * (.data-table tr.row-active) carries the benchmark-row highlight.
+ *
  * Tokens: --primary #005677 / --secondary #008DCB on Segoe UI, gradient
  * header, KPI cards with colored left borders, section bars, pill tags,
- * left-bordered alert boxes, print button + prepared-by footer.
+ * left-bordered alert boxes, readiness matrix + action gates, prepared-by
+ * footer.
  */
 
-export const TEMPLATE_VERSION = "Master v1.2.2 (STANDARD — promoted 2026-10-06, disclaimer hardened + value-first KPI option 2026-10-11)";
+export const TEMPLATE_VERSION = "Master v1.2.3 (STANDARD — promoted 2026-10-06; disclaimer hardened 2026-10-11, value-first KPI option 2026-10-11, visa readiness matrix + action gates + PDF button hidden by default 2026-10-11)";
 
 export const REPORT_CSS = `
 :root{--primary:#005677;--secondary:#008DCB;--success:#28a745;--danger:#dc3545;--warning:#ffc107;--light:#f8f9fa;--dark:#343a40;--white:#ffffff}
@@ -75,6 +87,7 @@ body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background-color:#e
 .data-table th{background:var(--light);color:var(--primary);text-align:left;padding:12px;border-bottom:2px solid #ddd}
 .data-table td{padding:11px 12px;border-bottom:1px solid #eee;vertical-align:top}
 .data-table tr:nth-child(even) td{background:#fafbfc}
+.data-table tr.row-active td{background:#e0f2fe}
 .text-right{text-align:right}.text-center{text-align:center}
 .text-success{color:var(--success);font-weight:bold}.text-danger{color:var(--danger);font-weight:bold}
 .num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
@@ -178,6 +191,58 @@ export function signoff(left = "Authorized Signature — Global EIS", right = `D
   return `<div class="signoff"><div class="sig-line">${escHtml(left)}</div><div class="sig-line">${escHtml(right)}</div></div>`;
 }
 
+/* ---------------- Master v1.2.3 vocabulary (DL-9, 2026-10-11) ---------------- */
+
+/** One assessment line of the visa readiness matrix. */
+export interface ReadinessRow {
+  /** e.g. "UK Visit Visa (per applicant)" or "UK Visit Visa — JOINT, 2 travellers". */
+  destination: string;
+  /** Required funds, e.g. "EGP 205,440.00"; informational lines use "—". */
+  required: string;
+  /** true/false → PASS/FAIL with semantic color; informational lines pass true. */
+  pass: boolean;
+  /** e.g. "1,235.3% (12.35x)" or free text for informational lines. */
+  coverage: string;
+  /** Override the PASS/FAIL word (e.g. "PASS"). */
+  result?: string;
+  /** Highlights the line as the case's ACTIVE BENCHMARK (light-blue row + pill). */
+  active?: boolean;
+  /** Small print under the destination, e.g. "2 × EGP 205,440.00 = EGP 410,880.00". */
+  subLines?: string[];
+}
+
+/**
+ * Quantitative visa readiness matrix (Master v1.2.3) — the Elgarayadli
+ * strength: per-destination maintenance benchmarks with coverage multiples,
+ * a highlighted joint/active-benchmark line, and document-authenticity
+ * screening. Renders entirely from template classes.
+ */
+export function visaReadinessMatrix(rows: ReadinessRow[]): string {
+  const body = rows
+    .map((r) => {
+      const word = r.result ?? (r.pass ? "PASS" : "FAIL");
+      const cls = r.pass ? "text-success" : "text-danger";
+      const badge = r.active ? ` ${tag("ACTIVE BENCHMARK", "low")}` : "";
+      const sub = (r.subLines ?? []).map((s) => `<br><span class="small">${s}</span>`).join("");
+      return (
+        `<tr${r.active ? ' class="row-active"' : ""}><td><b>${escHtml(r.destination)}</b>${badge}${sub}</td>` +
+        `<td class="num">${r.required}</td>` +
+        `<td class="num ${cls}"><b>${escHtml(word)}</b></td>` +
+        `<td class="num">${r.coverage}</td></tr>`
+      );
+    })
+    .join("");
+  return `<table class="data-table"><thead><tr><th>Assessment Line</th><th>Required (EGP-equivalent)</th><th>Result</th><th>Coverage</th></tr></thead><tbody>${body}</tbody></table>`;
+}
+
+/**
+ * Numbered client action gate card (Master v1.2.3) — place inside
+ * analysisGrid() for the "Required Client Actions" checklist.
+ */
+export function actionGate(n: number, title: string, bodyHtml: string): string {
+  return `<div class="analysis-card"><b>Gate ${n} — ${escHtml(title)}.</b> ${bodyHtml}</div>`;
+}
+
 export interface ReportShellOpts {
   title: string;
   /** Fully-qualified header sub-lines (HTML allowed, e.g. <strong>…</strong>). */
@@ -187,6 +252,7 @@ export interface ReportShellOpts {
   contentHtml: string;
   /** Page <title> (defaults to the firm's standard). */
   pageTitle?: string;
+  /** Master v1.2.3: hidden by default (owner order 2026-10-11) — pass true to show. */
   downloadButton?: boolean;
   /** Master v1.2 header reference line (ref · generated date). */
   refLine?: string;
@@ -194,7 +260,7 @@ export interface ReportShellOpts {
 
 /** Full standard page: gradient header → content → sign-off-ready prepared-by footer. */
 export function reportShell(opts: ReportShellOpts): string {
-  const btn = opts.downloadButton === false ? "" : `<button class="download-btn" onclick="window.print()">&#11015; Download PDF Report</button>`;
+  const btn = opts.downloadButton === true ? `<button class="download-btn" onclick="window.print()">&#11015; Download PDF Report</button>` : "";
   const ref = opts.refLine ? `<p class="ref-line">${opts.refLine}</p>` : "";
   return `<!DOCTYPE html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">

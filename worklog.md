@@ -1516,3 +1516,38 @@ Work Log:
 Stage Summary:
 - Gehad Abdelwahab 299-row Banque Misr EGP report shipped from Master v1.2.2, chain 299/299 residual 0.00, dual audit 24/24, gate pending this entry
 - Evidence archive rebuilt at download/04_evidence/GehadAbdelwahab_1stmt (receipts + QA crops)
+
+---
+Task ID: DL-9
+Agent: Super Z (main)
+Task: "choose anything you see it's strong points... abdulrahman report has more benefits as visa operations, i guess there's a good mix between this template and our current template + hide Download PDF Report" (challenger re-attached)
+
+Work Log:
+- Verified upload identical to DL-5/6/7 challenger (sha e6a650c9, 40,392 B); canonical Elgarayadli
+  (git d88bfbb^) carries the same section 10 — the quantitative matrix was a one-off handcraft,
+  never in template vocabulary. That is the "good mix" the owner wants promoted.
+- ADOPTED into src/lib/report_design.ts as Master v1.2.3:
+  (1) visaReadinessMatrix(rows) + ReadinessRow interface — per-destination benchmarks with
+      coverage multiples, joint line with ACTIVE BENCHMARK pill (tag low) + .row-active highlight,
+      document-authenticity screening line, FAIL state in danger red;
+  (2) actionGate(n, title, body) — numbered client action gates for analysisGrid;
+  (3) ONE additive CSS line: .data-table tr.row-active td{background:#e0f2fe};
+  (4) OWNER ORDER: reportShell downloadButton default FLIPPED — hidden unless downloadButton:true
+      (print/PDF unaffected; button never printed).
+- REJECTED (ledger stands from DL-6/7): phantom .section classes, ALL-CAPS signoff, dead CSS spend.
+- Verification: scoped tsc exit 0; full-project error output byte-identical before/after change
+  (md5 ae642935bc151d023615125c55e4eb02 both sides) => zero new errors; SO-9 class audit script
+  (scripts/so9_class_audit.py, now tracked/reusable) PASS — 28 used / 47 defined, NONE missing,
+  zero challenger-legacy classes.
+- Specimen rendered THROUGH the real module with bun (scripts/dl9_visa_specimen.ts — zero drift):
+  self-audit green (no button element, row-active CSS, ACTIVE BENCHMARK pill, 6 gates, 8 matrix
+  rows); playwright screenshots confirm matrix layout + empty header top-right.
+- Deliverable: download/00_Specimen_VisaReadiness_Master_v123.html (14,924 B,
+  sha256 a805436c5abbf18bd985c547048cac554ca069a1d69d9f1348bceb788e36ea7e)
+- Evidence: download/04_evidence/DL9_Template_v123/ (RECEIPT.json + aux hashes + 2 screenshots)
+
+Stage Summary:
+- Master v1.2.3 is the template source of truth: Elgarayadli's strongest one-off section is now
+  standard vocabulary every generator can mix in; on-screen PDF button retired by owner order.
+- All previously delivered reports remain valid (additive change); future reports render
+  button-less by default and may call visaReadinessMatrix()/actionGate() directly.
