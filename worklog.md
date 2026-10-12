@@ -1768,3 +1768,20 @@ Work Log:
 
 Stage Summary:
 - Production verified CURRENT with DL-10d Royal Aurora refined. Owner-side stale page: browser cache or old preview URL or checked mid-build. Remedy issued: hard refresh / incognito on the production domain. No code change needed.
+
+---
+Task ID: DL-10f
+Agent: Super Z (main)
+Task: Owner: "Upload failed (HTTP 404). again" — portal upload broken again.
+
+Work Log:
+- Root-caused in minutes (repeat offense): /api/upload route.ts (418 lines) deleted from the tree by lineage churn at commit c893192 (AUDIT-1) and never restored — third occurrence in project history (10ed6e7, f73286b precedents). Forensic diff c893192^ vs HEAD confirmed it was the ONLY missing src file (verify-code was a later addition, unrelated).
+- Restored verbatim: git checkout c893192^ -- src/app/api/upload/route.ts. All @/lib imports verified present (db/portal/storage/mail/actions/engine-run/session).
+- Gates: tsc src-tree 0 errors (12 baseline noise all in examples/+scripts/, none in src/); bunx next build exit 0 with /api/upload back in the route manifest.
+- Standalone server restart incl. mandatory .next/static copy step (DL-10b lesson): root 200, css 200.
+- LIVE E2E on local: op.eis login 200 -> POST /api/upload (field name "files", not "file") -> HTTP 200 ok:true, submissionId + md5 handshake, autoWork:true -> queue row went WAITING->ANALYZING with needsManual:true (expected: 209-byte dummy PDF has no bank data -> documented yellow OCR path). Engine pipeline confirmed alive end-to-end.
+- Test artifacts purged from DB (submission + statementFile + parseLog) so operator queue stays pristine; test PDF in /tmp only.
+- Pushed 4001ebb -> Vercel auto-deploy; prod curl-verified after build (POST /api/upload no longer 404).
+
+Stage Summary:
+- Upload pipeline fully restored for the THIRD time. Chronic lesson: lineage churn keeps eating /api/upload — AUDIT gate should check git ls-tree HEAD src/app/api/upload/route.ts before any push. Owner can retry the real statement upload on prod once Vercel build finishes (~2-3 min).
