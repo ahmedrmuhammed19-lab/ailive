@@ -166,7 +166,7 @@ export default function PortalPage() {
       </div>
 
       {/* Header — floating glass bar */}
-      <header className="sticky top-0 z-40 border-b border-[var(--eis-border)] bg-[var(--eis-canvas-glass)] backdrop-blur-xl backdrop-saturate-150">
+      <header className="sticky top-0 z-40 border-b border-[var(--eis-border)] bg-[var(--eis-canvas-glass)] backdrop-blur-xl backdrop-saturate-[1.25]">
         <div className="mx-auto flex max-w-5xl flex-wrap items-center gap-3 px-4 py-3 sm:px-6">
           <div className="eis-brand-tile flex h-9 w-9 items-center justify-center rounded-xl" aria-hidden="true">
             <Crown className="h-4.5 w-4.5" strokeWidth={2.2} />
@@ -209,7 +209,7 @@ export default function PortalPage() {
         </div>
       </header>
 
-      <main className="mx-auto w-full max-w-5xl flex-1 px-4 py-6 sm:px-6">
+      <main className="mx-auto w-full max-w-5xl flex-1 px-4 py-8 sm:px-6 sm:py-10">
         {/* Sign-in gate / first-run setup */}
         {!user && !checking && (
           <motion.div
@@ -220,17 +220,17 @@ export default function PortalPage() {
           >
             {/* Hero strip — 2026: typography leads */}
             <div className="mb-6 text-center">
-              <p className="eis-foil mb-3 inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-[11px] font-semibold tracking-wide backdrop-blur">
+              <p className="eis-foil mb-3 inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-[10px] font-semibold tracking-[0.14em] backdrop-blur">
                 <span className="h-1.5 w-1.5 rounded-full bg-[var(--eis-online)] eis-dot-live" aria-hidden="true" />
-                SECURE CLIENT PORTAL · ROYAL AURORA · 2026 EDITION
+                SECURE CLIENT PORTAL · ROYAL AURORA · ÉLÉGANCE 2026
               </p>
-              <h2 className="eis-display text-balance text-3xl font-semibold leading-[1.1] tracking-tight sm:text-4xl" style={{ color: GH.fg }}>
+              <h2 className="eis-display text-balance text-3xl font-medium leading-[1.12] tracking-[-0.01em] sm:text-4xl" style={{ color: GH.fg }}>
                 Secure statement <span className="eis-gradient-text">intelligence</span>
               </h2>
-              <p className="mx-auto mt-2.5 max-w-sm text-pretty text-sm leading-relaxed text-[var(--eis-muted)]">
+              <p className="mx-auto mt-3 max-w-sm text-pretty text-sm leading-relaxed text-[var(--eis-muted)]">
                 100% balance-chain verified reports — every format, text or scan.
               </p>
-              <div className="eis-ornament mx-auto mt-4 w-fit" aria-hidden="true">
+              <div className="eis-ornament mx-auto mt-5 w-fit" aria-hidden="true">
                 <i />
               </div>
               <div className="mt-3 flex flex-wrap items-center justify-center gap-1.5">

@@ -1785,3 +1785,19 @@ Work Log:
 
 Stage Summary:
 - Upload pipeline fully restored for the THIRD time. Chronic lesson: lineage churn keeps eating /api/upload — AUDIT gate should check git ls-tree HEAD src/app/api/upload/route.ts before any push. Owner can retry the real statement upload on prod once Vercel build finishes (~2-3 min).
+
+---
+Task ID: DL-11
+Agent: Super Z (main)
+Task: Owner: "Elegant design for 2026" — elegance refinement pass on the Royal Aurora portal.
+
+Work Log:
+- Pre-flight churn incidents (all recovered before design work): (a) local git history FORGED — churn created twin commit 2fa0f9e (same worklog message, route-less tree) replacing pushed 394b5b9 locally; forensic diff confirmed only /api/upload missing; hard-reset local to origin/main (prod was never affected — origin still held the hotfix). (b) 4th env/DB wipe — restore_env.sh re-run: SESSION_SECRET regenerated, 4 accounts reseeded (op.eis/client.workq/client.other/abdo); SMTP back to file-outbox mode until operator re-supplies config/mail_credentials.json (documented operator-side secret). (c) NEW LESSON — Next 16 standalone does NOT read .env from its dir at runtime: must launch with `set -a; source .env; set +a`; AND restarts must kill the renamed worker (process title becomes 'next-server (v16.x)', pkill -f standalone/server.js misses it) or the stale worker silently keeps :3000 with old env.
+- Design pass "ROYAL AURORA — ÉLÉGANCE 2026" (values layer only, NOTHING renamed): aurora dimmed + slowed (orb opacity light .7/.62/.55 dark .42/.38/.3; cycles 96/88/104s; wash alphas down) so it reads as atmosphere, not decoration; glass airier (blur 24px, saturate 1.2; glass alphas 0.78 light / 0.66 dark); champagne gold #e7c982 (dark) replacing brassier #ecc76f, softer foil wash; silk shadows (diffuse 22-52px drops, lighter sheen); --radius 0.875rem; ornament hairlines 4.5rem→6rem + smaller diamond; starfield dimmed; sheen/selection/scrollbar softened; CTA hover de-flashed (brightness flash removed, lift + deeper shadow, 0.25s cubic-bezier(0.22,1,0.36,1)).
+- page.tsx 5 cosmetic edits: badge text 'SECURE CLIENT PORTAL · ROYAL AURORA · ÉLÉGANCE 2026' with 0.14em tracking @10px; hero serif font-medium + tracking-[-0.01em] (Playfair medium = elegant); breathing room (main py-8/sm:py-10, ornament mt-5, subtext mt-3); header saturate 1.25. layout.tsx themeColor synced to new canvases (#faf8fe/#090613).
+- Discipline: all --eis-* names + class names intact; STATUS semantics untouched; report_design.ts (Master v1.2.6) untouched; zero logic/API changes.
+- Gates: upload-route-in-tree pre-push check PASS; tsc src-tree 0 errors; bunx next build exit 0; standalone static-copy step applied.
+- Browser (agent-browser) 5-shot evidence in download/04_evidence/DL11_Elegance2026/ + RECEIPT.json (sha256-locked): gate light, gate dark (starfield restraint), workspace dark (glass panels under night sky), workspace light (porcelain silk), queue light. Login + all 5 tabs verified live.
+
+Stage Summary:
+- Portal wears "Royal Aurora — Élégance 2026": same royal stage, now whispered instead of displayed — dimmer aurora, silk glass, champagne gold, wider tracking, generous air. Zero logic drift; upload pipeline confirmed healthy pre-push; env reaper incidents (4th wipe + forged commit) recovered and codified in the receipt.

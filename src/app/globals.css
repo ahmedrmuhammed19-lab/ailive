@@ -46,7 +46,7 @@
 }
 
 :root {
-  --radius: 0.75rem;
+  --radius: 0.875rem; /* élégance: softer, more generous corners */
   --background: oklch(0.975 0.012 300);
   --foreground: oklch(0.22 0.045 300);
   --card: oklch(1 0 0);
@@ -128,8 +128,9 @@
 }
 
 /* ============================================================
-   Global EIS portal — 2026 design system ("ROYAL AURORA", 2026.10
-   owner-selected theme; supersedes "Petrol Teal — Crisp" DL-10).
+   Global EIS portal — 2026 design system ("ROYAL AURORA",
+   ÉLÉGANCE refinement pass DL-11; owner-selected theme,
+   supersedes "Petrol Teal — Crisp" DL-10).
 
    Concept — the throne-room aurora:
    • Canvas — deep royal indigo (dark) / lavender porcelain (light).
@@ -138,8 +139,11 @@
      earlier RGB scene (no hue-cycling, no twinkle, no spin).
    • Royal gold foil — reserved for ceremonial moments (edition
      badge); never used as wallpaper.
-   • Surfaces — crisp violet-tinted glass, hairline border, one
-     inner top highlight, layered indigo shadow.
+   • Surfaces — silk violet-tinted glass (24px blur, calmer saturate),
+     hairline border, one inner top highlight, layered indigo shadow.
+   • ÉLÉGANCE 2026 — elegance through restraint: dimmer + slower
+     aurora, airier glass, champagne gold, longer hairlines, softer
+     shadows, wider tracking, more breathing room. Nothing renamed.
    • Status semantics UNCHANGED: green / amber / red stay exactly
      as ratified (--eis-success / --eis-attention / --eis-danger).
    ALL --eis-* variable NAMES and class names are unchanged, so the
@@ -151,16 +155,16 @@
    ============================================================ */
 :root {
   color-scheme: light;
-  --eis-canvas: #f8f6fd;
-  --eis-canvas-subtle: #efeafa;
-  --eis-canvas-glass: rgba(255, 253, 255, 0.84);
+  --eis-canvas: #faf8fe;
+  --eis-canvas-subtle: #f1ecfb;
+  --eis-canvas-glass: rgba(255, 254, 255, 0.78);
   --eis-live-1: #a855f7;
   --eis-live-2: #7c3aed;
   --eis-live-3: #4c1d95;
   --eis-grid-line: rgba(109, 40, 217, 0.05);
   --eis-hover: #efe9f8;
-  --eis-border: #e2d9f3;
-  --eis-border-muted: #ebe4f7;
+  --eis-border: #e7dff6;
+  --eis-border-muted: #eee8f9;
   --eis-fg: #191327;
   --eis-muted: #5d5474;
   --eis-accent: #6d28d9;
@@ -185,26 +189,26 @@
   --eis-scale-3: #8b5cf6;
   --eis-scale-4: #4c1d95;
   --eis-gold: #a16207;
-  --eis-gold-soft: #f5e6c4;
-  --eis-glow: 0 0 0 1px rgba(109, 40, 217, 0.16), 0 10px 32px -8px rgba(139, 92, 246, 0.4);
+  --eis-gold-soft: #f7eed6; /* champagne wash */
+  --eis-glow: 0 0 0 1px rgba(109, 40, 217, 0.13), 0 10px 30px -10px rgba(139, 92, 246, 0.32);
   --eis-card-shadow:
-    0 1px 2px rgba(25, 19, 39, 0.05),
-    0 12px 32px -16px rgba(76, 29, 149, 0.18);
+    0 1px 2px rgba(25, 19, 39, 0.04),
+    0 18px 44px -20px rgba(76, 29, 149, 0.15);
 }
 
 .dark {
   color-scheme: dark;
   /* Royal indigo canvas — matte near-black with a violet cast */
-  --eis-canvas: #0a0715;
-  --eis-canvas-subtle: #110c22;
-  --eis-canvas-glass: rgba(17, 11, 34, 0.72);
+  --eis-canvas: #090613;
+  --eis-canvas-subtle: #0f0a1f;
+  --eis-canvas-glass: rgba(15, 10, 29, 0.66);
   --eis-live-1: #c084fc;
   --eis-live-2: #a78bfa;
   --eis-live-3: #7c3aed;
   --eis-grid-line: rgba(167, 139, 250, 0.05);
   --eis-hover: #17102e;
-  --eis-border: #271d45;
-  --eis-border-muted: #1e1636;
+  --eis-border: #241a40;
+  --eis-border-muted: #1c1433;
   --eis-fg: #ede9f8;
   --eis-muted: #9d93b8;
   --eis-accent: #a78bfa;
@@ -228,14 +232,14 @@
   --eis-scale-2: #3b2382;
   --eis-scale-3: #7c3aed;
   --eis-scale-4: #c084fc;
-  --eis-gold: #ecc76f;
-  --eis-gold-soft: rgba(236, 199, 111, 0.14);
-  --eis-glow: 0 0 0 1px rgba(139, 92, 246, 0.24), 0 10px 34px -8px rgba(139, 92, 246, 0.35);
-  /* Crisp panel depth: faint inner top sheen + deep indigo drop */
+  --eis-gold: #e7c982; /* champagne, not brass */
+  --eis-gold-soft: rgba(231, 201, 130, 0.12);
+  --eis-glow: 0 0 0 1px rgba(139, 92, 246, 0.2), 0 10px 32px -10px rgba(139, 92, 246, 0.28);
+  /* Silk panel depth: faint inner top sheen + deep, diffuse indigo drop */
   --eis-card-shadow:
-    inset 0 1px 0 rgba(196, 181, 253, 0.06),
-    0 1px 2px rgba(0, 0, 0, 0.5),
-    0 16px 40px -18px rgba(12, 6, 34, 0.72);
+    inset 0 1px 0 rgba(196, 181, 253, 0.05),
+    0 1px 2px rgba(0, 0, 0, 0.42),
+    0 22px 52px -22px rgba(10, 5, 28, 0.7);
 }
 
 /* --- Dark overrides for hardcoded light-only utilities --- */
@@ -281,8 +285,8 @@
   overflow: hidden;
   pointer-events: none;
   background:
-    radial-gradient(52rem 34rem at 82% -8%, rgba(139, 92, 246, 0.09), transparent 62%),
-    radial-gradient(46rem 30rem at -12% 108%, rgba(192, 38, 211, 0.07), transparent 60%),
+    radial-gradient(52rem 34rem at 82% -8%, rgba(139, 92, 246, 0.07), transparent 62%),
+    radial-gradient(46rem 30rem at -12% 108%, rgba(192, 38, 211, 0.055), transparent 60%),
     var(--eis-canvas);
 }
 /* Aurora curtain 1 — violet crown, drifts northwest↔southeast */
@@ -297,9 +301,9 @@
   height: 42rem;
   top: -17rem;
   right: -13rem;
-  background: radial-gradient(closest-side, rgba(139, 92, 246, 0.17), transparent 70%);
-  opacity: 0.85;
-  animation: eis-drift-a 82s ease-in-out infinite alternate;
+  background: radial-gradient(closest-side, rgba(139, 92, 246, 0.14), transparent 70%);
+  opacity: 0.7;
+  animation: eis-drift-a 96s ease-in-out infinite alternate;
 }
 /* Aurora curtain 2 — fuchsia under-glow */
 .eis-orb-b {
@@ -307,9 +311,9 @@
   height: 38rem;
   bottom: -17rem;
   left: -11rem;
-  background: radial-gradient(closest-side, rgba(217, 70, 239, 0.13), transparent 72%);
-  opacity: 0.8;
-  animation: eis-drift-b 74s ease-in-out infinite alternate;
+  background: radial-gradient(closest-side, rgba(217, 70, 239, 0.105), transparent 72%);
+  opacity: 0.62;
+  animation: eis-drift-b 88s ease-in-out infinite alternate;
 }
 /* Aurora curtain 3 — teal counterpoint (2026: re-armed) */
 .eis-orb-c {
@@ -317,9 +321,9 @@
   height: 34rem;
   top: 24%;
   left: -14rem;
-  background: radial-gradient(closest-side, rgba(45, 212, 191, 0.11), transparent 72%);
-  opacity: 0.75;
-  animation: eis-drift-c 90s ease-in-out infinite alternate;
+  background: radial-gradient(closest-side, rgba(45, 212, 191, 0.09), transparent 72%);
+  opacity: 0.55;
+  animation: eis-drift-c 104s ease-in-out infinite alternate;
 }
 @keyframes eis-drift-a {
   from { transform: translate3d(0, 0, 0) scale(1); }
@@ -348,22 +352,22 @@
 }
 .dark .eis-aurora {
   background:
-    radial-gradient(52rem 34rem at 82% -8%, rgba(139, 92, 246, 0.12), transparent 62%),
-    radial-gradient(46rem 30rem at -12% 108%, rgba(192, 38, 211, 0.09), transparent 60%),
+    radial-gradient(52rem 34rem at 82% -8%, rgba(139, 92, 246, 0.1), transparent 62%),
+    radial-gradient(46rem 30rem at -12% 108%, rgba(192, 38, 211, 0.075), transparent 60%),
     var(--eis-canvas);
 }
-.dark .eis-orb-a { opacity: 0.55; }
-.dark .eis-orb-b { opacity: 0.5; }
-.dark .eis-orb-c { opacity: 0.45; }
+.dark .eis-orb-a { opacity: 0.42; }
+.dark .eis-orb-b { opacity: 0.38; }
+.dark .eis-orb-c { opacity: 0.3; }
 /* Starfield (dark only) — a static royal night sky scattered over
    the aurora: four dot layers at different tile scales (pseudo-
    random repetition) above the fine grid. No twinkle — calm. */
 .dark .eis-stars {
   background-image:
-    radial-gradient(1.3px 1.3px at 14px 22px, rgba(237, 233, 248, 0.6), transparent 2px),
-    radial-gradient(1px 1px at 52px 46px, rgba(196, 181, 253, 0.5), transparent 1.6px),
-    radial-gradient(1.5px 1.5px at 78px 12px, rgba(237, 233, 248, 0.34), transparent 2.2px),
-    radial-gradient(1px 1px at 96px 66px, rgba(240, 219, 158, 0.42), transparent 1.6px),
+    radial-gradient(1.3px 1.3px at 14px 22px, rgba(237, 233, 248, 0.5), transparent 2px),
+    radial-gradient(1px 1px at 52px 46px, rgba(196, 181, 253, 0.42), transparent 1.6px),
+    radial-gradient(1.5px 1.5px at 78px 12px, rgba(237, 233, 248, 0.28), transparent 2.2px),
+    radial-gradient(1px 1px at 96px 66px, rgba(240, 219, 158, 0.36), transparent 1.6px),
     linear-gradient(var(--eis-grid-line) 1px, transparent 1px),
     linear-gradient(90deg, var(--eis-grid-line) 1px, transparent 1px);
   background-size: 108px 108px, 132px 132px, 156px 156px, 180px 180px, 44px 44px, 44px 44px;
@@ -388,8 +392,8 @@
 .eis-glass {
   position: relative;
   background: var(--eis-canvas-glass);
-  backdrop-filter: blur(20px) saturate(1.35);
-  -webkit-backdrop-filter: blur(20px) saturate(1.35);
+  backdrop-filter: blur(24px) saturate(1.2);
+  -webkit-backdrop-filter: blur(24px) saturate(1.2);
   border: 1px solid var(--eis-border);
   box-shadow: var(--eis-card-shadow);
 }
@@ -398,10 +402,10 @@
   position: absolute;
   inset: 0;
   border-radius: inherit;
-  background: linear-gradient(180deg, rgba(139, 92, 246, 0.06), transparent 18%);
+  background: linear-gradient(180deg, rgba(139, 92, 246, 0.05), transparent 20%);
   pointer-events: none;
 }
-.dark .eis-glass::before { background: linear-gradient(180deg, rgba(196, 181, 253, 0.07), transparent 20%); }
+.dark .eis-glass::before { background: linear-gradient(180deg, rgba(196, 181, 253, 0.06), transparent 22%); }
 
 /* Hairline header rule for panel headers — static aurora-tinted
    gradient line (was: animated RGB sweep). */
@@ -413,7 +417,7 @@
   position: absolute;
   inset: 0 0 auto 0;
   height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(139, 92, 246, 0.55) 30%, rgba(217, 70, 239, 0.3) 55%, transparent);
+  background: linear-gradient(90deg, transparent, rgba(139, 92, 246, 0.45) 30%, rgba(217, 70, 239, 0.24) 55%, transparent);
   pointer-events: none;
 }
 
@@ -431,24 +435,24 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.8rem;
+  gap: 1rem;
 }
 .eis-ornament::before,
 .eis-ornament::after {
   content: "";
   height: 1px;
-  width: 4.5rem;
+  width: 6rem;
   background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--eis-gold) 60%, transparent));
 }
 .eis-ornament::after {
   background: linear-gradient(90deg, color-mix(in srgb, var(--eis-gold) 60%, transparent), transparent);
 }
 .eis-ornament i {
-  width: 6px;
-  height: 6px;
+  width: 5px;
+  height: 5px;
   transform: rotate(45deg);
   background: var(--eis-gold);
-  box-shadow: 0 0 8px color-mix(in srgb, var(--eis-gold) 65%, transparent);
+  box-shadow: 0 0 6px color-mix(in srgb, var(--eis-gold) 55%, transparent);
 }
 
 /* Royal brand tile — the header monogram: deep royal indigo tile,
@@ -456,11 +460,11 @@
 .eis-brand-tile {
   position: relative;
   background: linear-gradient(150deg, #241640 0%, #150e2c 58%, #0d081f 100%);
-  border: 1px solid color-mix(in srgb, var(--eis-gold) 42%, transparent);
+  border: 1px solid color-mix(in srgb, var(--eis-gold) 38%, transparent);
   box-shadow:
-    inset 0 1px 0 rgba(236, 199, 111, 0.18),
-    0 6px 18px -6px rgba(12, 6, 34, 0.55),
-    0 0 14px -2px rgba(139, 92, 246, 0.25);
+    inset 0 1px 0 rgba(231, 201, 130, 0.16),
+    0 6px 18px -6px rgba(12, 6, 34, 0.5),
+    0 0 14px -2px rgba(139, 92, 246, 0.2);
   color: var(--eis-gold);
 }
 
@@ -514,7 +518,7 @@
   background: linear-gradient(135deg, var(--eis-accent) 0%, var(--eis-accent-2) 100%);
   color: #ffffff;
   box-shadow: var(--eis-glow);
-  transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease;
+  transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.25s cubic-bezier(0.22, 1, 0.36, 1), filter 0.25s ease;
 }
 .eis-cta::after {
   content: "";
@@ -526,8 +530,7 @@
   pointer-events: none;
 }
 .eis-cta:hover {
-  filter: brightness(1.06);
-  box-shadow: var(--eis-glow), 0 4px 14px -2px rgba(139, 92, 246, 0.45);
+  box-shadow: var(--eis-glow), 0 6px 18px -4px rgba(139, 92, 246, 0.38);
   transform: translateY(-1px);
 }
 .eis-cta:hover::after { transform: translateX(130%); }
@@ -561,16 +564,16 @@
   scrollbar-width: thin;
   scrollbar-color: var(--eis-border) transparent;
 }
-::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar { width: 8px; height: 8px; }
 ::-webkit-scrollbar-thumb {
   background: var(--eis-border);
-  border-radius: 8px;
+  border-radius: 999px;
   border: 2px solid transparent;
   background-clip: content-box;
 }
 ::-webkit-scrollbar-thumb:hover { background-color: var(--eis-neutral); }
 ::selection {
-  background: rgba(139, 92, 246, 0.32);
+  background: rgba(139, 92, 246, 0.26);
 }
 
 /* Accessibility: one switch kills every motion effect — aurora
