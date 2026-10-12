@@ -1737,3 +1737,21 @@ Work Log:
 - Read its palette from source: navy night ramp #070d1c/#0e1c3f/#12234d + 4-step gold #b8892c->#f3d588 + violet/teal/blue accents. "Desert-night royal" language: navy app tile with gold arch monogram, Arabic calligraphy wordmark (gold glow) / serif EN wordmark (gold->navy split), letter-spaced 2026 kicker with gold diamond ornament, cream+pastel mesh (light) / navy night + starfield + dual wash (dark), fine grid both modes, crisp-white vs blue-glow glass cards, true RTL/LTR mirroring.
 - Compared with Global EIS Royal Aurora (DL-10b): same royal family (ceremonial badge, grid, glass, calm motion); difference is ours = "northern lights" (indigo+violet/fuchsia/teal drift) vs theirs = "desert night" (navy+gold+stars). Their unique assets we lack: monogram app tile, gold diamond divider, dark-mode starfield, serif display pairing, bilingual RTL.
 - NO changes made to the Global EIS portal — awaiting owner's direction (adopt elements / keep as-is).
+
+---
+Task ID: DL-10d
+Agent: Super Z (main)
+Task: Owner: "apply it" — adopt the four reference elements proposed in DL-10c into the Royal Aurora portal.
+
+Work Log:
+- Applied all four refinements at the design-system layer:
+  (1) .eis-ornament ceremonial divider — gold hairlines meeting a glowing gold diamond, placed under the hero subtext;
+  (2) .eis-brand-tile — header "GE" text chip replaced by a deep-indigo tile with gold ring + gold Crown icon (lucide). eis-gradient-brand LEFT UNTOUCHED (shared by upload/queue panels);
+  (3) dark-mode starfield — four static radial-gradient dot layers (white/violet/gold, pseudo-random tile scales 108-180px) above the fine grid in .dark .eis-stars; no twinkle (calm); stars+aurora = royal night sky;
+  (4) serif display voice — Playfair Display via next/font (--font-display) applied to header wordmark + hero h2 via .eis-display; body/product stays Geist; report document (report_design.ts) untouched.
+- Gates: tsc src-tree 0 errors; next build exit 0; standalone static-copy step applied before server start (DL-10b lesson).
+- Browser verification: gate light (crown tile, serif hero, ornament), gate dark (starfield over aurora), workspace dark after op.eis login (panels intact under night sky). Screenshots + RECEIPT in download/04_evidence/DL10d_RoyalAurora_Refined/.
+- Pushed to origin/main -> Vercel auto-deploy.
+
+Stage Summary:
+- Royal Aurora 2026 now carries the reference portal's ceremonial DNA (crown monogram, gold diamond ornament, starfield, serif voice) while keeping its own northern-lights palette — the fusion the owner asked for. Zero logic drift; Master v1.2.6 untouched; pipeline unaffected.
