@@ -1755,3 +1755,16 @@ Work Log:
 
 Stage Summary:
 - Royal Aurora 2026 now carries the reference portal's ceremonial DNA (crown monogram, gold diamond ornament, starfield, serif voice) while keeping its own northern-lights palette — the fusion the owner asked for. Zero logic drift; Master v1.2.6 untouched; pipeline unaffected.
+
+---
+Task ID: DL-10e
+Agent: Super Z (main)
+Task: Owner: "i checked our portal it's not applied" — diagnose Royal Aurora refinement visibility.
+
+Work Log:
+- Forensic on prod (https://ailive-three.vercel.app): pushed commits confirmed on origin/main (92458b4/9e6ebc1); prod HTML carries DL-10b themeColor (#0a0715/#f8f6fd) + DL-10d markup classes (eis-brand-tile, eis-display); ALL prod CSS chunks (131,831 B) contain every marker: eis-foil, eis-gold, eis-brand-tile, eis-ornament, 108px starfield layers, playfair, eis-drift. No service worker in repo (not a SW cache issue).
+- Fresh agent-browser profile (zero cache) loaded prod dark mode: crown tile, starfield over aurora, Playfair serif hero, gold diamond ornament, foil badge — ALL visible. Screenshots + RECEIPT in download/04_evidence/DL10e_ProdVerify/.
+- eis-ornament absent from static HTML is expected: hero renders client-side after session check; only header is SSR-visible.
+
+Stage Summary:
+- Production verified CURRENT with DL-10d Royal Aurora refined. Owner-side stale page: browser cache or old preview URL or checked mid-build. Remedy issued: hard refresh / incognito on the production domain. No code change needed.
