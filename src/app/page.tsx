@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
-  ShieldCheck, CheckCircle2, Loader2, Lock, ListOrdered, LayoutDashboard, FileText, UploadCloud, LogOut, User, UserCog, Sparkles,
+  ShieldCheck, CheckCircle2, Loader2, Lock, ListOrdered, LayoutDashboard, FileText, UploadCloud, LogOut, User, UserCog, Sparkles, Crown,
 } from "lucide-react";
 import { UploadPanel } from "@/components/portal/upload-panel";
 import { QueuePanel } from "@/components/portal/queue-panel";
@@ -168,11 +168,11 @@ export default function PortalPage() {
       {/* Header — floating glass bar */}
       <header className="sticky top-0 z-40 border-b border-[var(--eis-border)] bg-[var(--eis-canvas-glass)] backdrop-blur-xl backdrop-saturate-150">
         <div className="mx-auto flex max-w-5xl flex-wrap items-center gap-3 px-4 py-3 sm:px-6">
-          <div className="eis-gradient-brand flex h-9 w-9 items-center justify-center rounded-xl text-sm font-bold text-white shadow-[var(--eis-glow)]" aria-hidden="true">
-            GE
+          <div className="eis-brand-tile flex h-9 w-9 items-center justify-center rounded-xl" aria-hidden="true">
+            <Crown className="h-4.5 w-4.5" strokeWidth={2.2} />
           </div>
           <div className="min-w-0">
-            <h1 className="text-sm font-semibold leading-tight tracking-tight">
+            <h1 className="eis-display text-base font-semibold leading-tight tracking-tight">
               Global <span className="eis-gradient-text">EIS</span>
             </h1>
             <p className="truncate text-xs text-[var(--eis-muted)]">Statement intake queue · Financial Intelligence Services</p>
@@ -224,12 +224,15 @@ export default function PortalPage() {
                 <span className="h-1.5 w-1.5 rounded-full bg-[var(--eis-online)] eis-dot-live" aria-hidden="true" />
                 SECURE CLIENT PORTAL · ROYAL AURORA · 2026 EDITION
               </p>
-              <h2 className="text-balance text-3xl font-semibold leading-[1.1] tracking-tight sm:text-4xl" style={{ color: GH.fg }}>
+              <h2 className="eis-display text-balance text-3xl font-semibold leading-[1.1] tracking-tight sm:text-4xl" style={{ color: GH.fg }}>
                 Secure statement <span className="eis-gradient-text">intelligence</span>
               </h2>
               <p className="mx-auto mt-2.5 max-w-sm text-pretty text-sm leading-relaxed text-[var(--eis-muted)]">
                 100% balance-chain verified reports — every format, text or scan.
               </p>
+              <div className="eis-ornament mx-auto mt-4 w-fit" aria-hidden="true">
+                <i />
+              </div>
               <div className="mt-3 flex flex-wrap items-center justify-center gap-1.5">
                 {[
                   { icon: ShieldCheck, label: "MD5 hash-locked" },

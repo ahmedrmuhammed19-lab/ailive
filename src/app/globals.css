@@ -355,6 +355,19 @@
 .dark .eis-orb-a { opacity: 0.55; }
 .dark .eis-orb-b { opacity: 0.5; }
 .dark .eis-orb-c { opacity: 0.45; }
+/* Starfield (dark only) — a static royal night sky scattered over
+   the aurora: four dot layers at different tile scales (pseudo-
+   random repetition) above the fine grid. No twinkle — calm. */
+.dark .eis-stars {
+  background-image:
+    radial-gradient(1.3px 1.3px at 14px 22px, rgba(237, 233, 248, 0.6), transparent 2px),
+    radial-gradient(1px 1px at 52px 46px, rgba(196, 181, 253, 0.5), transparent 1.6px),
+    radial-gradient(1.5px 1.5px at 78px 12px, rgba(237, 233, 248, 0.34), transparent 2.2px),
+    radial-gradient(1px 1px at 96px 66px, rgba(240, 219, 158, 0.42), transparent 1.6px),
+    linear-gradient(var(--eis-grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--eis-grid-line) 1px, transparent 1px);
+  background-size: 108px 108px, 132px 132px, 156px 156px, 180px 180px, 44px 44px, 44px 44px;
+}
 
 /* Rubber grain: ultra-fine fractal noise — kept barely-there for the
    matte soft-touch finish (static, decorative). */
@@ -410,6 +423,50 @@
   border-color: color-mix(in srgb, var(--eis-gold) 38%, transparent) !important;
   background: linear-gradient(180deg, var(--eis-gold-soft), transparent) !important;
   color: var(--eis-gold) !important;
+}
+
+/* Ceremonial ornament — hairlines meeting a gold diamond (borrowed
+   from the owner's reference portal, DL-10c). Static, gold-only. */
+.eis-ornament {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.8rem;
+}
+.eis-ornament::before,
+.eis-ornament::after {
+  content: "";
+  height: 1px;
+  width: 4.5rem;
+  background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--eis-gold) 60%, transparent));
+}
+.eis-ornament::after {
+  background: linear-gradient(90deg, color-mix(in srgb, var(--eis-gold) 60%, transparent), transparent);
+}
+.eis-ornament i {
+  width: 6px;
+  height: 6px;
+  transform: rotate(45deg);
+  background: var(--eis-gold);
+  box-shadow: 0 0 8px color-mix(in srgb, var(--eis-gold) 65%, transparent);
+}
+
+/* Royal brand tile — the header monogram: deep royal indigo tile,
+   gold ring, gold crown mark (reference-informed, DL-10c). Static. */
+.eis-brand-tile {
+  position: relative;
+  background: linear-gradient(150deg, #241640 0%, #150e2c 58%, #0d081f 100%);
+  border: 1px solid color-mix(in srgb, var(--eis-gold) 42%, transparent);
+  box-shadow:
+    inset 0 1px 0 rgba(236, 199, 111, 0.18),
+    0 6px 18px -6px rgba(12, 6, 34, 0.55),
+    0 0 14px -2px rgba(139, 92, 246, 0.25);
+  color: var(--eis-gold);
+}
+
+/* Serif display voice — wordmark + hero headings only. */
+.eis-display {
+  font-family: var(--font-display), Georgia, 'Times New Roman', serif;
 }
 
 /* Online status: live green dot with a pulsing glow ring — functional
