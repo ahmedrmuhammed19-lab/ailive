@@ -1831,3 +1831,23 @@ Work Log:
 
 Stage Summary:
 - Deployment VERIFIED CURRENT and healthy: Vercel success on c7f4ce6, Élégance 2026 design tokens live, all API routes alive (upload/queue/login), auth gate working, static reports served. 5th churn strike caught pre-commit this time — audit-gate habit is paying off.
+
+---
+Task ID: DL-11d
+Agent: Super Z (main)
+Task: Owner screenshot — Supabase Security Advisor shows "1 error: RLS Disabled in Public" on public.client... ("check"). Plus 6th lineage-churn incident recovery.
+
+Work Log:
+- Triage question: does this affect the Global EIS portal? Answer: NO — evidence chain:
+  (a) prisma/schema.prisma provider = "sqlite"; local DATABASE_URL = file:db/custom.db.
+  (b) Local SQLite contains exactly the 6 portal models (Submission/PortalUser/ReportFile/StatementFile/UploadChunk/ParseLog) — NO table starting with "client".
+  (c) Zero @supabase packages in package.json, zero supabase references in src/, scripts/, .env, or the entire worklog history.
+  (d) File storage is Vercel-Blob/db/fs mode (src/lib/storage.ts); DB layer is plain PrismaClient on DATABASE_URL (src/lib/db.ts).
+- Conclusion: the flagged table lives in a DIFFERENT project inside the owner's Supabase org (advisor org shows repo ahmedrmuhammed1... / main) — not this portal. Likely a `clients` table from the other app or an experimental import.
+- Risk explainer issued to owner: Supabase auto-exposes every public-schema table via PostgREST to the anon role; without RLS, anyone holding the public anon key can read/write all rows. Fix is one SQL statement in Supabase SQL Editor: ALTER TABLE public.<table> ENABLE ROW LEVEL SECURITY; — safe by design: service_role key and direct Postgres connections (what apps/Prisma use) bypass RLS, so the owning app cannot break; only unauthenticated PostgREST access gets locked out. Optional authenticated-read policy provided if the other app needs it via anon/authenticated keys.
+- No Supabase credentials exist in this sandbox (correct posture) — fix must be run by owner in Supabase dashboard (SQL Editor or Table Editor RLS toggle), or owner re-runs the linter afterwards to confirm 0 errors.
+- INCIDENT (6th churn strike, forged-twin signature): after DL-11c push (87525d9), local history was re-forged — twin commit b706e23 (same DL-11c message) with /api/upload DELETED replaced the pushed commit, and DL-11d initially landed on the forged parent (891f538, forensic: ls-tree 0 route entries). Remedy: extracted worklog entry -> git reset --hard origin/main (87525d9, route back: ls-tree 1 entry) -> re-applied entry -> commit. Origin was never affected; prod never at risk.
+- No code changes; no prod probes beyond prior DL-11c audit.
+
+Stage Summary:
+- Supabase RLS error triaged: NOT a Global EIS portal exposure (portal is SQLite+Blob, no Supabase). Owner given the one-line ALTER TABLE remedy + policy template; awaiting owner confirmation of which project owns that table if deeper help is wanted. 6th churn strike documented — forged-twin now the dominant churn pattern (3 of last 4 incidents); audit gate must check ls-tree route + git log twins before every push.
