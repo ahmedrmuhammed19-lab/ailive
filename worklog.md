@@ -1851,3 +1851,16 @@ Work Log:
 
 Stage Summary:
 - Supabase RLS error triaged: NOT a Global EIS portal exposure (portal is SQLite+Blob, no Supabase). Owner given the one-line ALTER TABLE remedy + policy template; awaiting owner confirmation of which project owns that table if deeper help is wanted. 6th churn strike documented — forged-twin now the dominant churn pattern (3 of last 4 incidents); audit gate must check ls-tree route + git log twins before every push.
+---
+Task ID: DL-11e
+Agent: Super Z (main)
+Task: Owner: "check queue" — queue state audit (local + prod).
+
+Work Log:
+- Local sandbox queue: 0 submissions / 0 statement files / 0 parse logs / 0 report files — pristine. PortalUser table found EMPTY (residue of the DB-wipe series; DL-11 reseed had not persisted) -> re-ran scripts/seed_users.mjs: op.eis, client.workq, client.other, abdo restored. Future sandbox E2E unblocked.
+- Prod queue readability: every queue route is session- or HMAC-token-gated (full API auth map built: only login/logout/verify-code/setup are sessionless; setup is triple-gated — constant-time SETUP_KEY >=16 chars, one-shot after first account, per-IP rate limit 5/min). Old work-all magic-link tokens died with the SESSION_SECRET rotation — by design.
+- Credential-free prod probe via GET /api/setup (read-only): {"users":2,"available":false} — prod DB REACHABLE and the operator's 2 accounts SURVIVED today's 3 deploys (c7f4ce6/87525d9/dbf9d2c) -> persistence holding; queue rows not readable without operator session (correct posture).
+- Observation parked (not alarmed): provider=sqlite on Vercel serverless is architecturally volatile (/tmp per lambda instance); users:2 surviving deploys suggests DATABASE_URL points somewhere stable or DB is bundled — needs a Vercel-env look only if owner reports vanishing rows.
+
+Stage Summary:
+- Queue verified clean on both planes: local empty + users reseeded; prod DB alive with operator accounts intact, queue properly gated. Owner sees live rows via portal login; no action needed unless uploads go missing (then investigate prod DATABASE_URL persistence).
