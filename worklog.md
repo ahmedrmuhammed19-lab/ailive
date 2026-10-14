@@ -1929,3 +1929,17 @@ Work Log:
 
 Stage Summary:
 - Re-read independently CONFIRMS DL-13: May 25-31 is a CamScanner capture gap (missing sheet between the 24/05 page and June's statement). Bank's own prints fix the week's net at -EGP 45,186.26 (135,283.04 -> 90,096.78). Itemization is unrecoverable from this source; re-scan of that single sheet remains the only path to full-census May. Report rev 1.1 stands as delivered.
+
+---
+Task ID: DL-13b
+Agent: Super Z (main)
+Task: Owner follow-up: "WHY YOU SAID IT'S MISSING WHY IT'S NOT STOPPED TRANSACTIONS AT THIS PERIOD" — justify the "capture gap" conclusion vs the alternative "account dormant 25-31 May".
+
+Work Log:
+- Pulled bank-printed monthly closing summaries (official tables parsed from closing pages IN the scan): APR p23 closes May-open at 292,368.18; JUN p35 opens at 90,096.78 with printed counts 42 D / 10 C. May's own closing summary page (which would print May's D/C counts and the 25-31 rows) is the ONLY monthly summary absent from the 68 pages (MAR p16, APR p23, JUN p35, JUL p44, AUG p54 all present; May slot empty).
+- Quantified the scanner's page-skips from bank-printed vs captured counts: MAR unseen 12 D = 57,541.49 + 1 C = 73,000.00 (scan starts 02/03); JUN unseen 3 D = 55,539.13 + 1 C = 19,600.00; APR 0/0 exact. Three months hit by the same skip pattern -> CamScanner behavior, not bank behavior.
+- Dormancy rebuttal: balance only moves via posted transactions; 135,283.04 (24/05 printed close) != 90,096.78 (31/05 printed close, double-anchored in June statement header row + June summary). Net -45,186.26 proves at least one debit posted in the window. Dormant week would leave the two prints equal.
+- Contextual: account averaged ~75 posted transactions/month (427 captured in 7 months) and 6+ transactions on 24/05 alone; a silent week ending 45K lower would contradict the bank's own prints.
+
+Stage Summary:
+- "Missing" = missing from the SCAN FILE (one unphotographed sheet at the end of the May statement), NOT missing from CIB's books. Bank's own prints prove the week posted net -45,186.26. Itemization requires the missing sheet: May closing page (25-31 rows + summary table), plus optional MAR first sheet and JUN mid-sheet for full census. No code/template changes; no prod probes.
