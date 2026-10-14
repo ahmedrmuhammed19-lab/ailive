@@ -149,7 +149,7 @@
    ALL --eis-* variable NAMES and class names are unchanged, so the
    panels, GH tokens (src/lib/format.ts) and STATUS_META inherit
    this redesign with zero logic changes. The report document
-   (report_design.ts, Master v1.2.6) is deliberately untouched —
+   (report_design.ts, Master v1.3) is deliberately untouched —
    reports keep the firm #005677/#008DCB identity; the portal is
    the product shell and wears the owner's Royal Aurora.
    ============================================================ */

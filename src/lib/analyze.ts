@@ -12,6 +12,8 @@ import {
   tag,
   visaReadinessSection,
   so10Passport,
+  so9DoubleCheck,
+  type DoubleCheckRow,
 } from "@/lib/report_design";
 
 /**
@@ -2391,6 +2393,82 @@ function findingsHtml(fs: Finding[]): string {
     .join("");
 }
 
+/**
+ * SO-9 Balance Verification Double-Check rows (Appendix A2, Master v1.3) —
+ * built from live engine data. The arithmetic core (credits Σ, debits Σ,
+ * closing telescope) is genuinely re-aggregated over the parsed ledger as a
+ * second independent pass; the printed-header anchor and the bank-printed
+ * cycle-checkpoint re-reads stay PENDING for the analyst (draft-stage
+ * honesty, mirroring the Appendix A passport contract). Any non-zero
+ * residual renders MISMATCH and blocks delivery — fail-loud.
+ */
+function buildDoubleCheckRows(legs: AccountLeg[]): DoubleCheckRow[] {
+  const tol = 0.005;
+  const j = (parts: string[]) => (parts.length > 1 ? parts.join(" · ") : parts[0] ?? "—");
+  const reInOf: number[] = [];
+  const reOutOf: number[] = [];
+  const reCloseOf: number[] = [];
+  let creditsOk = true;
+  let debitsOk = true;
+  let closesOk = true;
+  for (const l of legs) {
+    const reIn = l.rows.filter((r) => r.signed > 0).reduce((s, r) => s + r.signed, 0);
+    const reOut = l.rows.filter((r) => r.signed < 0).reduce((s, r) => s - r.signed, 0);
+    const reClose = l.opening + reIn - reOut;
+    reInOf.push(reIn);
+    reOutOf.push(reOut);
+    reCloseOf.push(reClose);
+    creditsOk = creditsOk && Math.abs(reIn - l.inflow) < tol;
+    debitsOk = debitsOk && Math.abs(reOut - l.outflow) < tol;
+    closesOk = closesOk && Math.abs(reClose - l.closing) < tol;
+  }
+  const pairs = legs.map((l) => (l.txCount ? `${l.matched}/${l.txCount}` : "0/0")).join(" · ");
+  return [
+    {
+      id: "DC1",
+      name: "Opening balance anchor (printed header)",
+      firstRun: j(legs.map((l) => `${money(l.opening)} ${l.currency}`)),
+      reRun: "printed-header glyph re-read pending analyst",
+      delta: "—",
+      pass: false,
+      pending: true,
+    },
+    {
+      id: "DC2",
+      name: "Credits total Σ — independent re-aggregation",
+      firstRun: j(legs.map((l) => `${money(l.inflow)} ${l.currency}`)),
+      reRun: j(reInOf.map((v) => money(v))),
+      delta: j(legs.map((l, i) => money(reInOf[i] - l.inflow))),
+      pass: creditsOk,
+    },
+    {
+      id: "DC3",
+      name: "Debits total Σ — independent re-aggregation",
+      firstRun: j(legs.map((l) => `${money(l.outflow)} ${l.currency}`)),
+      reRun: j(reOutOf.map((v) => money(v))),
+      delta: j(legs.map((l, i) => money(reOutOf[i] - l.outflow))),
+      pass: debitsOk,
+    },
+    {
+      id: "DC4",
+      name: "Closing balance telescope (opening + Σ credits − Σ debits)",
+      firstRun: j(legs.map((l) => `${money(l.closing)} ${l.currency}`)),
+      reRun: j(reCloseOf.map((v) => money(v))),
+      delta: j(legs.map((l, i) => money(reCloseOf[i] - l.closing))),
+      pass: closesOk,
+    },
+    {
+      id: "DC5",
+      name: "Bank-printed cycle checkpoints (pairs closed)",
+      firstRun: `${pairs} pairs closed against printed running balances`,
+      reRun: "printed-checkpoint re-read pending analyst",
+      delta: "—",
+      pass: false,
+      pending: true,
+    },
+  ];
+}
+
 function buildReportHtml(
   userId: string,
   country: string | null,
@@ -2519,6 +2597,7 @@ ${analysisCard("Pattern findings — analyst view", findingsHtml(legFindings(l, 
       ],
       "engine draft",
     ),
+    so9DoubleCheck(buildDoubleCheckRows(legs), legs.length > 1 ? `${legs.length} accounts` : legs[0]?.account ?? undefined),
     legSections,
     alertBox(
       "blue",

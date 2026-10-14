@@ -145,3 +145,5 @@ scripts/wafa_work/
 !scripts/alahly_dump_lines.py
 !scripts/inspect_alahly.py
 !scripts/ocr_probe_p1.py
+!scripts/es1_v13_specimen.ts
+!scripts/delivery_gate.py

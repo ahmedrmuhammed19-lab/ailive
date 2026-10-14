@@ -1,0 +1,431 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Global EIS Report - Abdelrahman Elgarayadli - EGP (UK Tourism)</title><style>
+        :root {
+            --primary: #005677;
+            --secondary: #008DCB;
+            --success: #28a745;
+            --danger: #dc3545;
+            --warning: #ffc107;
+            --light: #f8f9fa;
+            --dark: #343a40;
+            --white: #ffffff;
+        }
+        * { box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #eef2f5;
+            color: var(--dark);
+            margin: 0;
+            padding: 20px;
+            line-height: 1.55;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: var(--white);
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* ===== HEADER (standard gradient shell) ===== */
+        .header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: var(--white);
+            padding: 40px 30px;
+            text-align: center;
+            position: relative;
+        }
+        .header h1 { margin: 0; font-size: 2.2em; text-transform: uppercase; letter-spacing: 1px; }
+        .header p { margin: 5px 0 0; opacity: 0.92; font-size: 1.02em; }
+        .header p b, .header p strong { color: var(--white); }
+        .header .ref-line { margin-top: 12px; font-size: 0.85em; opacity: 0.85; }
+        .download-btn {
+            position: absolute;
+            top: 30px;
+            right: 30px;
+            background: var(--white);
+            color: var(--primary);
+            border: none;
+            padding: 10px 20px;
+            font-size: 14px;
+            font-weight: bold;
+            border-radius: 5px;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            transition: 0.2s;
+        }
+        .download-btn:hover { background: #f0f0f0; transform: translateY(-2px); }
+
+        .content { padding: 40px; }
+
+        /* ===== VERDICT BADGE ===== */
+        .verdict-block { display: flex; justify-content: space-between; align-items: flex-start; gap: 20px; flex-wrap: wrap; margin-bottom: 20px; }
+        .verdict-badge { border-radius: 10px; padding: 14px 20px; text-align: center; min-width: 220px; font-weight: bold; }
+        .verdict-badge.pass { background: #e6f4ea; border: 1px solid var(--success); color: #1e7e34; }
+        .verdict-badge.fail { background: #fdecea; border: 1px solid var(--danger); color: #a71d2a; }
+        .verdict-badge .big { font-size: 1.05em; display: block; }
+        .verdict-badge .small { font-size: 0.75em; font-weight: normal; display: block; margin-top: 4px; }
+
+        /* ===== SECTION TITLES (canonical + generator h2.sec) ===== */
+        .section-title {
+            font-size: 1.45em;
+            color: var(--primary);
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+            margin: 44px 0 20px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+        }
+        .section-title::before {
+            content: ''; display: inline-block; width: 8px; height: 22px;
+            background: var(--secondary); margin-right: 12px; border-radius: 2px;
+        }
+        h2.sec {
+            font-size: 1.3em;
+            color: var(--primary);
+            background: none;
+            border-bottom: 2px solid #eee;
+            padding: 0 0 10px 0;
+            margin: 40px 0 16px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+        }
+        h2.sec::before {
+            content: ''; display: inline-block; width: 8px; height: 20px;
+            background: var(--secondary); margin-right: 12px; border-radius: 2px;
+        }
+        h3 { color: var(--primary); font-size: 1.05em; margin: 18px 0 8px; }
+
+        /* ===== TABLES (canonical .data-table + bare generator tables) ===== */
+        table { width: 100%; border-collapse: collapse; font-size: 0.92em; margin: 12px 0 22px; }
+        th {
+            background: var(--light);
+            color: var(--primary);
+            text-align: left;
+            padding: 10px 12px;
+            font-weight: 600;
+            border-bottom: 2px solid #ddd;
+        }
+        td { padding: 9px 12px; border-bottom: 1px solid #eee; vertical-align: top; }
+        tr:nth-child(even) td { background: #fafbfc; }
+        .data-table { margin-bottom: 30px; }
+        .text-right { text-align: right; }
+        .text-center { text-align: center; }
+        .text-success { color: var(--success); font-weight: bold; }
+        .text-danger { color: var(--danger); font-weight: bold; }
+        .num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+        tr.hl td { background: #e7f3fe !important; }
+
+        /* ===== KPI CARDS (canonical .kpi-card + compact .kpi) ===== */
+        .kpi-grid { display: flex; gap: 14px; flex-wrap: wrap; margin: 16px 0 26px; }
+        .kpi-card, .kpi {
+            background: var(--white);
+            border-radius: 10px;
+            padding: 16px 18px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            border: 1px solid #e1e4e8;
+            border-left: 5px solid var(--secondary);
+            flex: 1; min-width: 190px;
+            transition: transform 0.2s;
+        }
+        .kpi-card:hover, .kpi:hover { transform: translateY(-3px); }
+        .kpi-card h3, .kpi .l { margin: 0 0 8px; color: #666; font-size: 0.92em; text-transform: uppercase; letter-spacing: 0.4px; font-weight: 600; }
+        .kpi-card .value, .kpi .v { font-size: 1.5em; font-weight: bold; color: var(--primary); }
+        .kpi-card.success { border-left-color: var(--success); } .kpi-card.success .value { color: var(--success); }
+        .kpi-card.danger { border-left-color: var(--danger); } .kpi-card.danger .value { color: var(--danger); }
+        .kpi-card.warning { border-left-color: var(--warning); } .kpi-card.warning .value { color: #b8860b; }
+
+        /* ===== TAGS / BADGES ===== */
+        .tag { background: #e9ecef; padding: 3px 10px; border-radius: 12px; font-size: 0.85em; color: #495057; margin-right: 5px; display: inline-block; margin-bottom: 5px; }
+        .tag.in { background: #e6f4ea; color: var(--success); }
+        .tag.out { background: #fce8e6; color: var(--danger); }
+        .tag.credit { background: #e6f4ea; color: var(--success); }
+        .tag.debit { background: #fce8e6; color: var(--danger); }
+        .tag.pass { background: #e6f4ea; color: var(--success); font-weight: bold; }
+        .tag.fail { background: #fee2e2; color: var(--danger); font-weight: bold; }
+        .tag.warn { background: #fff3cd; color: #856404; font-weight: bold; }
+        .tag.low { background: #e0f7fa; color: var(--primary); font-weight: bold; }
+        .badge { display: inline-block; padding: 3px 12px; border-radius: 14px; font-weight: 700; font-size: 0.85em; }
+        .badge.pass, .pass { background: #e6f4ea; color: #1e7e34; }
+        .badge.caution, .caution { background: #fff3cd; color: #856404; }
+        .badge.fail, .fail { background: #fdecea; color: #a71d2a; }
+        .badge.info, .info { background: #e7f3fe; color: var(--primary); }
+
+        /* ===== ALERT / NOTE BOXES (canonical .alert-box + generator .note/.warn/.danger) ===== */
+        .alert-box { padding: 18px 20px; border-radius: 8px; margin: 15px 0; border-left: 5px solid; }
+        .alert-box.blue { background: #e7f3fe; border-color: var(--secondary); }
+        .alert-box.green { background: #e6f4ea; border-color: var(--success); }
+        .alert-box.red { background: #fff3cd; border-color: var(--warning); }
+        .alert-box.danger { background: #fef2f2; border-color: var(--danger); }
+        .alert-box h4 { margin: 0 0 10px; color: var(--dark); }
+        .alert-box ul { margin: 10px 0 0 20px; padding: 0; }
+        .alert-box li { margin-bottom: 8px; }
+        .note { background: #e7f3fe; border-left: 4px solid var(--secondary); padding: 12px 16px; font-size: 0.95em; margin: 12px 0; border-radius: 0 7px 7px 0; }
+        .note.warn, .warn { background: #fffbeb; border-left: 4px solid #d97706; }
+        .note.danger, .danger { background: #fef2f2; border-left: 4px solid var(--danger); }
+
+        /* ===== VERDICT BOX (generator) ===== */
+        .verdict-box { border: 2.5px solid var(--primary); border-radius: 11px; padding: 18px 22px; background: #e7f3fe; margin: 16px 0; }
+
+        /* ===== ANALYSIS CARDS ===== */
+        .analysis-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-bottom: 40px; }
+        @media (max-width: 768px) {
+            .analysis-grid { grid-template-columns: 1fr; }
+            .download-btn { position: static; margin-top: 20px; display: inline-block; }
+        }
+        .analysis-card { background: var(--white); border: 1px solid #e1e4e8; border-radius: 10px; padding: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.03); }
+        .analysis-card.full-width { grid-column: span 2; }
+        .analysis-card h3 { margin-top: 0; color: var(--primary); display: flex; align-items: center; font-size: 1.2em; }
+        .analysis-card h3::before { content: ''; display: inline-block; width: 10px; height: 10px; background: var(--secondary); border-radius: 50%; margin-right: 10px; }
+
+        /* ===== ANNEX BANNER ===== */
+        .annex-banner { background: var(--primary); color: var(--white); padding: 10px 20px; border-radius: 8px 8px 0 0; font-weight: bold; font-size: 0.9em; letter-spacing: 0.5px; }
+        .annex-body { border: 1px solid #e1e4e8; border-top: none; border-radius: 0 0 8px 8px; padding: 20px; margin-bottom: 30px; }
+
+        /* ===== SIGNOFF ===== */
+        .signoff { display: flex; justify-content: space-between; align-items: flex-end; margin-top: 40px; padding-top: 20px; border-top: 1px dashed #ccc; flex-wrap: wrap; gap: 20px; }
+        .signoff .sig-line { border-top: 1px solid var(--dark); padding-top: 6px; font-size: 0.85em; min-width: 220px; }
+
+        /* ===== FOOTER ===== */
+        .footer { text-align: center; padding: 20px; color: #777; font-size: 0.85em; background: #f8f9fa; border-top: 1px solid #eee; }
+        .footer .legal { max-width: 900px; margin: 6px auto 0; line-height: 1.5; }
+        .footer strong { color: var(--primary); }
+
+        /* ===== PRINT ===== */
+        @page { size: A4; margin: 16mm 12mm; }
+        @media print {
+            body { background: none; padding: 0; }
+            .container { box-shadow: none; border-radius: 0; max-width: none; }
+            .download-btn { display: none; }
+            .section-title, h2.sec, .analysis-card, .kpi-card, .kpi, .annex-body, .verdict-box { page-break-inside: avoid; }
+            table tr, .data-table tr { page-break-inside: avoid; }
+            thead { display: table-header-group; }
+            .header { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+        }
+</style></head>
+<body><div class="container">
+<div class="header">
+ <button class="download-btn" onclick="window.print()">&#11015; Download PDF Report</button>
+ <h1>Financial Intelligence Report</h1>
+<p>Account Holder: <b>ABDELRAHMAN AHMED MOHAMED ELGARAYADLI</b> &middot; CIB Egypt &mdash; Grand Mall Branch</p>
+<p>Account: <b>100007554812 (EGP)</b> &nbsp;&middot;&nbsp; Statement Period: <b>March &ndash; August 2026 (6 cycles)</b></p>
+<p>Application: <b>UK Visitor Visa (Tourism) &mdash; JOINT, 2 travellers</b>: ABDELRAHMAN AHMED MOHAMED ELGARAYADLI (account holder) + <b>DALIA ALI SAYED MOHAMED</b> (wife)</p>
+ <p class="ref-line">Ref: GEIS-2026-ABD-ELG-EGP-R3 &nbsp;&middot;&nbsp; Case: UK Tourism - JOINT (holder + wife) &nbsp;&middot;&nbsp; CIB EGP 100007554812 &nbsp;&middot;&nbsp; Cycles 01MAR26&ndash;26AUG26 &nbsp;&middot;&nbsp; Standard: Global EIS Design v1.3 (CIB Blue)</p>
+</div>
+<div class="content">
+<div class="section"><h2 class="section-title">1. Executive Dashboard</h2>
+<div class="verdict-block">
+ <div class="verdict-badge" style="background:#ffc107;color:#343a40">CONDITIONALLY SUBMITTABLE</div>
+ <div class="verdict-box">
+  <p>This statement supports a <b>joint UK visitor (tourism) application for two travellers</b> - the account
+  holder <b>ABDELRAHMAN AHMED MOHAMED ELGARAYADLI</b> and his wife <b>DALIA ALI SAYED MOHAMED</b> - with this account as
+  the shared financial evidence. It closes at <b>EGP 2,537,761.72</b> - <b>6.18 times</b> the
+  joint two-traveller maintenance benchmark of EGP 410,880.00 (2 &times; EGP 205,440.00). Every one of
+  the 440 transactions reconciles inside the bank's own printed running balances, and all 24 bank-printed cycle
+  checkpoints match the parsed ledger to the cent. The arithmetic layer of this statement is submission-grade.</p>
+  <p>The conditional status is driven entirely by the <b>source-of-funds layer</b>: 85.1% of all inflows arrive as
+  internal CIB transfers <i>by order of another customer</i> (1000357369), with no salary credits anywhere in the
+  six cycles. The balance is strong; its origin must be documented before submission (Section 11 action gates).</p>
+ </div>
+</div>
+
+<div class="kpi-grid">
+ <div class="kpi-card"><div class="kpi-value">2,537,761.72</div><div class="kpi-label">Closing Balance (EGP) - 26 Aug 2026</div></div>
+ <div class="kpi-card"><div class="kpi-value">440/440</div><div class="kpi-label">Transaction Chain Verified</div></div>
+ <div class="kpi-card"><div class="kpi-value">24/24</div><div class="kpi-label">Bank-Printed Checkpoints Match</div></div>
+ <div class="kpi-card"><div class="kpi-value">6.18x</div><div class="kpi-label">Joint 2-Traveller UK Coverage (617.6%)</div></div>
+ <div class="kpi-card"><div class="kpi-value">11,693,311.11</div><div class="kpi-label">Total Credits - 21 items</div></div>
+ <div class="kpi-card"><div class="kpi-value">9,411,768.85</div><div class="kpi-label">Total Debits - 419 items</div></div>
+</div>
+<p>Across the six statement cycles the account turned over EGP 21,105,079.96 in 440 verified movements.
+The holder maintains an active CIB personal loan (36 auto-deductions), a CIB credit card settled in full twice,
+recurring AXA insurance premiums, and 208 point-of-sale purchases - a normal lived-in spending profile. The two
+structural vulnerabilities an embassy officer would notice are the third-party funding concentration and the
+volatile balance trajectory (a 96% drawdown in cycle 2 followed by a 58x rebuild by cycle 5), both addressed in
+the advisory flags of Section 9. For the joint application, the same funds comfortably maintain both travellers;
+the co-traveller documentation gate is listed in Section 11.</p>
+</div>
+
+<div class="section"><h2 class="section-title">2. Account &amp; Holder Identification</h2>
+<table class="data-table"><tbody>
+<tr><td>Account Holder (statement)</td><td><b>ABDELRAHMAN AHMED MO</b></td></tr>
+<tr><td>Account Holder (Arabic, as printed)</td><td>عبدالرحمن احمد محمد الجريدلى</td></tr>
+<tr><td>Full name (as rendered in transfer narratives)</td><td>ABDELRAHMAN AHMED MOHAMED ELGR&hellip; (romanisation to be confirmed against passport)</td></tr>
+<tr><td>Bank / Branch</td><td>C.I.B GRAND MALL BR.</td></tr>
+<tr><td>Account Number</td><td><b>100007554812</b> (ledger ref 18-8010243-7)</td></tr>
+<tr><td>Customer ID</td><td>1000514538</td></tr>
+<tr><td>IBAN</td><td>EG640010001800000100007554812</td></tr>
+<tr><td>Currency</td><td>EGP - Egyptian Pound</td></tr>
+<tr><td>Statement Cycles</td><td>6 consecutive cycles, 01 MAR 2026 &rarr; 26 AUG 2026 (last movement) - statement print dates 29MAR26 &rarr; 29AUG26</td></tr>
+<tr><td>Application type</td><td><b>UK Visitor (Tourism) - JOINT application, 2 travellers</b>; this statement is the shared financial evidence for the travelling party</td></tr>
+<tr><td>Second traveller (co-applicant)</td><td><b>DALIA ALI SAYED MOHAMED</b> - wife of the account holder (name per client instruction; marriage certificate to be attached as relationship evidence)</td></tr>
+<tr><td>Card on file</td><td>Debit card 5264 39xx xxxx 4449 (POS/online)</td></tr>
+<tr><td>Registered address</td><td>18 Aqar Younis Ismail Khourshid, Al-Harm (as printed in Arabic)</td></tr>
+</tbody></table>
+</div>
+
+<div class="section"><h2 class="section-title">3. Mathematical Reconciliation &amp; Chain Audit</h2>
+<p>Two independent verification layers were applied to the source document. First, a line-by-line running-balance
+audit: every posted amount is re-applied in sequence and the resulting balance compared with the balance printed
+by the bank on the statement itself; all 440 movements reconcile. Second, the six bank-printed cycle summary
+lines (brought-forward, total debits, total credits, carried-forward) are compared against the parsed ledger -
+all 24 checkpoint figures match to the cent.</p>
+<p><b>Grand reconciliation:</b> 256,219.46 (opening 28FEB26) + 11,693,311.11 (credits) &minus; 9,411,768.85
+(debits) = <b>EGP 2,537,761.72</b> = the printed CLOSING BALANCE. Exact match, zero residual.</p>
+<table class="data-table"><thead><tr><th>Statement Cycle</th><th>Txns</th><th>Opening</th>
+<th>Debits (parsed)</th><th>Credits (parsed)</th><th>Closing</th><th>Bank-printed checkpoints</th></tr></thead>
+<tbody><tr><td>Cycle 1 &middot; 01MAR26 &rarr; 29MAR26</td><td class='num'>49</td><td class='num'>256,219.46</td><td class='num'>2,554,904.43</td><td class='num'>3,528,125.00</td><td class='num'>1,229,440.03</td><td class='text-success'><b>OK</b> &middot; printed: 256,219.46 / 2,554,904.43 / 3,528,125.00 / 1,229,440.03</td></tr><tr><td>Cycle 2 &middot; 30MAR26 &rarr; 23APR26</td><td class='num'>60</td><td class='num'>1,229,440.03</td><td class='num'>1,183,288.68</td><td class='num'>2,958.33</td><td class='num'>49,109.68</td><td class='text-success'><b>OK</b> &middot; printed: 1,229,440.03 / 1,183,288.68 / 2,958.33 / 49,109.68</td></tr><tr><td>Cycle 3 &middot; 03MAY26 &rarr; 25MAY26</td><td class='num'>61</td><td class='num'>49,109.68</td><td class='num'>699,311.10</td><td class='num'>1,102,958.33</td><td class='num'>452,756.91</td><td class='text-success'><b>OK</b> &middot; printed: 49,109.68 / 699,311.10 / 1,102,958.33 / 452,756.91</td></tr><tr><td>Cycle 4 &middot; 01JUN26 &rarr; 29JUN26</td><td class='num'>128</td><td class='num'>452,756.91</td><td class='num'>3,498,207.14</td><td class='num'>3,653,155.56</td><td class='num'>607,705.33</td><td class='text-success'><b>OK</b> &middot; printed: 452,756.91 / 3,498,207.14 / 3,653,155.56 / 607,705.33</td></tr><tr><td>Cycle 5 &middot; 30JUN26 &rarr; 28JUL26</td><td class='num'>105</td><td class='num'>607,705.33</td><td class='num'>1,084,899.02</td><td class='num'>3,302,958.33</td><td class='num'>2,825,764.64</td><td class='text-success'><b>OK</b> &middot; printed: 607,705.33 / 1,084,899.02 / 3,302,958.33 / 2,825,764.64</td></tr><tr><td>Cycle 6 &middot; 30JUL26 &rarr; 26AUG26</td><td class='num'>37</td><td class='num'>2,825,764.64</td><td class='num'>391,158.48</td><td class='num'>103,155.56</td><td class='num'>2,537,761.72</td><td class='text-success'><b>OK</b> &middot; printed: 2,825,764.64 / 391,158.48 / 103,155.56 / 2,537,761.72</td></tr></tbody></table>
+<p class="note">Chain integrity: all 101/101 printed running-balance rows reproduced exactly; the
+remaining 339 movements carry no printed balance and are verified in balance-groups whose signed sum
+must equal the printed balance delta (24 anchored groups, zero unresolved). Printed checkpoints 24/24
+matched &middot; grand reconciliation exact. Cycle 2 covers the bank's short cut (30MAR&rarr;23APR); cycle boundaries
+follow the printed statement sections, not calendar months.</p>
+</div>
+
+<div class="section"><h2 class="section-title">4. Monthly Financial Trajectory &amp; Gap Analysis</h2>
+<table class="data-table"><thead><tr><th>Cycle</th><th>Credits</th><th>Debits</th>
+<th>Cycle-End Balance (printed)</th><th>Net Change</th></tr></thead><tbody><tr><td>Cycle 1 (01MAR26 &rarr; 29MAR26)</td><td class='num'>3,528,125.00</td><td class='num'>2,554,904.43</td><td class='num'>1,229,440.03</td><td class='num text-success'><b>&mdash;</b></td></tr><tr><td>Cycle 2 (30MAR26 &rarr; 23APR26)</td><td class='num'>2,958.33</td><td class='num'>1,183,288.68</td><td class='num'>49,109.68</td><td class='num text-danger'><b>-1,180,330.35</b></td></tr><tr><td>Cycle 3 (03MAY26 &rarr; 25MAY26)</td><td class='num'>1,102,958.33</td><td class='num'>699,311.10</td><td class='num'>452,756.91</td><td class='num text-success'><b>+403,647.23</b></td></tr><tr><td>Cycle 4 (01JUN26 &rarr; 29JUN26)</td><td class='num'>3,653,155.56</td><td class='num'>3,498,207.14</td><td class='num'>607,705.33</td><td class='num text-success'><b>+154,948.42</b></td></tr><tr><td>Cycle 5 (30JUN26 &rarr; 28JUL26)</td><td class='num'>3,302,958.33</td><td class='num'>1,084,899.02</td><td class='num'>2,825,764.64</td><td class='num text-success'><b>+2,218,059.31</b></td></tr><tr><td>Cycle 6 (30JUL26 &rarr; 26AUG26)</td><td class='num'>103,155.56</td><td class='num'>391,158.48</td><td class='num'>2,537,761.72</td><td class='num text-danger'><b>-288,002.92</b></td></tr></tbody></table>
+<p><b>Reading the trajectory:</b> the account starts at EGP 256,219.46 and is deliberately built up in waves:
+two large internal injections (EGP 2.0M in March) lift the balance to 1.23M, after which cycle 2 sees an
+aggressive 96.0% drawdown to EGP 49,109.68 as EGP 1.18M flows out to other accounts and card spending. From May
+onward the rebuild is rapid - injections of EGP 1.1M (cycle 3), 3.65M (cycle 4) and 3.30M (cycle 5) push the
+balance to its EGP 2,825,764.64 peak on 28 July, closing the period at EGP 2,537,761.72 after August's
+EGP 391,158.48 of outflows. The six-cycle average month-end is EGP 1,283,756.39.</p>
+<p><b>Gap flags:</b> (i) the cycle-2 trough to EGP 49,109.68 is a classic funds-repositioning move - the money
+left as structured transfers ("Feed account" 500K + 250K, CIB-client transfers 1.25M) rather than consumption;
+(ii) the cycle-5 jump of +2.22M net is dominated by the single EGP 3,300,000 injection of 09JUL26. Embassies
+reading this statement will ask what the account is <i>for</i>: it behaves as a treasury/hub account, not a
+salary account - the cover letter should say so plainly and point to the origin account of customer 1000357369.</p>
+</div>
+
+<div class="section"><h2 class="section-title">5. Significant Financial Events</h2>
+<table class="data-table"><thead><tr><th>Date</th><th>Direction</th><th>Amount (EGP)</th>
+<th>Narrative (as printed)</th></tr></thead><tbody><tr><td>09JUL26</td><td class='text-success'><b>Credit</b></td><td class='num'>3,300,000.00</td><td>Online Funds I.F.O 100007554812 ABDELRAHMAN AHMED MOHAMED ELGR Funds B/O 1000357369</td></tr><tr><td>24JUN26</td><td class='text-success'><b>Credit</b></td><td class='num'>2,500,000.00</td><td>Online Funds I.F.O 100007554812 ABDELRAHMAN AHMED MOHAMED ELGR Funds B/O 1000357369</td></tr><tr><td>29JUN26</td><td class='text-danger'><b>Debit</b></td><td class='num'>2,000,000.00</td><td>Online Transfer - Buying a car</td></tr><tr><td>18MAR26</td><td class='text-success'><b>Credit</b></td><td class='num'>1,750,000.00</td><td>Online Funds I.F.O 100007554812 ABDELRAHMAN AHMED MOHAMED ELGR Funds B/O 1000357369</td></tr><tr><td>11MAR26</td><td class='text-success'><b>Credit</b></td><td class='num'>1,500,000.00</td><td>Inward WF-1002541763 Funds I.F.O. 100007554812 ABDELRAHMAN AHMED MOHAMED ELGR SWIFT</td></tr><tr><td>16MAR26</td><td class='text-danger'><b>Debit</b></td><td class='num'>750,000.00</td><td>Online Transfer - Transfer to Another CIB Client</td></tr><tr><td>07JUN26</td><td class='text-success'><b>Credit</b></td><td class='num'>700,000.00</td><td>Online Funds I.F.O 100007554812 ABDELRAHMAN AHMED MOHAMED ELGR Funds B/O 1000357369</td></tr><tr><td>11MAR26</td><td class='text-danger'><b>Debit</b></td><td class='num'>500,000.00</td><td>Online Transfer - Transfer to Another CIB Client</td></tr><tr><td>30MAR26</td><td class='text-danger'><b>Debit</b></td><td class='num'>500,000.00</td><td>Online Transfer - Feed account</td></tr><tr><td>09JUL26</td><td class='text-danger'><b>Debit</b></td><td class='num'>400,015.00</td><td>Outward Online Transfer</td></tr></tbody></table>
+<p class="note">Top 10 movements by value. The three largest items - the EGP 3.3M and EGP 2.5M internal
+injections and the EGP 2.0M vehicle purchase - collectively account for a substantial share of the period's
+turnover and are each covered by a specific action gate in Section 11.</p>
+</div>
+
+<div class="section"><h2 class="section-title">6. Source of Funds Analysis</h2>
+<table class="data-table"><thead><tr><th>Source</th><th>Items</th><th>Amount (EGP)</th>
+<th>Share of Credits</th></tr></thead><tbody><tr><td>Internal transfer by order of CIB customer 1000357369 (third-party injection)</td><td class='num'>11</td><td class='num'>9,950,000.00</td><td class='num'>85.1%</td></tr><tr><td>Inward SWIFT wire (WF-1002541763) - I.F.O. the account holder</td><td class='num'>1</td><td class='num'>1,500,000.00</td><td class='num'>12.8%</td></tr><tr><td>Inward ACH from another Egyptian bank (sender: Abdelrahman Ahmed - same name)</td><td class='num'>2</td><td class='num'>200,000.00</td><td class='num'>1.7%</td></tr><tr><td>Account transfer reversal (REV)</td><td class='num'>1</td><td class='num'>25,000.00</td><td class='num'>0.2%</td></tr><tr><td>Interest posting - standing ref MM2530949293 (CIB certificate/savings)</td><td class='num'>6</td><td class='num'>18,311.11</td><td class='num'>0.2%</td></tr><tr style='background:#e0f2fe'><td><b>TOTAL CREDITS</b></td><td class='num'><b>21</b></td><td class='num'><b>11,693,311.11</b></td><td class='num'><b>100.0%</b></td></tr></tbody></table>
+<p><b>Concentration finding:</b> 85.1% of all funds entering the account (EGP 9,950,000 across 11 transfers,
+each a round-sum of EGP 100,000&ndash;3,300,000) arrive as online transfers <i>by order of CIB customer
+1000357369</i> - a different customer number from the holder's own (1000514538). This is the statement's single
+most important fact. The pattern is consistent with an internal hub account being fed from a principal account
+(a family member, sponsor, or the holder's other profile), but the statement itself does not name the funding
+customer, and no salary, business-revenue or rental credits appear anywhere in the six cycles.</p>
+<p>The remaining inflows are an inward SWIFT wire of EGP 1,500,000 (11MAR26, reference WF-1002541763, in favour
+of the holder - remitter not printed), two EGP 100,000 ACH credits from a same-name sender at another Egyptian
+bank (10MAY26), EGP 18,311.11 of monthly interest postings under standing reference MM2530949293, and a
+EGP 25,000 reversal. Each of these is verifiable with the right document: the SWIFT credit advice, the sending
+bank's statement, and the certificate contract respectively.</p>
+</div>
+
+<div class="section"><h2 class="section-title">7. Funds Utilization Analysis</h2>
+<table class="data-table"><thead><tr><th>Utilization Category</th><th>Items</th><th>Amount (EGP)</th>
+<th>Share of Debits</th></tr></thead><tbody><tr><td>IPN outward transfers (InstaPay)</td><td class='num'>119</td><td class='num'>2,170,037.45</td><td class='num'>23.1%</td></tr><tr><td>Vehicle purchase (narrative: 'Buying a car')</td><td class='num'>1</td><td class='num'>2,000,000.00</td><td class='num'>21.2%</td></tr><tr><td>Transfers to other CIB clients</td><td class='num'>11</td><td class='num'>1,535,000.00</td><td class='num'>16.3%</td></tr><tr><td>'Feed account' outbound transfers</td><td class='num'>3</td><td class='num'>888,160.00</td><td class='num'>9.4%</td></tr><tr><td>Outward online transfers</td><td class='num'>2</td><td class='num'>500,030.00</td><td class='num'>5.3%</td></tr><tr><td>Other online transfers</td><td class='num'>20</td><td class='num'>397,829.60</td><td class='num'>4.2%</td></tr><tr><td>POS card purchases</td><td class='num'>208</td><td class='num'>397,387.16</td><td class='num'>4.2%</td></tr><tr><td>Loan - interest (CIB loan)</td><td class='num'>12</td><td class='num'>351,031.97</td><td class='num'>3.7%</td></tr><tr><td>Cheque collection (holder-issued cheques)</td><td class='num'>2</td><td class='num'>345,478.46</td><td class='num'>3.7%</td></tr><tr><td>Credit card - full settlement</td><td class='num'>3</td><td class='num'>335,982.62</td><td class='num'>3.6%</td></tr><tr><td>Loan - principal repayment (CIB loan)</td><td class='num'>12</td><td class='num'>300,938.35</td><td class='num'>3.2%</td></tr><tr><td>AXA insurance premiums</td><td class='num'>13</td><td class='num'>177,723.24</td><td class='num'>1.9%</td></tr><tr><td>ATM / cash</td><td class='num'>1</td><td class='num'>11,000.00</td><td class='num'>0.1%</td></tr><tr><td>Loan - monthly service fees</td><td class='num'>12</td><td class='num'>1,170.00</td><td class='num'>0.0%</td></tr><tr style='background:#e0f2fe'><td><b>TOTAL DEBITS</b></td><td class='num'><b>419</b></td><td class='num'><b>9,411,768.85</b></td><td class='num'><b>100.0%</b></td></tr></tbody></table>
+<p><b>Where the money went:</b> the outflow story mirrors the inflow one - large structured transfers dominate.
+The single largest debit is EGP 2,000,000 narrated <i>"Buying a car"</i> (29JUN26), followed by EGP 1.25M of
+transfers to other CIB clients and EGP 888,160 labelled "Feed account". On the recurring side the account
+services a CIB personal loan (EGP 653,140.32 over the period: principal 300,938.35 + interest 351,031.97 +
+fees 1,170.00), settles its CIB credit card in full twice (EGP 335,982.62), pays two identical cheques of
+EGP 172,739.23 (01APR &amp; 01JUL), and carries 13 AXA insurance premiums (EGP 177,723.24).</p>
+<p><b>Lived-in profile:</b> 208 POS purchases totalling EGP 397,387.16 (avg EGP 1,910) across supermarkets,
+cafes, fuel stations and online services (Amazon Prime, Starbucks, Fawry, Paymob merchants) - a credible
+day-to-day spending fingerprint that supports the document's genuineness. ATM cash usage is negligible
+(EGP 11,000), meaning the trail is almost entirely electronic and traceable - a positive for visa scrutiny.</p>
+</div>
+
+<div class="section"><h2 class="section-title">8. Associated Parties Register</h2>
+<table class="data-table"><thead><tr><th>Party</th><th>Volume</th><th>Amount (EGP)</th>
+<th>Assessment</th></tr></thead><tbody><tr><td>CIB customer 1000357369 (internal 'Funds B/O' funder)</td><td>11 credits</td><td class='num'>9,950,000.00</td><td>Dominant funding source - relationship undocumented in this statement</td></tr><tr><td>WF-1002541763 - SWIFT remitter (I.F.O. holder)</td><td>1 credit</td><td class='num'>1,500,000.00</td><td>Remitter name not printed; credit advice needed</td></tr><tr><td>ACH sender 'Abdelrahman Ahmed' - other bank (routing 0003)</td><td>2 credits</td><td class='num'>200,000.00</td><td>Same-name sender - likely own account at another bank</td></tr><tr><td>Vehicle seller (narrative 'Buying a car')</td><td>1 debit</td><td class='num'>2,000,000.00</td><td>Counterparty not printed; sale contract recommended</td></tr><tr><td>CIB-loan facility (auto-deduction LD refs)</td><td>36 debits</td><td class='num'>653,140.32</td><td>Principal 300,938.35 + interest 351,031.97 + fees 1,170.00</td></tr><tr><td>Cheques 128048103 / 128048104 (inc. collection)</td><td>2 debits</td><td class='num'>345,478.46</td><td>Identical amounts 172,739.23 - recurring commitment</td></tr><tr><td>RAMY R... R... (IPN payee)</td><td>2+ debits</td><td class='num'>200,040.00</td><td>Recurring 100,020.00 pattern</td></tr><tr><td>AXA insurance (policy premiums)</td><td>13 debits</td><td class='num'>177,723.24</td><td>Recurring premiums - dependent cover indication</td></tr><tr><td>Card 5264390000004449 - POS merchants</td><td>208 debits</td><td class='num'>397,387.16</td><td>Daily living spend profile</td></tr></tbody></table>
+<p class="note">Counterparty names are reproduced as printed (truncated by the bank). Payee names inside IPN
+narratives are partially masked by CIB's own print policy; the register lists every party whose activity
+materially shapes the account's financial picture.</p>
+</div>
+
+<div class="section"><h2 class="section-title">9. Risk &amp; Compliance Advisory Flags</h2>
+<div class="alert-box"><b>ADVISORY F1 - Third-party funding concentration (HIGH).</b> 85.1% of inflows are
+"Funds B/O 1000357369". Embassies treat unnamed recurring injections as a layering indicator. Remedy: obtain
+the funding customer's identity and first-page statement, plus a short sponsor letter stating the relationship
+and purpose of each injection.</div>
+<div class="alert-box"><b>ADVISORY F2 - No employment income visible (MEDIUM).</b> The six cycles contain no
+salary, pension or business-revenue credits. If the applicant is employed or runs a business, add an employer
+letter or commercial registry extract; if sponsored, say so explicitly and document the sponsor.</div>
+<div class="alert-box"><b>ADVISORY F3 - Balance volatility / repositioning pattern (MEDIUM).</b> 1.23M &rarr;
+49.1K (&minus;96.0%) in cycle 2, then a rebuild to 2.83M by cycle 5. Funds move in structured round-sum waves;
+the account behaves as a hub. A cover-letter paragraph explaining the account's treasury role pre-empts this
+question.</div>
+<div class="alert-box"><b>ADVISORY F4 - Large unexplained outflows (MEDIUM).</b> The EGP 2.0M "Buying a car"
+debit and the EGP 1.25M of CIB-client transfers have no printed counterparty. Provide the vehicle sale contract
+(and, if the vehicle is an asset you intend to declare, its registration) and identify the transfer
+beneficiaries.</div>
+<div class="alert-box"><b>ADVISORY F5 - Recurring obligations to disclose (LOW).</b> CIB loan service of ~EGP 54.4K
+per month and two identical cheques of EGP 172,739.23 imply ongoing commitments. These are not negative factors -
+they demonstrate credit history - but they should be listable in the cover letter with their documents.</div>
+<div class="alert-box"><b>ADVISORY F6 - Name romanisation (LOW).</b> The statement prints
+"ABDELRAHMAN AHMED MO" (truncated) and Arabic عبدالرحمن احمد محمد الجريدلى. Ensure the passport romanisation
+(likely ELGARAYADLI) is used consistently in the visa file; a one-line name declaration avoids misidentification.</div>
+<div class="alert-box"><b>ADVISORY F7 - SWIFT remitter not printed (LOW).</b> The EGP 1.5M inward wire shows only
+the WF reference. Attach the bank-issued SWIFT credit advice naming the remitter and purpose.</div>
+</div>
+
+<div class="section"><h2 class="section-title">10. UK Visa Readiness Matrix - Joint Application (2 Travellers)</h2>
+<table class="data-table"><thead><tr><th>Assessment Line</th><th>Required (EGP-equivalent)</th>
+<th>Result</th><th>Coverage</th></tr></thead><tbody><tr><td>UK Visit Visa (per applicant)</td><td class='num'>EGP 205,440.00</td><td class='num text-success'><b>PASS</b></td><td class='num'>1,235.3% (12.35x)</td></tr><tr><td>Schengen Visit Visa (per applicant)</td><td class='num'>EGP 154,080.00</td><td class='num text-success'><b>PASS</b></td><td class='num'>1,647.0% (16.47x)</td></tr><tr><td>US Visit Visa (per applicant)</td><td class='num'>EGP 256,800.00</td><td class='num text-success'><b>PASS</b></td><td class='num'>988.2% (9.88x)</td></tr><tr style='background:#e0f2fe'><td><b>UK Visit Visa - JOINT, 2 travellers</b> <span class='badge' style='background:#005677'>ACTIVE BENCHMARK</span><br><span style='font-size:0.9em'>2 &times; EGP 205,440.00 = EGP 410,880.00</span></td><td class='num'>EGP 410,880.00</td><td class='num text-success'><b>PASS</b></td><td class='num'>617.6% (6.18x)</td></tr><tr><td>Document Authenticity Screening</td><td class='num'>&mdash;</td><td class='num text-success'><b>PASS</b></td><td class='num'>Genuine CIB issue format; no specimen/test markers</td></tr></tbody></table>
+<p><b>Result:</b> the closing balance of EGP 2,537,761.72 clears every line of the matrix for both travellers.
+Against the <b>active joint two-traveller benchmark</b> of EGP 410,880.00 the account covers the
+requirement <b>6.18 times</b> (coverage 617.6%) - and still covers the
+single-applicant UK line 12.35 times even if the holder and his wife were assessed
+separately. The maintenance-funds test is passed with a margin so wide that even a 90% haircut of the closing
+balance would still clear the joint UK line. The readiness question for this case is therefore not <i>how much</i>
+but <i>whose</i> - resolved by the Section 11 gates.</p>
+</div>
+
+<div class="section"><h2 class="section-title">11. Conclusion &amp; Required Client Actions</h2>
+<p>The statement is arithmetically immaculate: 440/440 running-balance checks, 24/24 printed checkpoint matches,
+and an exact grand reconciliation to the printed closing balance of EGP 2,537,761.72. The spending profile
+is that of a genuine, actively used account. For the <b>joint two-traveller UK tourism application</b> the account
+covers the combined requirement 6.18 times over.</p>
+<p><b>Conditional status - complete these six gates before submission:</b></p>
+<div class="analysis-grid">
+<div class="analysis-card"><b>Gate 1 - Funding source.</b> Identify CIB customer 1000357369 (behind the
+EGP 9.95M of B/O injections): copy of their statement first page + relationship proof + short sponsor letter.</div>
+<div class="analysis-card"><b>Gate 2 - SWIFT wire.</b> Obtain the credit advice for WF-1002541763
+(EGP 1,500,000, 11MAR26) naming the remitter and purpose.</div>
+<div class="analysis-card"><b>Gate 3 - Vehicle purchase.</b> Contract/receipt for the EGP 2,000,000
+"Buying a car" debit of 29JUN26, plus registration if the vehicle is to be declared.</div>
+<div class="analysis-card"><b>Gate 4 - Obligations schedule.</b> Loan statement for the CIB facility and the
+payee reference for cheques 128048103/104 (EGP 172,739.23 each).</div>
+<div class="analysis-card"><b>Gate 5 - Name consistency.</b> Confirm passport romanisation of
+&ldquo;Elgarayadli&rdquo; and align it across the visa file and cover letter.</div>
+<div class="analysis-card"><b>Gate 6 - Co-traveller file.</b> Second traveller confirmed: <b>DALIA ALI SAYED MOHAMED</b>
+(wife of the account holder). Remaining: her passport details in the application, the <b>marriage certificate</b> as
+relationship evidence, and an itinerary naming both travellers - this statement then serves as the joint
+maintenance evidence.</div>
+</div>
+<p>Once Gates 1&ndash;6 are documented, the joint application for the holder and his wife is supported by a strong
+account profile: high liquid balance, low cash reliance, full electronic traceability, demonstrated credit
+discipline (loan + full credit-card settlements) and six months of continuous banking history.</p>
+</div>
+
+<div class="signoff">
+<p><b>Prepared by:</b> Global EIS - Financial Intelligence Services &nbsp;&middot;&nbsp;
+<b>Analyst verification:</b> automated chain audit + printed-total cross-check + source-of-funds classification,
+26 September 2026</p>
+<p><b>Verification statement:</b> 440/440 transactions verified (101/101 printed running-balance
+rows reproduced exactly; all others group-verified against printed anchors); 24/24 bank-printed checkpoint figures
+matched; grand reconciliation exact to EGP 2,537,761.72. All figures in this report are computed from the
+source statement document; no figure is estimated or supplied by any party.</p>
+</div></div>
+<div class="footer">
+ <p><strong>Prepared By:</strong> GLOBAL EIS - FINANCIAL INTELLIGENCE SERVICES</p>
+ <div class="legal">Disclaimer: This report is prepared by Global EIS based solely on the bank statement document supplied by the client. Global EIS does not independently verify the authenticity of the underlying bank statement and makes no representation as to the applicant's eligibility for any visa or immigration outcome. All mathematical reconciliations are verified against the stated bank totals. This report is intended solely to support the client's own submission, should be read together with all other required supporting documentation, and does not constitute legal advice. Statements analysed as delivered; authenticity findings reflect documentary consistency only. One statement = one report; never recycled.</div>
+</div>
+</div></body></html>
