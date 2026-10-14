@@ -46,72 +46,72 @@
 }
 
 :root {
-  --radius: 0.875rem; /* élégance: softer, more generous corners */
-  --background: oklch(0.975 0.012 300);
-  --foreground: oklch(0.22 0.045 300);
+  --radius: 0.75rem; /* precision: crisp engineering corners */
+  --background: oklch(0.978 0.007 230);
+  --foreground: oklch(0.25 0.03 245);
   --card: oklch(1 0 0);
-  --card-foreground: oklch(0.22 0.045 300);
+  --card-foreground: oklch(0.25 0.03 245);
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.22 0.045 300);
-  --primary: oklch(0.42 0.19 293); /* royal violet */
+  --popover-foreground: oklch(0.25 0.03 245);
+  --primary: oklch(0.52 0.125 240); /* firm azure */
   --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.955 0.02 300);
-  --secondary-foreground: oklch(0.32 0.1 295);
-  --muted: oklch(0.96 0.014 300);
-  --muted-foreground: oklch(0.5 0.035 300);
-  --accent: oklch(0.945 0.03 300);
-  --accent-foreground: oklch(0.32 0.09 295);
+  --secondary: oklch(0.955 0.012 230);
+  --secondary-foreground: oklch(0.35 0.06 240);
+  --muted: oklch(0.96 0.009 230);
+  --muted-foreground: oklch(0.5 0.03 240);
+  --accent: oklch(0.945 0.022 225);
+  --accent-foreground: oklch(0.35 0.07 240);
   --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.905 0.025 300);
-  --input: oklch(0.905 0.025 300);
-  --ring: oklch(0.62 0.17 295);
-  --chart-1: oklch(0.55 0.21 293);
-  --chart-2: oklch(0.6 0.2 328);
-  --chart-3: oklch(0.68 0.14 200);
+  --border: oklch(0.905 0.015 230);
+  --input: oklch(0.905 0.015 230);
+  --ring: oklch(0.62 0.12 235);
+  --chart-1: oklch(0.55 0.14 240);
+  --chart-2: oklch(0.65 0.12 210);
+  --chart-3: oklch(0.68 0.1 190);
   --chart-4: oklch(0.78 0.14 85);
-  --chart-5: oklch(0.5 0.16 280);
-  --sidebar: oklch(0.98 0.008 300);
-  --sidebar-foreground: oklch(0.22 0.045 300);
-  --sidebar-primary: oklch(0.42 0.19 293);
+  --chart-5: oklch(0.45 0.08 250);
+  --sidebar: oklch(0.98 0.006 230);
+  --sidebar-foreground: oklch(0.25 0.03 245);
+  --sidebar-primary: oklch(0.52 0.125 240);
   --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.955 0.02 300);
-  --sidebar-accent-foreground: oklch(0.32 0.1 295);
-  --sidebar-border: oklch(0.905 0.025 300);
-  --sidebar-ring: oklch(0.62 0.17 295);
+  --sidebar-accent: oklch(0.955 0.012 230);
+  --sidebar-accent-foreground: oklch(0.35 0.07 240);
+  --sidebar-border: oklch(0.905 0.015 230);
+  --sidebar-ring: oklch(0.62 0.12 235);
 }
 
 .dark {
-  --background: oklch(0.16 0.045 295);
-  --foreground: oklch(0.94 0.02 300);
-  --card: oklch(0.2 0.05 295);
-  --card-foreground: oklch(0.94 0.02 300);
-  --popover: oklch(0.2 0.05 295);
-  --popover-foreground: oklch(0.94 0.02 300);
-  --primary: oklch(0.8 0.12 300);
-  --primary-foreground: oklch(0.17 0.05 295);
-  --secondary: oklch(0.25 0.06 295);
-  --secondary-foreground: oklch(0.94 0.02 300);
-  --muted: oklch(0.25 0.06 295);
-  --muted-foreground: oklch(0.7 0.045 300);
-  --accent: oklch(0.25 0.06 295);
-  --accent-foreground: oklch(0.94 0.02 300);
+  --background: oklch(0.18 0.028 245);
+  --foreground: oklch(0.93 0.012 230);
+  --card: oklch(0.22 0.03 245);
+  --card-foreground: oklch(0.93 0.012 230);
+  --popover: oklch(0.22 0.03 245);
+  --popover-foreground: oklch(0.93 0.012 230);
+  --primary: oklch(0.78 0.11 230);
+  --primary-foreground: oklch(0.18 0.03 245);
+  --secondary: oklch(0.26 0.035 245);
+  --secondary-foreground: oklch(0.93 0.012 230);
+  --muted: oklch(0.26 0.035 245);
+  --muted-foreground: oklch(0.68 0.03 235);
+  --accent: oklch(0.27 0.035 240);
+  --accent-foreground: oklch(0.93 0.012 230);
   --destructive: oklch(0.704 0.191 22.216);
   --border: oklch(1 0 0 / 12%);
   --input: oklch(1 0 0 / 16%);
-  --ring: oklch(0.72 0.14 300);
-  --chart-1: oklch(0.68 0.19 293);
-  --chart-2: oklch(0.72 0.17 328);
-  --chart-3: oklch(0.78 0.12 200);
+  --ring: oklch(0.72 0.11 230);
+  --chart-1: oklch(0.7 0.13 235);
+  --chart-2: oklch(0.74 0.11 205);
+  --chart-3: oklch(0.78 0.09 185);
   --chart-4: oklch(0.83 0.13 88);
-  --chart-5: oklch(0.6 0.18 280);
-  --sidebar: oklch(0.2 0.05 295);
-  --sidebar-foreground: oklch(0.94 0.02 300);
-  --sidebar-primary: oklch(0.68 0.15 295);
+  --chart-5: oklch(0.6 0.09 250);
+  --sidebar: oklch(0.22 0.03 245);
+  --sidebar-foreground: oklch(0.93 0.012 230);
+  --sidebar-primary: oklch(0.7 0.12 230);
   --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.25 0.06 295);
-  --sidebar-accent-foreground: oklch(0.94 0.02 300);
+  --sidebar-accent: oklch(0.26 0.035 245);
+  --sidebar-accent-foreground: oklch(0.93 0.012 230);
   --sidebar-border: oklch(1 0 0 / 12%);
-  --sidebar-ring: oklch(0.72 0.14 300);
+  --sidebar-ring: oklch(0.72 0.11 230);
 }
 
 @layer base {
@@ -121,55 +121,57 @@
   body {
     /* Canvas color lives on the BODY so it propagates to the root
        canvas — painted below the negative-z fixed backdrop, letting
-       the royal aurora and fine grid show through the app shell. */
+       the signal drift and fine grid show through the app shell. */
     @apply text-foreground;
     background-color: var(--eis-canvas);
   }
 }
 
 /* ============================================================
-   Global EIS portal — 2026 design system ("ROYAL AURORA",
-   ÉLÉGANCE refinement pass DL-11; owner-selected theme,
-   supersedes "Petrol Teal — Crisp" DL-10).
+   Global EIS portal — 2026 design system ("PRECISION AZURE",
+   DL-15 redesign; supersedes "Royal Aurora" DL-11).
 
-   Concept — the throne-room aurora:
-   • Canvas — deep royal indigo (dark) / lavender porcelain (light).
-   • Aurora — three soft curtains (violet, fuchsia, teal) drifting
-     on a 70–90s cycle: elegant and slow, the 2026 refinement of the
-     earlier RGB scene (no hue-cycling, no twinkle, no spin).
-   • Royal gold foil — reserved for ceremonial moments (edition
-     badge); never used as wallpaper.
-   • Surfaces — silk violet-tinted glass (24px blur, calmer saturate),
-     hairline border, one inner top highlight, layered indigo shadow.
-   • ÉLÉGANCE 2026 — elegance through restraint: dimmer + slower
-     aurora, airier glass, champagne gold, longer hairlines, softer
-     shadows, wider tracking, more breathing room. Nothing renamed.
+   Concept — one brand, engineered for 2026:
+   • ONE-BRAND ALIGNMENT — the portal finally wears the firm's
+     ratified report identity (SO-1): #005677 deep sea + #008DCB
+     azure. Portal and reports now speak the same language.
+   • Canvas — deep ink navy (dark) / cool porcelain (light).
+   • Signal drift — two slow azure/cyan washes drifting on a
+     110–130s cycle over a static brand wash: calm, engineered.
+   • Blueprint grid — fine sea-tinted engineering grid fading
+     toward the bottom (the quiet 2026 signature). Royal
+     starfield retired.
+   • Surfaces — liquid-glass frost (20px blur, crisper saturate),
+     hairline border, one inner top highlight, layered navy
+     shadow. Depth from shadow craft, not moving parts.
+   • Typography — Geist-led display (royal serif retired); mono
+     voice for data. Verification-seal azure replaces gold foil.
    • Status semantics UNCHANGED: green / amber / red stay exactly
      as ratified (--eis-success / --eis-attention / --eis-danger).
    ALL --eis-* variable NAMES and class names are unchanged, so the
    panels, GH tokens (src/lib/format.ts) and STATUS_META inherit
    this redesign with zero logic changes. The report document
    (report_design.ts, Master v1.3) is deliberately untouched —
-   reports keep the firm #005677/#008DCB identity; the portal is
-   the product shell and wears the owner's Royal Aurora.
+   reports keep the firm #005677/#008DCB identity; the portal now
+   MATCHES it in the product shell.
    ============================================================ */
 :root {
   color-scheme: light;
-  --eis-canvas: #faf8fe;
-  --eis-canvas-subtle: #f1ecfb;
-  --eis-canvas-glass: rgba(255, 254, 255, 0.78);
-  --eis-live-1: #a855f7;
-  --eis-live-2: #7c3aed;
-  --eis-live-3: #4c1d95;
-  --eis-grid-line: rgba(109, 40, 217, 0.05);
-  --eis-hover: #efe9f8;
-  --eis-border: #e7dff6;
-  --eis-border-muted: #eee8f9;
-  --eis-fg: #191327;
-  --eis-muted: #5d5474;
-  --eis-accent: #6d28d9;
-  --eis-accent-2: #c026d3;
-  --eis-accent-subtle: #f3e8ff;
+  --eis-canvas: #f3f7fa;
+  --eis-canvas-subtle: #e9f0f6;
+  --eis-canvas-glass: rgba(255, 255, 255, 0.8);
+  --eis-live-1: #38bdf8;
+  --eis-live-2: #0284c7;
+  --eis-live-3: #075985;
+  --eis-grid-line: rgba(0, 86, 119, 0.055);
+  --eis-hover: #e6eef5;
+  --eis-border: #d8e4ee;
+  --eis-border-muted: #e2ebf3;
+  --eis-fg: #0b1620;
+  --eis-muted: #51626f;
+  --eis-accent: #0072a6;
+  --eis-accent-2: #0891b2;
+  --eis-accent-subtle: #e0f2fe;
   --eis-success: #1a7f37;
   --eis-success-subtle: #dafbe1;
   --eis-online: #16a34a;
@@ -179,41 +181,41 @@
   --eis-danger: #dc2626;
   --eis-danger-strong: #b91c1c;
   --eis-danger-subtle: #fdeeee;
-  --eis-neutral: #9b93ad;
-  --eis-cell-empty: #eae4f5;
-  --eis-btn-green: #6d28d9;
-  --eis-btn-green-hover: #5b21b6;
-  --eis-divide: #e9e3f5;
-  --eis-scale-1: #e2d4fa;
-  --eis-scale-2: #b78df0;
-  --eis-scale-3: #8b5cf6;
-  --eis-scale-4: #4c1d95;
-  --eis-gold: #a16207;
-  --eis-gold-soft: #f7eed6; /* champagne wash */
-  --eis-glow: 0 0 0 1px rgba(109, 40, 217, 0.13), 0 10px 30px -10px rgba(139, 92, 246, 0.32);
+  --eis-neutral: #8fa1ae;
+  --eis-cell-empty: #dfe9f1;
+  --eis-btn-green: #0073b1;
+  --eis-btn-green-hover: #005b8e;
+  --eis-divide: #e3ecf3;
+  --eis-scale-1: #d9e8f2;
+  --eis-scale-2: #6fb9dd;
+  --eis-scale-3: #1493cc;
+  --eis-scale-4: #075985;
+  --eis-gold: #0369a1; /* repurposed: verification-seal azure */
+  --eis-gold-soft: #e3f2fc;
+  --eis-glow: 0 0 0 1px rgba(0, 141, 203, 0.16), 0 10px 30px -10px rgba(0, 141, 203, 0.35);
   --eis-card-shadow:
-    0 1px 2px rgba(25, 19, 39, 0.04),
-    0 18px 44px -20px rgba(76, 29, 149, 0.15);
+    0 1px 2px rgba(11, 22, 32, 0.05),
+    0 18px 44px -20px rgba(7, 89, 133, 0.18);
 }
 
 .dark {
   color-scheme: dark;
-  /* Royal indigo canvas — matte near-black with a violet cast */
-  --eis-canvas: #090613;
-  --eis-canvas-subtle: #0f0a1f;
-  --eis-canvas-glass: rgba(15, 10, 29, 0.66);
-  --eis-live-1: #c084fc;
-  --eis-live-2: #a78bfa;
-  --eis-live-3: #7c3aed;
-  --eis-grid-line: rgba(167, 139, 250, 0.05);
-  --eis-hover: #17102e;
-  --eis-border: #241a40;
-  --eis-border-muted: #1c1433;
-  --eis-fg: #ede9f8;
-  --eis-muted: #9d93b8;
-  --eis-accent: #a78bfa;
-  --eis-accent-2: #e879f9;
-  --eis-accent-subtle: rgba(139, 92, 246, 0.14);
+  /* Ink navy canvas — matte near-black with a sea cast */
+  --eis-canvas: #050b12;
+  --eis-canvas-subtle: #0a141d;
+  --eis-canvas-glass: rgba(9, 18, 27, 0.72);
+  --eis-live-1: #7dd3fc;
+  --eis-live-2: #38bdf8;
+  --eis-live-3: #0284c7;
+  --eis-grid-line: rgba(125, 211, 252, 0.05);
+  --eis-hover: #0e1b26;
+  --eis-border: #1b2a38;
+  --eis-border-muted: #142230;
+  --eis-fg: #e6eef5;
+  --eis-muted: #8ba3b4;
+  --eis-accent: #45c1f7;
+  --eis-accent-2: #22d3ee;
+  --eis-accent-subtle: rgba(56, 189, 248, 0.13);
   --eis-success: #4ade80;
   --eis-success-subtle: rgba(34, 197, 94, 0.13);
   --eis-online: #22c55e;
@@ -223,23 +225,23 @@
   --eis-danger: #f87171;
   --eis-danger-strong: #ef4444;
   --eis-danger-subtle: #2a1518;
-  --eis-neutral: #6f668a;
-  --eis-cell-empty: #150e2a;
-  --eis-btn-green: #8b5cf6;
-  --eis-btn-green-hover: #a78bfa;
-  --eis-divide: #170f2e;
-  --eis-scale-1: #1b1240;
-  --eis-scale-2: #3b2382;
-  --eis-scale-3: #7c3aed;
-  --eis-scale-4: #c084fc;
-  --eis-gold: #e7c982; /* champagne, not brass */
-  --eis-gold-soft: rgba(231, 201, 130, 0.12);
-  --eis-glow: 0 0 0 1px rgba(139, 92, 246, 0.2), 0 10px 32px -10px rgba(139, 92, 246, 0.28);
-  /* Silk panel depth: faint inner top sheen + deep, diffuse indigo drop */
+  --eis-neutral: #5d7386;
+  --eis-cell-empty: #0d1822;
+  --eis-btn-green: #0ea5e9;
+  --eis-btn-green-hover: #38bdf8;
+  --eis-divide: #0f1c27;
+  --eis-scale-1: #0e2030;
+  --eis-scale-2: #14486b;
+  --eis-scale-3: #0284c7;
+  --eis-scale-4: #7dd3fc;
+  --eis-gold: #7dd3fc; /* verification-seal azure (dark) */
+  --eis-gold-soft: rgba(125, 211, 252, 0.1);
+  --eis-glow: 0 0 0 1px rgba(56, 189, 248, 0.22), 0 10px 32px -10px rgba(14, 165, 233, 0.3);
+  /* Frost panel depth: faint inner top sheen + deep, diffuse navy drop */
   --eis-card-shadow:
-    inset 0 1px 0 rgba(196, 181, 253, 0.05),
+    inset 0 1px 0 rgba(125, 211, 252, 0.05),
     0 1px 2px rgba(0, 0, 0, 0.42),
-    0 22px 52px -22px rgba(10, 5, 28, 0.7);
+    0 22px 52px -22px rgba(2, 8, 16, 0.72);
 }
 
 /* --- Dark overrides for hardcoded light-only utilities --- */
@@ -272,12 +274,12 @@
 .dark .divide-\[\#eaeef2\] > :not(:last-child) { border-color: var(--eis-divide); }
 
 /* ============================================================
-   Royal Aurora primitives — drifting curtains, fine grid, glass
+   Precision Azure primitives — signal drift, blueprint grid, frost
    ============================================================ */
 
-/* Backdrop: the aurora stage — a violet/fuchsia wash baked into the
-   fixed layer beneath three independent drifting curtains. Static
-   itself; all motion lives in the orbs below (slow, elegant). */
+/* Backdrop: the signal stage — an azure/cyan wash baked into the
+   fixed layer beneath two independent drifting curtains. Static
+   itself; all motion lives in the orbs below (slow, engineered). */
 .eis-aurora {
   position: fixed;
   inset: 0;
@@ -285,11 +287,11 @@
   overflow: hidden;
   pointer-events: none;
   background:
-    radial-gradient(52rem 34rem at 82% -8%, rgba(139, 92, 246, 0.07), transparent 62%),
-    radial-gradient(46rem 30rem at -12% 108%, rgba(192, 38, 211, 0.055), transparent 60%),
+    radial-gradient(52rem 34rem at 82% -8%, rgba(0, 141, 203, 0.06), transparent 62%),
+    radial-gradient(46rem 30rem at -12% 108%, rgba(8, 145, 178, 0.05), transparent 60%),
     var(--eis-canvas);
 }
-/* Aurora curtain 1 — violet crown, drifts northwest↔southeast */
+/* Signal curtain 1 — azure crown, drifts northwest↔southeast */
 .eis-orb {
   position: absolute;
   border-radius: 9999px;
@@ -301,29 +303,29 @@
   height: 42rem;
   top: -17rem;
   right: -13rem;
-  background: radial-gradient(closest-side, rgba(139, 92, 246, 0.14), transparent 70%);
+  background: radial-gradient(closest-side, rgba(14, 165, 233, 0.13), transparent 70%);
   opacity: 0.7;
-  animation: eis-drift-a 96s ease-in-out infinite alternate;
+  animation: eis-drift-a 120s ease-in-out infinite alternate;
 }
-/* Aurora curtain 2 — fuchsia under-glow */
+/* Signal curtain 2 — cyan under-glow */
 .eis-orb-b {
   width: 38rem;
   height: 38rem;
   bottom: -17rem;
   left: -11rem;
-  background: radial-gradient(closest-side, rgba(217, 70, 239, 0.105), transparent 72%);
+  background: radial-gradient(closest-side, rgba(34, 211, 238, 0.1), transparent 72%);
   opacity: 0.62;
-  animation: eis-drift-b 88s ease-in-out infinite alternate;
+  animation: eis-drift-b 110s ease-in-out infinite alternate;
 }
-/* Aurora curtain 3 — teal counterpoint (2026: re-armed) */
+/* Signal curtain 3 — deep-sea counterpoint */
 .eis-orb-c {
   width: 34rem;
   height: 34rem;
   top: 24%;
   left: -14rem;
-  background: radial-gradient(closest-side, rgba(45, 212, 191, 0.09), transparent 72%);
+  background: radial-gradient(closest-side, rgba(0, 86, 119, 0.1), transparent 72%);
   opacity: 0.55;
-  animation: eis-drift-c 104s ease-in-out infinite alternate;
+  animation: eis-drift-c 128s ease-in-out infinite alternate;
 }
 @keyframes eis-drift-a {
   from { transform: translate3d(0, 0, 0) scale(1); }
@@ -337,8 +339,9 @@
   from { transform: translate3d(0, 0, 0) scale(1); }
   to { transform: translate3d(6rem, 3rem, 0) scale(1.1); }
 }
-/* The star-dust layer carries the fine engineering grid — a quiet
-   2026 signature, royal-tinted, fading toward the bottom. */
+/* The star-dust layer carries the fine blueprint grid — the quiet
+   2026 signature, sea-tinted, fading toward the bottom. The royal
+   starfield is retired: pure engineering grid, light and dark. */
 .eis-stars {
   position: absolute;
   inset: 0;
@@ -352,26 +355,13 @@
 }
 .dark .eis-aurora {
   background:
-    radial-gradient(52rem 34rem at 82% -8%, rgba(139, 92, 246, 0.1), transparent 62%),
-    radial-gradient(46rem 30rem at -12% 108%, rgba(192, 38, 211, 0.075), transparent 60%),
+    radial-gradient(52rem 34rem at 82% -8%, rgba(14, 165, 233, 0.085), transparent 62%),
+    radial-gradient(46rem 30rem at -12% 108%, rgba(34, 211, 238, 0.06), transparent 60%),
     var(--eis-canvas);
 }
-.dark .eis-orb-a { opacity: 0.42; }
-.dark .eis-orb-b { opacity: 0.38; }
+.dark .eis-orb-a { opacity: 0.38; }
+.dark .eis-orb-b { opacity: 0.32; }
 .dark .eis-orb-c { opacity: 0.3; }
-/* Starfield (dark only) — a static royal night sky scattered over
-   the aurora: four dot layers at different tile scales (pseudo-
-   random repetition) above the fine grid. No twinkle — calm. */
-.dark .eis-stars {
-  background-image:
-    radial-gradient(1.3px 1.3px at 14px 22px, rgba(237, 233, 248, 0.5), transparent 2px),
-    radial-gradient(1px 1px at 52px 46px, rgba(196, 181, 253, 0.42), transparent 1.6px),
-    radial-gradient(1.5px 1.5px at 78px 12px, rgba(237, 233, 248, 0.28), transparent 2.2px),
-    radial-gradient(1px 1px at 96px 66px, rgba(240, 219, 158, 0.36), transparent 1.6px),
-    linear-gradient(var(--eis-grid-line) 1px, transparent 1px),
-    linear-gradient(90deg, var(--eis-grid-line) 1px, transparent 1px);
-  background-size: 108px 108px, 132px 132px, 156px 156px, 180px 180px, 44px 44px, 44px 44px;
-}
 
 /* Rubber grain: ultra-fine fractal noise — kept barely-there for the
    matte soft-touch finish (static, decorative). */
@@ -385,15 +375,15 @@
 }
 .dark .eis-grain { opacity: 0.04; }
 
-/* Crisp glass surface — the ONE surface treatment of the system:
+/* Crisp frost surface — the ONE surface treatment of the system:
    translucent panel, hairline border, single inner top highlight,
    layered soft shadow. No rotating edge light, no sheen animation;
    depth comes from shadow craft, not moving parts. */
 .eis-glass {
   position: relative;
   background: var(--eis-canvas-glass);
-  backdrop-filter: blur(24px) saturate(1.2);
-  -webkit-backdrop-filter: blur(24px) saturate(1.2);
+  backdrop-filter: blur(20px) saturate(1.35);
+  -webkit-backdrop-filter: blur(20px) saturate(1.35);
   border: 1px solid var(--eis-border);
   box-shadow: var(--eis-card-shadow);
 }
@@ -402,12 +392,12 @@
   position: absolute;
   inset: 0;
   border-radius: inherit;
-  background: linear-gradient(180deg, rgba(139, 92, 246, 0.05), transparent 20%);
+  background: linear-gradient(180deg, rgba(56, 189, 248, 0.05), transparent 20%);
   pointer-events: none;
 }
-.dark .eis-glass::before { background: linear-gradient(180deg, rgba(196, 181, 253, 0.06), transparent 22%); }
+.dark .eis-glass::before { background: linear-gradient(180deg, rgba(125, 211, 252, 0.06), transparent 22%); }
 
-/* Hairline header rule for panel headers — static aurora-tinted
+/* Hairline header rule for panel headers — static signal-tinted
    gradient line (was: animated RGB sweep). */
 .eis-sheen {
   position: relative;
@@ -417,20 +407,21 @@
   position: absolute;
   inset: 0 0 auto 0;
   height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(139, 92, 246, 0.45) 30%, rgba(217, 70, 239, 0.24) 55%, transparent);
+  background: linear-gradient(90deg, transparent, rgba(0, 141, 203, 0.45) 30%, rgba(34, 211, 238, 0.26) 55%, transparent);
   pointer-events: none;
 }
 
-/* Royal gold foil — ceremonial accent for the edition badge: a
-   gold-foil border ring + gold text over a soft gold wash. Static. */
+/* Verification seal — the ceremonial accent (was royal gold foil):
+   azure-seal border ring + deep-sea text over a soft azure wash.
+   Static. Used for the edition badge. */
 .eis-foil {
   border-color: color-mix(in srgb, var(--eis-gold) 38%, transparent) !important;
   background: linear-gradient(180deg, var(--eis-gold-soft), transparent) !important;
   color: var(--eis-gold) !important;
 }
 
-/* Ceremonial ornament — hairlines meeting a gold diamond (borrowed
-   from the owner's reference portal, DL-10c). Static, gold-only. */
+/* Engineering ornament — hairlines meeting an azure diamond (kept
+   structure, re-tinted from royal gold). Static, seal-azure only. */
 .eis-ornament {
   display: flex;
   align-items: center;
@@ -455,22 +446,23 @@
   box-shadow: 0 0 6px color-mix(in srgb, var(--eis-gold) 55%, transparent);
 }
 
-/* Royal brand tile — the header monogram: deep royal indigo tile,
-   gold ring, gold crown mark (reference-informed, DL-10c). Static. */
+/* Brand tile — the header monogram: deep-sea ink tile, azure ring,
+   scan-mark in seal azure. Static, engineered (was gold crown). */
 .eis-brand-tile {
   position: relative;
-  background: linear-gradient(150deg, #241640 0%, #150e2c 58%, #0d081f 100%);
-  border: 1px solid color-mix(in srgb, var(--eis-gold) 38%, transparent);
+  background: linear-gradient(150deg, #06304a 0%, #041c2e 58%, #02121f 100%);
+  border: 1px solid color-mix(in srgb, var(--eis-gold) 40%, transparent);
   box-shadow:
-    inset 0 1px 0 rgba(231, 201, 130, 0.16),
-    0 6px 18px -6px rgba(12, 6, 34, 0.5),
-    0 0 14px -2px rgba(139, 92, 246, 0.2);
+    inset 0 1px 0 rgba(125, 211, 252, 0.16),
+    0 6px 18px -6px rgba(2, 18, 31, 0.55),
+    0 0 14px -2px rgba(0, 141, 203, 0.28);
   color: var(--eis-gold);
 }
 
-/* Serif display voice — wordmark + hero headings only. */
+/* Display voice — wordmark + hero headings only. Geist-led (the
+   royal serif is retired; 2026 belongs to the grotesk). */
 .eis-display {
-  font-family: var(--font-display), Georgia, 'Times New Roman', serif;
+  font-family: var(--font-geist-sans), 'Segoe UI', Tahoma, sans-serif;
 }
 
 /* Online status: live green dot with a pulsing glow ring — functional
@@ -497,12 +489,12 @@
   }
 }
 
-/* Brand mark: solid violet→fuchsia identity gradient (static). */
+/* Brand mark: solid azure→cyan identity gradient (static). */
 .eis-gradient-brand {
   background: linear-gradient(135deg, var(--eis-accent) 0%, var(--eis-accent-2) 100%);
 }
 
-/* Headline accent: full aurora-spectrum text (static; shimmer retired). */
+/* Headline accent: deep-sea→cyan signal text (static; shimmer retired). */
 .eis-gradient-text {
   background: linear-gradient(120deg, var(--eis-accent), var(--eis-accent-2) 55%, var(--eis-live-1));
   -webkit-background-clip: text;
@@ -510,7 +502,7 @@
   color: transparent;
 }
 
-/* Primary button: solid violet→fuchsia gradient + glow; the sheen
+/* Primary button: solid azure→cyan gradient + glow; the sheen
    sweep fires on INTERACTION (hover) only — no idle breathing. */
 .eis-cta {
   position: relative;
@@ -530,7 +522,7 @@
   pointer-events: none;
 }
 .eis-cta:hover {
-  box-shadow: var(--eis-glow), 0 6px 18px -4px rgba(139, 92, 246, 0.38);
+  box-shadow: var(--eis-glow), 0 6px 18px -4px rgba(0, 141, 203, 0.38);
   transform: translateY(-1px);
 }
 .eis-cta:hover::after { transform: translateX(130%); }
@@ -549,11 +541,11 @@
   position: absolute;
   inset: 0;
   transform: translateX(-100%);
-  background: linear-gradient(90deg, transparent, rgba(196, 181, 253, 0.35), transparent);
+  background: linear-gradient(90deg, transparent, rgba(125, 211, 252, 0.35), transparent);
   animation: eis-skeleton-slide 1.6s ease infinite;
 }
 .dark .eis-skeleton::after {
-  background: linear-gradient(90deg, transparent, rgba(196, 181, 253, 0.09), transparent);
+  background: linear-gradient(90deg, transparent, rgba(125, 211, 252, 0.09), transparent);
 }
 @keyframes eis-skeleton-slide {
   to { transform: translateX(100%); }
@@ -573,10 +565,10 @@
 }
 ::-webkit-scrollbar-thumb:hover { background-color: var(--eis-neutral); }
 ::selection {
-  background: rgba(139, 92, 246, 0.26);
+  background: rgba(56, 189, 248, 0.28);
 }
 
-/* Accessibility: one switch kills every motion effect — aurora
+/* Accessibility: one switch kills every motion effect — signal
    curtains included; the backdrop freezes as a calm static wash. */
 @media (prefers-reduced-motion: reduce) {
   .eis-orb-a,

@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
-  ShieldCheck, CheckCircle2, Loader2, Lock, ListOrdered, LayoutDashboard, FileText, UploadCloud, LogOut, User, UserCog, Sparkles, Crown,
+  ShieldCheck, CheckCircle2, Loader2, Lock, ListOrdered, LayoutDashboard, FileText, UploadCloud, LogOut, User, UserCog, Sparkles, ScanLine,
 } from "lucide-react";
 import { UploadPanel } from "@/components/portal/upload-panel";
 import { QueuePanel } from "@/components/portal/queue-panel";
@@ -156,7 +156,7 @@ export default function PortalPage() {
 
   return (
     <div className="flex min-h-screen flex-col" style={{ color: GH.fg }}>
-      {/* Royal Aurora backdrop — three drifting curtains over the indigo stage */}
+      {/* Precision Azure backdrop — two slow signal curtains over the ink stage */}
       <div className="eis-aurora" aria-hidden="true">
         <span className="eis-orb eis-orb-a" />
         <span className="eis-orb eis-orb-b" />
@@ -169,7 +169,7 @@ export default function PortalPage() {
       <header className="sticky top-0 z-40 border-b border-[var(--eis-border)] bg-[var(--eis-canvas-glass)] backdrop-blur-xl backdrop-saturate-[1.25]">
         <div className="mx-auto flex max-w-5xl flex-wrap items-center gap-3 px-4 py-3 sm:px-6">
           <div className="eis-brand-tile flex h-9 w-9 items-center justify-center rounded-xl" aria-hidden="true">
-            <Crown className="h-4.5 w-4.5" strokeWidth={2.2} />
+            <ScanLine className="h-4.5 w-4.5" strokeWidth={2.2} />
           </div>
           <div className="min-w-0">
             <h1 className="eis-display text-base font-semibold leading-tight tracking-tight">
@@ -222,13 +222,15 @@ export default function PortalPage() {
             <div className="mb-6 text-center">
               <p className="eis-foil mb-3 inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-[10px] font-semibold tracking-[0.14em] backdrop-blur">
                 <span className="h-1.5 w-1.5 rounded-full bg-[var(--eis-online)] eis-dot-live" aria-hidden="true" />
-                SECURE CLIENT PORTAL · ROYAL AURORA · ÉLÉGANCE 2026
+                SECURE CLIENT PORTAL · PRECISION AZURE · 2026
               </p>
-              <h2 className="eis-display text-balance text-3xl font-medium leading-[1.12] tracking-[-0.01em] sm:text-4xl" style={{ color: GH.fg }}>
-                Secure statement <span className="eis-gradient-text">intelligence</span>
+              <h2 className="eis-display text-balance text-3xl font-semibold leading-[1.1] tracking-[-0.02em] sm:text-4xl" style={{ color: GH.fg }}>
+                Statement intelligence,
+                <br />
+                <span className="eis-gradient-text">verified</span> to the cent.
               </h2>
               <p className="mx-auto mt-3 max-w-sm text-pretty text-sm leading-relaxed text-[var(--eis-muted)]">
-                100% balance-chain verified reports — every format, text or scan.
+                Every report crosses the SO-9 balance double-check before delivery — text PDFs and scans alike.
               </p>
               <div className="eis-ornament mx-auto mt-5 w-fit" aria-hidden="true">
                 <i />
@@ -237,7 +239,7 @@ export default function PortalPage() {
                 {[
                   { icon: ShieldCheck, label: "MD5 hash-locked" },
                   { icon: Sparkles, label: "Any size" },
-                  { icon: CheckCircle2, label: "Chain-verified" },
+                  { icon: CheckCircle2, label: "SO-9 double-check" },
                 ].map((f) => (
                   <span
                     key={f.label}
@@ -463,7 +465,7 @@ export default function PortalPage() {
               ahmedr.muhammed19@gmail.com
             </a>
           </p>
-          <p className="mt-1 text-[10px] tracking-wide text-[var(--eis-neutral)]">© 2026 Global EIS · Master v1.2.6 report standard</p>
+          <p className="mt-1 text-[10px] tracking-wide text-[var(--eis-neutral)]">© 2026 Global EIS · Master v1.3.0 report standard</p>
         </div>
       </footer>
     </div>

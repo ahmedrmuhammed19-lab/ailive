@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono, Playfair_Display } from "next/font/google";
+import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
 import { ThemeProvider } from "@/components/theme-provider";
@@ -14,14 +14,6 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-/* Royal Aurora ceremonial voice — serif display for wordmark + hero
-   (body/product stays Geist; the report document is untouched). */
-const playfair = Playfair_Display({
-  variable: "--font-display",
-  subsets: ["latin"],
-  weight: ["500", "600", "700"],
-});
-
 export const metadata: Metadata = {
   title: "Global EIS — Secure Statement Portal",
   description:
@@ -31,8 +23,8 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#faf8fe" },
-    { media: "(prefers-color-scheme: dark)", color: "#090613" },
+    { media: "(prefers-color-scheme: light)", color: "#f3f7fa" },
+    { media: "(prefers-color-scheme: dark)", color: "#050b12" },
   ],
 };
 
@@ -44,7 +36,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} ${playfair.variable} font-sans antialiased bg-background text-foreground`}
+        className={`${geistSans.variable} ${geistMono.variable} font-sans antialiased bg-background text-foreground`}
       >
         <ThemeProvider>
           {children}
