@@ -2154,3 +2154,42 @@ Stage Summary:
   downloads stay session-guarded, token server-side only. Owner action items remain: rotate BOTH
   chat-transited tokens (GitHub PAT ghp_… and Vercel vcp_…) — update Vercel env GH_VAULT_TOKEN
   after rotating the PAT; SMTP creds still missing (mail leg = outbox mode).
+
+---
+Task ID: DL-20
+Agent: Super Z (main)
+Task: Owner: "THIS PROJECT CONSUME 3.18 GB — JUST REDUCE THIS STORAGE AS MUCH AS POSSIBLE —
+JUST MOVE OR CUT TO GITHUB IF ANYTHING CONSUME ALOT" — workspace slim-down, bulk data to GitHub.
+
+Work Log:
+- Audit: /home/z was ~7.4G — node_modules 1.3G, upload/ 372M (client statements + dev
+  evidence), .next 369M, .venv 4.4G (kitchen-sink python env), .bun cache 1.3G,
+  ms-playwright 613M + puppeteer 601M, @mermaid-js 461M, .agent-browser 398M, .git 84M.
+- MOVE leg: created PRIVATE repo ahmedrmuhammed19-lab/eis-archive; seeded via bare-repo
+  GIT_DIR/GIT_WORK_TREE staging (no file copies) with upload/ + download/ + db/custom.db;
+  pushed commit 4f5b977672; verified tree (db/download/upload) via GitHub API. Local
+  upload/ is a sandbox mount -> emptied contents (kept dir + .gitkeep); download/ same.
+  Client statements remain fully private; new uploads already land in eis-vault (DL-19).
+- CUT leg (all regenerable or zero-usage — import-audited before each removal):
+  node_modules + .next + tsbuildinfo (bun install / next build restore), bun install cache,
+  ms-playwright + puppeteer browser caches, @mermaid-js CLI, and from .venv: nvidia CUDA
+  orphan libs, vtkmodules, catboost, aspose, xgboost, casadi, OCP/cadquery (CAD), spacy/blis/
+  thinc, gensim, gradio, notebook/jupyter, geo stack (rasterio/pyogrio/fiona/pyproj/geopandas),
+  imageio_ffmpeg, cv2/opencv, python-playwright, plotly/bokeh/statsmodels, skimage, sympy,
+  botocore/s3transfer, ezdxf, ddtrace, mne, babel, debugpy, tables/Bio/tabula/faker/blosc2.
+  Kept the ACTIVE toolchain verified by 3x sanity imports: fitz, pdfplumber, PIL,
+  pytesseract, openpyxl, requests, psycopg2, matplotlib, numpy, pandas, scipy, sklearn.
+- Also deleted the 127M local staging bare repo (archive lives on GitHub) and killed a stray
+  next dev server (25% RAM) that had been running since an earlier session.
+- Result: /home/z 7.4G -> 1.7G (-5.7G, -77%). Remaining: .venv 897M (active data/parse stack),
+  .agent-browser 398M (kept as the only browser runtime for portal verification), my-project
+  155M (.git 84M + skills 61M + sources), .local 120M (uv), .npm-global 89M, .cache 37M.
+- Restore paths if ever needed: `bun install` (node_modules), `next build` (.next),
+  `uv pip install <pkg>` (venv), `npx playwright install` / puppeteer (browsers),
+  `npm i -g @mermaid-js/mermaid-cli` (mermaid). Agent-browser + python data stack untouched.
+- Prod/Vercel/Neon untouched (0 bytes in src/ diff; no gates needed beyond durability push).
+
+Stage Summary:
+- Workspace cut from ~7.4G to 1.7G. All client statements/evidence/deliverables moved to the
+  private eis-archive repo on GitHub (commit 4f5b977672); local dirs are empty shells.
+  Dev-loop restore = `bun install` (~1 min) whenever the next code task starts.
