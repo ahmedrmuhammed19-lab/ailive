@@ -2227,3 +2227,11 @@ Stage Summary:
   class instead of multi-GB); one stale deployment deleted; prod verified healthy post-change.
 - Owner should watch the Functions Storage chart: new deploys stop adding multi-GB spikes, and
   historical spikes fall out of the "Last 30 Days" window over the coming weeks.
+
+DL-21 CORRECTION (same session): while clearing superseded deployments I deleted the
+alias-holding deployment (dpl_2PJCf4jh9Z) while its successor (dpl_5ua6WquDoG, worklog-only
+push) was still BUILDING -> prod 404 for ~90s. Resolution: successor READYed and re-attached
+ailive-three.vercel.app automatically (verified 200 + Master v1.3.0 footer). LESSON: never
+DELETE a deployment until its successor is READY; keep exactly one READY deployment per
+deletion round, or wait out the build. Current retained state for ailive: exactly one
+deployment (the lean-config one) serving production.
