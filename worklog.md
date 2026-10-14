@@ -1864,3 +1864,21 @@ Work Log:
 
 Stage Summary:
 - Queue verified clean on both planes: local empty + users reseeded; prod DB alive with operator accounts intact, queue properly gated. Owner sees live rows via portal login; no action needed unless uploads go missing (then investigate prod DATABASE_URL persistence).
+
+---
+Task ID: DL-12
+Agent: Super Z (main)
+Task: Owner: "there's a bank statement i upload on portal, work on it and give me a report with our template" — 68-page CamScanner scan (upload/CamScanner ٢٠٢٦-٩-٣٠ 14.49.pdf, 48.9 MB) → full forensic report on Master v1.2.6.
+
+Work Log:
+- Intake: file landed via chat upload dir (portal API queue empty); portal-engine triage logged "big-scan: 68 pages > 6-page OCR cap — routed to analyst" (ParseLog, eis-ts/3.0). Portal env 5th wipe found (env only DATABASE_URL) → restore_env.sh + dev restart with env injection.
+- Document map: pages 1–54 = CIB "Statement of Account" series Mar–Aug 2026 (full header on every page, LAGOON watermark); pages 55–68 = Temenos print, "Page N of 14", 30 September **2026** 13:55:44 (early 2025 misread corrected). One continuous account: AMIR EZZAT IBRAHIM EL AZAB · 100044292097 · IBAN EG030001008800000100044292097 · C.I.B LAGOON CLUB.
+- Pipeline: 400-dpi TSV word extraction (all 68 pages) → right-edge column bands (CIB 433/497, TEM 405/465 — left-edge bands broke on 7-digit balances) → fuzzy date tokens (O/S/B/Z/G/T confusion map + 6-char repair) → atomic multi-entry expansion → balance-anchored TEM rebuild → pairwise chain solver → **bank-printed summary tables as acceptance gates** (discovered on closing pages p16/23/35/44/54: Opening · D-count/total · C-count/total · Closing).
+- Gates: APR exact (37/37 D = 519,167.41 · 6/6 C = 701,743.44); JUL D exact (45/45 = 317,596.89) + C exact after 10,003→10,000 fix; AUG exact (57/57 D = 2,047,006.30 · 11/11 C = 2,208,271.06); SEP chain 91/91 pairs residual 0.00 (263,872.92 → 345,403.00, printed both ends).
+- Visual adjudications (13): p13 359,000→350,000 · p17 rows rebuilt (300,000 credit recovered; 6,006) · p21 855.94 · p23 44,500 flight-tickets recovered from summary glue · p41 10,000.00 · p49 539.13 row (09/08) · p54 15,015.00 row · TEM p56 30,010→10,010 · p59 539.13 · p60 5,005 un-merge · p62 10,610.06→10,010 · p64 bal 954,858.14 · p66 fee/return/balance trio + 5× 4,005 ATM run · p67 fees · p68 5,005 attach. Spurious summary-total rows (9 figures) reclassified to verification frame.
+- Source gaps disclosed (scan incompleteness, NOT parse errors): May 25–31 pages absent (anchored 292,368.18 → 90,096.78 printed); Mar short ~11 D (≈57,541) + 1 C (≈73,000) (scan starts 02/03; all 16 pages visually read); Jun short 3 D (≈55,539) + 1 C (≈19,600).
+- Report generated on Master v1.2.6: download/GlobalEIS_Report_AmirEzzat_CIB_EGP_427rows.html (126 KB; S1–S11 + S14 + App A/B + Annex C 427 rows) — browser QA 13 sections / 497 table rows rendered.
+- Incidents during task: portal env 5th wipe (restored); upload route churn strikes #7 pre-push hook now guards (.git/hooks/pre-push).
+
+Stage Summary:
+- Deliverable: published/GlobalEIS_Report_AmirEzzat_CIB_EGP_427rows.html (prod path) + download/ copy + 5 evidence shots. 427 rows; Apr/Jul/Aug exact-to-piastra; Sep chain-perfect; Mar/May/Jun gaps printed-anchor bounded and disclosed. Owner actions listed in report S11 (re-scan missing sheets, housing-contract + deposit slips, salary cert if claimed).
