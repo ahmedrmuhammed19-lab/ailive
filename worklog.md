@@ -2049,3 +2049,22 @@ Work Log:
 
 Stage Summary:
 - Upload form no longer asks for a Queue ID: clients fill case details + drop the statement; the portal assigns EIS-XXXXX on arrival and shows it in the received-card. LIVE on prod (commit 7a493f0).
+
+---
+Task ID: DL-16
+Agent: Super Z (main)
+Task: Owner: "can we change this squares to live interactions you know what i say?" — turn the static blueprint grid backdrop into a live, interactive surface.
+
+Work Log:
+- Interpreted "squares" = the static .eis-stars blueprint grid (owner screenshot showed the ink canvas grid); designed DL-16 "the blueprint answers back" — cosmetic-only backdrop, zero data/logic surface touched.
+- New src/components/portal/live-grid.tsx (client): canvas at the IDENTICAL 44px pitch drawing --eis-grid-line hairlines; three layers of life — (1) pointer halo: cells charge azure from --eis-accent, fast rise (dt*14 lerp) + slow exp(-1.9t) decay; (2) ambient signal comets: 95-180px/s pulses traveling random grid lines with a sine life envelope, 3 warm-spawned at mount then one every 2.4-5s (alive before any input, incl. touch); (3) tap ripples: easeOutCubic expanding ring + 3x3 cell bloom on pointerdown.
+- Theme-reactive: palette re-read from tokens on mount + MutationObserver on html.class (.dark) -> grid re-tunes light/dark instantly; theme factor keeps porcelain quiet (0.62 vs 1.0).
+- Guardrails: prefers-reduced-motion -> component renders the original static .eis-stars span (class retained); DPR capped at 2; static grid prerendered per resize/theme-change and blitted per frame; rAF paused on visibilitychange; pointer-events none; window-level listeners (aurora is pointer-events:none, page interactions never blocked).
+- globals.css: added .eis-live-grid (absolute inset-0, same radial top-lit mask family widened to 128%/104% so interaction stays visible down-page); .eis-stars kept solely as the reduced-motion fallback. page.tsx: backdrop comment updated, <span className="eis-stars" /> swapped for <LiveGrid />; no other file touched — 5 panels + report_design.ts untouched.
+- DEBUG WAR: first verification read HALO maxAlpha=0 despite events arriving (probe counted mousemove+pointermove on window). Instrumented frame loop -> px/py/energy/pulses all healthy (e:95, p:4) yet canvas was DEFAULT 300x150 — computed style position:static, .eis-live-grid rule ABSENT from served stylesheets while next build compiled it fine -> stale Turbopack dev cache. pkill dev + rm -rf .next + restart -> canvas 1280x577 absolute; halo maxAlpha=90, ripple maxAlpha=33 (pixel-proven), zero console errors. Temp debug hook removed, gates re-run clean.
+- Evidence: download/04_evidence/DL16_LiveGrid/ (01_gate_light_halo / 02_gate_dark_halo / 03_gate_light_halo shows ripple ring + comet / 04_gate_dark_halo shows comet streak along a grid line).
+- Gates: tsc src tree 0 errors; next build exit 0. Pushed 78daacc..aa8f834 through pre-push gate (upload route intact).
+- Prod forensics: CSS chunk 875231d0db0dc283.css contains .eis-live-grid; JS chunk 78696bb6b7318bf8.js contains the component string; footer "Master v1.3.0 report standard" intact (DL-15 continuity).
+
+Stage Summary:
+- The 2026 blueprint is now a living surface: it answers the cursor with an azure halo, breathes with ambient signal comets, and ripples on tap — same 44px DNA, same tokens, zero logic drift. Reduced-motion users keep the calm static grid. LIVE on prod (commit aa8f834).
