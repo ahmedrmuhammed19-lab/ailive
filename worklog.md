@@ -2015,3 +2015,22 @@ Stage Summary:
 - Master v1.3.0 (Elgarayadli build) is the firm's STANDARD, live on prod (commit c80c563, Vercel success). One design system unchanged (SO-1); earlier delivered reports keep their bytes.
 - Every future engine draft + analyst report now carries fixed Appendix A2 — SO-9 Balance Verification Double-Check: balance chain verified TWICE with measured values side by side; non-zero residual = MISMATCH = delivery blocked.
 - Specimen for owner eyeball: download/GlobalEIS_Master_v1.3_Specimen.html (all vocabulary families + A2). Upload-route deletion incident closed; trust surface unchanged.
+
+---
+Task ID: DL-15
+Agent: Super Z (main)
+Task: Owner: "OKAY AND NOW REDESIGN THE PORTAL ALIGN IN 2026" — full portal redesign aligned to 2026, executed as the next design-system pass.
+
+Work Log:
+- Surveyed the current surface (page.tsx shell + 5 panels + globals.css 594-line Royal Aurora theme): everything is token-driven (--eis-* + GH bridge), so the redesign executed at the design-system layer with ZERO panel/logic changes (same proven DL-10/DL-11 playbook).
+- New design language "PRECISION AZURE 2026" (DL-15, supersedes Royal Aurora DL-11): ONE-BRAND ALIGNMENT — the portal now wears the firm's ratified report identity (SO-1: #005677 deep sea / #008DCB azure), so portal and reports finally speak the same language. Ink-navy canvas (#050b12 dark / #f3f7fa light porcelain), fine blueprint grid (royal starfield retired), liquid-glass frost (20px blur, saturate 1.35), Geist-led display (Playfair serif retired from layout.tsx incl. font import + viewport themeColor), verification-seal azure replaces gold foil (token repurposed: --eis-gold now seal-azure), royal crown tile -> deep-sea scan-mark tile (Crown -> ScanLine), calm 110–130s signal drift replaces the royal aurora timing.
+- Shell copy: hero "Statement intelligence, verified to the cent." + sub surfacing the new SO-9 double-check; edition badge "SECURE CLIENT PORTAL · PRECISION AZURE · 2026"; chips updated (SO-9 double-check); footer stamp corrected to "Master v1.3.0 report standard" (ES-1 correctness fix). All token NAMES and class names preserved -> dashboard/queue/upload/reports/accounts panels inherit automatically; STATUS_META/GH untouched; status semantics (green/amber/red) unchanged.
+- SKILL INIT DEVIATION (documented, same as DL-10): fullstack-dev init script cp -a would have destroyed the production portal — skipped after inspection.
+- CHRONIC ENV REAPER strike mid-task: .env SESSION_SECRET stripped again -> /api/login 500 in browser verification; restored via scripts/restore_env.sh + re-seeded users (op.eis/client.workq/client.other/abdo); login 200 after.
+- Verification: tsc src tree 0 errors (scripts/examples/skills noise pre-existing, out of gate scope); next build exit 0 (/api/upload in manifest); agent-browser end-to-end: gate light (new hero renders), sign-in op.eis 200, workspace all 5 tabs, Queue light+dark, Upload dark — all clean, zero console/page errors; screenshots in download/04_evidence/DL15_Portal2026/ (5 shots).
+- Pushed 3526a1b..9dc6fcf through pre-push gate. Prod verification: footer marker "Master v1.3.0 report standard" live in served HTML + main 124KB CSS chunk contains the new ink-canvas hex #050b12 -> redesign LIVE on https://ailive-three.vercel.app/.
+
+Stage Summary:
+- Portal redesigned to "PRECISION AZURE 2026" and LIVE on prod (commit 9dc6fcf): one brand across portal + reports (SO-1 alignment), engineered 2026 language, zero logic changes, panels inherited untouched.
+- SO-9 (Appendix A2, Master v1.3.0) now surfaced in the portal hero — the standard and the shell tell the same story.
+- Report document (report_design.ts) deliberately untouched; earlier delivered reports keep their bytes.
