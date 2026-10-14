@@ -2082,3 +2082,17 @@ Work Log:
 
 Stage Summary:
 - The owner now has one word — "WORK THE QUEUE" — that triggers the full operator loop end-to-end on prod. AUTO_WORK keeps the queue moving by itself on every upload; the word covers every exception path. Remaining owner-side gap for a fully hands-off email leg: re-supply config/mail_credentials.json (open item since 10-06).
+
+---
+Task ID: DL-18
+Agent: Super Z (main)
+Task: Owner: "i mean the work is done by you not engine" — clarify ORD-1015-T4: on the trigger word the analysis is performed PERSONALLY by Super Z, not the portal engine.
+
+Work Log:
+- Re-read ORD-1015-T4 wording: it implied force-running the portal engine (work-all/retry) and verifying ITS output. Owner's intent is different: he wants my hands on the statement — the same personal forensic standard as BOLA-1 (444/444 rows glyph-exact, strict balance chains, residual 0.00) and the AmirEzzat CIB report — not blind trust in the auto-pipeline.
+- AMENDED protocol (STANDING_ORDERS ORD-1015-T5, amends T4): on "WORK THE QUEUE" — (1) pull prod queue; (2) download each item's ORIGINAL statement bytes via the session-guarded statement route (operator session); (3) personally parse + extract every transaction row glyph-exact; (4) personally recompute opening->closing running-balance chains + totals; (5) personally run the SO-9 double-check (two-pass measured arithmetic, fail-loud MISMATCH blocks delivery per ES-1); (6) build the Master v1.3.0 report (report_design.ts is the sole template truth); (7) publish + attach to the queue item, flip status via /api/queue/update; (8) mail leg to ahmedr.muhammed19@gmail.com (real send once SMTP re-supplied, else outbox links); (9) per-item rundown.
+- Engine demoted: AUTO_WORK keeps producing instant drafts inside the portal (client-facing convenience only), but the OFFICIAL deliverable is my personal pass; engine output is treated as unverified reference at most. If the owner prefers the engine fully silent on his cases, the AUTO_WORK=0 kill switch or the operator-acted skip exists.
+- No code changes (protocol amendment turn). Ledger + worklog recorded as durability commit.
+
+Stage Summary:
+- "WORK THE QUEUE" now means: my personal forensic pass on every statement — glyph-exact extraction, own arithmetic, own SO-9 verdict, Master v1.3.0 report, queue updated, mail leg. The engine only ever provides a preview draft; it is never the deliverable.
