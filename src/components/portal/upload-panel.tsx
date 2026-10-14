@@ -250,7 +250,6 @@ async function sendBatch(
 }
 
 export function UploadPanel() {
-  const [queueId, setQueueId] = useState("");
   const [clientEmail, setClientEmail] = useState("");
   const [country, setCountry] = useState("");
   const [visaType, setVisaType] = useState("");
@@ -294,7 +293,9 @@ export function UploadPanel() {
         return;
       }
       const fields: Record<string, string> = {
-        userId: queueId,
+        // Queue ID is hidden from the form (owner order): the server
+        // auto-assigns EIS-XXXXX when userId arrives empty.
+        userId: "",
         email: clientEmail.trim(),
         country: country.trim(),
         visaType: visaType.trim(),
@@ -304,7 +305,6 @@ export function UploadPanel() {
       if (outcome.ok && outcome.data) {
         setResult(outcome.data);
         setFiles([]);
-        setQueueId("");
         setClientEmail("");
         setCountry("");
         setVisaType("");
@@ -316,29 +316,19 @@ export function UploadPanel() {
       setProgress("");
       setUploading(false);
     }
-  }, [queueId, clientEmail, country, visaType, travelers, files]);
+  }, [clientEmail, country, visaType, travelers, files]);
 
   return (
     <div className="mx-auto max-w-2xl space-y-4">
-      {/* Step 1 — Queue ID */}
+      {/* Step 1 — Case details (Queue ID input hidden per owner order;
+          the portal assigns EIS-XXXXX automatically on arrival) */}
       <div className="eis-glass rounded-2xl">
         <div className="flex items-center gap-2.5 border-b border-[var(--eis-border-muted)] px-5 py-3 text-sm font-semibold" style={{ color: GH.fg }}>
           <span className="eis-gradient-brand flex h-5 w-5 items-center justify-center rounded-md text-[10px] font-bold text-white">1</span>
-          Queue ID
+          Case details
         </div>
         <div className="space-y-2 p-5">
-          <Input
-            value={queueId}
-            onChange={(e) => setQueueId(e.target.value.toUpperCase())}
-            placeholder="e.g. 1024 or AHMED-01"
-            aria-label="Queue or user ID"
-            className="h-10 max-w-xs rounded-xl font-mono text-sm uppercase placeholder:normal-case placeholder:font-sans placeholder:text-[var(--eis-neutral)]"
-          />
-          <p className="text-xs text-[var(--eis-muted)]">
-            Leave blank and we&apos;ll assign one automatically (EIS-XXXXX). The customer name and case
-            details are attached later by Global EIS from the queue.
-          </p>
-          <div className="grid grid-cols-1 gap-3 pt-1 sm:grid-cols-3">
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
             <div>
               <label htmlFor="dest-country" className="mb-1 block text-xs font-semibold" style={{ color: GH.fg }}>
                 Destination country
