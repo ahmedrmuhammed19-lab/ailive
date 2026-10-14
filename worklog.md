@@ -1895,3 +1895,20 @@ Work Log:
 
 Stage Summary:
 - Report delivered as file; prod mirror pending Vercel build. Re-scan request (May 25–31 sheet + Mar/Jun missing pages) stands as the path to full-census upgrade.
+
+---
+Task ID: DL-13
+Agent: Super Z (main)
+Task: Owner: "what happen in May 25-31؟" — gap question on the AmirEzzat CIB statement (DL-12) → answer + full May re-audit + report rev 1.1.
+
+Work Log:
+- Direct answer established from printed anchors: 25–31/05 is the scan's ONE missing week (CamScanner jumps from the 24/05 page to June's opening row). Close of 24/05 printed 135,283.04 → 31/05 printed (June opening row) 90,096.78 = net −45,186.26 across the uncaptured week; itemization impossible from this source. Whole-May anchors: 292,368.18 → 90,096.78 = −202,271.40 (of which −157,085.14 is the captured 01–24/05 span).
+- DISCOVERY while answering: the delivered report's Appendix B attributed the whole-month −202,271.40 to the 25–31 window (wrong; window figure is −45,186.26). Deeper chain audit then found May's captured section carried ≈1,031.39 net OCR residual across the 10–19/05 window — May was the only month with no bank-printed summary table to gate it (DL-12 limitation, honestly disclosed but unresolved until now).
+- Visual adjudication at 600 dpi (pdf2image renders, Read-tool inspection, arithmetic pinning): (1) 19/05 row "Payment of Interest MM2509797120" +828.33 was MISSED by OCR ('£28.33' — the £↔8 confusion also visible in the page's IBAN line); fits the report's own documented interest series (828.33 on 17/03 & 21/07). (2) 10/05 POS Purchase = 539.13, not 639.19 (539.13 recurs in Aug p49/p59). (3) 10/05 printed balance = 222,963.25, not 222,063.26. (4) 17/05 IPN to DEIRDRE MARIE GREANEY = 5,905.00, not 6,008.00. (5) 12/05 balance piastra 220,961.25. Each fix pinned by exact chain closure, not glyph taste.
+- Report rev 1.1 (scripts/dl13_patch_report.py, 17 asserted edits): 4 amount/balance corrections, +1 restored row (427→428, serials 157+ shifted), counts updated (exec dashboard, annex heading, ledger ref), interest series line gains 19/05, G4/G5 adjudication counts 13→18, Appendix B #1 rewritten with −45,186.26 window figure + nine-checkpoint claim, Section 4 May paragraph split into captured/uncaptured spans, exec dashboard gains May chain-exact sentence, rev stamp added. Both download/ and published/ copies patched in place (filename kept for URL continuity).
+- Acceptance (scripts/dl13_acceptance.py): patched annex re-parsed from delivered HTML — 428 rows; ALL 9 printed May checkpoints residual 0.00 (289,651.88 / 279,641.88 / 222,963.25 / 220,961.25 / 209,019.21 / 207,017.21 / 141,759.58 / 135,753.58 / 135,283.04); May 24 close = 135,283.04 exact; stale figures purged. Browser QA: 8 tables, 498 tr, new row + window figure + rev stamp render.
+- No code changes; no prod probes; template source src/lib/report_design.ts untouched.
+
+Stage Summary:
+- Owner question answered: May 25–31 = scan's missing week; bank's own prints fix its net at −EGP 45,186.26 (135,283.04 → 90,096.78); individual rows need a re-scan of that sheet.
+- Report upgraded to rev 1.1: May captured section now piastra-exact at all 9 printed checkpoints (was ≈1,031.39 residual); 428 rows; the Appendix B window-figure error corrected. Re-scan request for the 25–31/05 sheet stands as the only path to full-census May.
