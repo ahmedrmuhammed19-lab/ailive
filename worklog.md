@@ -2096,3 +2096,20 @@ Work Log:
 
 Stage Summary:
 - "WORK THE QUEUE" now means: my personal forensic pass on every statement — glyph-exact extraction, own arithmetic, own SO-9 verdict, Master v1.3.0 report, queue updated, mail leg. The engine only ever provides a preview draft; it is never the deliverable.
+
+---
+Task ID: DL-19
+Agent: Super Z (main)
+Task: Owner supplied a GitHub token as green light for "use GitHub as the statement storage" (feasibility turn answered: yes — GitHub vault + Vercel doorman, no new party). Implement the GitHub vault storage driver, option A (GitHub primary).
+
+Work Log:
+- Validated the pasted classic PAT (login ahmedrmuhammed19-lab, scope repo — classic tokens cannot be repo-scoped; noted to owner, rotation recommended since it transited chat). Created PRIVATE repo ahmedrmuhammed19-lab/eis-vault + smoke-tested Contents API roundtrip (commit 59d26b6987, raw read-back OK).
+- New 4th storage driver in src/lib/storage.ts: GH_STORAGE (GH_VAULT_TOKEN + GH_VAULT_REPO env; FILE_STORAGE=gh forces on, any other value forces off; default OFF so prod behavior is unchanged until env lands). ghPut commits bytes with a 64-bit random path prefix; key format gh:<hex>/<subdir>/<name>@<blobSha> — the git blob SHA rides the key as tamper evidence. ghVaultFetch streams back server-side only (Accept: application/vnd.github.raw).
+- Read/write wiring: putStatement/putReport got the gh branch (checked before blob/db/fs); getStoredObject + new loadFileBytes handle gh keys; STORE_BYTES_IN_DB = DB_STORAGE && !GH_STORAGE so upload rows stop carrying bytea in gh mode; storeReportRow routes report artifacts (gh key rides the ReportFile.url column — the model has no storedPath). Consumers patched: upload route, analyze.ts byte loading (engine now reads vault bytes), publishDraftReport, publish-report + attach action routes, report/download (gh branch before the blob-url branches, covers operator + ownership-checked clients). Statement view/download routes needed no change (already go through getStoredObject).
+- TS pitfall fixed: Prisma Bytes input wants Uint8Array<ArrayBuffer>; Buffer<ArrayBufferLike> rejected — storeReportRow returns Uint8Array.from(buf) (ArrayBuffer-backed copy).
+- Local E2E wire-proof (scripts/test_gh_vault.sh, token read from untracked .env only): login op.eis -> multipart upload of tests/e2e_fixtures/statement_green_B.pdf (userId empty -> EIS-T8JED auto-assigned, ok:true) -> sqlite row: storedPath gh:894345e8…/statements/…@ac18d655…, data IS NULL=1 -> vault object present, size 1941, sha matches key -> AUTO_WORK engine loaded the statement FROM the vault through analyze.ts and reached DONE -> session-guarded /api/statement read-back md5 eb5ea2ea… identical both sides -> ReportFile row url=gh:102f187d…/reports/EIS-T8JED/GlobalEIS_Draft_…html@c76003b7…, data IS NULL. Vault commit log: ad11012027 statement, f644b0981d report — the audit trail IS the commit history.
+- Gates: tsc src tree 0 errors; next build exit 0. Pushed 0b91fc7..c3ecfdc through pre-push gate (upload route intact). Vercel Production deployment for c3ecfdc = success (GitHub Deployments API; byte-level prod forensics not applicable — the driver is server-side and dormant until env vars are set).
+- PROD ACTIVATION PENDING (owner-side, ~60s): paste GH_VAULT_TOKEN + GH_VAULT_REPO=ahmedrmuhammed19-lab/eis-vault into Vercel -> Settings -> Environment Variables (Production) -> redeploy. No Vercel CLI auth in the sandbox, so this leg belongs to the owner. After redeploy I run the prod E2E (test upload -> vault commit -> prod read-back) and then clean the test item from the queue.
+
+Stage Summary:
+- Uploaded statements and published reports now commit to a private GitHub vault as immutable evidence (md5 + git blob SHA per file), Neon stops storing file bytes, downloads remain session-guarded with the token server-side only. Driver ships dormant; one env paste + redeploy activates it on prod.
