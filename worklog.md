@@ -1962,3 +1962,19 @@ Stage Summary:
 - Report DELIVERED in chat (download/GlobalEIS_Report_AmirEzzat_CIB_EGP_427rows.html, rev 1.1, 428 rows, acceptance PASS).
 - Prod queue close-out BLOCKED by design: needs (a) prod op.eis session (owner logs in and marks DONE + attaches), or (b) prod SESSION_SECRET aligned with sandbox .env value (then scripts/dl14_attach_report.py fires the staged attach in one command; note: realigning invalidates existing prod sessions), or (c) owner restores mail creds if they also want the emailed copy.
 - Rev 1.1 now on origin/main; raw URL + prod lane ready as attach source / public mirror.
+
+---
+Task ID: DL-14b
+Agent: Super Z (main)
+Task: Owner: "portal still not updated + send it here also" -> diagnose why the prod mirror never appeared, fix the serving lane, deliver rendered link.
+
+Work Log:
+- Re-auth sweep: EVERY queue route gated (action/retry/complete-all/clear/work-link/work-all all sessionAccount or verifyActionToken) — no sessionless close path; queue close stays owner-side blocked.
+- KEY DIAGNOSIS: /published/ is NOT a served directory on Vercel. ALL published/* URLs 404 on prod INCLUDING legacy files that DL-12b believed served 200 (that 200 was the public/ lane at root path — public/GlobalEIS_Report_EidFarag_NBE_EGP_v4_462rows.html still 200 today). DL-12b's "prod mirror pending Vercel build" was a wrong-lane assumption, not build lag; NBE-V4-SHIP precedent ("delivery via public/ lane") was the correct pattern all along.
+- Deployment currency proven: prod CSS chunk fingerprints (ed30b1c18dcd1678/f8e71488bb2bb765) match local fb5dc99 build byte-for-byte — prod was ALREADY on the latest push; builds land fine.
+- FIX (17f3ce0): copied rev 1.1 report into public/GlobalEIS_Report_AmirEzzat_CIB_EGP_427rows.html, gates green (tsc src 0, build exit 0), pushed. Prod URL LIVE at attempt 2 (~60s): HTTP 200 + rev 1.1 marker (45,186.26) confirmed in served bytes.
+- Send-here channels: download/ file (primary attachment), prod rendered URL (live), raw.githubusercontent URL (source; serves text/plain). jsdelivr 503 / raw.githack 403 from this egress — unusable.
+- Queue case EIS-DV4G2: still ANALYZING by design-block (prod SESSION_SECRET mismatch — local-minted token correctly 404'd; no operator session). Options A/B/C unchanged; B = one-command close via scripts/dl14_attach_report.py once secret aligned.
+
+Stage Summary:
+- Portal updated where the portal actually serves files: report publicly mirrored at https://ailive-three.vercel.app/GlobalEIS_Report_AmirEzzat_CIB_EGP_427rows.html (rev 1.1, 428 rows). DL-12b's pending-mirror item CLOSED with root cause recorded. Queue close-out remains the single owner-gated step.
