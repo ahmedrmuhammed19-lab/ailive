@@ -2193,3 +2193,37 @@ Stage Summary:
 - Workspace cut from ~7.4G to 1.7G. All client statements/evidence/deliverables moved to the
   private eis-archive repo on GitHub (commit 4f5b977672); local dirs are empty shells.
   Dev-loop restore = `bun install` (~1 min) whenever the next code task starts.
+
+---
+Task ID: DL-21
+Agent: Super Z (main)
+Task: Owner screenshot (Vercel Usage -> Functions Storage): account holding ~10GB —
+ailive 4.85GB + translation-portal 4.93GB ("see it's alot?"). Reduce Vercel-side storage.
+
+Work Log:
+- Forensics: the metric is serverless-function artifacts retained across the 30-day window,
+  NOT the sandbox (which DL-20 already cut to 1.7G). Deployment list via owner's Vercel token
+  showed almost nothing deletable — each project keeps 1-2 live deployments — so the fat is
+  per-deploy bundle size + window retention.
+- Deleted ailive's superseded deployment dpl_GWuMhu9y4Kqo2BQPAdxw8FF4aCx5 (DL-19b) via
+  DELETE /v13/deployments — only the live prod remained, then the fix deploy replaced it.
+- ROOT CAUSE (mirrors translation-portal's "Function Storage fix: 2925MB to 209MB per
+  deployment" from earlier today): next.config.ts carried output:"standalone" — a
+  self-hosting/Docker packaging mode that balloons Vercel's function packaging. Local build
+  evidence: .next/standalone = 160M (node_modules 149M) packaged as one tree instead of
+  Vercel's route-scoped NFT output.
+- FIX (commit d968793): removed output:"standalone"; added outputFileTracingExcludes for
+  /api/** dropping the CLI-only @prisma/engines/schema-engine* + prisma CLI from every traced
+  lambda. Gates: tsc scoped to src = 0 errors; next build exit 0. Pushed through pre-push gate.
+- New prod deployment dpl_2PJCf4jh9ZqbSRdMQPkh5x7yZCKj READY (traced 46.7ms, functions 889ms);
+  smoke test: / = 200 with LiveGrid + "Master v1.3.0 report standard" footer, /api/login = 400
+  on empty body (route alive). translation-portal has only its post-fix deployment retained —
+  its 4.93GB figure decays as pre-fix artifacts age out of the 30-day window (no action possible).
+- Sandbox re-slimmed after the build work (node_modules/.next re-cut per DL-20; bun install
+  restores in ~10s).
+
+Stage Summary:
+- ailive's per-deploy function packaging is off the standalone path (future deploys ~200-400MB
+  class instead of multi-GB); one stale deployment deleted; prod verified healthy post-change.
+- Owner should watch the Functions Storage chart: new deploys stop adding multi-GB spikes, and
+  historical spikes fall out of the "Last 30 Days" window over the coming weeks.
