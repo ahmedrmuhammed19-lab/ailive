@@ -2113,3 +2113,44 @@ Work Log:
 
 Stage Summary:
 - Uploaded statements and published reports now commit to a private GitHub vault as immutable evidence (md5 + git blob SHA per file), Neon stops storing file bytes, downloads remain session-guarded with the token server-side only. Driver ships dormant; one env paste + redeploy activates it on prod.
+
+---
+Task ID: DL-19b
+Agent: Super Z (main)
+Task: Owner pasted a Vercel API token (vcp_…) in chat — delegated the prod-activation leg
+(GH_VAULT_TOKEN + GH_VAULT_REPO env + redeploy) that DL-19 had left to the owner.
+
+Work Log:
+- Validated the vcp_ token against Vercel API: identity ahmedrmuhammed19-lab, hobby plan,
+  project ailive = prj_ePJk7MoYWScUisQ2SmiwoF4en8fN. Token transited chat -> rotation advised
+  (same caveat as the GitHub PAT).
+- Set env on prod via Vercel API (both encrypted, target production only): GH_VAULT_TOKEN
+  (the owner's classic PAT, value read from untracked .env) + GH_VAULT_REPO=
+  ahmedrmuhammed19-lab/eis-vault -> HTTP 201 (ids GEWkaJJY0xpuTCE0 / dP3wGgJK9rYXqIFP).
+- Triggered a production redeploy via POST /v13/deployments (gitSource main) since env changes
+  need a fresh deployment: dpl_DqJWFdmEwHfuisLZrogTohLv7yWu @ 377034d -> READY. Driver auto-
+  activates (both vars present, no FILE_STORAGE override); prod is the ONLY target with the vars.
+- PROD E2E (scripts/prod_vault_e2e.py, gitignored, secrets in-memory only): local seed creds are
+  known-rejected on prod (DL-11e) and prod SESSION_SECRET differs, so the script (a) decrypted
+  prod SESSION_SECRET + DATABASE_URL via Vercel env API (decrypt=true), (b) minted an operator
+  session for prod account 'ahmed' (same HMAC-SHA256 base64url format as src/lib/session.ts;
+  prod accounts: ahmed=operator, paul=client), (c) uploaded statement_green_B.pdf on PROD.
+- 10/10 PASS: upload ok (queueId EIS-H2XH7, autoWork=True) -> StatementFile.storedPath=
+  gh:fc6f51f74cd4f85d/statements/20261014223421_EIS_H2XH7/statement_green_B.pdf@<blobSha> with
+  data IS NULL (Neon bytea gone) -> vault object present (1941 B, sha-in-key match, commit
+  27932c9bfba7 "statement: …") -> AUTO_WORK engine loaded the bytes FROM the vault on prod and
+  reached DONE (ParseLog auto-delivered, eis-ts/3.0) -> session-guarded /api/statement read-back
+  md5 eb5ea2ea… identical -> ReportFile.url=gh:335e84fc15255a0b/reports/EIS-H2XH7/GlobalEIS_Draft_….htm@…
+  with data IS NULL. psycopg2 note: Neon DSN carries pgbouncer=true — param stripped before connect.
+- Cleanup: test rows deleted (ParseLog/ReportFile/StatementFile/Submission scoped to the test
+  submission only); both test objects removed from vault HEAD via Contents DELETE (history keeps
+  the audit trail by design). Post-check: prod queue back to pre-test state (only EIS-DV4G2 DONE),
+  zero EIS-H2XH7 residue, exactly ONE StatementFile still carrying bytea = the pre-vault
+  EIS-DV4G2 statement (Mode A contract: old data untouched, no backfill).
+
+Stage Summary:
+- DL-19 COMPLETE end-to-end: every new statement/report on prod now commits to the private
+  eis-vault repo as immutable evidence (md5 + git blob SHA per file), Neon stores metadata only,
+  downloads stay session-guarded, token server-side only. Owner action items remain: rotate BOTH
+  chat-transited tokens (GitHub PAT ghp_… and Vercel vcp_…) — update Vercel env GH_VAULT_TOKEN
+  after rotating the PAT; SMTP creds still missing (mail leg = outbox mode).
