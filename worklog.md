@@ -2235,3 +2235,41 @@ ailive-three.vercel.app automatically (verified 200 + Master v1.3.0 footer). LES
 DELETE a deployment until its successor is READY; keep exactly one READY deployment per
 deletion round, or wait out the build. Current retained state for ailive: exactly one
 deployment (the lean-config one) serving production.
+
+---
+Task ID: DL-22
+Agent: Super Z (main)
+Task: Owner "ready" — resume after context loss: (a) recover the df -h mount evidence that
+context compression ate, (b) verify the post-DL-21 Vercel state, (c) keep shrinking retained
+storage under the standing "reduce as much as possible" directive.
+
+Work Log:
+- Persisted scripts/measure_storage.sh (re-runnable forensics; report tee'd to
+  scripts/storage_report_20261015.txt). Evidence: root overlay 240M/9.9G used (3% — system
+  layer nearly empty); /home/z = 1.7G (.venv 897M active data stack, .agent-browser 398M only
+  browser runtime, my-project 156M = .git 85M + skills 61M + sources, .local 120M uv,
+  .npm-global 89M, .cache 37M); /tmp 137M. Platform mounts identified (NOT our disk):
+  my-project/upload = ossfs cloud-backed, /tmp/my-project + /home/user_skills = PolarFS,
+  official_skills + /home/sync = ossfs. Sandbox verdict: nothing further to cut without
+  harming the live toolchain.
+- Persisted scripts/vercel_storage_check.py (projects + retained deployments + prod smoke).
+  Account = 5 projects: ailive, translation-portal, visa-center, aireport, ahmedrmuhammed19.
+  ailive showed 2 READY production deployments — the 23:12 successor dpl_V8gifq96 was
+  auto-spawned by the DL-21 worklog durability pushes; predecessor dpl_5ua6WquDoG (23:10)
+  superseded.
+- Persisted scripts/vercel_dep_sweep.py implementing the DL-21-correction protocol: keeper =
+  latest READY production deployment; DELETE only strictly-older deployments; require
+  keeper.alias non-empty before touching anything; inconclusive alias check -> project SKIP.
+- Dry run account-wide: exactly ONE deletable deployment (dpl_5ua6WquDoG) — all other four
+  projects already retain a single deployment. Applied the delete; post-sweep: ailive
+  retained=1 (lean keeper dpl_V8gifq96), every project at exactly 1 deployment, prod smoke
+  200 + "Master v1.3.0" footer + /api/login 400. Zero downtime (protocol followed).
+- Durability: whitelisted the 3 forensic scripts in .gitignore; worklog entry committed.
+
+Stage Summary:
+- Account-wide deployment retention is now minimal: 1 lean deployment per project. Remaining
+  Functions Storage mass = translation-portal's pre-fix artifacts aging out of the 30-day
+  window (no action possible) + per-deploy bundle sizes (already lean after d968793).
+- Sandbox 1.7G with active toolchain only; root overlay 3%. Both storage fronts fully swept.
+- Owner items unchanged: rotate chat-transited GitHub PAT + Vercel token (update Vercel env
+  GH_VAULT_TOKEN after PAT rotation); SMTP creds still missing (mail leg = outbox mode).

@@ -147,3 +147,6 @@ scripts/wafa_work/
 !scripts/ocr_probe_p1.py
 !scripts/es1_v13_specimen.ts
 !scripts/delivery_gate.py
+!scripts/measure_storage.sh
+!scripts/vercel_storage_check.py
+!scripts/vercel_dep_sweep.py
