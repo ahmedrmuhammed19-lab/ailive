@@ -84,7 +84,7 @@ export async function GET() {
     queueId: sub.userId,
     submissionId: sub.id,
     status: done?.status ?? sub.status,
-    attached: dup ? [] : [{ name: NAME, sizeBytes: dup ? dup.sizeBytes : 0 }],
+    attached: [{ name: NAME, sizeBytes: dup ? dup.sizeBytes : 0 }],
     skipped: dup ? [{ name: NAME, reason: "already attached" }] : [],
     notified: done?.notified ?? null,
   });
