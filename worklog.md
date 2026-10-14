@@ -1995,3 +1995,23 @@ Work Log:
 
 Stage Summary:
 - EIS-DV4G2 CLOSED: status DONE + rev 1.1 report attached + email delivered to owner's Gmail. Full loop now green: report finished -> portal mirror live -> queue DONE -> email out. Temporary route existed on prod for ~2 deploys and is verified gone. Session/attach trust model unchanged.
+
+---
+Task ID: ES-1
+Agent: Super Z (main)
+Task: Owner: "make this template our standard and add SO9 as a double check of balance verification" — Elgarayadli HTML uploaded as reference build.
+
+Work Log:
+- Repo rescue first: HEAD contained stray auto-commit 3309d3c (wiped-tree snapshot) that DELETED src/app/api/upload/route.ts (418 lines) — same catastrophic class as QUEUE-AUTOWORK-1. Soft-reset to 590fef4, restored route verbatim, recommitted the good DL-14d worklog content from 2cfe432 under a proper message (40ae9d6). Pre-push guard preserved.
+- Read the uploaded GlobalEIS_Report_AbdelrahmanElgarayadli_EGP.html (40 KB, 11 sections, self-labelled "Global EIS Design v1.3 (CIB Blue)") and inventoried its vocabulary vs Master v1.2.6.
+- Master v1.3.0 promoted ADDITIVELY into src/lib/report_design.ts: box-sizing reset, body line-height 1.55, compact header (h1 2.2em, white strong), 1.45em section titles, h2.sec + base h3, bare table/th/td styles, tr.hl highlight, flex .kpi-grid with bordered compact cards + .kpi/.kpi-value/.kpi-label aliases (heals the one-off's unstyled KPI divs), tag.credit/debit, .badge pass/caution/fail/info, .note/.warn/.danger, .verdict-box, footer strong accent, broadened print contract. Every v1.2.6 class/export kept — zero generator breakage; SO-1 markers intact (#005677/#008DCB/Segoe UI).
+- SO-9 rendered canon: new fixed STANDARD_SECTIONS entry { no: 93, label: "Appendix A2", title: "SO-9 Balance Verification Double-Check" } + so9DoubleCheck(rows, label) / DoubleCheckRow — two-pass table (first run SO-10 gate vs independent re-run, Δ residual column, MATCH/MISMATCH/PENDING pills), fail-loud doctrine line carrying SO-4 chain vocabulary (pairs closed, residual disclosed) so delivery-gate CHAIN check stays satisfiable.
+- Engine draft wired (src/lib/analyze.ts): buildDoubleCheckRows(legs) re-aggregates credits Σ / debits Σ / closing telescope over the parsed ledger as a genuine second pass (DC2–DC4 measured live); printed-header anchor + cycle-checkpoint re-reads stay PENDING for the analyst (DC1/DC5), mirroring the Appendix A passport honesty contract. Rendered right after so10Passport.
+- Coherence: globals.css version comment → Master v1.3; STANDING_ORDERS.md ledger row ORD-1015-T1; reference HTML archived as templates/global_eis_master_v1.3_reference_elgarayadli.html; specimen script whitelisted in .gitignore.
+- Gates: tsc src tree 0 errors; next build exit 0 (/api/upload in manifest); specimen scripts/es1_v13_specimen.ts renders download/GlobalEIS_Master_v1.3_Specimen.html — 22/22 hard markers (tokens, chain words, A2 columns, pills, aliases, kept v1.2 classes, PDF button hidden).
+- Pushed 590fef4..c80c563 through pre-push gate. Prod verification: HTTP chunk-fingerprint probe was structurally blind (server-side-only changes + comment-stripped CSS = identical client chunks); definitive check via GitHub commit status on c80c563 → Vercel state: success.
+
+Stage Summary:
+- Master v1.3.0 (Elgarayadli build) is the firm's STANDARD, live on prod (commit c80c563, Vercel success). One design system unchanged (SO-1); earlier delivered reports keep their bytes.
+- Every future engine draft + analyst report now carries fixed Appendix A2 — SO-9 Balance Verification Double-Check: balance chain verified TWICE with measured values side by side; non-zero residual = MISMATCH = delivery blocked.
+- Specimen for owner eyeball: download/GlobalEIS_Master_v1.3_Specimen.html (all vocabulary families + A2). Upload-route deletion incident closed; trust surface unchanged.
