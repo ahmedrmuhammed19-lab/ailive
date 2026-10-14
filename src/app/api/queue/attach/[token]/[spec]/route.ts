@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { verifyActionToken, WORK_ALL_ID } from "@/lib/actions";
 import { db } from "@/lib/db";
+import { storeReportRow } from "@/lib/storage";
 import { markDoneAndNotify } from "@/lib/notify";
 
 /**
@@ -144,13 +145,14 @@ export async function GET(
       skipped.push({ name, reason: `content is ${kind ?? "unrecognized"}, expected ${wantedKind}` });
       continue;
     }
+    const stored = await storeReportRow(sub.userId || "attached", name, buf);
     await db.reportFile.create({
       data: {
         submissionId: sub.id,
         queueId: sub.userId,
         name,
-        url: "",
-        data: buf,
+        url: stored.url,
+        data: stored.data,
         sizeBytes: buf.length,
       },
     });

@@ -31,6 +31,63 @@ export const DB_STORAGE =
     ? explicit === "db"
     : String(process.env.DATABASE_URL ?? "").startsWith("postgres"));
 
+/** ── GitHub vault driver (DL-19) ─────────────────────────────────────────────
+ * 4th driver: file bytes live as immutable commits in a PRIVATE GitHub repo
+ * (GH_VAULT_TOKEN + GH_VAULT_REPO="owner/repo"). Keys look like
+ * `gh:<hex-prefix>/<subdir>/<name>@<blobSha>` — the git blob SHA rides the key
+ * as built-in tamper evidence. Reads are proxied server-side only; the token
+ * never reaches a client. FILE_STORAGE=gh forces it on, anything else forces
+ * it off; with no override, presence of both env vars enables it.
+ */
+const GH_VAULT_TOKEN = (process.env.GH_VAULT_TOKEN ?? "").trim();
+const GH_VAULT_REPO = (process.env.GH_VAULT_REPO ?? "").trim(); // "owner/repo"
+
+export const GH_STORAGE =
+  Boolean(GH_VAULT_TOKEN && GH_VAULT_REPO) && (explicit ? explicit === "gh" : true);
+
+/** DB rows carry file bytes only when the DB itself is the store (not gh/blob). */
+export const STORE_BYTES_IN_DB = DB_STORAGE && !GH_STORAGE;
+
+function ghApi(pathInRepo: string, init?: RequestInit): Promise<Response> {
+  const [owner, repo] = GH_VAULT_REPO.split("/");
+  return fetch(`https://api.github.com/repos/${owner}/${repo}/${pathInRepo}`, {
+    ...init,
+    headers: {
+      Authorization: `Bearer ${GH_VAULT_TOKEN}`,
+      Accept: "application/vnd.github+json",
+      "X-GitHub-Api-Version": "2022-11-28",
+      ...(init?.headers ?? {}),
+    },
+  });
+}
+
+/** Commit bytes to the vault; StoredObject.key = `gh:<path>@<blobSha>`. */
+async function ghPut(dirInRepo: string, safeName: string, data: Buffer, message: string): Promise<StoredObject> {
+  const prefix = randomBytes(8).toString("hex"); // 64-bit unguessable path prefix
+  const p = `${prefix}/${dirInRepo.replace(/[^a-zA-Z0-9._/-]+/g, "_").replace(/^\/+|\/+$/g, "")}/${safeName}`;
+  const res = await ghApi(`contents/${encodeURI(p)}`, {
+    method: "PUT",
+    body: JSON.stringify({ message, content: data.toString("base64") }),
+  });
+  if (!res.ok) throw new Error(`vault commit failed: HTTP ${res.status}`);
+  const j = (await res.json()) as { content?: { sha?: string } };
+  return { key: `gh:${p}@${j.content?.sha ?? ""}`, url: "" };
+}
+
+/** Stream bytes back out of the vault (raw media type, server-side only). */
+export async function ghVaultFetch(key: string): Promise<Buffer | null> {
+  try {
+    const p = key.split("@")[0];
+    const res = await ghApi(`contents/${encodeURI(p)}`, {
+      headers: { Accept: "application/vnd.github.raw" },
+    });
+    if (!res.ok) return null;
+    return Buffer.from(await res.arrayBuffer());
+  } catch {
+    return null;
+  }
+}
+
 export interface StoredObject {
   /** Storage key (fs path in dev mode, blob pathname in production). */
   key: string;
@@ -52,6 +109,9 @@ export async function putStatement(
   safeName: string,
   data: Buffer
 ): Promise<StoredObject> {
+  if (GH_STORAGE) {
+    return await ghPut(`statements/${subdir}`, safeName, data, `statement: ${safeName}`);
+  }
   if (BLOB_ENABLED) {
     const { put } = await import("@vercel/blob");
     const key = blobKey(subdir, safeName);
@@ -75,6 +135,9 @@ export async function putReport(
   safeName: string,
   data: Buffer
 ): Promise<StoredObject> {
+  if (GH_STORAGE) {
+    return await ghPut(`reports/${queueId.replace(/[^a-zA-Z0-9._-]+/g, "_")}`, safeName, data, `report: ${safeName}`);
+  }
   if (BLOB_ENABLED) {
     const { put } = await import("@vercel/blob");
     const key = blobKey(`reports/${queueId.replace(/[^a-zA-Z0-9._-]+/g, "_")}`, safeName);
@@ -93,9 +156,10 @@ export async function putReport(
   return { key: full, url: "" };
 }
 
-/** Read a stored object back (blob fetch in production, fs read in dev). */
+/** Read a stored object back (vault fetch, blob fetch in production, fs read in dev). */
 export async function getStoredObject(stored: StoredObject): Promise<Buffer | null> {
   try {
+    if (stored.key.startsWith("gh:")) return await ghVaultFetch(stored.key.slice(3));
     if (stored.url) {
       const res = await fetch(stored.url);
       if (!res.ok) return null;
@@ -105,4 +169,36 @@ export async function getStoredObject(stored: StoredObject): Promise<Buffer | nu
   } catch {
     return null;
   }
+}
+
+/** Load a statement/report row's bytes regardless of driver:
+ *  gh vault key (storedPath/url) → DB row bytes → blob URL → fs path. */
+export async function loadFileBytes(
+  row: { storedPath?: string | null; storedUrl?: string | null; data?: Uint8Array | null }
+): Promise<Buffer | null> {
+  const key = row.storedPath ?? "";
+  if (key.startsWith("gh:")) return await ghVaultFetch(key.slice(3));
+  if (row.data) return Buffer.from(row.data);
+  if (row.storedUrl) return await getStoredObject({ key: "", url: row.storedUrl });
+  if (key) return await getStoredObject({ key, url: "" });
+  return null;
+}
+
+/** Persist a report artifact per the active driver. In gh mode the vault key
+ * rides the ReportFile.url field (the model has no storedPath column); in
+ * db/fs modes bytes stay on the row exactly as before. */
+export async function storeReportRow(
+  queueId: string,
+  name: string,
+  buf: Buffer
+): Promise<{ url: string; data: Uint8Array<ArrayBuffer> | null }> {
+  if (BLOB_ENABLED) {
+    const stored = await putReport(queueId, name, buf);
+    return { url: stored.url, data: null };
+  }
+  if (GH_STORAGE) {
+    const stored = await putReport(queueId, name, buf);
+    return { url: stored.key, data: null };
+  }
+  return { url: "", data: Uint8Array.from(buf) };
 }

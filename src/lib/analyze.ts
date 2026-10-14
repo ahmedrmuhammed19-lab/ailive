@@ -1,5 +1,6 @@
 import { extractText, getDocumentProxy } from "unpdf";
 import { db } from "@/lib/db";
+import { loadFileBytes, storeReportRow } from "@/lib/storage";
 import { MAX_OCR_PAGES, ocrImageText, ocrPdfText, reocrPages } from "@/lib/ocr";
 import {
   alertBox,
@@ -203,8 +204,9 @@ export async function analyzeSubmission(submissionId: string): Promise<AutoAnaly
     const isImage = /\.(jpe?g|png)$/.test(lowerName);
     if (!isPdf && !isImage) continue;
     let buf: Buffer | null = null;
-    if (f.data) buf = Buffer.from(f.data);
-    else if (f.storedPath) {
+    if (f.data || (f.storedPath && f.storedPath.startsWith("gh:"))) {
+      buf = await loadFileBytes(f);
+    } else if (f.storedPath) {
       try {
         const { readFile } = await import("fs/promises");
         buf = await readFile(f.storedPath);
@@ -465,13 +467,14 @@ export async function publishDraftReport(
   const html = buildReportHtml(userId, submission.country, submission.visaType, submission.travelers ?? 1, legs, benchmark, style);
   const ts = new Date().toISOString().replace(/[-:T]/g, "").slice(0, 12);
   const name = `GlobalEIS_Draft_${userId}_${ts}.html`;
+  const stored = await storeReportRow(userId, name, Buffer.from(html, "utf8"));
   await db.reportFile.create({
     data: {
       submissionId: submission.id,
       queueId: userId,
       name,
-      url: "",
-      data: Buffer.from(html, "utf8"),
+      url: stored.url,
+      data: stored.data,
       sizeBytes: Buffer.byteLength(html),
     },
   });

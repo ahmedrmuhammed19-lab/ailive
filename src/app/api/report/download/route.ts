@@ -3,6 +3,7 @@ import { readFile } from "fs/promises";
 import path from "path";
 import { db } from "@/lib/db";
 import { REPORTS_DIR } from "@/lib/portal";
+import { ghVaultFetch } from "@/lib/storage";
 import { sessionAccount } from "@/lib/session";
 import { isOperator, ownedScope } from "@/lib/authz";
 
@@ -45,6 +46,14 @@ export async function GET(req: Request) {
     }
     if (row?.data) {
       return reportResponse(name, ext, Buffer.from(row.data));
+    }
+    // GitHub vault rows: the gh key rides the url field (server-side proxy only)
+    if (row?.url && row.url.startsWith("gh:")) {
+      const data = await ghVaultFetch(row.url.slice(3));
+      if (!data) {
+        return NextResponse.json({ ok: false, error: "Report not found." }, { status: 404 });
+      }
+      return reportResponse(name, ext, data);
     }
     if (row?.url && operator) {
       const upstream = await fetch(row.url);

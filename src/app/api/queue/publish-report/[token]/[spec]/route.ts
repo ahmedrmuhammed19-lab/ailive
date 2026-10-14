@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { verifyActionToken, WORK_ALL_ID } from "@/lib/actions";
 import { db } from "@/lib/db";
+import { storeReportRow } from "@/lib/storage";
 
 /**
  * GET /api/queue/publish-report/<token>/<spec> — publish a standalone report
@@ -128,13 +129,14 @@ export async function GET(
       skipped.push({ name, reason: `content is ${kind ?? "unrecognized"}, expected ${wantedKind}` });
       continue;
     }
+    const stored = await storeReportRow("external", name, buf);
     await db.reportFile.create({
       data: {
         submissionId: null,
         queueId: null,
         name,
-        url: "",
-        data: buf,
+        url: stored.url,
+        data: stored.data,
         sizeBytes: buf.length,
       },
     });

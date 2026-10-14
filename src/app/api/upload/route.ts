@@ -8,7 +8,7 @@ import {
   sanitizeName,
   submissionDirName,
 } from "@/lib/portal";
-import { DB_STORAGE, putStatement } from "@/lib/storage";
+import { STORE_BYTES_IN_DB, putStatement } from "@/lib/storage";
 import { loadMailCreds, operatorAddress, sendOrQueue } from "@/lib/mail";
 import { PORTAL_BASE_URL, actionUrl, statementViewUrl } from "@/lib/actions";
 import { runEngine } from "@/lib/engine-run";
@@ -124,7 +124,7 @@ async function finalizeUpload(
           originalName: item.name,
           storedPath: stored.key,
           storedUrl: stored.url || null,
-          ...(DB_STORAGE ? { data: buf } : {}),
+          ...(STORE_BYTES_IN_DB ? { data: buf } : {}),
           sizeBytes: buf.length,
           md5: digest,
         },
