@@ -2068,3 +2068,17 @@ Work Log:
 
 Stage Summary:
 - The 2026 blueprint is now a living surface: it answers the cursor with an azure halo, breathes with ambient signal comets, and ripples on tap — same 44px DNA, same tokens, zero logic drift. Reduced-motion users keep the calm static grid. LIVE on prod (commit aa8f834).
+
+---
+Task ID: DL-17
+Agent: Super Z (main)
+Task: Owner: "so if me or any user upload a bank statement on queue how can i tell you to work on it + send a report and update the queue also i mean just give you a word and do all next steps" — codify a one-word operator protocol.
+
+Work Log:
+- Audited the existing automation stack before answering: AUTO_WORK (QUEUE-AUTOWORK-1) already fires runEngine via after() on every upload (zero-tap; kill switch AUTO_WORK=0; skips if operator already acted) — upload -> ANALYZING -> engine -> report -> queue DONE runs by itself. /api/queue/work-all exposes POST (operator session) + GET ?token=<hmac> session-free magic link; retry/clear/complete-all/publish-report all present.
+- Gaps identified honestly: (1) prod SMTP creds still lost since the 2026-10-06 wipe (only config/mail_credentials.json.example remains) -> portal mail degrades to outbox mode, so the "send" leg currently ends at outbox links until re-supplied; (2) cron-job.org auto-poll (owner-side open item) not yet activated; (3) no prod operator creds stored on disk -> sign in at invocation time with the operator account (owner updates once if rotated).
+- Codified the OWNER TRIGGER WORD protocol (STANDING_ORDERS ORD-1015-T4): word = "WORK THE QUEUE" (variants "work queue" / "run the queue" accepted). On the word, with zero further questions: pull prod queue -> force work-all/retry on pending+stuck items -> verify engine completion + SO-9 balance double-check verdict per item -> confirm queue updated (green DONE; yellow/red flagged with exactly what each needs) -> confirm the mail leg to ahmedr.muhammed19@gmail.com (real send once SMTP restored, else fetch outbox links) -> post a per-item rundown (queue ID, status, report link, mail status).
+- No code changes this turn (protocol turn only); both legs of the loop already exist in the portal. Gates not applicable (no src diff); durability commit as usual.
+
+Stage Summary:
+- The owner now has one word — "WORK THE QUEUE" — that triggers the full operator loop end-to-end on prod. AUTO_WORK keeps the queue moving by itself on every upload; the word covers every exception path. Remaining owner-side gap for a fully hands-off email leg: re-supply config/mail_credentials.json (open item since 10-06).
