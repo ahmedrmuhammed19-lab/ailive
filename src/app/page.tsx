@@ -14,6 +14,7 @@ import { DashboardPanel } from "@/components/portal/dashboard-panel";
 import { ReportsPanel } from "@/components/portal/reports-panel";
 import { AccountsPanel } from "@/components/portal/accounts-panel";
 import { ThemeToggle } from "@/components/portal/theme-toggle";
+import { LiveGrid } from "@/components/portal/live-grid";
 import { GH } from "@/lib/format";
 
 type Account = { username: string; label: string | null; role: string };
@@ -156,12 +157,13 @@ export default function PortalPage() {
 
   return (
     <div className="flex min-h-screen flex-col" style={{ color: GH.fg }}>
-      {/* Precision Azure backdrop — two slow signal curtains over the ink stage */}
+      {/* Precision Azure backdrop — two slow signal curtains, a live blueprint
+          grid that answers the cursor (halo, comets, tap ripples), ink stage */}
       <div className="eis-aurora" aria-hidden="true">
         <span className="eis-orb eis-orb-a" />
         <span className="eis-orb eis-orb-b" />
         <span className="eis-orb eis-orb-c" />
-        <span className="eis-stars" />
+        <LiveGrid />
         <span className="eis-grain" />
       </div>
 
