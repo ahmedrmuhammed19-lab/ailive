@@ -2034,3 +2034,18 @@ Stage Summary:
 - Portal redesigned to "PRECISION AZURE 2026" and LIVE on prod (commit 9dc6fcf): one brand across portal + reports (SO-1 alignment), engineered 2026 language, zero logic changes, panels inherited untouched.
 - SO-9 (Appendix A2, Master v1.3.0) now surfaced in the portal hero — the standard and the shell tell the same story.
 - Report document (report_design.ts) deliberately untouched; earlier delivered reports keep their bytes.
+
+---
+Task ID: DL-15b
+Agent: Super Z (main)
+Task: Owner: "hide Queue ID" — remove the Queue ID input from the upload form.
+
+Work Log:
+- Verified the auto-assign contract first: normalizeQueueId() ends with `return cleaned || generateQueueId()` (src/lib/portal.ts) — empty userId arrives -> EIS-XXXXX generated server-side. Hiding the field is behavior-safe.
+- Surgical edits (upload-panel.tsx only): queueId state + input + helper paragraph removed; fields now post userId:"" with a comment citing the owner order; submit deps + success reset updated; Step 1 card renamed "Queue ID" -> "Case details" (numbering 1/2 unchanged). Success card still shows the assigned EIS-XXXXX after arrival (that is the client's reference).
+- Browser: client.workq sign-in 200, panel shows NO Queue ID field (screenshot 06_upload_no_queueid.png). Browser file-dialog harness could not attach a file (native dialog limitation) -> wire-proof done via curl multipart with the EXACT fields the hidden form posts (userId="", email, country, visaType, travelers): ok:true, userId=EIS-TJHKK auto-assigned, handshake MD5 verified, autoWork:true fired (LOCAL queue only; prod untouched).
+- Gates: tsc src tree 0 errors; next build exit 0. Pushed 14722b0..7a493f0 through pre-push gate.
+- Prod verified: client JS chunk c358d1d77ddb522a.js served on https://ailive-three.vercel.app/ contains "Case details" (SSR HTML can never show panel strings — workspace renders post-session-check client-side).
+
+Stage Summary:
+- Upload form no longer asks for a Queue ID: clients fill case details + drop the statement; the portal assigns EIS-XXXXX on arrival and shows it in the received-card. LIVE on prod (commit 7a493f0).
