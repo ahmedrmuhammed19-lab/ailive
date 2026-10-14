@@ -1912,3 +1912,20 @@ Work Log:
 Stage Summary:
 - Owner question answered: May 25–31 = scan's missing week; bank's own prints fix its net at −EGP 45,186.26 (135,283.04 → 90,096.78); individual rows need a re-scan of that sheet.
 - Report upgraded to rev 1.1: May captured section now piastra-exact at all 9 printed checkpoints (was ≈1,031.39 residual); 428 rows; the Appendix B window-figure error corrected. Re-scan request for the 25–31/05 sheet stands as the only path to full-census May.
+
+---
+Task ID: DL-13a
+Agent: Super Z (main)
+Task: Owner: "CAN YOU TRY RE READ May 25-31" — independent re-read of the May 25-31 window straight from the source PDF (not from cached conclusions).
+
+Work Log:
+- Structural re-check (FINAL_cib.json): last captured May transactions all dated 24MAY26 (pages 26-27); page 28 carries a single 31MAY26 balance-only row (90,096.78) then June starts 01JUN26. Zero rows dated 25-30 May.
+- Full-page OCR date sweep pages 23-29 @300dpi (scripts/dl13_reread_may.py): p27 holds ONLY day 24; p28 holds JUN 1-2 (+31MAY opening line). No 25-31 May date tokens on any boundary page.
+- Global sweep across ALL 68 pages @400dpi word data: ZERO tokens combining 25-31 with MAY context — the week does not hide anywhere else in the scan.
+- Visual re-read of boundary pixels: p27 bottom crop = final 24MAY26 rows closing at printed balance 135,283.04 followed by page-end footnotes (May section physically terminates); p28 top crop = fresh CIB Statement-of-Account header (June, print date 30JUN26) whose first row prints "31MAY26 OPENING BALANCE 90,096.78". Both anchors bank-printed, confirmed by eye.
+- Arithmetic identity re-proven: captured 01-24/05 net -157,085.14 + uncaptured week -45,186.26 = whole-May -202,271.40 (exact).
+- Acceptance gate re-run (scripts/dl13_acceptance.py): PASS — 9 May checkpoints residual 0.00, May-24 close 135,283.04 exact, 428 rows, window figure -45,186.26, rev 1.1 stamp present. Delivered report intact.
+- No code changes; no template changes; no prod probes. Evidence crops at /tmp/dl13_reread/ (p27_full/p28_full/p27_bottom/p28_top).
+
+Stage Summary:
+- Re-read independently CONFIRMS DL-13: May 25-31 is a CamScanner capture gap (missing sheet between the 24/05 page and June's statement). Bank's own prints fix the week's net at -EGP 45,186.26 (135,283.04 -> 90,096.78). Itemization is unrecoverable from this source; re-scan of that single sheet remains the only path to full-census May. Report rev 1.1 stands as delivered.
