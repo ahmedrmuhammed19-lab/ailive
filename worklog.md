@@ -1882,3 +1882,16 @@ Work Log:
 
 Stage Summary:
 - Deliverable: published/GlobalEIS_Report_AmirEzzat_CIB_EGP_427rows.html (prod path) + download/ copy + 5 evidence shots. 427 rows; Apr/Jul/Aug exact-to-piastra; Sep chain-perfect; Mar/May/Jun gaps printed-anchor bounded and disclosed. Owner actions listed in report S11 (re-scan missing sheets, housing-contract + deposit slips, salary cert if claimed).
+
+---
+Task ID: DL-12b
+Agent: Super Z (main)
+Task: Prod publication of the DL-12 report + delivery state.
+
+Work Log:
+- d91ebaa (report + worklog) pushed; prod 404 for the new report after ~7 min while OLD reports and root serve 200 → build not carrying new artifact. Empty retry 13c985e per DL-11b precedent → still 404 after further wait. GitHub API rate-limited (remaining 0) — cannot read commit status remotely; no Vercel token in sandbox.
+- Diagnosis: serving path proven correct (published/ files serve; old EidFarag report 200). Current builds either queued (free-tier concurrency) or repeatedly failing transiently. Owner-side Vercel dashboard check requested.
+- Deliverable unaffected: report is final and delivered as a file (download/GlobalEIS_Report_AmirEzzat_CIB_EGP_427rows.html, 126 KB, browser-QA'd: 13 sections / 497 table rows). Prod mirror will populate on the next successful build.
+
+Stage Summary:
+- Report delivered as file; prod mirror pending Vercel build. Re-scan request (May 25–31 sheet + Mar/Jun missing pages) stands as the path to full-census upgrade.
