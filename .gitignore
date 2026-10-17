@@ -153,3 +153,4 @@ scripts/wafa_work/
 !scripts/audit_bola_v3.py
 !scripts/audit_master_v14.ts
 !scripts/audit_master_v14_report.txt
+!scripts/vercel_wait_ready.py

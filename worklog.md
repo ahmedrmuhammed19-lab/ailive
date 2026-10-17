@@ -2318,3 +2318,70 @@ Stage Summary:
   standard (src/lib/report_design.ts -> v1.4.0) so ALL future portal-generated reports
   inherit them. Requires ES gate + tsc/build gates. Not done unilaterally — the approved
   v1.3.0 standard stays frozen until the owner says so.
+
+---
+Task ID: DL-24
+Agent: Super Z (main)
+Task: Owner "yes" — promote the DL-23 Bola Ayad Gerges Rev 3 additions (GRAND
+debit/credit totals + annual income + monthly expense) into the Master standard
+(src/lib/report_design.ts v1.3.0 -> v1.4.0) so every future portal-generated
+report inherits them. ES gate = owner approval this turn.
+
+Work Log:
+- Restored the destructive machine commit 93c9872 (deleted src/app/api/upload/
+  route.ts -418 lines again — same wipe pattern as resets #3/#4); git reset
+  --hard 22288cd, route verified back in HEAD (17,184 bytes); the pre-push
+  hook had kept the bad commit off origin.
+- report_design.ts (single source of truth) — additive v1.4.0 vocabulary:
+  * monthlyTrajectoryTable(): per-account Debit/Credit/Net column groups +
+    COMPUTED "Grand — All Accounts" group + bold WINDOW TOTAL footer row;
+    every net/sum/total re-derived inside the builder from raw numbers
+    (G8: no hand-typed sums); single-account specs collapse to one D/C/N
+    table whose footer row IS the grand total.
+  * incomeExpenseSummaryBlock(): window income (gross + verified external),
+    annual income gross/external run-rates, monthly expense window average +
+    full calendar months; canonical math annualRunRate() = x365/days and
+    monthlyRunRate() = /days*30.44; callers pass RAW numbers — the builder
+    formats every rendered figure. Missing external classification renders
+    "—" + pending disclosure (never a silent guess).
+  * monthlyTrajectorySection() = guaranteed S4 (stdTitle(4)) wrapper.
+  * CSS additive: th.grand-col / td.grand-cell / tr.total-row.
+  * TEMPLATE_VERSION -> Master v1.4.0 (lineage string preserved).
+- analyze.ts: buildTrajectorySections() — engine drafts now render the
+  guaranteed S4 right after the Executive Dashboard: UTC month buckets from
+  the chain-verified window rows (monthlyAgg), partial-month day-range
+  notes, full-calendar-month detection, legs grouped by currency (no
+  cross-currency sums), window = union of account windows with row-date
+  fallback; date-unparseable rows disclosed, never silently dropped.
+- Footer bumps: page.tsx "Master v1.4.0 report standard"; globals.css comment.
+- scripts/vercel_storage_check.py smoke expectation updated to v1.4.0.
+- PROMOTION AUDIT (scripts/audit_master_v14.ts, bun): 39/39 PASS — the new
+  builders reproduce the independently audited Bola v3 figures to the cent
+  (July grand 110,145.63 D / 135,102.50 C / +24,956.87 N; August 28,375.06 /
+  402.50 / -27,972.56; WINDOW 138,520.69 / 135,505.00 / -3,015.69; annual
+  gross 1,177,602.98; annual external 3,476.19; monthly expense window avg
+  100,394.52; July full-month 110,145.63) + structural + single-account
+  collapse checks. Report tee'd to scripts/audit_master_v14_report.txt.
+- GATES: npx tsc --noEmit src tree = 0 errors; bunx next build exit 0.
+- Push 74bc366 (pre-push hook verified upload route in HEAD) -> Vercel
+  auto-deploy dpl_7At2drKjtxFD2nYBmE7rZ3hNSDZF READY 19:14:37 UTC.
+- PROD SMOKE: GET / 200 + footer 'Master v1.4.0' present: True; POST /api/login
+  empty -> 400 (expected).
+- Storage standing directive: alias-safe sweep (keeper-alias protocol) deleted
+  the superseded pre-v1.4.0 ailive deployment (dpl_F5LZ76) + translation-portal
+  old (dpl_9yuytvQ) — all 5 projects back to exactly 1 deployment; post-sweep
+  prod re-verified (200 + v1.4.0 footer + 400). Zero downtime.
+- vercel_wait_ready.py added (poll newest production deployment to READY;
+  projects API key is id, deployments key is uid; VERCEL_TOKEN from env or
+  .env — token itself lives in the gitignored prod_recent_probe.py).
+
+Stage Summary:
+- Master v1.4.0 is LIVE on prod: every engine-generated report now carries
+  guaranteed S4 — per-month Debit/Credit/Net with computed GRAND — All
+  Accounts group, WINDOW TOTAL footer row, and the window-prorated Income &
+  Expense Summary (annual income run-rates, monthly expense) — cross-validated
+  39/39 against the audited Bola v3 figures.
+- Account deployment retention re-minimalized (1 per project).
+- Owner items unchanged: rotate chat-transited GitHub PAT + Vercel token
+  (update Vercel env GH_VAULT_TOKEN after PAT rotation); SMTP creds still
+  missing (mail leg = outbox mode).
