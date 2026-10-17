@@ -6,8 +6,10 @@ import {
   alertBox,
   analysisCard,
   escHtml,
+  incomeExpenseSummaryBlock,
   kpiCard,
   kpiGrid,
+  monthlyTrajectorySection,
   reportShell,
   sectionTitle,
   tag,
@@ -15,6 +17,7 @@ import {
   so10Passport,
   so9DoubleCheck,
   type DoubleCheckRow,
+  type MonthlyTrajectorySpec,
 } from "@/lib/report_design";
 
 /**
@@ -493,6 +496,7 @@ function money(n: number): string {
 
 // ---------- 6-month analysis window (embassy lookback rule) ----------
 const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+const MONTHS_FULL = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
 /** TxRow dates come in five families: "dd/mm/yyyy", "dd-mm-yyyy", "DDMMMYY", "dd-Month-yyyy", "yy/mm/dd", "dd MMM yy". */
 function parseTxDate(s: string): Date | null {
@@ -2472,6 +2476,139 @@ function buildDoubleCheckRows(legs: AccountLeg[]): DoubleCheckRow[] {
   ];
 }
 
+/* ---------- Master v1.4 (DL-23): monthly trajectory + income & expense summary ---------- */
+
+interface MonthBucket {
+  debits: number;
+  credits: number;
+  minD: Date;
+  maxD: Date;
+}
+
+/** Bucket window rows by calendar month (UTC): Σ debits / Σ credits + per-month day range. */
+function monthlyAgg(rows: TxRow[]): {
+  buckets: Map<string, MonthBucket>;
+  min: Date | null;
+  max: Date | null;
+  skipped: number;
+} {
+  const buckets = new Map<string, MonthBucket>();
+  let min: Date | null = null;
+  let max: Date | null = null;
+  let skipped = 0;
+  for (const r of rows) {
+    const d = parseTxDate(r.date);
+    if (!d) {
+      skipped++;
+      continue;
+    }
+    if (!min || d < min) min = d;
+    if (!max || d > max) max = d;
+    const k = `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, "0")}`;
+    const b = buckets.get(k) ?? { debits: 0, credits: 0, minD: d, maxD: d };
+    if (r.signed >= 0) b.credits += r.signed;
+    else b.debits += -r.signed;
+    if (d < b.minD) b.minD = d;
+    if (d > b.maxD) b.maxD = d;
+    buckets.set(k, b);
+  }
+  return { buckets, min, max, skipped };
+}
+
+/**
+ * Master v1.4 (DL-23): the guaranteed section 4 for every engine report —
+ * per-month Debit/Credit/Net with a computed GRAND (All Accounts) group and
+ * WINDOW TOTAL row, plus the window-prorated Income & Expense Summary
+ * (annual income run-rates, monthly expense). Legs are grouped by currency
+ * so no cross-currency sum is ever rendered; engine drafts cannot classify
+ * third-party credits, so the external-income lines render as "—" (pending
+ * analyst) instead of a silent guess. All figures come from the parsed,
+ * chain-verified row tables — G8: no hand-typed numbers.
+ */
+function buildTrajectorySections(legs: AccountLeg[]): string[] {
+  const curGroups = new Map<string, AccountLeg[]>();
+  for (const l of legs) {
+    const g = curGroups.get(l.currency) ?? [];
+    g.push(l);
+    curGroups.set(l.currency, g);
+  }
+  const sections: string[] = [];
+  for (const [cur, group] of curGroups) {
+    const aggs = group.map((l) => monthlyAgg(effectiveRows(l)));
+    const allBuckets = aggs.flatMap((a) => [...a.buckets.values()]);
+    const skipped = aggs.reduce((s, a) => s + a.skipped, 0);
+    const keys = [...new Set(aggs.flatMap((a) => [...a.buckets.keys()]))].sort();
+    const candFrom = group.map((l) => l.windowFrom ?? l.periodFrom ?? null);
+    const candTo = group.map((l) => l.periodTo ?? null);
+    const mins = aggs.map((a) => a.min).filter((d): d is Date => !!d);
+    const maxs = aggs.map((a) => a.max).filter((d): d is Date => !!d);
+    const fromD =
+      candFrom.filter((d): d is Date => !!d).reduce<Date | null>((acc, d) => (!acc || d < acc ? d : acc), null) ??
+      (mins.length ? new Date(Math.min(...mins.map((d) => d.getTime()))) : null);
+    const toD =
+      candTo.filter((d): d is Date => !!d).reduce<Date | null>((acc, d) => (!acc || d > acc ? d : acc), null) ??
+      (maxs.length ? new Date(Math.max(...maxs.map((d) => d.getTime()))) : null);
+    if (!keys.length || !fromD || !toD) {
+      if (skipped) {
+        sections.push(
+          `<p class="small">Monthly trajectory (${escHtml(cur)}): ${skipped} row(s) without parseable dates — monthly buckets withheld (chain figures unaffected, see Appendix A2).</p>`,
+        );
+      }
+      continue;
+    }
+    const windowDays = Math.max(1, Math.round((toD.getTime() - fromD.getTime()) / 86400000) + 1);
+    const isFull = (k: string) => {
+      const y = Number(k.slice(0, 4));
+      const m = Number(k.slice(5, 7)) - 1;
+      return fromD.getTime() <= Date.UTC(y, m, 1) && Date.UTC(y, m + 1, 0) <= toD.getTime();
+    };
+    const dayLabel = (d: Date) => String(d.getUTCDate()).padStart(2, "0");
+    const spec: MonthlyTrajectorySpec = {
+      accountLabels: group.map((l) => `Account ${l.account ?? "(number not parsed)"}`),
+      currency: cur,
+      rows: keys.map((k) => {
+        const y = Number(k.slice(0, 4));
+        const m = Number(k.slice(5, 7)) - 1;
+        const bs = aggs.map((a) => a.buckets.get(k));
+        const first = bs.find((b) => b)?.minD;
+        const last = bs.find((b) => b)?.maxD;
+        return {
+          month: `${MONTHS_FULL[m]} ${y}`,
+          note: isFull(k) ? undefined : `day range ${dayLabel(first ?? fromD)}–${dayLabel(last ?? toD)} — partial month`,
+          accounts: bs.map((b) => ({ debits: b?.debits ?? 0, credits: b?.credits ?? 0 })),
+        };
+      }),
+    };
+    const totC = allBuckets.reduce((s, b) => s + b.credits, 0);
+    const totD = allBuckets.reduce((s, b) => s + b.debits, 0);
+    const fullMonths = keys.filter(isFull).map((k) => {
+      const y = Number(k.slice(0, 4));
+      const m = Number(k.slice(5, 7)) - 1;
+      return {
+        label: `${MONTHS_FULL[m]} ${y}`,
+        debits: aggs.reduce((s, a) => s + (a.buckets.get(k)?.debits ?? 0), 0),
+        credits: aggs.reduce((s, a) => s + (a.buckets.get(k)?.credits ?? 0), 0),
+      };
+    });
+    const skipNote = skipped
+      ? `<p class="small">${skipped} row(s) without parseable dates are excluded from the monthly buckets — ledger chain totals unaffected (see Appendix A2).</p>`
+      : "";
+    sections.push(
+      monthlyTrajectorySection(
+        spec,
+        incomeExpenseSummaryBlock({
+          currency: cur,
+          windowDays,
+          windowCredits: totC,
+          windowDebits: totD,
+          fullMonths,
+        }) + skipNote,
+      ),
+    );
+  }
+  return sections;
+}
+
 function buildReportHtml(
   userId: string,
   country: string | null,
@@ -2552,6 +2689,7 @@ ${analysisCard("Pattern findings — analyst view", findingsHtml(legFindings(l, 
       kpi("Coverage", coverage.toFixed(1) + "%", coverage >= 100 ? "benchmark met" : "gap: EGP " + money(Math.max(0, required - consolidated)), covCls),
     ]),
     `<p class="small">Benchmark figure is the portal's indicative default for this destination — the analyst confirms or adjusts it before delivery. Joint applicants share this statement, so the requirement is multiplied accordingly.</p>`,
+    ...buildTrajectorySections(legs),
     visaReadinessSection(
       [
         {

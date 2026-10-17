@@ -467,7 +467,7 @@ export default function PortalPage() {
               ahmedr.muhammed19@gmail.com
             </a>
           </p>
-          <p className="mt-1 text-[10px] tracking-wide text-[var(--eis-neutral)]">© 2026 Global EIS · Master v1.3.0 report standard</p>
+          <p className="mt-1 text-[10px] tracking-wide text-[var(--eis-neutral)]">© 2026 Global EIS · Master v1.4.0 report standard</p>
         </div>
       </footer>
     </div>

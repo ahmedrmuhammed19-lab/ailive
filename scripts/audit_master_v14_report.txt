@@ -1,0 +1,46 @@
+— monthly trajectory table (multi-account, GRAND group) —
+  PASS  July grand debits 110,145.63
+  PASS  July grand credits 135,102.50
+  PASS  July grand net +24,956.87
+  PASS  August grand debits 28,375.06
+  PASS  August grand credits 402.50
+  PASS  August grand net −27,972.56
+  PASS  WINDOW grand debits 138,520.69
+  PASS  WINDOW grand credits 135,505.00
+  PASS  WINDOW grand net −3,015.69
+  PASS  Grand — All Accounts header
+  PASS  WINDOW TOTAL footer row
+  PASS  Savings July per-account D 73,708.44
+  PASS  Current July per-account D 36,437.19
+  PASS  grand-col header class
+  PASS  grand-cell body class
+  PASS  row count = 2 months + 1 total + 2 header = 5
+  PASS  July row carries 10 cells
+— income & expense summary (window-prorated) —
+  PASS  window income 135,505.00
+  PASS  verified external 400.00
+  PASS  external share pill 0.3%
+  PASS  own-account remainder 99.7%
+  PASS  annual gross run-rate 1,177,602.98
+  PASS  annual external run-rate 3,476.19
+  PASS  monthly expense avg 100,394.52
+  PASS  July full-month expense 110,145.63
+  PASS  canonical formula × 365 ÷ 42
+  PASS  canonical formula × 30.44
+  PASS  Income & Expense Summary title
+  PASS  Methodology note present
+— canonical run-rate math (pure functions) —
+  PASS  annualRunRate(135505, 42) = 1,177,602.98
+  PASS  annualRunRate(400, 42) = 3,476.19
+  PASS  monthlyRunRate(138520.69, 42) = 100,394.52
+  PASS  monthlyRunRate(0-safe)
+  PASS  annualRunRate(days=0) = —
+— single-account collapse (one D/C/N table, footer IS the grand) —
+  PASS  single-account header Total Debits (EGP)
+  PASS  single-account has NO redundant grand group
+  PASS  single-account footer = grand total
+  PASS  single-account net +61,394.06
+  PASS  single-account total row D 73,708.44 / C 135,102.50
+
+RESULT: 39 PASS / 0 FAIL
+OK — Master v1.4.0 builders reproduce the audited Bola Ayad Gerges Rev 3 figures to the cent.

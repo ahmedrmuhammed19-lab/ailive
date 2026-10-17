@@ -96,13 +96,34 @@
  * renders live engine-measured arithmetic (G8 precedent) with analyst rows
  * PENDING until the final build, mirroring the Appendix A passport contract.
  *
+ * v1.4.0 (2026-10-18, DL-23): owner order ("add a grand for each row like
+ * this debit, credit and add a total of annual income and monthly expense")
+ * ratified the Bola Ayad Gerges Rev 3 additions into the standard — the
+ * builder was cross-validated 32/32 against the independently audited v3
+ * figures before promotion. monthlyTrajectoryTable() renders per-account
+ * Debit/Credit/Net column groups PLUS a computed GRAND — All Accounts group
+ * and a bold WINDOW TOTAL footer row (every figure re-derived from the raw
+ * numbers inside the builder — G8: no hand-typed sums; single-account
+ * reports collapse the redundant per-account group into one D/C/N table).
+ * incomeExpenseSummaryBlock() renders the window-prorated Income & Expense
+ * Summary (window income gross + verified external, annual income run-rates,
+ * monthly expense window average + full calendar month) with the canonical
+ * proration math: annualRunRate() = ×365÷days, monthlyRunRate() =
+ * ÷days×30.44. Engine drafts that cannot classify third-party credits
+ * render the external lines as "—" with the pending disclosure — never a
+ * silent assumption. CSS adds th.grand-col / td.grand-cell / tr.total-row
+ * additively. The engine draft (src/lib/analyze.ts) now renders the
+ * guaranteed S4 through monthlyTrajectorySection() for every submission.
+ * All v1.3.0 exports keep names and signatures — earlier reports keep
+ * their bytes.
+ *
  * Tokens: --primary #005677 / --secondary #008DCB on Segoe UI, gradient
  * header, KPI cards with colored left borders, section bars, pill tags,
  * left-bordered alert boxes, readiness matrix + action gates, prepared-by
  * footer.
  */
 
-export const TEMPLATE_VERSION = "Master v1.3.0 (STANDARD — Elgarayadli build promoted 2026-10-15; SO-9 balance double-check appendix A2 added 2026-10-15; lineage: v1.2.6 three-way coverage audit 2026-10-11, SO-10 passport appendix 2026-10-11, section order contract 2026-10-11, visa readiness matrix + action gates 2026-10-11, disclaimer hardened 2026-10-11; v1.2 promoted 2026-10-06)";
+export const TEMPLATE_VERSION = "Master v1.4.0 (STANDARD — GRAND debit/credit totals + window-prorated income & expense summary promoted from the audited Bola Ayad Gerges Rev 3 build, owner-approved 2026-10-18; lineage: v1.3.0 Elgarayadli build promoted 2026-10-15; SO-9 balance double-check appendix A2 added 2026-10-15; v1.2.6 three-way coverage audit 2026-10-11, SO-10 passport appendix 2026-10-11, section order contract 2026-10-11, visa readiness matrix + action gates 2026-10-11, disclaimer hardened 2026-10-11; v1.2 promoted 2026-10-06)";
 
 export const REPORT_CSS = `
 /* ===== Master v1.3 tokens (SO-1 locked) ===== */
@@ -206,6 +227,10 @@ tr.hl td{background:#e7f3fe !important}
 .footer p{margin:4px 0}
 .footer .legal{max-width:900px;margin:6px auto 0;line-height:1.5}
 .footer strong{color:var(--primary)}
+/* ===== Master v1.4: GRAND column group + window-total row (DL-23) ===== */
+th.grand-col{background:#e8f1f8}
+td.grand-cell{background:#f7fbfd}
+tr.total-row td{background:#eef6fa !important;font-weight:bold;border-top:2px solid var(--primary)}
 /* ===== Print contract ===== */
 @page{size:A4;margin:16mm 12mm}
 @media print{body{background:none;padding:0}.container{box-shadow:none;border-radius:0;max-width:none}.download-btn{display:none}.section-title,h2.sec,.analysis-card,.kpi-card,.kpi,.annex-body,.verdict-box,.authenticity-alert{page-break-inside:avoid}table tr,.data-table tr{page-break-inside:avoid}thead{display:table-header-group}.header{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
@@ -492,6 +517,223 @@ export function so10Passport(gates: PassportGate[], accountLabel?: string): stri
     ` this exact statement — none is assumed.${open ? ` ${open} gate(s) pending analyst measurement in this draft.` : ""}</p>`;
   const label = accountLabel ? ` — ${escHtml(accountLabel)}` : "";
   return `${sectionTitle(`${stdTitle(90)}${label}`)}<table class="data-table"><tr><th>Gate</th><th>Verdict</th><th>Measured Values</th></tr>${rows}</table>${note}`;
+}
+
+/* ---------------- Master v1.4: GRAND TOTALS + INCOME & EXPENSE SUMMARY (DL-23, 2026-10-18) ---------------- */
+
+/** Per-account debit/credit sums for one month (major units, raw numbers — the builder does the math). */
+export interface MonthlyFlow {
+  debits: number;
+  credits: number;
+}
+
+/** One month row of the monthly trajectory table. */
+export interface MonthlyTrajectoryRow {
+  /** Month label, e.g. "July 2026". */
+  month: string;
+  /** Small note under the label, e.g. "day range 01–11 — partial month". */
+  note?: string;
+  /** Per-account figures, SAME order as the spec's accountLabels. */
+  accounts: MonthlyFlow[];
+}
+
+export interface MonthlyTrajectorySpec {
+  /** Account labels for the column groups, e.g. "Account 1000…2501019". */
+  accountLabels: string[];
+  /** Currency code shown in the headers, e.g. "EGP". */
+  currency: string;
+  /** Month rows, chronological. */
+  rows: MonthlyTrajectoryRow[];
+  /** Footer row label — default "WINDOW TOTAL". */
+  totalLabel?: string;
+}
+
+function fmt2(n: number): string {
+  return n.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+
+function signed2(n: number): string {
+  if (n > 0) return `+${fmt2(n)}`;
+  if (n < 0) return `−${fmt2(-n)}`;
+  return "0.00";
+}
+
+function flowCells(f: MonthlyFlow, strong: boolean, grand: boolean): string {
+  const net = f.credits - f.debits;
+  const b = (s: string) => (strong ? `<strong>${s}</strong>` : s);
+  const cls = ["num", grand ? "grand-cell" : "", net > 0 ? "text-success" : net < 0 ? "text-danger" : ""]
+    .filter(Boolean)
+    .join(" ");
+  return (
+    `<td class="${cls}">${b(fmt2(f.debits))}</td>` +
+    `<td class="${cls}">${b(fmt2(f.credits))}</td>` +
+    `<td class="${cls}">${b(signed2(net))}</td>`
+  );
+}
+
+/**
+ * Master v1.4.0 monthly trajectory table (DL-23): one row per month with
+ * per-account Debit/Credit/Net column groups and a COMPUTED GRAND — All
+ * Accounts group; closes with the bold WINDOW TOTAL row. Every figure —
+ * per-account nets, grand sums, window totals — is re-derived here from the
+ * raw numbers (G8: no hand-typed sums can enter the rendered bytes).
+ * Single-account specs collapse the redundant per-account group: one
+ * Debit/Credit/Net table whose footer row IS the grand total.
+ */
+export function monthlyTrajectoryTable(spec: MonthlyTrajectorySpec): string {
+  const tl = spec.totalLabel ?? "WINDOW TOTAL";
+  const cur = escHtml(spec.currency);
+  const grandRows = spec.rows.map((r) => ({
+    debits: r.accounts.reduce((s, a) => s + a.debits, 0),
+    credits: r.accounts.reduce((s, a) => s + a.credits, 0),
+  }));
+  const tot = grandRows.reduce(
+    (s, g) => ({ debits: s.debits + g.debits, credits: s.credits + g.credits }),
+    { debits: 0, credits: 0 },
+  );
+  const monthCell = (label: string, note: string | undefined, strong: boolean) =>
+    `<td>${strong ? `<strong>${escHtml(label)}</strong>` : escHtml(label)}${note ? `<br><span class="small">${escHtml(note)}</span>` : ""}</td>`;
+
+  if (spec.accountLabels.length <= 1) {
+    const head = `<tr><th>Month</th><th class="text-right">Total Debits (${cur})</th><th class="text-right">Total Credits (${cur})</th><th class="text-right">Net (${cur})</th></tr>`;
+    const body = spec.rows
+      .map((r) => `<tr>${monthCell(r.month, r.note, false)}${flowCells(r.accounts[0] ?? { debits: 0, credits: 0 }, false, false)}</tr>`)
+      .join("");
+    const total = `${monthCell(tl, undefined, true)}${flowCells(tot, true, false)}`;
+    return `<table class="data-table"><thead>${head}</thead><tbody>${body}<tr class="total-row">${total}</tr></tbody></table>`;
+  }
+
+  const groups = spec.accountLabels.map((l) => `<th colspan="3">${escHtml(l)}</th>`).join("");
+  const sub = `<th class="text-right">Total Debits</th><th class="text-right">Total Credits</th><th class="text-right">Net</th>`;
+  const head =
+    `<tr><th rowspan="2">Month</th>${groups}<th colspan="3" class="grand-col">Grand — All Accounts (${cur})</th></tr>` +
+    `<tr>${sub.repeat(spec.accountLabels.length + 1)}</tr>`;
+  const body = spec.rows
+    .map(
+      (r, i) =>
+        `<tr>${monthCell(r.month, r.note, false)}${r.accounts.map((a) => flowCells(a, false, false)).join("")}${flowCells(grandRows[i], false, true)}</tr>`,
+    )
+    .join("");
+  const perAccountTot = spec.accountLabels
+    .map((_, i) =>
+      flowCells(
+        spec.rows.reduce(
+          (s, r) => ({ debits: s.debits + (r.accounts[i]?.debits ?? 0), credits: s.credits + (r.accounts[i]?.credits ?? 0) }),
+          { debits: 0, credits: 0 },
+        ),
+        true,
+        false,
+      ),
+    )
+    .join("");
+  const total = `${monthCell(tl, undefined, true)}${perAccountTot}${flowCells(tot, true, true)}`;
+  return `<table class="data-table"><thead>${head}</thead><tbody>${body}<tr class="total-row">${total}</tr></tbody></table>`;
+}
+
+/** Master v1.4 canonical annualization: window total × 365 ÷ windowDays (2-dp, en-US). */
+export function annualRunRate(windowTotal: number, windowDays: number): string {
+  if (!(windowDays > 0)) return "—";
+  return fmt2((windowTotal * 365) / windowDays);
+}
+
+/** Master v1.4 canonical monthly proration: window total ÷ windowDays × 30.44 (2-dp, en-US). */
+export function monthlyRunRate(windowTotal: number, windowDays: number): string {
+  if (!(windowDays > 0)) return "—";
+  return fmt2((windowTotal / windowDays) * 30.44);
+}
+
+export interface IncomeExpenseInput {
+  currency: string;
+  /** Analysis window length in days (union across accounts). */
+  windowDays: number;
+  /** GRAND window credits — gross income, all accounts. */
+  windowCredits: number;
+  /** GRAND window debits — gross expense, all accounts. */
+  windowDebits: number;
+  /** Verified external (third-party) credits. Omit = analyst classification pending — renders "—", never a guess. */
+  verifiedExternalCredits?: number;
+  /** Full calendar months inside the window — the verifiable monthly expense figures. */
+  fullMonths?: Array<{ label: string; debits: number; credits: number }>;
+  /** Case-specific methodology addendum appended to the canonical note (HTML). */
+  methodologyHtml?: string;
+}
+
+/**
+ * The GUARANTEED Income & Expense Summary (Master v1.4.0, DL-23): window
+ * income (gross + verified external), annual income run-rates, monthly
+ * expense (window average + full calendar months) — prorated by the
+ * canonical math above. Fail-loud doctrine: the caller passes RAW numbers
+ * and this builder formats every rendered figure — no hand-typed strings.
+ */
+export function incomeExpenseSummaryBlock(input: IncomeExpenseInput): string {
+  const cur = escHtml(input.currency);
+  const v = (x: string, strong = false) => `<td class="num">${strong ? `<strong>${x}</strong>` : x}</td>`;
+  const rows: string[] = [];
+  rows.push(
+    `<tr><td>Total income — window (gross credits, all accounts)</td>${v(fmt2(input.windowCredits), true)}` +
+      `<td class="small">Σ all credits across the ${input.windowDays}-day window = GRAND credits, WINDOW TOTAL row</td></tr>`,
+  );
+  const ext = input.verifiedExternalCredits;
+  if (ext === undefined) {
+    rows.push(
+      `<tr><td>Total income — verified external only</td>${v("—")}` +
+        `<td class="small">third-party credit classification pending analyst (Source of Funds) — never silently assumed</td></tr>`,
+    );
+  } else {
+    const share = input.windowCredits > 0 ? Math.round((ext / input.windowCredits) * 1000) / 10 : 100;
+    rows.push(
+      `<tr><td>Total income — verified external only</td>` +
+        `<td class="num">${fmt2(ext)} ${tag(`${share}%`, "warn")}</td>` +
+        `<td class="small">third-party credits only; the remaining ${(100 - share).toFixed(1)}% is own-account circulation</td></tr>`,
+    );
+  }
+  rows.push(
+    `<tr><td>Annual income — gross run-rate</td>${v(annualRunRate(input.windowCredits, input.windowDays), true)}` +
+      `<td class="small">${fmt2(input.windowCredits)} × 365 ÷ ${input.windowDays} — projection at window pace; overstated by own-account circulation, NOT verified capacity</td></tr>`,
+  );
+  if (ext === undefined) {
+    rows.push(
+      `<tr><td>Annual income — verified external run-rate</td>${v("—")}` +
+        `<td class="small">awaits the verified external classification above</td></tr>`,
+    );
+  } else {
+    rows.push(
+      `<tr><td>Annual income — verified external run-rate</td>${v(annualRunRate(ext, input.windowDays))}` +
+        `<td class="small">${fmt2(ext)} × 365 ÷ ${input.windowDays} — the assessment-grade annualized external income</td></tr>`,
+    );
+  }
+  rows.push(
+    `<tr><td>Monthly expense — window average</td>${v(monthlyRunRate(input.windowDebits, input.windowDays), true)}` +
+      `<td class="small">${fmt2(input.windowDebits)} ÷ ${input.windowDays} days × 30.44 (avg month length) — gross debits prorated monthly</td></tr>`,
+  );
+  for (const fm of input.fullMonths ?? []) {
+    rows.push(
+      `<tr><td>Monthly expense — ${escHtml(fm.label)} (full calendar month)</td>${v(fmt2(fm.debits))}` +
+        `<td class="small">GRAND debits, ${escHtml(fm.label)} only</td></tr>`,
+    );
+  }
+  const note =
+    `<p class="small" style="margin-top:8px;"><strong>Methodology (Master v1.4):</strong> GRAND columns aggregate all analysed accounts ` +
+    `per month; internal transfers between own accounts are included and cancel on consolidation. Annualized figures prorate the ` +
+    `${input.windowDays}-day window to 365 days; partial months are flagged and only full calendar months are quoted as verified monthly ` +
+    `expense. The gross run-rate is a turnover figure, not income capacity; the verified external run-rate (where classified) is the ` +
+    `figure an assessor treats as income.${input.methodologyHtml ? ` ${input.methodologyHtml}` : ""}</p>`;
+  return (
+    `<h3 style="color:var(--primary);margin-bottom:12px;">Income &amp; Expense Summary (window-prorated)</h3>` +
+    `<table class="data-table"><thead><tr><th>Metric</th><th class="text-right">Value (${cur})</th><th>Basis / Formula</th></tr></thead><tbody>${rows.join("")}</tbody></table>` +
+    note
+  );
+}
+
+/**
+ * The GUARANTEED section 4 (Master v1.4.0): canonical S4 title + the monthly
+ * trajectory table (per-account column groups + computed GRAND group +
+ * WINDOW TOTAL footer) + the window-prorated income & expense summary.
+ * Engine drafts and analyst finals both render S4 through this one call so
+ * the section number, title and grand-total contract can never drift.
+ */
+export function monthlyTrajectorySection(spec: MonthlyTrajectorySpec, incomeExpenseHtml: string): string {
+  return `${sectionTitle(stdTitle(4))}${monthlyTrajectoryTable(spec)}${incomeExpenseHtml}`;
 }
 
 export interface ReportShellOpts {

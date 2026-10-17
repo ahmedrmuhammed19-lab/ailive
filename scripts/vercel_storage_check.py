@@ -68,8 +68,8 @@ def main():
     else:
         print(f"  GET / -> {code}")
     if body:
-        hit = "Master v1.3.0" in body
-        print(f"  footer 'Master v1.3.0' present: {hit}")
+        hit = "Master v1.4.0" in body
+        print(f"  footer 'Master v1.4.0' present: {hit}")
     try:
         req = urllib.request.Request(
             "https://ailive-three.vercel.app/api/login",
