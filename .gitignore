@@ -160,3 +160,5 @@ scripts/wafa_work/
 !scripts/vercel_env_inspect_20261018.txt
 !scripts/mailcreds_check_20261018.txt
 !scripts/mail_smoke_20261018.txt
+!scripts/bank_adapters_test.ts
+!scripts/bank_adapters_test_report.txt

@@ -2430,3 +2430,53 @@ Stage Summary:
 - Note: MAIL_CREDS_JSON value was transited via chat/API previously — treat
   like the other chat-transited tokens (rotate when convenient; rotation =
   new app password + env update + re-smoke).
+
+---
+Task ID: DL-26
+Agent: main (Z.ai)
+Task: Owner-directed build — "save our template ... then build": (1) signed restore checkpoint for the Master v1.4.0 template; (2) bank-adapter layer so ANY bank's statement aligns onto the same template automatically (coverage-audited, never guesses).
+
+Work Log:
+- CHECKPOINT: annotated tag template/master-v1.4.0 pushed to origin (anchored
+  at 20cbb4c; snapshot verified — 776 lines, 4x "Master v1.4.0"). Restore
+  recipe lives in the tag message: git checkout <tag> -- src/lib/report_design.ts
+  + gates + push; atomic because the version string lives inside the file.
+- FAMILY G (src/lib/analyze.ts, ~200 lines, additive — template untouched,
+  0 diff lines on report_design.ts):
+  * BANK_DIALECTS fingerprint registry: NBE, Banque Misr (incl. Arabic بنك مصر),
+    Al Ahly, QNB, AlexBank, SAIB, MIDB, Faisal, HDB, Suez Canal, United, ADIB.
+  * G_STRUCTURAL_RE gate — a MENTION of a bank never claims a document
+    (A2 lesson): the text must look like a ledger.
+  * extractGenericMeta: account/IBAN, currency label, From→To period, stated
+    opening (Opening/Previous Balance / B/F) — generic across spellings.
+  * Reuses the proven ledger core ONLY: lineTableRows (desc-preserving),
+    walkLedgerAmounts (fwd+rev, newest-first layouts), solveDropStable chain
+    solve, under 4 generic date anchors (dd/mm/yyyy, dd-mm-yyyy, dd MMM yyyy,
+    dd-MMM-yyyy).
+  * auditLedgerCoverage (exported, SO-9 lineage): rows>=5 floor + chain
+    integrity >= AUTO_DELIVER_MIN + opening→closing reconciliation to the
+    cent (|opening+inflow-outflow-closing| < 0.02). No confident audit =>
+    null => document stays RED for the analyst. OCR G legs keep the shadow
+    rule (draft-review only, never auto-delivered).
+  * Wired into parseCibTextMulti dispatch between F and Z.
+- ENGINE HONESTY: AutoAnalysisResult.mode += "bank-parsed"; success message
+  now reads "Parsed N accounts via bank adapter (NBE, ...)" vs "(CIB)".
+  engine-run.ts gates on ok+fullLegs (mode-agnostic) — zero downstream churn.
+- TESTS (scripts/bank_adapters_test.ts, bun): 29/29 PASS — NBE text-layer
+  (8 txns + 2 stated-position rows, chain 100%, closing/inflow/outflow to the
+  cent, desc preserved), Banque Misr bilingual USD, QNB dd-MMM-yyyy, negatives
+  (unknown bank, broken chain stays red, name-mention, audit unit on a
+  fabricated residual). Report tee'd to scripts/bank_adapters_test_report.txt.
+- GATES: npx tsc --noEmit -p tsconfig.json filtered to ^src/ = 0 errors (added
+  tsconfig.src.json for the scoped gate); bunx next build exit 0.
+- NOTE: test row-count expectation corrected 8->10 — printed Opening/Closing
+  Balance lines are legitimate stated-position rows (movement null, signed 0),
+  consistent with intl families; inflow/outflow reconcile to the cent.
+
+Stage Summary:
+- The portal now claims fingerprinted Egyptian-bank statements automatically:
+  same Master v1.4.0 template (S4 monthly D/C/N + GRAND totals + income &
+  expense summary) renders any audited leg; unauditable documents stay red.
+- Restore path for the template is one command: git checkout
+  template/master-v1.4.0 -- src/lib/report_design.ts.
+- Registry is additive: new banks = one line in BANK_DIALECTS.

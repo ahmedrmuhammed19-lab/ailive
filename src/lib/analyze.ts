@@ -141,7 +141,7 @@ interface AccountLeg {
 
 export interface AutoAnalysisResult {
   ok: boolean;
-  mode: "cib-parsed" | "unrecognized" | "no-files" | "scan-analyst";
+  mode: "cib-parsed" | "bank-parsed" | "unrecognized" | "no-files" | "scan-analyst";
   message: string;
   legs: Array<
     Pick<AccountLeg, "account" | "currency" | "mode" | "opening" | "closing" | "inflow" | "outflow" | "txCount" | "matched"> & {
@@ -415,9 +415,11 @@ export async function analyzeSubmission(submissionId: string): Promise<AutoAnaly
           .slice(0, 40)
           .map((r) => ({ file: l.file, date: r.date, desc: r.desc?.slice(0, 120), movement: r.movement, balance: r.balance }))
       );
+  const adapterLegs = legs.filter((l) => (l.mode ?? "").startsWith("G:"));
+  const adapterBanks = [...new Set(adapterLegs.map((l) => (l.mode ?? "G:").slice(2)))];
   return {
     ok: true,
-    mode: "cib-parsed",
+    mode: adapterLegs.length > 0 ? "bank-parsed" : "cib-parsed",
     legs: legs.map((l) => ({
       account: l.account,
       currency: l.currency,
@@ -454,7 +456,11 @@ export async function analyzeSubmission(submissionId: string): Promise<AutoAnaly
       .filter(Boolean)
       .join(" | "),
     message:
-      `Parsed ${legs.length} CIB account${legs.length > 1 ? "s" : ""}.` +
+      `Parsed ${legs.length} account${legs.length > 1 ? "s" : ""}` +
+      (adapterBanks.length > 0
+        ? ` via bank adapter (${adapterBanks.join(", ")})`
+        : " (CIB)" ) +
+      "." +
       (ocrUsed ? " OCR shadow mode — scanned source, analyst review required." : ""),
   };
 }
@@ -968,6 +974,14 @@ export function parseCibTextMulti(text: string, file: string, ocr = false): Acco
     (fLegs.length > 0
       ? fLegs.map((l) => ({ ...l, mode: ocr ? `OCR:${l.mode ?? "unknown"}` : "F-cib-estatement", ocr: ocr || l.ocr }))
       : null) ??
+    // FAMILY G — bank-adapter registry (DL-26): fingerprinted bank statements
+    // (NBE, Banque Misr, QNB, ...) reconstructed with the shared ledger core;
+    // only legs that pass the coverage audit (chain gate + opening→closing
+    // reconciliation) may claim the document, else it stays red.
+    (() => {
+      const g = parseBankStatementGeneric(text, file, ocr);
+      return g ? [g] : null;
+    })() ??
     // last resort: OCR-recovered text only — a generic chain-guided ledger
     // walk that must reconcile EVERY row, else it refuses the document
     (ocr ? attempt("Z-ocr-ledger", parseOcrLedger) : null) ??
@@ -1004,6 +1018,208 @@ function parseOcrLedger(text: string, file: string): AccountLeg | null {
     closing: rows[rows.length - 1].balance ?? 0,
     matched: rows.length,
   });
+}
+
+/**
+ * FAMILY G — bank-adapter registry (DL-26, owner-directed).
+ *
+ * Goal: ANY bank's statement (text layer or OCR) aligns onto the same Master
+ * v1.4.0 template automatically — the template is data-driven, so the adapter
+ * only has to produce chain-verified legs. Design:
+ *   1. Fingerprint registry routes the document to a bank dialect (a mere
+ *      MENTION of a bank name never claims a document — structural markers
+ *      must agree, and the chain + coverage audit are the final judges).
+ *   2. Generic meta extraction (account / currency / period / stated opening)
+ *      works across label spellings instead of one parser per bank.
+ *   3. The SAME proven ledger machinery (lineTableRows / walkLedgerAmounts /
+ *      solveDropStable) reconstructs rows — nothing new to trust.
+ *   4. COVERAGE AUDIT before a leg may enter: row-count floor, chain-integrity
+ *      gate (same AUTO_DELIVER_MIN threshold as CIB), and an opening→closing
+ *      reconciliation (opening + inflow − outflow must equal closing to the
+ *      cent). Anything that fails stays RED for the analyst — never guesses.
+ * OCR-sourced G legs keep the standing shadow rule: draft-review only, never
+ * auto-delivered (engine-run.ts ocrUsed gate — unchanged).
+ */
+
+export interface CoverageAudit {
+  bank: string;
+  rows: number;
+  chainVerified: number;
+  chainRatio: number;
+  openingClosingOk: boolean;
+  statedOpeningUsed: boolean;
+  inflow: number;
+  outflow: number;
+  confident: boolean;
+  notes: string[];
+}
+
+/** Opening→closing reconciliation + chain-integrity gate (SO-9 lineage). */
+export function auditLedgerCoverage(
+  leg: AccountLeg,
+  bank: string,
+  statedOpeningUsed: boolean
+): CoverageAudit {
+  const chainRatio = leg.txCount > 0 ? leg.matched / leg.txCount : 0;
+  // Position rows (movement null, signed 0) and the seeded base row do not
+  // disturb the identity; every signed row must reconcile to the cent.
+  const residual = Math.abs(leg.opening + leg.inflow - leg.outflow - leg.closing);
+  const openingClosingOk = residual < 0.02;
+  const confident =
+    leg.txCount >= 5 && chainRatio >= AUTO_DELIVER_MIN && openingClosingOk;
+  const notes: string[] = [];
+  if (!statedOpeningUsed)
+    notes.push("opening not stated in the statement — seeded from the first ledger position");
+  if (!openingClosingOk)
+    notes.push(`opening+in-out != closing (residual ${residual.toFixed(2)}) — leg refused`);
+  if (leg.txCount < 5) notes.push(`only ${leg.txCount} rows — below the 5-row confidence floor`);
+  if (chainRatio < AUTO_DELIVER_MIN)
+    notes.push(`chain integrity ${(chainRatio * 100).toFixed(1)}% below the ${(AUTO_DELIVER_MIN * 100).toFixed(0)}% gate`);
+  return {
+    bank,
+    rows: leg.txCount,
+    chainVerified: leg.matched,
+    chainRatio,
+    openingClosingOk,
+    statedOpeningUsed,
+    inflow: leg.inflow,
+    outflow: leg.outflow,
+    confident,
+    notes,
+  };
+}
+
+/** Bank dialects — fingerprint arrays; ALL patterns of one dialect must match. */
+interface BankDialect {
+  bank: string;
+  detect: RegExp[];
+}
+
+const BANK_DIALECTS: BankDialect[] = [
+  { bank: "NBE", detect: [/national\s+bank\s+of\s+egypt/i] },
+  { bank: "Banque Misr", detect: [/banque\s+misr|بنك\s+مصر/] },
+  { bank: "Al Ahly", detect: [/al[\s-]?ahly\s+bank/i] },
+  { bank: "QNB", detect: [/\bqnb\b|qatar\s+national\s+bank/i] },
+  { bank: "AlexBank", detect: [/bank\s+of\s+alexandria|alexbank/i] },
+  { bank: "SAIB", detect: [/soci[eé]t[eé]\s+arabe\s+internationale|\bsaib\b/i] },
+  { bank: "MIDB", detect: [/misr\s+iran\s+development/i] },
+  { bank: "Faisal Bank", detect: [/faisal\s+islamic/i] },
+  { bank: "HDB", detect: [/housing\s+and\s+development\s+bank/i] },
+  { bank: "Suez Canal Bank", detect: [/suez\s+canal\s+bank/i] },
+  { bank: "United Bank", detect: [/\bunited\s+bank\b/i] },
+  { bank: "ADIB", detect: [/abu\s+dhabi\s+islamic\s+bank|\badib\b/i] },
+];
+
+/** Structural markers — the document must LOOK like a ledger, not mention a bank. */
+const G_STRUCTURAL_RE =
+  /statement\s+of\s+account|opening\s+balance|closing\s+balance|opening\s+balances|balance\s+b\/?f(?:orward)?|previous\s+balance|period(?:\s+of)?\s+statement|حساب|كشف/i;
+
+/** Date anchors tried in order — generic across Egyptian statement layouts. */
+const G_ANCHORS: RegExp[] = [
+  /(\d{1,2}\/\d{1,2}\/\d{2,4})/, // 01/04/2026 (also matches 1/4/26)
+  /(\d{1,2}-\d{1,2}-\d{2,4})/, // 01-04-2026
+  /(\d{1,2}\s+[A-Za-z]{3,9}\s+\d{2,4})\b/, // 01 APR 2026 / 1 April 26
+  /(\d{1,2}-[A-Za-z]{3,9}-\d{2,4})\b/, // 01-APR-2026
+];
+
+/** Generic meta extraction across label spellings. */
+function extractGenericMeta(text: string): {
+  account: string | null;
+  currency: string;
+  period: string | null;
+  statedOpening: number | null;
+  statedOpeningUsed: boolean;
+} {
+  const account =
+    /Account\s*(?:No\.?|Number|#)\s*[:.]?\s*([A-Z0-9]{7,25})/i.exec(text)?.[1] ??
+    /\bEG\d{2}[A-Z0-9]{11,27}\b/.exec(text)?.[0] ??
+    null;
+  const currency =
+    /Currency\s*[:.]?\s*([A-Z]{3})\b/i.exec(text)?.[1] ??
+    /\b(EGP|USD|EUR|GBP|CHF|SAR|AED|KWD)\b/.exec(text)?.[1] ??
+    "EGP";
+  const periodM =
+    /From\s*[:.]?\s*(\d{1,2}[\/-]\d{1,2}[\/-]\d{2,4})\s*(?:to|until|-|–)\s*(\d{1,2}[\/-]\d{1,2}[\/-]\d{2,4})/i.exec(text) ??
+    /From\s*[:.]?\s*(\d{1,2}\s+[A-Za-z]{3,9}\s+\d{2,4})\s*(?:to|until|-|–)\s*(\d{1,2}\s+[A-Za-z]{3,9}\s+\d{2,4})/i.exec(text);
+  const period = periodM ? `${periodM[1]} → ${periodM[2]}` : null;
+  const openRe =
+    /(?:opening|previous)\s+balance[^\d\n]{0,40}?([\d,]+\.\d{2})/i.exec(text) ??
+    /balance\s+b\/?f(?:orward)?[^\d\n]{0,40}?([\d,]+\.\d{2})/i.exec(text);
+  const statedOpening = openRe ? toNum(openRe[1]) : null;
+  return { account, currency, period, statedOpening, statedOpeningUsed: statedOpening !== null };
+}
+
+/** Summarize candidate rows into a leg with G conventions. */
+function summarizeGLeg(
+  file: string,
+  rows: TxRow[],
+  meta: ReturnType<typeof extractGenericMeta>,
+  bank: string,
+  ocr: boolean
+): AccountLeg {
+  const leg = summarizeLeg(file, rows, {
+    account: meta.account,
+    currency: meta.currency,
+    period: meta.period,
+    opening: meta.statedOpening ?? rows[0].balance ?? 0,
+    closing: rows[rows.length - 1].balance ?? 0,
+    matched: rows.filter((r) => r.chainOk).length,
+  });
+  leg.mode = `G:${bank}`;
+  leg.ocr = ocr || undefined;
+  return leg;
+}
+
+/**
+ * Family G entry — detect bank, extract meta, run the proven strategies under
+ * every generic anchor, and hand back ONLY a leg whose coverage audit is
+ * confident. No confident leg => null (document stays red for the analyst).
+ */
+export function parseBankStatementGeneric(text: string, file: string, ocr = false): AccountLeg | null {
+  const dialect = BANK_DIALECTS.find((d) => d.detect.every((re) => re.test(text)));
+  if (!dialect) return null;
+  if (!G_STRUCTURAL_RE.test(text)) return null; // mention ≠ statement (A2 lesson)
+  const meta = extractGenericMeta(text);
+
+  let best: AccountLeg | null = null;
+  let bestAudit: CoverageAudit | null = null;
+  const consider = (leg: AccountLeg | null) => {
+    if (!leg || leg.txCount < 3) return;
+    const audit = auditLedgerCoverage(leg, dialect.bank, meta.statedOpeningUsed);
+    if (!audit.confident) return;
+    if (
+      !best ||
+      audit.chainVerified > bestAudit!.chainVerified ||
+      (audit.chainVerified === bestAudit!.chainVerified && leg.txCount > best.txCount)
+    ) {
+      best = leg;
+      bestAudit = audit;
+    }
+  };
+
+  for (const anchor of G_ANCHORS) {
+    // Strategy 0 — line-paired table (primary: preserves descriptions)
+    const lrows = solveDropStable(lineTableRows(text, anchor), meta.statedOpening, ocr);
+    if (lrows.length >= 3)
+      consider(summarizeGLeg(file, lrows, meta, dialect.bank, ocr));
+    // Strategy 1 — chain-guided walk over the whole amount sequence
+    const seq = scanAmountSequence(text, anchor);
+    if (seq.length >= 7) {
+      const walked =
+        walkLedgerAmounts(seq, meta.statedOpening, ocr) ?? walkLedgerAmounts(seq, null, ocr);
+      if (walked) consider(summarizeGLeg(file, solveDropStable(walked, meta.statedOpening, ocr), meta, dialect.bank, ocr));
+      // newest-first layouts: reverse the sequence and re-walk
+      const rev = walkLedgerAmounts(
+        [...seq].reverse(),
+        meta.statedOpening,
+        ocr
+      ) ?? walkLedgerAmounts([...seq].reverse(), null, ocr);
+      if (rev) consider(summarizeGLeg(file, solveDropStable(rev, meta.statedOpening, ocr), meta, dialect.bank, ocr));
+    }
+    if (best && bestAudit!.chainRatio >= 0.999) break; // exact chain — stop early
+  }
+
+  return best;
 }
 
 /**

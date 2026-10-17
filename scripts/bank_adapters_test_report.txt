@@ -1,0 +1,45 @@
+
+[1] NBE text-layer
+  PASS  bank adapter claimed the document
+  PASS  dialect = G:NBE
+  PASS  account extracted
+  PASS  currency = EGP
+  PASS  period extracted
+  PASS  row count = 8 txns + 2 stated positions
+  PASS  transaction rows = 8
+  PASS  position rows are movement-less
+  PASS  full chain verified
+  PASS  closing to the cent
+  PASS  inflow to the cent
+  PASS  outflow to the cent
+  PASS  coverage audit confident
+  PASS  opening→closing reconciles
+  PASS  descriptions preserved
+
+[2] Banque Misr (bilingual)
+  PASS  bank adapter claimed the document
+  PASS  dialect = G:Banque Misr
+  PASS  currency = USD from label
+  PASS  full chain verified
+  PASS  closing to the cent
+  PASS  coverage audit confident
+
+[3] QNB (dd MMM yyyy)
+  PASS  bank adapter claimed the document
+  PASS  dialect = G:QNB
+  PASS  full chain verified
+  PASS  closing to the cent
+
+[4] unknown bank
+  PASS  no dialect claims it
+
+[5] broken chain (NBE header)
+  PASS  no confident leg returns (stays red)
+
+[6] name-mention only
+  PASS  mention does not claim
+
+[7] audit unit
+  PASS  residual > 0 → not confident
+
+=== Family G suite: 29 pass / 0 fail ===
