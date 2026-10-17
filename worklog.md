@@ -2273,3 +2273,48 @@ Stage Summary:
 - Sandbox 1.7G with active toolchain only; root overlay 3%. Both storage fronts fully swept.
 - Owner items unchanged: rotate chat-transited GitHub PAT + Vercel token (update Vercel env
   GH_VAULT_TOKEN after PAT rotation); SMTP creds still missing (mail leg = outbox mode).
+
+---
+Task ID: DL-23
+Agent: Super Z (main)
+Task: Owner pasted a screenshot of the Bola Ayad Gerges report section 4 and asked:
+"add a grand for each row like this debit, credit / and add a total of annual income /
+and monthly expense". Also closed out the earlier "you analysed bank statement called
+abdulrahman?" question.
+
+Work Log:
+- Abdulrahman resolved: prod DB has exactly ONE submission (EIS-DV4G2, CamScanner 2026-9-30,
+  48.9MB scan, report GlobalEIS_Report_AmirEzzat_CIB_EGP_428rows_rev1.1) — NO Abdulrahman
+  case exists on prod; eis-vault holds only the cleaned E2E history. "Abdulrahman" on record
+  = Abdelrahman Elgarayadli, the challenger template that was analysed and whose build was
+  promoted as Master v1.3.0 (DL lineage in worklog ~L1465-1665).
+- Located the screenshot source: download/Bola_Ayad_Gerges_Global_EIS_Report_v3.html
+  (Savings ...02501019 + Current ...2500010, window 01/07–11/08/2026, 86 txns). A parallel
+  session (the one that held the second sandbox) had drafted the v3 changes at 18:40–18:45
+  in the shared workspace (scripts/bola_rev2/ + patch_report.py).
+- INDEPENDENT AUDIT (scripts/audit_bola_v3.py) — every rendered figure re-derived from raw
+  monthly data: 32/32 PASS.
+  * Per-row GRAND — Both Accounts columns: July 110,145.63 D / 135,102.50 C / +24,956.87 N;
+    August 28,375.06 D / 402.50 C / −27,972.56 N; WINDOW TOTAL 138,520.69 D / 135,505.00 C /
+    −3,015.69 N. Header carries the new "Grand — Both Accounts" column group.
+  * Income & Expense Summary (window-prorated): total income 135,505.00; verified external
+    only 400.00 (0.3% — own-account circulation 99.7% flagged); annual income gross
+    run-rate 1,177,602.98 (135,505 × 365 ÷ 42); annual income verified external run-rate
+    3,476.19; monthly expense window average 100,394.52 (138,520.69 ÷ 42 × 30.44); monthly
+    expense July full-month 110,145.63. Methodology note (Rev 3, 18/10/2026) included.
+- Visual proof: agent-browser render + section-4 screenshot download/bola_v3_section4_grand.png.
+- Durability: pushed 8 files to eis-archive commit 5f516924 via git-trees API (report v3 +
+  proof PNG + orig report + generator scripts + audit script, under download/ + work/bola_rev2/).
+- Restored reaped .env keys: GH_VAULT_TOKEN + GH_VAULT_REPO (DATABASE_URL had survived).
+- Sandbox forensics recovered (context-compression loss from DL-21/22 era): root overlay
+  240M/9.9G (3%); /home/z 1.7G; upload/ is an ossfs cloud mount; /tmp/my-project +
+  /home/user_skills are PolarFS platform mounts — none of it counts against our workspace.
+
+Stage Summary:
+- Bola Ayad Gerges v3 is final and audited: GRAND columns per row + annual income +
+  monthly expense, 32/32 numeric checks PASS, proof PNG rendered, evidence chain committed
+  to eis-archive (5f516924).
+- OPEN (owner decision): promote GRAND columns + income/expense summary into the Master
+  standard (src/lib/report_design.ts -> v1.4.0) so ALL future portal-generated reports
+  inherit them. Requires ES gate + tsc/build gates. Not done unilaterally — the approved
+  v1.3.0 standard stays frozen until the owner says so.

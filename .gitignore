@@ -150,3 +150,4 @@ scripts/wafa_work/
 !scripts/measure_storage.sh
 !scripts/vercel_storage_check.py
 !scripts/vercel_dep_sweep.py
+!scripts/audit_bola_v3.py
