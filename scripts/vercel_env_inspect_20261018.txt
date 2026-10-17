@@ -1,0 +1,14 @@
+ailive (prj_ePJk7MoYWScUisQ2SmiwoF4en8fN) env vars: 9
+  - DATABASE_URL
+  - GH_VAULT_REPO
+  - GH_VAULT_TOKEN
+  - MAIL_CREDS_JSON
+  - SESSION_SECRET
+  - SETUP_KEY
+  - ailive_DATABASE_URL
+  - ailive_POSTGRES_URL
+  - ailive_PRISMA_DATABASE_URL
+
+MAIL_CREDS_JSON present: True
+TEST_MAIL_TO present: False
+GH_VAULT_TOKEN present: True

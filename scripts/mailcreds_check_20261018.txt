@@ -1,0 +1,7 @@
+MAIL_CREDS_JSON: valid JSON, shape OK: True
+  email domain: gmail.com
+  host: smtp.gmail.com (default)
+  port: 465 (gmail default)
+  app_password length: 16
+  notify_to set: True
+  gmail-shape (16-char app password): True

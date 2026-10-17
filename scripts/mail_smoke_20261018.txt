@@ -1,0 +1,6 @@
+local creds file written: /home/z/my-project/config/mail_credentials.json (chmod 600, gitignored)
+smtp login: ah***@gmail.com
+--- running mail smoke (real mailer, TEST_MAIL_TO lock engaged) ---
+TEST_MAIL_TO lock: ahmedr.muhammed19@gmail.com
+mail result: {"sent":true,"queued":false,"to":"ahmedr.muhammed19@gmail.com"}
+PASS — SMTP live, message accepted by smtp.gmail.com

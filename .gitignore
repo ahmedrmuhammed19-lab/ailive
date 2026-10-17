@@ -154,3 +154,9 @@ scripts/wafa_work/
 !scripts/audit_master_v14.ts
 !scripts/audit_master_v14_report.txt
 !scripts/vercel_wait_ready.py
+!scripts/vercel_env_inspect.py
+!scripts/vercel_mailcreds_check.py
+!scripts/mail_wire_and_smoke.sh
+!scripts/vercel_env_inspect_20261018.txt
+!scripts/mailcreds_check_20261018.txt
+!scripts/mail_smoke_20261018.txt
