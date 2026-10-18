@@ -2557,3 +2557,60 @@ Stage Summary:
 - Standing protocol updated: agent-personal forensic pipeline is the sole
   analysis path for owner-sent documents; engine path dormant unless the
   owner explicitly re-enables it.
+
+---
+Task ID: DL-29
+Agent: main (Z.ai)
+Task: Owner recheck order — "photos are clear, recheck, all from you not from engine" (ORD-1018-P1 active). Personal pipeline re-verification of the two NBE scans; push rows + chain toward 100%.
+
+Work Log:
+- Personal pipeline built from scratch (scripts/abdl2_*): failure map with own
+  chain arithmetic -> 1200dpi surgical rescue (ink-isolation watermark
+  suppression, multi-variant cell voting, digit whitelists) -> segment-level
+  verification (solver v8) -> personal report generator (Master v1.4.0
+  vocabulary, zero engine imports) -> personal SMTP delivery. ZERO imports
+  from src/lib/analyze.ts at every stage.
+- USD: ALL 11 printed rows recovered (DL-27 had 7/~10): Previous Balance
+  3,066.87 (row 1), two hidden admin-fee rows (31/03 and 30/06, 4.00 each),
+  the round-trip 20/07 pair (+9,440.00 in / -9,406.23 out — DL-27 saw only
+  the outgoing leg and thought the row was bad), and the tail row 11
+  (30/09/2026, was "SN" garbage). Chain closes at EVERY row to the cent:
+  3,066.87 + 18,524.00 - 17,329.62 = 4,261.25 = printed closing; bank
+  words-match confirmed ("Four Thousand Two Hundred Sixty One...").
+  10/10 movements verified (1 Class-B disclosed: OCR "4.06" vs chain 4.00).
+- EGY: personal chain walk exposed DL-27's fatal flaw — the delivered audit's
+  "opening" was CIRCULAR (computed as closing - net, so it always "matched").
+  The bank's own printed Totals row was recovered (p30): D 3,679,367.55 /
+  C 4,333,219.30, and printed row 1 "Previous Balance 870.44" — identity
+  870.44 + 4,333,219.30 - 3,679,367.55 = 654,722.19 EXACT TO THE CENT.
+  DL-27's delivered report claimed 6.68M credits / 6.29M debits — ~2.5M of
+  phantom movements (engine text-walk double-count) disproven by the bank's
+  own arithmetic.
+- EGY recovered structure: opening row 1 (870.44), the p3 negative running
+  balance (-21,951.37 after a 25,000 credit-card payment — OCR drops the
+  minus sign; chain restores it, disclosed), row 70 (61.04 fee -> 0.00
+  balance -> +40,000), the certificate/loan cluster (row 247 +1,029,000,
+  loan disbursements, -500,000 Rydex) with mid-period balances ~1.38M.
+- Final EGY classification (613 recovered rows of 630): 286 strict +
+  13 balance-anchored + 314 read-corroborated + 2 pending-class rows.
+  Net attribution gap vs bank identity: 5,534.13 EGP (0.85% of closing),
+  concentrated in scan-destroyed zones (p7 128-136, p10 246, certificate
+  cluster rows) — DISCLOSED in-report for analyst confirmation, never forced.
+- Solver evolution logged: v2->v8; dead ends (v6/v7 floating sign-combos)
+  documented — v8 (sequential + Occam + Class-B + negative-balance
+  corroboration) is the production solver.
+- Reports: download/GlobalEIS_Report_AbdulrahmanAli_{USD,EGP}_DL29.html
+  (Master v1.4.0 vocabulary, personal generator).
+- Delivery: personal SMTP (no engine mail lib) -> abdulrahman.ali@
+  global-operation.com (owner-authorized, DL-27 precedent) + operator copy.
+  Both sends confirmed.
+
+Stage Summary:
+- USD account: 100% rows, 100% chain, triple-checked — the "unrecoverable"
+  rows were OCR failures, now recovered from source pixels.
+- EGY account: anchored to the bank's own printed arithmetic (exact to the
+  cent); row-level detail at 99.15% net attribution with the residual
+  disclosed for analyst sign-off; DL-27's phantom-movement defect proven and
+  corrected.
+- Standing proof of ORD-1018-P1: every figure above came from the personal
+  pipeline; the portal engine was not used at any stage.
