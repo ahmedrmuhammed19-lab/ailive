@@ -2707,3 +2707,59 @@ Stage Summary:
   EGP 630/630 rows, chain exact, bank totals exact; USD 11/11 strict;
   SO-9 6/6 MATCH; reports at download/GlobalEIS_Report_AbdulrahmanAli_
   {USD,EGP}_DL30.html (Master v1.4.0 design, composed from report_design.ts).
+
+---
+Task ID: DL-32
+Agent: main (Z.ai)
+Task: Owner model — "portal just if i want to share and some one will be
+upload bank statement, i will give you order to work on it by yourself,
+engine will be disabled. all work will be done from you" — disable the
+portal engine, portal becomes an upload/share surface only.
+
+Work Log:
+- Confirmed the model back to the owner, then ENFORCED it in code rather
+  than leaving it as words: flipped AUTO_WORK from opt-out to OPT-IN in
+  src/app/api/upload/route.ts (`process.env.AUTO_WORK === "1"`, default
+  OFF). Manual Start Analysis flow unchanged as a draft assist; operator
+  upload-mail wording updated ("Auto-analysis is DISABLED (engine off)…").
+- .env AUTO_WORK=0 was written first, then REMOVED after discovering the
+  real disable belongs in code default (env fight + token-less prod);
+  SESSION_SECRET regenerated in .env (wipe casualty), TEST_MAIL_TO lock
+  restored — .env untracked, values never printed.
+- Test-infrastructure debugging (two real finds):
+  (1) a STALE next-server from a pre-session boot was squatting on :3000
+  and answering everything — both my boots EADDRINUSE'd silently behind it
+  (server "up in 2s" was the tell); killed the whole tree, ports verified
+  free.
+  (2) `bun run dev` does NOT forward prefixed env to the script pipeline
+  (/proc/<pid>/environ of its bash wrapper had no AUTO_WORK) — booted the
+  binary directly (`AUTO_WORK=1 node node_modules/.bin/next dev`), env
+  reached the process (ENV-REACHED-PROCESS proof).
+- Proof, both modes:
+  * Opt-in intact: test_autowork.py **12/12 PASS** with AUTO_WORK=1
+    (green auto-DONE + auto-delivered, photo draft-review OCR: provenance,
+    red unrecognized, start-on-DONE no-op, clear guards).
+  * NEW DEFAULT: dl32_engine_off_probe.py **4/4 PASS** on a clean default
+    boot — upload → autoWork=false, status WAITING, ZERO engine firings
+    in 8s (the old auto-run fired within ~2s), queue cleanup clean.
+- Gates: tsc -p tsconfig.src.json 0 errors; bunx next build exit 0.
+- Shipped: commit 9021fb1 pushed to origin/main (route + both probe scripts
+  force-added per the ops-script convention) → Vercel auto-deploy picks it
+  up on the same pipeline as every prior push; the default-off is
+  deterministic in the shipped code (no env dependency, no token needed).
+- Standing orders: ORD-1019-P2 recorded (ACCEPTED + ENFORCED IN CODE),
+  chained to ORD-1018-P1 (personal pipeline on the owner's order) and
+  ORD-1019-F1 (delivery freeze unchanged).
+
+Stage Summary:
+- The owner's words are now the machine's behavior: uploads land in the
+  queue and WAIT. The engine cannot touch them unless the owner explicitly
+  sets AUTO_WORK=1. Every statement is worked PERSONALLY by the analyst on
+  the owner's order, with the 100% standard (rows + chain + bank totals).
+- Prod note: VERCEL_TOKEN is gone from the environment (wipe; rotating
+  anyway), so prod env was not touched — none needed, the code default
+  ships the disable. When the owner rotates tokens, the new Vercel token
+  restores my prod-verification ability (deploy poll / env inspect).
+- Housekeeping pending from earlier (owner's word decides): vault archive
+  of standing orders + template lineage; token rotations (GitHub PAT,
+  Vercel token, Gmail app password).
