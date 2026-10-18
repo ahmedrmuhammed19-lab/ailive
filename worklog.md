@@ -2668,3 +2668,42 @@ Stage Summary:
 - Standing proof of ORD-1018-P1: analysis 100% personal; the template file
   used only as the design contract (import & compose), per the locked skill
   contract "import and compose only".
+
+---
+Task ID: DL-31
+Agent: main (Z.ai)
+Task: Owner directive "stop sending abdulrahman" — freeze the client-delivery
+channel to abdulrahman.ali@global-operation.com immediately.
+
+Work Log:
+- Compliance confirmed the moment the directive arrived: no mail was in
+  flight, nothing was sent this turn.
+- Timeline note (honest record): DL-30 completed earlier this session and its
+  two emails (client + operator copy) had ALREADY gone out before this
+  directive landed. No recall/retraction mail was sent — that would itself
+  mail Mr. Ali and breach the freeze. State as of freeze: Mr. Ali has
+  received DL-29 (2 mails) and DL-30 (2 mails).
+- Send-path audit: swept the whole project for the client address — only
+  executable path is scripts/abdl_mail.ts (other hits: worklog + pipeline
+  log, non-executable). Checked crontab (empty) and running processes (no
+  mail/smtp daemons) — nothing can auto-send.
+- Enforcement made durable: hard FREEZE guard inserted at the top of
+  scripts/abdl_mail.ts — exits 78 with a loud "[DL-31 FREEZE]" refusal BEFORE
+  any mail logic runs; address kept only as the block-list constant. Dry-run
+  verified: exit 78, zero network activity, no sendOrQueue reached.
+- Standing orders updated: ORD-1019-F1 recorded in STANDING_ORDERS.md ledger
+  (supersedes the DL-29/DL-30 per-task delivery authorization; lifting the
+  freeze requires an explicit owner-named recipient).
+
+Stage Summary:
+- Channel to abdulrahman.ali@global-operation.com is FROZEN — enforced in
+  code (exit-78 guard), in the ledger (ORD-1019-F1), and in this log. It
+  stays frozen until the owner explicitly names a recipient again.
+- All future deliverables (reports, rebuilds, analyses) are HELD locally in
+  download/ and shown to the OWNER in chat only. No email leg of any kind to
+  any client address without a new explicit instruction.
+- Operator mail (ahmedr.muhammed19@gmail.com) is unaffected by the freeze.
+- DL-30 analysis state is untouched and available for the owner's review:
+  EGP 630/630 rows, chain exact, bank totals exact; USD 11/11 strict;
+  SO-9 6/6 MATCH; reports at download/GlobalEIS_Report_AbdulrahmanAli_
+  {USD,EGP}_DL30.html (Master v1.4.0 design, composed from report_design.ts).

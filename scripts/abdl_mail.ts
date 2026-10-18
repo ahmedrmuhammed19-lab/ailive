@@ -9,6 +9,21 @@
 import { sendOrQueue, operatorAddress, loadMailCreds } from "../src/lib/mail.ts";
 import * as fs from "node:fs";
 
+// ━━ DL-31 FREEZE — owner directive 2026-10-19: "stop sending abdulrahman" ━━
+// The client-delivery channel to Mr. Ali is FROZEN by the owner. This guard
+// exits BEFORE any send; the client address is kept solely so this script can
+// identify and refuse it. Lifting the freeze requires an explicit new owner
+// authorization (recorded in STANDING_ORDERS.md). Operator mail unaffected.
+const CLIENT_DELIVERY_FROZEN = true;
+const FROZEN_CLIENT_ADDRESS = "abdulrahman.ali@global-operation.com";
+if (CLIENT_DELIVERY_FROZEN) {
+  console.error(
+    `[DL-31 FREEZE] Client delivery is FROZEN by owner directive "stop sending abdulrahman". ` +
+      `No mail sent to ${FROZEN_CLIENT_ADDRESS}. Explicit owner re-authorization required.`
+  );
+  process.exit(78);
+}
+
 const W = "/home/z/my-project/scripts/abdl_work";
 const OUT = "/home/z/my-project/download";
 const names: string[] = JSON.parse(fs.readFileSync(`${W}/report_names.json`, "utf8"));
