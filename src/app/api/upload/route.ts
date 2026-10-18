@@ -173,8 +173,8 @@ async function finalizeUpload(
     `Client email    : ${clientEmail ?? "not provided — report will go to this mailbox"}\n\n` +
     `Files (${handshake.length}) — MD5 hash-locked on arrival:\n${fileList}\n\n` +
     `View the statement(s) in your browser:\n${viewLinks}\n\n` +
-    `Analysis starts automatically in the background — no tap needed. The button below still works if a manual re-run is ever required.\n\n` +
-    `— Global EIS automated intake`;
+    `Auto-analysis is DISABLED (engine off) — the case waits in the queue. Start Analysis remains available for the manual draft; the deliverable work is done personally on the owner's order.\n\n` +
+    `— Global EIS intake`;
 
   // Rich-HTML twin of the alert — email-client-safe tables + inline styles.
   const fileRows = handshake
@@ -222,11 +222,14 @@ async function finalizeUpload(
     submissionId: submission.id,
   });
 
-  // --- AUTO_WORK: fire the engine automatically, zero taps ---
+  // --- AUTO_WORK: zero-tap engine firing on upload (OPT-IN, default OFF) ---
   // After the response is sent, stamp ANALYZING and run the full engine
   // (same code path as the signed start link — behavior can never drift).
-  // Kill switch: AUTO_WORK=0 restores the manual "Start Analysis" flow.
-  const autoWork = process.env.AUTO_WORK !== "0";
+  // Owner model since DL-32: the portal is an upload/share surface ONLY and
+  // the engine is DISABLED by default — every statement is worked PERSONALLY
+  // by the analyst on the owner's explicit order (ORD-1018-P1/ORD-1019-P2).
+  // Set AUTO_WORK=1 to re-enable the zero-tap auto-run.
+  const autoWork = process.env.AUTO_WORK === "1";
   if (autoWork) {
     after(async () => {
       try {
