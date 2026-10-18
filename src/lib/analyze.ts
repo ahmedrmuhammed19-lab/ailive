@@ -62,7 +62,7 @@ const BENCHMARK_EGP: Record<string, number> = {
   CANADA: 150_000,
   AUSTRALIA: 150_000,
 };
-const DEFAULT_BENCHMARK_EGP = 150_000;
+export const DEFAULT_BENCHMARK_EGP = 150_000;
 
 // ---------- auto-delivery gate ----------
 // Minimum per-leg ledger-chain integrity (matched rows / total rows) required
@@ -463,6 +463,19 @@ export async function analyzeSubmission(submissionId: string): Promise<AutoAnaly
       "." +
       (ocrUsed ? " OCR shadow mode — scanned source, analyst review required." : ""),
   };
+}
+
+/** Engine-standard report assembly — exported for offline audited builds (DL-27). */
+export async function buildReportHtmlExternal(
+  userId: string,
+  country: string | null,
+  visaType: string | null,
+  travelers: number,
+  legs: AccountLeg[],
+  benchmarkEgp: number,
+  style: "review" | "engine"
+): Promise<string> {
+  return buildReportHtml(userId, country, visaType, travelers, legs, benchmarkEgp, style);
 }
 
 /** Phase 2 — publish the draft report (review-watermarked or engine-stamped). */
@@ -1096,7 +1109,8 @@ interface BankDialect {
 }
 
 const BANK_DIALECTS: BankDialect[] = [
-  { bank: "NBE", detect: [/national\s+bank\s+of\s+egypt/i] },
+  { bank: "NBE", detect: [/national\s+bank\s+of\s+egy/i] }, // EGYPT/EGYET/EGYP — OCR-mangle tolerant (DL-27)
+  { bank: "NBE", detect: [/\bnbe\b/i, /statement/i] }, // badly mangled headers still carry "NBE" + "statement"
   { bank: "Banque Misr", detect: [/banque\s+misr|بنك\s+مصر/] },
   { bank: "Al Ahly", detect: [/al[\s-]?ahly\s+bank/i] },
   { bank: "QNB", detect: [/\bqnb\b|qatar\s+national\s+bank/i] },
@@ -1112,7 +1126,7 @@ const BANK_DIALECTS: BankDialect[] = [
 
 /** Structural markers — the document must LOOK like a ledger, not mention a bank. */
 const G_STRUCTURAL_RE =
-  /statement\s+of\s+account|opening\s+balance|closing\s+balance|opening\s+balances|balance\s+b\/?f(?:orward)?|previous\s+balance|period(?:\s+of)?\s+statement|حساب|كشف/i;
+  /statement\s+of\s+account|account\s+statement|opening\s+balance|closing\s+balance|opening\s+balances|current\s+balance|balance\s+b\/?f(?:orward)?|previous\s+balance|period(?:\s+of)?\s+statement|end\s+of\s+statement|حساب|كشف/i;
 
 /** Date anchors tried in order — generic across Egyptian statement layouts. */
 const G_ANCHORS: RegExp[] = [
@@ -1122,7 +1136,7 @@ const G_ANCHORS: RegExp[] = [
   /(\d{1,2}-[A-Za-z]{3,9}-\d{2,4})\b/, // 01-APR-2026
 ];
 
-/** Generic meta extraction across label spellings. */
+/** Generic meta extraction across label spellings (incl. OCR-mangled word forms). */
 function extractGenericMeta(text: string): {
   account: string | null;
   currency: string;
@@ -1132,16 +1146,48 @@ function extractGenericMeta(text: string): {
 } {
   const account =
     /Account\s*(?:No\.?|Number|#)\s*[:.]?\s*([A-Z0-9]{7,25})/i.exec(text)?.[1] ??
+    /\bNo\s*[:.]\s*([0-9]{10,25})\b/.exec(text)?.[1] ?? // NBE-style bare "No: <digits>" label (DL-27)
     /\bEG\d{2}[A-Z0-9]{11,27}\b/.exec(text)?.[0] ??
     null;
+  // Currency: label may be a code (EGP/USD), a word form ("United States dollar",
+  // "Egyptian Pound"), or OCR-mangled ("gyp") — map in priority order.
+  const curM =
+    /currency\s*[:.]?\s*(united\s+states\s+dollar|u\.?s\.?d\.?|egyptian\s+pound|e\.?g\.?p\.?|gyp\b|euro\b|sterling|british\s+pound|saudi\s+riyal|uae\s+dirham|kuwaiti\s+dinar)/i.exec(
+      text
+    )?.[1] ?? "";
+  const curNorm = curM.toLowerCase().replace(/[.\s]/g, "");
+  const CURRENCY_MAP: Record<string, string> = {
+    unitedstatesdollar: "USD",
+    usd: "USD",
+    egyptianpound: "EGP",
+    egp: "EGP",
+    gyp: "EGP",
+    euro: "EUR",
+    eur: "EUR",
+    sterling: "GBP",
+    britishpound: "GBP",
+    gbp: "GBP",
+    saudiriyal: "SAR",
+    sar: "SAR",
+    uaedirham: "AED",
+    aed: "AED",
+    kuwaitidinar: "KWD",
+    kwd: "KWD",
+  };
   const currency =
-    /Currency\s*[:.]?\s*([A-Z]{3})\b/i.exec(text)?.[1] ??
+    CURRENCY_MAP[curNorm] ??
     /\b(EGP|USD|EUR|GBP|CHF|SAR|AED|KWD)\b/.exec(text)?.[1] ??
     "EGP";
-  const periodM =
-    /From\s*[:.]?\s*(\d{1,2}[\/-]\d{1,2}[\/-]\d{2,4})\s*(?:to|until|-|–)\s*(\d{1,2}[\/-]\d{1,2}[\/-]\d{2,4})/i.exec(text) ??
-    /From\s*[:.]?\s*(\d{1,2}\s+[A-Za-z]{3,9}\s+\d{2,4})\s*(?:to|until|-|–)\s*(\d{1,2}\s+[A-Za-z]{3,9}\s+\d{2,4})/i.exec(text);
-  const period = periodM ? `${periodM[1]} → ${periodM[2]}` : null;
+  // Period: "From <d> ... To <d>" with OCR junk (=, |, 🙂 between the dates —
+  // take the From-line segment and use its first/last date tokens.
+  let period: string | null = null;
+  const fromSeg = /from\b[^\n]{0,100}/i.exec(text)?.[0];
+  if (fromSeg) {
+    const ds = [
+      ...fromSeg.matchAll(/\d{1,2}[\/-]\d{1,2}[\/-]\d{2,4}|\d{1,2}\s+[A-Za-z]{3,9}\s+\d{2,4}/g),
+    ].map((m) => m[0]);
+    if (ds.length >= 2) period = `${ds[0]} → ${ds[ds.length - 1]}`;
+  }
   const openRe =
     /(?:opening|previous)\s+balance[^\d\n]{0,40}?([\d,]+\.\d{2})/i.exec(text) ??
     /balance\s+b\/?f(?:orward)?[^\d\n]{0,40}?([\d,]+\.\d{2})/i.exec(text);
@@ -1157,10 +1203,15 @@ function summarizeGLeg(
   bank: string,
   ocr: boolean
 ): AccountLeg {
+  const period =
+    meta.period ??
+    (rows.length > 0
+      ? `${rows[0].date} → ${rows[rows.length - 1].date}` // OCR ate the header period — derive from ledger rows
+      : null);
   const leg = summarizeLeg(file, rows, {
     account: meta.account,
     currency: meta.currency,
-    period: meta.period,
+    period,
     opening: meta.statedOpening ?? rows[0].balance ?? 0,
     closing: rows[rows.length - 1].balance ?? 0,
     matched: rows.filter((r) => r.chainOk).length,
@@ -1176,24 +1227,33 @@ function summarizeGLeg(
  * confident. No confident leg => null (document stays red for the analyst).
  */
 export function parseBankStatementGeneric(text: string, file: string, ocr = false): AccountLeg | null {
+  const best = bestBankLeg(text, file, ocr, AUTO_DELIVER_MIN);
+  return best && best.audit.confident ? best.leg : null;
+}
+
+interface BestBankLeg {
+  leg: AccountLeg;
+  audit: CoverageAudit;
+}
+
+/** Shared G core — best chain-verified leg for the detected dialect. */
+function bestBankLeg(text: string, file: string, ocr: boolean, minChainRatio: number): BestBankLeg | null {
   const dialect = BANK_DIALECTS.find((d) => d.detect.every((re) => re.test(text)));
   if (!dialect) return null;
   if (!G_STRUCTURAL_RE.test(text)) return null; // mention ≠ statement (A2 lesson)
   const meta = extractGenericMeta(text);
 
-  let best: AccountLeg | null = null;
-  let bestAudit: CoverageAudit | null = null;
+  let best: BestBankLeg | null = null;
+  let bestRatio = -1;
+  let bestRows = -1;
   const consider = (leg: AccountLeg | null) => {
     if (!leg || leg.txCount < 3) return;
     const audit = auditLedgerCoverage(leg, dialect.bank, meta.statedOpeningUsed);
-    if (!audit.confident) return;
-    if (
-      !best ||
-      audit.chainVerified > bestAudit!.chainVerified ||
-      (audit.chainVerified === bestAudit!.chainVerified && leg.txCount > best.txCount)
-    ) {
-      best = leg;
-      bestAudit = audit;
+    if (audit.chainRatio < minChainRatio) return;
+    if (audit.chainVerified > bestRatio || (audit.chainVerified === bestRatio && leg.txCount > bestRows)) {
+      best = { leg, audit };
+      bestRatio = audit.chainVerified;
+      bestRows = leg.txCount;
     }
   };
 
@@ -1216,10 +1276,25 @@ export function parseBankStatementGeneric(text: string, file: string, ocr = fals
       ) ?? walkLedgerAmounts([...seq].reverse(), null, ocr);
       if (rev) consider(summarizeGLeg(file, solveDropStable(rev, meta.statedOpening, ocr), meta, dialect.bank, ocr));
     }
-    if (best && bestAudit!.chainRatio >= 0.999) break; // exact chain — stop early
+    if (bestRows > 0 && bestRatio >= bestRows) break; // exact chain — stop early
   }
 
   return best;
+}
+
+/**
+ * ANALYST MODE (DL-27): same machinery, disclosed-integrity gate. Returns the
+ * best leg + its coverage audit even when the full-confidence gate would
+ * refuse it — the caller (analyst build) must disclose unverified rows in the
+ * report. Never used for engine auto-delivery (that path stays 100% gated).
+ */
+export function parseBankStatementAnalyst(
+  text: string,
+  file: string,
+  ocr: boolean,
+  minChainRatio: number
+): { leg: AccountLeg; audit: CoverageAudit } | null {
+  return bestBankLeg(text, file, ocr, minChainRatio);
 }
 
 /**

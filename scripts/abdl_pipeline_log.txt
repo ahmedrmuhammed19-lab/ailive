@@ -1,0 +1,10 @@
+DL-27 pipeline log — Abdulrahman Ali case (2 NBE scans -> 2 Master v1.4.0 reports -> email)
+2026-10-18
+- Statements: Dollar Account Statement.pdf (2p, image-only) / Egyptian Account Statement.pdf (30p, 42MB, image-only)
+- OCR passes: 300dpi full (per-page cached) -> 450dpi full + coords -> 600/900dpi numeric band -> 900dpi surgical line re-OCR -> gap-directed recovery
+- Fusion: y-proximity band->full attachment, column classification by x (Debit|Credit|Balance), chain verify strict -> 2-digit D/C-locked -> Class-B delta-truth (<=10 residual)
+- Recovered: USD 7 rows (rows 1-2 + one lost to watermark zone, disclosed) / EGY 595 of 630 printed rows
+- Integrity: USD 85.7% / EGY 92.4% chain-verified; printed closing reconciles to the cent on BOTH (4,261.25 USD / 654,722.19 EGP)
+- Reports: GlobalEIS_Report_AbdulrahmanAli_USD_202610181743.html + ..._EGP_202610181743.html (review style, disclosures inside)
+- Delivery: sent:true -> abdulrahman.ali@global-operation.com (owner-directed, both HTML reports attached); operator copy -> ahmedr.muhammed19@gmail.com
+- NOTE: first send attempt hit a wiped local creds file (DL-25 artifact removed by a destructive working-tree reset); re-wired from Vercel MAIL_CREDS_JSON and re-sent. An initial attachment-less copy reached the recipient via flush_outbox before the fix (flush ignores queued attachment lists, DB-only lookup — flush script gap noted for follow-up).

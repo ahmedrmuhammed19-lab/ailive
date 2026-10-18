@@ -2480,3 +2480,57 @@ Stage Summary:
 - Restore path for the template is one command: git checkout
   template/master-v1.4.0 -- src/lib/report_design.ts.
 - Registry is additive: new banks = one line in BANK_DIALECTS.
+
+---
+Task ID: DL-27
+Agent: main (Z.ai)
+Task: Owner order — "2 bank statements = 2 reports, email to abdulrahman.ali@global-operation.com". Two image-only NBE scans -> two Master v1.4.0 reports -> email delivery.
+
+Work Log:
+- CASE: Abdulrahman Ali (recipient) — account holder Mohammed Hamdy Mahmoud Aly Salama.
+  Dollar Account Statement.pdf (2p scan) = NBE USD savings 0205000539007300011;
+  Egyptian Account Statement.pdf (30p, 42MB scan) = NBE EGP savings 4955000539007300018.
+  Both 01/03/2026 -> 04/10/2026, image-only (0 text chars).
+- OCR CAMPAIGN (scripts/abdl_*, Al Ahly lineage): 300dpi full -> 450dpi full with
+  word coordinates -> 600/900dpi numeric band -> 900dpi surgical per-line re-OCR
+  (psm 7 digit whitelist) -> gap-directed recovery of missing sibling rows
+  (y-zone crops between broken chain points). Fusion v3-v7: y-proximity
+  band->full attachment, Debit/Credit/Balance classified BY X-COORDINATE
+  (no sign guessing), chain verify strict -> 2-digit D/C-locked -> Class-B
+  delta-truth (small lost sibling adjustments <=10: balances are the truth).
+- FAILURE CLASSES FOUND: (A) genuinely missing sibling rows (566.67 monthly
+  certificate interest posted 04/03 + 04/05 etc.) — recovered via gap crops;
+  (B) tiny sibling adjustments lost by OCR — resolved by balance-chain truth.
+- RESULT USD: 7 ledger rows recovered (~10 printed; rows 1-2 + one in the
+  watermark zone NOT recoverable — disclosed), 6 verified = 85.7%; printed
+  closing 4,261.25 matches to the cent.
+- RESULT EGY: 595 of 630 printed rows recovered, 550 verified = 92.4%; printed
+  closing 654,722.19 matches to the cent. Unverified rows disclosed in-report.
+- Family G upgrades (src/lib/analyze.ts, additive; template untouched):
+  OCR-mangle-tolerant NBE fingerprints ("EGYET"/"NBE"), structural markers
+  (account statement/current balance/end of statement), currency word forms
+  (United States dollar/Egyptian Pound/gyp), bare "No:" account pattern,
+  From-line date-span period extraction, row-date period fallback,
+  parseBankStatementAnalyst (disclosed-integrity gate for analyst builds).
+  Adapter suite still 29/29; tsc src 0 errors; next build exit 0.
+- REPORTS: engine-standard buildReportHtmlExternal (exported) — 2 files in
+  download/: GlobalEIS_Report_AbdulrahmanAli_{USD,EGP}_202610181743.html,
+  review style (chain < 100%), S4 monthly D/C/N + WINDOW TOTAL footer + Income
+  & Expense Summary + disclosures inside.
+- DELIVERY: sendOrQueue live SMTP -> abdulrahman.ali@global-operation.com
+  {"sent":true} with BOTH HTML reports attached; operator copy ->
+  ahmedr.muhammed19@gmail.com. Owner-authorized recipient override of the
+  operator-only mail rule, recorded here. NOTE: first attempt hit a wiped
+  local creds file (same destructive reset that deleted the upload route);
+  re-wired from Vercel MAIL_CREDS_JSON. flush_outbox.py gap: it ignores the
+  queued mail's attachment list (DB-only lookup) — the pre-fix copy reached
+  the recipient without attachments; corrected copy delivered after.
+- Client data (OCR text, rows, legs, reports) stays in gitignored
+  scripts/abdl_work/ + download/ — never pushed.
+
+Stage Summary:
+- 2 statements = 2 reports delivered by email per owner instruction; printed
+  closing balances reconcile to the cent on both accounts; chain-verification
+  coverage disclosed in-report (85.7% USD / 92.4% EGY).
+- Family G hardened for real scanned Egyptian statements (fingerprint + meta
+  + analyst mode); flush_outbox attachment gap logged for follow-up.
