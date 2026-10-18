@@ -2534,3 +2534,26 @@ Stage Summary:
   coverage disclosed in-report (85.7% USD / 92.4% EGY).
 - Family G hardened for real scanned Egyptian statements (fingerprint + meta
   + analyst mode); flush_outbox attachment gap logged for follow-up.
+
+---
+Task ID: DL-28
+Agent: main (Z.ai)
+Task: Owner directive — "if i sent you any thing to do just you work on it not depends or use engine in portal" (personal-work mandate, generalized).
+
+Work Log:
+- Recorded as ORD-1018-P1 in STANDING_ORDERS.md order ledger (GENERALIZES
+  ORD-1015-T5 from the WORK-THE-QUEUE flow to ALL owner-sent work).
+- Scope now locked: every document the owner sends is worked personally
+  end-to-end — own OCR/extraction, own chain arithmetic, own SO-9 two-pass
+  double-check, own report generator rendering the Master v1.4.0 design
+  (SO-1 look unchanged; template file = design reference only).
+- Zero imports from / dependence on the portal engine (src/lib/analyze.ts);
+  portal is at most a delivery surface when the owner asks.
+- DL-27 hybrid noted in ledger as the last case where engine parser
+  (parseBankStatementAnalyst) + engine report builder (buildReportHtmlExternal)
+  were used — that split is retired from this order forward.
+
+Stage Summary:
+- Standing protocol updated: agent-personal forensic pipeline is the sole
+  analysis path for owner-sent documents; engine path dormant unless the
+  owner explicitly re-enables it.
