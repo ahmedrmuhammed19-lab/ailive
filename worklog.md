@@ -2885,3 +2885,43 @@ Stage Summary:
 - In-chat delivery channel proven without any send/attach tooling: one
   copy-paste → local .html → two clicks → both reports out, SHA-verified.
 - Storage cost: +39,751B (carrier only), scripts persisted for rebuild.
+
+---
+Task ID: DL-33-c
+Agent: main (Z.ai)
+Task: Owner — "TRY TO SEND IT HERE + UPLOAD ON PORTAL" — exhaust every
+send-mechanism for in-chat delivery and publish the reports on the portal.
+
+Work Log:
+- Send-mechanism scan: env var names audited for bot/gateway/webhook/
+  message/notify endpoints — ZERO hits. No send/attach tooling exists in
+  this environment; chat-side delivery = message-body paste (carrier,
+  DL-33-b) + clickable links (this entry).
+- CRITICAL CATCH before push: local main was ahead 4 with UUID-message
+  auto-snapshot commits; 7d6ca8f had DELETED src/app/api/upload/route.ts
+  (all 421 lines — the DL-32 engine-off file; whole dir missing from the
+  working tree, wipe casualty auto-committed). Pushing as-is would have
+  broken the portal upload endpoint in prod.
+- Repair: route restored byte-identical from origin/main (= 9021fb1,
+  the DL-32 ship commit). Net push delta: worklog +178, STANDING_ORDERS
+  +1, upload route net-zero (restored), +3 new public files.
+- Portal upload (existing convention — BolaAyad/EidFarag/AmirEzzat
+  reports already served from public/): copied USD, EGP, CARRIER into
+  public/, hashes verified, gates re-run (tsc 0 errors, next build
+  exit 0, /api/upload present in manifest), committed fc15779, pushed
+  9021fb1..fc15779.
+- Prod verification: all three URLs 200 within ~60s of push;
+  downloaded prod USD/EGP files sha256-match local masters
+  (69082d35… / a9f7f6c4…); GET /api/upload -> 405 (route present,
+  engine-off code intact).
+- URLs (unlisted but public — same convention as prior reports):
+  https://ailive-three.vercel.app/GlobalEIS_Report_RoyalWayTravel_USD.html
+  https://ailive-three.vercel.app/GlobalEIS_Report_RoyalWayTravel_EGP.html
+  https://ailive-three.vercel.app/GlobalEIS_Reports_CARRIER.html
+
+Stage Summary:
+- Owner now has three surfaces: chat paste (carrier), chat links (prod
+  URLs), portal files. Byte-identity proven end-to-end.
+- Repo integrity incident (UUID snapshot deleting upload route) caught,
+  repaired, documented — gate discipline before push prevented a prod
+  outage of the upload endpoint.
