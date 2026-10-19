@@ -2763,3 +2763,69 @@ Stage Summary:
 - Housekeeping pending from earlier (owner's word decides): vault archive
   of standing orders + template lineage; token rotations (GitHub PAT,
   Vercel token, Gmail app password).
+
+---
+Task ID: DL-33
+Agent: main (Z.ai)
+Task: "NEW MISSION LETS TEST YOU" — two CamScanner PDFs (Crédit Agricole
+Egypt, ROYAL WAY TRAVEL / ASHRAF SAID SAID MOHAMED AND MOHAMED ALI ABD EL
+SAMEI AND HIS PARTNERS): EGP 8pp + USD 14pp, period 01/04→11/10/2026.
+100% personal pipeline end-to-end (ORD-1018-P1), engine OFF, deliverables
+HELD for owner (ORD-1019-F1 — no email leg).
+
+Work Log:
+- Inventory: image-only scans (no text layer), rotated 90°, stamps/signatures
+  crossing tables. pdfimages native extraction (1872–1992 × 2620–2840).
+- Personal OCR campaign: 3 variants/page (native grayscale, 2× lanczos,
+  1.5× hard threshold) × 22 pages = 66 TSV passes, 6-way parallel
+  (scripts/dl33_ocr_pass.py).
+- Extraction (scripts/dl33_extract.py): self-calibrating per-page column
+  geometry (date-pair clusters, decimal-amount clusters, cheque-string
+  cluster); DATE-column row oracle with wrapped-description merging;
+  per-cell 3-variant voting. Real bugs found+fixed: variant scale mixing
+  (v2=2×, v3=1.5×), bank's SUBSCRIPT DECIMALS splitting balances
+  ("1,272,285." + "65", dy −57px overlap → fragment-merge pass), VALUE
+  cluster selection left of DEBITS.
+- Census EXACT on first full pass: A 142 rows = 98 Dr + 43 Cr + B/F ✓;
+  B 250 rows = 152 Dr + 97 Cr + B/F ✓ (bank's own printed counts).
+- Solver v2 (spine walk, per-row delta, no cascade) + bank anchors from the
+  printed totals blocks. First run: A 135/141, B 240/247 — all residues
+  diagnosed to 9 cells + 2 structural facts:
+  * B has NEGATIVE DEBIT reversal legs (−2,570 / −20,000 / −20,000) — bank's
+    Dr. Count 152 includes them; carrying signed makes Σdr EXACT.
+  * A has a NEGATIVE CREDIT reversal −1,046,800.00 (p8) — Cr. Count 43
+    includes it.
+- 9 PIXEL-VERIFIED patches (every one read from scan crops by the analyst,
+  provenance in dl33_patch.py): A r27 2,069,543.83 / r66 1,557,821.23
+  (page-bottom wrapped decimals), r128 579,669.78 (6↔8 flip), r137
+  cr −1,046,800.00 (reversal); B r7 1,312,285.65 / r59 1,230,461.68 /
+  r76 1,030,056.68 (page-bottom wraps), r135 913,658.74 (653↔658 flip),
+  r198 585,421.80 (5↔8 flip).
+- RESULT 100% BOTH: A 142/142 spine EXACT, Σdr 26,688,413.05 = print EXACT,
+  Σcr 27,335,750.00 = print EXACT, closing 768,014.78 EXACT, counts 98/43 ✓.
+  B 250/250 EXACT, Σdr 2,442,337.25 EXACT, Σcr 1,848,298.90 EXACT, closing
+  672,875.39 EXACT, counts 152/97 ✓.
+- SO-9 two-pass (scripts/dl33_so9.py): forward chain, BACKWARD chain
+  (closing→opening), per-page cross-foot (8+14 pages), counts, totals,
+  identity — 42/42 MATCH, 0 MISMATCH.
+- Reports rendered by scripts/dl33_render.ts composing the LOCKED builders
+  (reportShell/kpiGrid/verdictWrap/monthlyTrajectorySection/
+  incomeExpenseSummaryBlock/so10Passport/so9DoubleCheck/annexC ledger) —
+  zero hand-written CSS, every figure computed from the row data.
+  download/GlobalEIS_Report_RoyalWayTravel_{EGP,USD}_DL33.html
+  (66,524 B / 90,160 B). Sanity: 0 NaN/undefined leaks, all sections present.
+- ENVIRONMENT WIPE #5 noticed mid-mission: download/ had been emptied
+  (DL-29/DL-30 HTMLs gone; abdl_work JSONs survived so DL-30 reports remain
+  regenerable). DL-33 artifacts: all scripts + rows/tsv JSONs persisted
+  under scripts/ and scripts/dl33_work/.
+- Delivery: HELD for owner in chat only — ORD-1019-F1 freeze honored, no
+  email leg of any kind.
+
+Stage Summary:
+- Mission accomplished at the owner's 100% bar on the FIRST owner-test under
+  the new model: both Crédit Agricole statements reconcile to the cent with
+  the bank's own printed anchors, SO-9 42/42, Master v1.4.0 design composed
+  from the locked template, delivery held.
+- Reusable lesson recorded: this bank's font prints subscript decimals that
+  split in OCR and page-bottom balances wrap decimals — geometry-driven
+  fragment merge + pixel-level page-bottom rescue is the fix.
