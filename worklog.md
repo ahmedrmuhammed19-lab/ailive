@@ -2961,3 +2961,45 @@ Stage Summary:
   to the delivered masters (sha 69082d35… / a9f7f6c4… lineage).
 - All three delivery surfaces live: chat carrier (DL-33-b), direct prod URLs
   (DL-33-c), portal Reports tab (this entry).
+
+---
+Task ID: DL-34
+Agent: main (Z.ai)
+Task: Owner — "OUR TEMPLATE NEED SOME enhance AND IMPROVES (report styling / visual design) + USE THE
+ATTACHMENT HTML IF IT'S BETTER + I WANT TO MAKE AN HTML OR TEMPLATE ALIGNED TO THE BANK STATEMENT ...
+A TARGET TO KNOW EVERYTHING IN BANK STATEMENT BEFORE CUSTOMER SUBMIT THIS BANK STATEMENT FOR THEIR
+VISA PROCEDURE IN EGYPT ... I WANT TO KNOW THE SOURCE THE TRANSACTION THAT WE WILL COVER IT ON REPORT."
+
+Work Log:
+- Attachment forensics: upload/eis_analysis_functions.html = code-viewer of eis_analysis_functions.py
+  (the firm's analysis library v1, 1404 lines). Reconstructed the Python from the HTML rows byte-clean
+  (py_compile PASS; scripts/eis_analysis_functions_reconstructed.py, gitignored). Verdict: the code-viewer
+  HTML itself is not a report style; the library IS the intelligence backbone — adopted.
+- Extracted the full taxonomy (parse/verify_chain, monthly_summary, balance_stability, overdraft_days,
+  coverage_table + DEFAULT_THRESHOLDS, declared_vs_proven, monthly_inflows_by_source,
+  recurring_counterparties, detect_installments/list_cheques, detect_roundtrips/detect_reversals/late_build_up,
+  large_deposit_docs, living_expenses, document_checks, annualization) AND its presentation layer
+  (KPI strips, status pills with B/W icons, card tables, tabular-nums decimals).
+- Built Global_EIS_Template_v1.4_05_PreSubmission_Statement_Review.html (88,628B, sha256 4583c01a…):
+  Master v1.4.0 REPORT_CSS verbatim + additive .psr- uplift layer (section chips, intelligence-source
+  lines, card tables, top-border KPI strips, CSS-only coverage bars, assessment-map TOC grid, specimen
+  banner, APP A/B chips, print + mobile contracts). 12 sections + 2 appendices; every section names the
+  library functions that produce it (the owner's "intelligent level" traceability).
+- Sample data FICTIONAL and script-derived (scripts/psr_data.py): chain identity, per-month AND
+  per-category inflow reconciliation, cheque/cheque_deposit tie-out, installment/living tie-out,
+  late-build-up sum, threshold-day monotonicity — build aborts on any mismatch (G8 spirit).
+- Teaching verdict deliberately CONDITIONAL: closing clears all 4 baselines, avg-daily clears only
+  Schengen — demonstrates why closing-only PASS misleads (library doctrine).
+- QA: full-page browser render 12,880px inspected in 4 parts; fixed (a) impossible May "Highest EOD"
+  (< closing), (b) broken S11 cover formula (0.8% -> 24.6%), (c) appendix chips APP A/B.
+- Gates: src tsc 0 errors + next build exit 0. Committed c3c0b58 (templates/), pushed.
+- Portal: published via publish-report (same workall channel as DL-33-c-2), size byte-exact 88,628B,
+  receipt receipts/publish_psr_template.json. Appears in the portal Reports tab (DB row, operator-visible).
+  No mail (DL-31 intact); no engine fired (DL-32 intact); storage delta = one 88.6KB template asset
+  (canonical family member, single copy in repo + portal row).
+
+Stage Summary:
+- New template family member 05: PRE-SUBMISSION STATEMENT REVIEW — pre-submission intelligence +
+  readiness gates + transaction-source atlas + Rule 5 red flags + action gates, all Master-aligned.
+- If ratified, the .psr- uplift layer is the candidate for the next Master promotion (DL-7/DL-9 pattern);
+  reconstructed analysis library kept locally as the fill-source contract.
