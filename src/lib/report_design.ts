@@ -887,7 +887,7 @@ export function psrKpiStrip(cells: string[]): string {
 }
 
 /** CSS-only coverage bar cell — pct 0–100; tone auto: <70 red (f1), <100 amber (f2), else green. */
-export function psrBarCell(pct: number, passLabel = "&#10003; PASS", belowLabel = "&#9650; BELOW"): string {
+export function psrBarCell(pct: number, passLabel = "\u2713 PASS", belowLabel = "\u25B2 BELOW"): string {
   const w = Math.max(0, Math.min(100, pct));
   const cls = w < 70 ? "f1" : w < 100 ? "f2" : "";
   const pill = w >= 100 ? tag(passLabel, "pass") : tag(belowLabel, "warn");
