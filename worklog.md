@@ -2829,3 +2829,31 @@ Stage Summary:
 - Reusable lesson recorded: this bank's font prints subscript decimals that
   split in OCR and page-bottom balances wrap decimals — geometry-driven
   fragment merge + pixel-level page-bottom rescue is the fix.
+
+---
+Task ID: DL-33-a
+Agent: main (Z.ai)
+Task: Owner — "RENAME THE HTML NAME WITHOUT DL33 WORD" — strip the internal
+mission tag from the DL-33 deliverables and hand them over for download.
+
+Work Log:
+- Renamed in place (mv, no duplicates — storage standing order):
+  download/GlobalEIS_Report_RoyalWayTravel_{EGP,USD}_DL33.html →
+  download/GlobalEIS_Report_RoyalWayTravel_{EGP,USD}.html
+- Stripped the single internal "DL-33 · " token from each report's cover
+  ref-line (line 118): surgical sed on the exact string
+  "DL-33 · Master v1.4.0" → "Master v1.4.0". Pre-scan proved exactly ONE
+  DL-33 occurrence per file; post-check 0 residual DL-33/DL33 tokens in
+  both files. All financial content, rows, anchors, SO-9 blocks untouched.
+- Patched the source (scripts/dl33_render.ts): refLine no longer carries
+  the DL-33 tag; output path now writes the clean filename — a future
+  re-render cannot reintroduce the tag.
+- Freeze status unchanged: delivery HELD for owner in chat only
+  (ORD-1019-F1); ref-line still states this honestly.
+
+Stage Summary:
+- Clean-named deliverables ready for owner download:
+  download/GlobalEIS_Report_RoyalWayTravel_USD.html (92K)
+  download/GlobalEIS_Report_RoyalWayTravel_EGP.html (68K)
+  sha256: USD 69082d35…, EGP a9f7f6c4… — renamed + 1-token strip each,
+  nothing else. Analysis itself unchanged: 100% both statements, SO-9 42/42.
