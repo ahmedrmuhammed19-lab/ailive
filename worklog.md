@@ -2857,3 +2857,31 @@ Stage Summary:
   download/GlobalEIS_Report_RoyalWayTravel_EGP.html (68K)
   sha256: USD 69082d35…, EGP a9f7f6c4… — renamed + 1-token strip each,
   nothing else. Analysis itself unchanged: 100% both statements, SO-9 42/42.
+
+---
+Task ID: DL-33-b
+Agent: main (Z.ai)
+Task: Owner — "I WANT TO DOWNLOAD FROM JUST SEND IT HERE BY ANYWAY" — deliver
+the two reports INTO the chat itself, no download panel dependency.
+
+Work Log:
+- Built scripts/dl33_chat_package.py: embeds both reports gzip -9 + base64
+  (wrapped at 96ch/line for paste safety) into ONE self-carrier HTML
+  (download/GlobalEIS_Reports_CARRIER.html, 39,751B, 445 lines, max line
+  230ch — under the 2000ch read/paste truncation limit).
+- Carrier UX: dark GlobalEIS-styled page, two buttons (USD / EGP) →
+  in-browser DecompressionStream('gzip') extraction → Blob download with
+  the clean filenames → page recomputes SHA-256 and prints MATCH only on
+  byte-identity with the master files.
+- Roundtrip verified at build time: USD 92,017B EXACT (sha 69082d35…),
+  EGP 67,540B EXACT (sha a9f7f6c4…) — decoded+gunzipped bytes identical
+  to download/ masters.
+- Clean-named masters remain in download/ (GlobalEIS_Report_RoyalWayTravel_
+  {USD,EGP}.html); carrier is an additional delivery surface, no
+  duplicates of the masters themselves.
+- Freeze unchanged: nothing emailed; carrier handed to owner in chat body.
+
+Stage Summary:
+- In-chat delivery channel proven without any send/attach tooling: one
+  copy-paste → local .html → two clicks → both reports out, SHA-verified.
+- Storage cost: +39,751B (carrier only), scripts persisted for rebuild.
