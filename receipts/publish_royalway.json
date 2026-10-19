@@ -1,0 +1,16 @@
+{
+  "ok": true,
+  "published": [
+    {
+      "name": "GlobalEIS_Report_RoyalWayTravel_USD.html",
+      "sizeBytes": 92017
+    },
+    {
+      "name": "GlobalEIS_Report_RoyalWayTravel_EGP.html",
+      "sizeBytes": 67540
+    }
+  ],
+  "skipped": [],
+  "note": "Royal Way Travel - Credit Agricole Egypt (USD + EGP), statements 01/04/2026-11/10/2026",
+  "at": "2026-10-19T20:26:48.492Z"
+}
