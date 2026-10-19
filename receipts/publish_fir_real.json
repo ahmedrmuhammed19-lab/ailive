@@ -1,0 +1,16 @@
+{
+  "ok": true,
+  "published": [],
+  "skipped": [
+    {
+      "name": "GlobalEIS_FIR_RoyalWayTravel_EGP.html",
+      "reason": "already published (38736 bytes)"
+    }
+  ],
+  "note": "Financial Intelligence Report (one paper per section) - Royal Way Travel EGP 00031100008670, 01/04/2026-07/10/2026, owner-design FIR build on real statement data",
+  "at": "2026-10-19T22:27:35.386Z",
+  "expected": {
+    "GlobalEIS_FIR_RoyalWayTravel_EGP.html": 38736
+  },
+  "sha256_16": "9e7daaf069bc6081"
+}
