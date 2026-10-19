@@ -3044,3 +3044,61 @@ Stage Summary:
   bars + assessment-map TOC) from report_design.ts alone.
 - All red lines intact. Awaiting owner: archive -> eis-vault; rotate -> 3
   token rotations (unchanged backlog).
+
+---
+Task ID: DL-36
+Agent: main (Z.ai)
+Task: Owner — "use a real bank statement to see the template." Real-data PSR build:
+Royal Way Travel EGP account through the Master v1.5.0 Pre-Submission Statement
+Review.
+
+Work Log:
+- Data: scripts/dl33_work/rows_a.json (EGP a/c 00031100008670, 142 postings,
+  01/04→07/10/2026, triple-pass OCR extraction from DL-33). Library semantics
+  ported faithfully from scripts/eis_analysis_functions_reconstructed.py
+  (verify_chain, balance_stability, overdraft_days, detect_roundtrips,
+  detect_reversals, late_build_up, clusters/installments, list_cheques,
+  large_deposit_docs, coverage_table, annualization).
+- Builder scripts/dl36_psr_real.ts (untracked, follows dl33 pattern): imports
+  REPORT_CSS + PSR builders from src/lib/report_design.ts (SO-1), recomputes
+  EVERY figure from raw rows, G8 abort-gates: row chain 0 errors, printed
+  totals tie (Dr 26,688,413.05 / Cr 27,335,750.00), identity
+  120,677.83+27,335,750−26,688,413.05=768,014.78, monthly cross-sums, EOD
+  series 190 days, gross−correction=printed.
+- REAL findings the gates/detectors surfaced on live data:
+  * 06/10 duplicate credit 1,046,800.00 posted twice, reversed by the bank the
+    same day (negative credit) — bank-printed correction class added to S09;
+    gross 28,382,550 − correction 1,046,800 = printed 27,335,750 (ties to S03).
+  * 19/04 same-day round-trip candidate 775,800.00 in/out, diff 0.00.
+  * Source Atlas 100% classified: dominant rail 00031110001150 = 37 credits /
+    25,019,400 EGP (single main funding account — confirm owner); cheques 66 /
+    26,641,099 out (99.8% of debits); self-ref book transfers 10 (1,564,000 in
+    — excluded from external income); 27 postings with NO printed reference
+    (3 credits 1,799,150 in / 24 debits) → payer-side docs gated.
+  * 3 probable fixed payments (500,000×14, 250,000×7, 50,000×5); 5 recurring
+    credit streams = 49.1% of credits; readiness 4/4 PASS closing AND
+    avg-daily (743,769.76 avg; weakest line US 289.6%); verdict CONDITIONAL
+    (documentary fixes), 7 action gates.
+- Visual QA (browser render, 5 rounds) caught and fixed 4 real defects:
+  (a) OCR-unanimity gate was over-strict → resolved-states gate (133/142
+  triple-unanimous + 9 resolved by superior passes, all chain-confirmed);
+  (b) mkey month-bucket bug (68 date-buckets → 7 real months; had hidden 3
+  fixed-payment streams and corrupted midx); (c) Master v1.5.0 psrBarCell
+  default labels were entities → tag() escaped them literally → fixed in
+  MASTER (literal glyphs), gates re-run: src tsc 0 + next build exit 0;
+  (d) late-build-up cutoff passed ISO into dkey → 100% false share → fixed
+  (13.4% real). Also fixed atlas family order (cheque numbers outrank 0298
+  refs) + gross/correction reconciliation rows in S07.
+- Deliverable: download/GlobalEIS_PSR_RoyalWayTravel_EGP.html (82,503B,
+  sha256 4bcba441…), committed public/ copy, pushed bc6b8e9, published to the
+  portal Reports tab via publish-report (byte-exact, receipt
+  receipts/publish_psr_real.json). QA screenshots removed (storage order).
+  No mail (DL-31); no engine fired (DL-32); analyze.ts untouched (ORD-1018-P1).
+
+Stage Summary:
+- The PSR template is now PROVEN on a real client statement: every section
+  produced live intelligence, the G8 gates caught real anomalies (duplicate +
+  reversal + round-trip), and 4 template-layer defects were fixed at the
+  Master level.
+- Master v1.5.0 unchanged except the psrBarCell glyph fix; USD account (b,
+  250 rows) available for the same build if the owner wants the pair.

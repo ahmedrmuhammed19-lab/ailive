@@ -1,0 +1,16 @@
+{
+  "ok": true,
+  "published": [
+    {
+      "name": "GlobalEIS_PSR_RoyalWayTravel_EGP.html",
+      "sizeBytes": 82503
+    }
+  ],
+  "skipped": [],
+  "note": "Pre-Submission Statement Review - Royal Way Travel EGP 00031100008670, 01/04/2026-07/10/2026, Master v1.5.0 PSR build on real statement data",
+  "at": "2026-10-19T21:56:38.681Z",
+  "expected": {
+    "GlobalEIS_PSR_RoyalWayTravel_EGP.html": 82503
+  },
+  "sha256_16": "4bcba441139d623b"
+}
