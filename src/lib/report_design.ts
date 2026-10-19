@@ -117,13 +117,32 @@
  * All v1.3.0 exports keep names and signatures — earlier reports keep
  * their bytes.
  *
+ * v1.5.0 (2026-10-20, DL-35): owner ratified ("let's go") the PSR uplift
+ * layer from the Pre-Submission Statement Review template (v1.4-05,
+ * committed c3c0b58) into the standard — promoted additively exactly as
+ * ratified (SO-1). REPORT_CSS gains the full .psr- vocabulary: section
+ * chips (.psr-chip), intelligence-source lines (.psr-src, the
+ * "every section names the function that produces it" doctrine), card
+ * tables (.psr-card, hover + zebra + total-row), top-border KPI strips
+ * (.psr-kpi/.psr-k-*), CSS-only coverage bars (.psr-barwrap/.psr-bar),
+ * assessment-map TOC grid (.psr-toc), specimen banner (.psr-specimen),
+ * numeric typography (.psr-num/.psr-dec/.psr-zero/.psr-date/.psr-ref),
+ * gate accents (.psr-gate), warn badge, print + 640px mobile contracts.
+ * Canonical builders ship with it: psrSourceLine(), psrSectionHead(),
+ * psrCard(), psrKpiStrip(), psrBarCell(), psrToc() — pure string
+ * builders, byte-faithful to the ratified template markup. Every
+ * v1.4.0 class and export keeps its name and signature — all existing
+ * generators compile unchanged; earlier delivered reports keep their
+ * bytes. The PSR doctrine: run BEFORE the visa file is submitted, so
+ * nothing in the statement can surprise the assessor.
+ *
  * Tokens: --primary #005677 / --secondary #008DCB on Segoe UI, gradient
  * header, KPI cards with colored left borders, section bars, pill tags,
  * left-bordered alert boxes, readiness matrix + action gates, prepared-by
  * footer.
  */
 
-export const TEMPLATE_VERSION = "Master v1.4.0 (STANDARD — GRAND debit/credit totals + window-prorated income & expense summary promoted from the audited Bola Ayad Gerges Rev 3 build, owner-approved 2026-10-18; lineage: v1.3.0 Elgarayadli build promoted 2026-10-15; SO-9 balance double-check appendix A2 added 2026-10-15; v1.2.6 three-way coverage audit 2026-10-11, SO-10 passport appendix 2026-10-11, section order contract 2026-10-11, visa readiness matrix + action gates 2026-10-11, disclaimer hardened 2026-10-11; v1.2 promoted 2026-10-06)";
+export const TEMPLATE_VERSION = "Master v1.5.0 (STANDARD — PSR uplift layer promoted additively from the ratified Pre-Submission Statement Review template v1.4-05, owner-approved 2026-10-20; lineage: v1.4.0 GRAND debit/credit totals + window-prorated income & expense summary from the audited Bola Ayad Gerges Rev 3 build, owner-approved 2026-10-18; v1.3.0 Elgarayadli build promoted 2026-10-15; SO-9 balance double-check appendix A2 added 2026-10-15; v1.2.6 three-way coverage audit 2026-10-11, SO-10 passport appendix 2026-10-11, section order contract 2026-10-11, visa readiness matrix + action gates 2026-10-11, disclaimer hardened 2026-10-11; v1.2 promoted 2026-10-06)";
 
 export const REPORT_CSS = `
 /* ===== Master v1.3 tokens (SO-1 locked) ===== */
@@ -234,6 +253,59 @@ tr.total-row td{background:#eef6fa !important;font-weight:bold;border-top:2px so
 /* ===== Print contract ===== */
 @page{size:A4;margin:16mm 12mm}
 @media print{body{background:none;padding:0}.container{box-shadow:none;border-radius:0;max-width:none}.download-btn{display:none}.section-title,h2.sec,.analysis-card,.kpi-card,.kpi,.annex-body,.verdict-box,.authenticity-alert{page-break-inside:avoid}table tr,.data-table tr{page-break-inside:avoid}thead{display:table-header-group}.header{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+
+/* ===== PSR uplift layer (Master v1.5.0, DL-35 2026-10-20) =====
+   Promoted additively from the ratified Pre-Submission Statement Review
+   template v1.4-05. Every rule is new or scoped: .psr- prefixed (SO-1). */
+.psr-chip{flex:none;display:inline-flex;align-items:center;justify-content:center;min-width:46px;height:27px;padding:0 11px;border-radius:14px;background:var(--primary);color:#fff;font-size:.72em;font-weight:700;letter-spacing:.08em;margin-right:12px;font-family:'Segoe UI',Tahoma,sans-serif}
+.psr-src{clear:both;font-size:.78em;color:#66707a;margin:10px 0 12px;font-family:'Courier New',monospace;letter-spacing:.02em}
+.psr-src b{color:var(--primary);font-weight:700}
+.psr-src .f{background:#f1f5f8;border:1px solid #e0e7ee;border-radius:4px;padding:1px 6px;white-space:nowrap}
+.psr-intro{font-size:.9em;color:#3d4a56;margin:0 0 14px}
+.psr-card{border:1px solid #e3e8ee;border-radius:12px;overflow-x:auto;margin:6px 0 26px;background:#fff;box-shadow:0 1px 3px rgba(16,24,40,.05)}
+.psr-card table{margin:0;font-size:.93em}
+.psr-card th{background:#f4f7fa;color:#4a5b6b;font-size:.76em;text-transform:uppercase;letter-spacing:.06em;padding:11px 14px;border-bottom:1px solid #e3e8ee;white-space:nowrap}
+.psr-card td{padding:10px 14px;border-bottom:1px solid #eef1f4;vertical-align:middle}
+.psr-card tbody tr:nth-child(even) td{background:#fafbfd}
+.psr-card tbody tr:hover td{background:#f1f7fb}
+.psr-card tbody tr:last-child td{border-bottom:0}
+.psr-card th.dense,.psr-card td.dense{padding:9px 8px;font-size:.95em}
+.psr-card tr.total-row td{background:#eef6fa !important;border-top:2px solid var(--primary);font-weight:bold}
+.psr-card td.empty{text-align:center;color:#9aa5b1;padding:22px}
+.psr-card .tag{white-space:nowrap;margin:0;padding:3px 10px}
+.psr-num{font-variant-numeric:tabular-nums;font-feature-settings:"tnum" 1,"lnum" 1;white-space:nowrap;letter-spacing:.01em}
+.psr-dec{font-size:.82em;opacity:.72}
+.psr-zero{color:#b4bcc5}
+.psr-date{white-space:nowrap;color:#55636f;font-variant-numeric:tabular-nums}
+.psr-ref{font-family:'Courier New',monospace;font-size:.82em;word-break:break-all;color:#4a5b6b}
+.psr-b{font-weight:700}
+.psr-kpis{width:100%;border-spacing:0 10px;margin:2px 0 8px}
+.psr-kpis td.psr-kpi{vertical-align:top;background:#fff;border:1px solid #e3e8ee;border-top:3px solid var(--secondary);border-radius:0 0 10px 10px;padding:12px 16px}
+.psr-kpi{display:inline-block}
+.psr-k-green{border-top-color:var(--success)}.psr-k-red{border-top-color:var(--danger)}.psr-k-amber{border-top-color:#e0a100}.psr-k-blue{border-top-color:var(--secondary)}
+.psr-kpi .l{font-size:.72em;text-transform:uppercase;letter-spacing:.07em;color:#6b7782;margin-bottom:5px}
+.psr-kpi .v{font-size:1.38em;font-weight:700;color:#0f3b52;line-height:1.15;font-variant-numeric:tabular-nums;white-space:nowrap}
+.psr-k-green .v{color:var(--success)}.psr-k-red .v{color:var(--danger)}.psr-k-amber .v{color:#9a6b00}
+.psr-kpi .s{font-size:.78em;color:#6b7782;margin-top:3px}
+.psr-barwrap{display:flex;align-items:center;gap:10px}
+.psr-bar{flex:1;height:10px;background:#edf1f5;border-radius:6px;overflow:hidden;min-width:90px}
+.psr-bar i{display:block;height:100%;border-radius:6px;background:var(--success)}
+.psr-bar i.f1{background:var(--danger)}.psr-bar i.f2{background:#e0a100}
+.psr-pct{flex:none;font-variant-numeric:tabular-nums;font-weight:700;min-width:64px;text-align:right}
+.psr-toc{display:grid;grid-template-columns:repeat(auto-fit,minmax(236px,1fr));gap:10px;margin:0 0 10px}
+.psr-toc a{display:flex;gap:10px;align-items:flex-start;text-decoration:none;color:inherit;border:1px solid #e3e8ee;border-radius:10px;padding:10px 12px;background:#fff;transition:border-color .15s,box-shadow .15s}
+.psr-toc a:hover{border-color:var(--secondary);box-shadow:0 2px 8px rgba(0,141,203,.14)}
+.psr-toc .n{flex:none;width:30px;height:30px;border-radius:8px;background:#e7f3fe;color:var(--primary);font-weight:700;display:flex;align-items:center;justify-content:center;font-size:.78em}
+.psr-toc .t{font-size:.85em;font-weight:600;color:var(--primary);line-height:1.25}
+.psr-toc .d{font-size:.74em;color:#6b7782;margin-top:2px;line-height:1.35}
+.psr-specimen{display:inline-block;background:rgba(255,255,255,.16);border:1px dashed rgba(255,255,255,.55);border-radius:6px;padding:6px 16px;font-size:.78em;letter-spacing:.14em;font-weight:700;margin-top:16px;text-transform:uppercase}
+.psr-badge-warn{background:#fff3cd !important;border:1px solid #d97706 !important;color:#8a5a00 !important}
+.psr-gate{border-left:4px solid var(--secondary)}
+.psr-gate.psr-g-warn{border-left-color:#d97706}
+.psr-gate.psr-g-fail{border-left-color:var(--danger)}
+.psr-gate b:first-child{color:var(--primary)}
+@media (max-width:640px){.psr-kpis,.psr-kpis tr{display:block;width:auto;border-spacing:0}.psr-kpis td{display:block;margin-bottom:8px}.psr-toc{grid-template-columns:1fr}}
+@media print{.psr-toc{display:none}.psr-kpi,.psr-card,.psr-bar,.psr-card .tag,.psr-card th,.psr-card tr.total-row td{-webkit-print-color-adjust:exact;print-color-adjust:exact}.psr-card{box-shadow:none}}
 `;
 
 export function escHtml(s: string): string {
@@ -773,4 +845,61 @@ ${opts.contentHtml}
 <p class="legal"><strong>Disclaimer:</strong> This report is prepared by Global EIS based solely on the bank statement document supplied by the client. Global EIS does not independently verify the authenticity of the underlying bank statement and makes no representation as to the applicant's eligibility for any visa or immigration outcome. All mathematical reconciliations are verified against the stated bank totals. Statements analysed as delivered; authenticity findings reflect documentary consistency only. One statement = one report; never recycled. This report is intended solely to support the client's own submission, should be read together with all other required supporting documentation, and does not constitute legal advice.</p>
 </div>
 </div></body></html>`;
+}
+
+/* ===== PSR canonical builders (Master v1.5.0, DL-35 2026-10-20) =====
+   Byte-faithful string builders for the ratified Pre-Submission Statement
+   Review vocabulary (template v1.4-05). Pure additive exports — no existing
+   export is touched. Doctrine: run BEFORE the visa file is submitted; every
+   section names the analysis function that produces it (intelligence-source
+   line), so nothing in the statement can surprise the assessor. */
+
+/** Intelligence-source line: "Intelligence source: <lib> → f1 f2 …" (the PSR traceability doctrine). */
+export function psrSourceLine(lib = "eis_analysis_functions.py", fns: string[]): string {
+  const chips = fns.map((f) => `<span class="f">${escHtml(f)}</span>`).join(" ");
+  return `<p class="psr-src">Intelligence source: <b>${escHtml(lib)}</b> &#8594; ${chips}</p>`;
+}
+
+/** Numbered section head: chip (S01…S12) + title, anchorable for the assessment-map TOC. */
+export function psrSectionHead(chip: string, title: string, id?: string): string {
+  const idAttr = id ? ` id="${escHtml(id)}"` : "";
+  return `<h2 class="section-title"${idAttr}><span class="psr-chip">${escHtml(chip)}</span>${escHtml(title)}</h2>`;
+}
+
+/** Card table wrapper — rounded, zebra, hover, print-safe container for data tables. */
+export function psrCard(tableHtml: string): string {
+  return `<div class="psr-card">${tableHtml}</div>`;
+}
+
+/** One KPI strip cell — tone: "green" | "red" | "amber" | "blue" (top-border accent). */
+export function psrKpi(label: string, valueHtml: string, note = "", tone: "green" | "red" | "amber" | "blue" = "blue"): string {
+  return (
+    `<td class="psr-kpi psr-k-${tone}"><div class="l">${escHtml(label)}</div>` +
+    `<div class="v">${valueHtml}</div>` +
+    (note ? `<div class="s">${escHtml(note)}</div>` : "") +
+    `</td>`
+  );
+}
+
+/** KPI strip — the PSR top-border metric band (table for print robustness). */
+export function psrKpiStrip(cells: string[]): string {
+  return `<table class="psr-kpis"><tr>${cells.join("")}</tr></table>`;
+}
+
+/** CSS-only coverage bar cell — pct 0–100; tone auto: <70 red (f1), <100 amber (f2), else green. */
+export function psrBarCell(pct: number, passLabel = "&#10003; PASS", belowLabel = "&#9650; BELOW"): string {
+  const w = Math.max(0, Math.min(100, pct));
+  const cls = w < 70 ? "f1" : w < 100 ? "f2" : "";
+  const pill = w >= 100 ? tag(passLabel, "pass") : tag(belowLabel, "warn");
+  return `<div class="psr-barwrap"><div class="psr-bar"><i class="${cls}" style="width:${w.toFixed(1)}%"></i></div><span class="psr-pct">${pct.toFixed(1)}%</span></div> ${pill}`;
+}
+
+/** One assessment-map TOC entry (anchor + chip number + title + one-line description). */
+export function psrTocEntry(anchor: string, no: string, title: string, desc: string): string {
+  return `<a href="#${escHtml(anchor)}"><span class="n">${escHtml(no)}</span><span><span class="t">${escHtml(title)}</span><div class="d">${escHtml(desc)}</div></span></a>`;
+}
+
+/** Assessment-map TOC grid (hidden in print). */
+export function psrToc(entries: string[]): string {
+  return `<div class="psr-toc">${entries.join("")}</div>`;
 }
