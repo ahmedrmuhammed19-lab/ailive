@@ -3102,3 +3102,53 @@ Stage Summary:
   Master level.
 - Master v1.5.0 unchanged except the psrBarCell glyph fix; USD account (b,
   250 rows) available for the same build if the owner wants the pair.
+
+---
+Task ID: DL-37
+Agent: main (Z.ai)
+Task: Owner — "can you uncollapse or expand each section to be 1 paper report + i will attach
+html code nearest in my mind" — rebuild the real-statement report in the owner's attached
+Financial Intelligence Report design, every section expanded to its own full paper.
+
+Work Log:
+- Owner's attached FIR HTML adopted as the design source (palette #005677/#008DCB, Segoe UI,
+  kpi-cards, data-tables, alert-boxes, tags, gradient header + download button) — kept verbatim,
+  plus an additive .sheet paper layer: screen = one white paper per section, print = one A4 page
+  per section (@page A4, page-break-after, print-only compaction; screen design untouched).
+- Builder scripts/dl37_fir_real.ts (untracked, dl36 pattern): computation core ported 1:1 from
+  the verified DL-36 builder; G8 abort-gates all PASS (142 rows, chain 0 errors, printed totals
+  Dr 26,688,413.05 / Cr 27,335,750.00, identity 120,677.83+27,335,750−26,688,413.05=768,014.78,
+  monthly cross-sums, gross 28,382,550 − correction 1,046,800 = printed, EOD 190 days).
+- 9 papers: cover (verdict strip + report map) + 8 sections = Executive Dashboard / Account ID /
+  Reconciliation (as-reported vs ADJUSTED external-only: net −915,913.05 after stripping
+  1,564,000 internal) / Monthly Trajectory (7 months + gap remediation) / Source of Funds /
+  Associated Parties & Net Exposure / Risk & Compliance / Conclusion (CONDITIONAL PASS + 4 doc
+  supplements + run-rates). Intelligence-source line on every section (PSR doctrine kept).
+- DATA FIX 1: 0298-prefix 14-digit refs are bank cheque/advice serials, NOT account rails —
+  the 761,550.00 credit (ref 02980000077431) was misfamily'd into the account rail; family()
+  now keys account rails on the 000311 prefix → rail 00031110001150 = 36 credits / 24,257,850
+  (88.7% of credits) and the 761,550 is its own 0298-series line. Income card now reconciles
+  row-perfect: 24,257,850 + 761,550 + 1,564,000 + 1,799,150 − 1,046,800 = 27,335,750.
+- DATA FIX 2: no-reference count was 28 (zero-amount opening row leaked into the filter) →
+  corrected to 27 (3 credits 1,799,150 / 24 debits 46,564.05), matching DL-36.
+- DATA FIX 3: expenditure card rebuilt to the true breakdown (cheques 26,641,099 / 66 = 99.8%
+  of debits; fixed 500,000×14, 250,000×7, 50,000×5; unreferenced 46,564.05; self-out 750) —
+  the old "electronic rails 0.00" row was empty and misleading.
+- Print QA loop (playwright @ 711px true PDF width): papers 5+6 initially overflowed A4 →
+  print-scoped compaction (fonts/paddings, 2-col analysis-grid in print, S6 roles shortened,
+  S5 intro trimmed) → ALL 9 papers ≤ 1054px, page.pdf = EXACTLY 9 pages. Visual pass on all
+  9 paper screenshots: design vocabulary, numbers, tags, source lines all correct.
+- Gates: src tsc 0 errors + next build exit 0. Committed d0396d7 (public/ copy + purge of the
+  4 stray psr_qa PNGs the UUID snapshot b995595 had re-added — storage order restored), pushed.
+- Published to the portal Reports tab via publish-report (byte-exact 38,736B = UTF-8 size;
+  the 38,648 figure was the JS char count — EXPECTED corrected, receipt
+  receipts/publish_fir_real.json). No mail (DL-31); no engine (DL-32); analyze.ts untouched
+  (ORD-1018-P1); Master v1.5.0 not modified (FIR design is owner-ratification pending —
+  promotion to report_design.ts only after owner says so, DL-34/DL-35 pattern).
+
+Stage Summary:
+- The owner's "nearest in my mind" FIR design is now REAL: 9 A4 papers, one section per page,
+  every figure derived from the verified 142-posting ledger. Live in chat (download/), repo
+  (public/), and the portal Reports tab.
+- Classification upgrade worth carrying into future builds: 0298/000311 ref-prefix taxonomy
+  (cheque serials vs true account rails). USD account (250 rows) ready for the same FIR build.
