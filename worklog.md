@@ -3003,3 +3003,44 @@ Stage Summary:
   readiness gates + transaction-source atlas + Rule 5 red flags + action gates, all Master-aligned.
 - If ratified, the .psr- uplift layer is the candidate for the next Master promotion (DL-7/DL-9 pattern);
   reconstructed analysis library kept locally as the fill-source contract.
+
+---
+Task ID: DL-35
+Agent: main (Z.ai)
+Task: Owner "let's go" — ratify and promote the PSR uplift layer into the Master
+template (the open follow-up logged at the end of DL-34).
+
+Work Log:
+- Verified DL-34 end-state first: c3c0b58 committed + pushed, publish receipt
+  receipts/publish_psr_template.json (88,628B row live in portal Reports tab),
+  git status clean — no rework needed.
+- Promotion executed in src/lib/report_design.ts (single source of truth):
+  (1) header lineage paragraph v1.5.0 (DL-35, 2026-10-20, owner ratification);
+  (2) TEMPLATE_VERSION bumped to "Master v1.5.0 (...)" with full lineage —
+  no external consumers of the constant (grep-verified), zero break risk;
+  (3) REPORT_CSS gains the full .psr- block VERBATIM from the ratified
+  template v1.4-05 (chips, source lines, card tables, KPI strips, coverage
+  bars, TOC grid, specimen banner, numeric typography, gate accents,
+  .psr-intro, warn badge, 640px mobile + print contracts) — every token used
+  (--primary/--secondary/--success/--danger) already exists in :root;
+  (4) 8 new pure-string canonical builders appended: psrSourceLine(),
+  psrSectionHead(), psrCard(), psrKpi(), psrKpiStrip(), psrBarCell(),
+  psrTocEntry(), psrToc() — byte-faithful to the ratified markup, fully
+  additive (SO-1); zero existing exports touched.
+- Gates: src-scoped tsc 0 errors (full-repo run filtered to ^src/; the
+  scripts/+skills/ noise is pre-existing and out of scope) + bunx next build
+  exit 0. Builder smoke test via bun -e: SMOKE PASS, "Master v1.5.0",
+  .psr-chip present in REPORT_CSS.
+- Committed 54e1fb2, pushed to origin/main. Storage delta: +130/-1 lines in
+  one file, no new artifacts (standing order respected). No publish needed —
+  template 05 stays byte-exact as published; the promotion arms all FUTURE
+  PSR-family builds from the Master. No mail (DL-31 intact); no engine run
+  (DL-32 intact); ORD-1018-P1 untouched (analyze.ts not modified).
+
+Stage Summary:
+- Master is now v1.5.0 (STANDARD): the pre-submission intelligence vocabulary
+  is first-class engine vocabulary — any generator can now emit PSR sections
+  (chips + intelligence-source lines + card tables + KPI strips + coverage
+  bars + assessment-map TOC) from report_design.ts alone.
+- All red lines intact. Awaiting owner: archive -> eis-vault; rotate -> 3
+  token rotations (unchanged backlog).
