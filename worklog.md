@@ -3152,3 +3152,62 @@ Stage Summary:
   (public/), and the portal Reports tab.
 - Classification upgrade worth carrying into future builds: 0298/000311 ref-prefix taxonomy
   (cheque serials vs true account rails). USD account (250 rows) ready for the same FIR build.
+
+---
+Task ID: DL-38
+Agent: main (Z.ai)
+Task: Owner — "ratify" — promote the DL-37 Financial Intelligence Report (FIR) one-paper-
+per-section design into src/lib/report_design.ts as the Master standard (DL-34/DL-35
+promotion pattern), additive under SO-1.
+
+Work Log:
+- Read worklog: DL-37 had left the FIR design owner-ratification-pending (Master untouched).
+  "ratify" = approval → promotion task. FIR design source of record: public/
+  GlobalEIS_FIR_RoyalWayTravel_EGP.html (38,736B, committed d0396d7).
+- CSS promotion (additive, v1.6.0 layer appended inside REPORT_CSS): .sheet paper layer
+  (screen = one white paper per section; print = one A4 page per section via the NAMED
+  @page firpage — Chromium honors it, Master default @page 16mm/12mm contract untouched);
+  paper furniture .pageno/.map-grid/.map-item/.src-line/.sub-title/.muted/.dec/
+  .data-table.compact; FIR-exact shared-vocab metrics all scoped under .sheet (SO-1:
+  every new unscoped selector is a brand-new class; no existing rule modified).
+- Builders appended: firShell / firCover / firSheet(+extraClass) / firPageno / firMapItem /
+  firReportMap / firSourceLine — pure additive exports; TEMPLATE_VERSION → Master v1.6.0
+  (lineage preserved); v1.6.0 history paragraph added.
+- Fidelity proof (scripts/dl38_fir_promote.ts): rebuilt the ratified FIR document THROUGH
+  the promoted Master builders → 9/9 sheets + joined BODY byte-identical to the committed
+  artifact (one test-side fix: strip the newline after the opening <section> tag, which the
+  ratified serialization keeps and firSheet emits itself).
+- Rendering QA (playwright, scripts/dl38_qa.js + diag/probe/persheet): caught and fixed SIX
+  real cascade collisions between the ratified FIR markup and Master's older vocabulary —
+  (1) .note: FIR uses it as the KPI caption, Master has a padded callout .note → cards
+  inflated +36/+102px → scoped reset; (2) bare .danger/.warn border-left:4px leaks onto
+  alert-box.danger (5px ratified) and tag.warn → border-width/border:0 scoped resets;
+  (3) my own scoped .sheet .kpi-card border-left tied specificity with .kpi-card.success/
+  danger/warning and won by position → tone colors killed → tone-scoped color rules;
+  (4) .footer strong{color:primary} vs inherited #777 → color:inherit;
+  (5) .analysis-card h3 UA margin-bottom 1em (20.8px) vs Master 8px → margin:0 0 1em;
+  (6) THE SUBTLE ONE: FIR's own .data-table th{text-align:left} at (0,1,1) BEATS
+  .text-right (0,1,0), so the ratified artifact renders right-classed th LEFT — Master's
+  th base (0,0,1) loses to .text-right → scoped .sheet .data-table th{text-align:left}
+  restores the ratified cascade. Found via computed-style probes + raw RGB delta sampling
+  (same glyph pattern shifted +112px inside identical column boxes).
+- FINAL PROOF: whole-document render diff = 0 of 9,295,360 pixels (0.0000%, worst channel
+  delta 0, screenshot byte sizes equal 1,597,489B); print = 9 A4 pages BOTH docs
+  (preferCSSPageSize; named page honored); markup byte-identity 9/9.
+- Gates: full-repo bunx tsc --noEmit → ^src/ count 0; bunx next build exit 0 (three clean
+  runs; one transient exit 1 on a chained run — isolated reruns green). SO-1 audit:
+  141 insertions / 1 replaced line (TEMPLATE_VERSION); git status clean otherwise; stray
+  working-tree deletion of src/app/api/upload/route.ts (DL-33 had restored it) reverted.
+- Cleanup: all QA temp artifacts deleted (screenshots, PDFs, crops, rebuilt.html); the
+  dl38_* scripts kept in scripts/ as the recoverable QA rig (untracked, dl36/dl37 pattern).
+  No mail (DL-31); no engine (DL-32); analyze.ts untouched (ORD-1018-P1); delivered report
+  bytes frozen (SO-1).
+
+Stage Summary:
+- Master v1.6.0 is the new STANDARD: the owner-ratified FIR one-paper-per-section design
+  now lives in report_design.ts beside the v1.5.0 PSR layer, with canonical builders and a
+  zero-drift fidelity proof (byte + pixel + print). Committed 4d73824, pushed a7cf3ce..4d73824.
+- Doctrine locked: FIR papers carry the same intelligence-source lines as the PSR; one
+  section = one paper on screen and one A4 page in print.
+- Standing option: the USD account (250 rows) FIR build on the promoted Master v1.6.0
+  builders is the natural next real-data run.
