@@ -3211,3 +3211,61 @@ Stage Summary:
   section = one paper on screen and one A4 page in print.
 - Standing option: the USD account (250 rows) FIR build on the promoted Master v1.6.0
   builders is the natural next real-data run.
+
+---
+Task ID: DL-39
+Agent: main (Z.ai)
+Task: Owner — "add Net cash flow. We'll multiply the total credit by 2 if the period is 6 months;
+if it's less than 6 months, calculate the total revenue for the entire year, and the same applies
+to expenses, but the difference here is that if the period is 6 months, we'll divide it by 6
+because I want the expenses on a monthly basis. Also, keep in mind that our standard rule is to
+use bank statements for the last 6 months." Plus (prior message, codified this cycle) "in next
+bank statements send only html".
+
+Work Log:
+- Standing orders: SO-13 (HTML-ONLY DELIVERY) + SO-14 (SIX-MONTH STANDARD & NET CASH FLOW
+  ANNUALIZATION) codified in STANDING_ORDERS.md §A; ledger rows ORD-1021-H1 (ACCEPTED),
+  ORD-1021-N1 (DONE), ORD-1021-E1 (PROPOSED — Eid Farag 2 appendix papers plan, awaiting owner
+  `go`; derivation path disclosed: committed v4 census artifact, G8 abort-on-disagreement).
+- Master promotion (additive, v1.6.1): firNetCashFlow builder + FirNetCashFlowInput in
+  report_design.ts — raw numbers in, every rendered figure computed IN-builder (fail-loud G8),
+  formulas PRINTED on the report, exact-day cross-check reuses the v1.4 canonical
+  annualRunRate/monthlyRunRate; print-only .ncf compaction rules; TEMPLATE_VERSION → v1.6.1.
+  Dimensional note: the owner's ×2 (credits) and ÷6 (expenses) rules are the n=6 case of
+  ×(12÷n) / ÷n and are mutually consistent (annual expenses = monthly × 12 = ×2).
+- Proof build (scripts/dl39_ncf.ts): reads the byte-frozen FIR v1 (sha256 9e7daaf069bc6081…),
+  re-parses GRAND credits 27,335,750.00 / debits 26,688,413.05 from ≥3 independent sites each,
+  re-verifies identity 120,677.83 + credits − debits = 768,014.78, parses the 190-day window
+  from the artifact, upgrades the embedded DL-37-era stylesheet to the CURRENT Master constant
+  (v1.6.1 — the DL-38 zero-drift proof guarantees identity; v1.6.1 adds only .ncf rules),
+  injects the builder block, emits FIR v2 as a NEW file (public/ + download/). Abort-loud
+  gates: anchors 7/7 · figures 6/6 · sheets 9/9 · ncf occurrences ≥6 · v1 sha unchanged.
+- Placement decision: §1 Executive Dashboard (semantic home of the metric). §8 Conclusion
+  measured 1,434px at TRUE 710px print width vs ~1,046px A4 usable — already at the DL-37
+  ceiling; the block there split the paper (10 pages). §1 measured 843px → fits with the
+  compact card. Two defects found and fixed en route: (a) the card initially referenced .ncf
+  rules absent from v1's EMBEDDED stylesheet (the artifact carries its own CSS snapshot — not
+  a cache bug) → v2 now carries the Master v1.6.1 constant; (b) builder initially 6 rows + long
+  note → restructured to 5 single-line rows + terse note (derivation column kept — G8).
+- Print QA (playwright-core + cached chromium-1200, scripts/dl39_qa.js): v2 prints EXACTLY
+  9 A4 pages; §1 with the card renders correctly (screenshot QA); screen design untouched
+  (compaction is print-scoped only).
+- Figures (EGP, standard 6-month basis, n=6): net window +647,336.95 (NET POSITIVE) ·
+  annualized revenue 54,671,500.00 (credits ×2) · annualized expenses 53,376,826.10 (debits ×2)
+  · monthly expense run-rate 4,448,068.84 (debits ÷6) · NET CASH FLOW annual 1,294,673.90 ·
+  monthly 107,889.49 · exact-day cross-check ×1.9211 → annual net 1,243,568.35, monthly
+  (30.44-day) 103,710.19.
+- Gates: full-repo bunx tsc --noEmit → ^src/ count 0; bunx next build exit 0. Cleanup: QA temp
+  artifacts (PDF, page PNGs, sheet screenshots) deleted; dl39_ncf.ts + dl39_qa.js kept as the
+  recoverable rig (untracked, dl38 pattern). No mail (DL-31/ORD-1019-F1); no engine (DL-32/
+  ORD-1019-P2); analyze.ts untouched (ORD-1018-P1); delivered report bytes frozen (SO-1).
+  Delivery per SO-13: ONE HTML file — chat + repo/public.
+
+Stage Summary:
+- Master v1.6.1 is the STANDARD: the owner's Net Cash Flow annualization rule (×2 annual
+  revenue, ÷6 monthly-basis expenses, both annual+monthly nets, formulas printed, <6-month
+  generalization, exact-day cross-check) is now canonical FIR vocabulary, proven on real data
+  (FIR v2, Royal Way Travel EGP — v1 untouched).
+- HTML-only delivery (SO-13) and the six-month standard (SO-14) are locked rules.
+- Awaiting owner word: ORD-1021-E1 (Eid Farag 2 appendix papers — `go` fires it); USD FIR
+  build remains queued behind it.

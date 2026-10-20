@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Global EIS - Financial Intelligence Report - Royal Way Travel (EGP)</title>
+<style>
+/* ===== Master v1.3 tokens (SO-1 locked) ===== */
+:root{--primary:#005677;--secondary:#008DCB;--success:#28a745;--danger:#dc3545;--warning:#ffc107;--light:#f8f9fa;--dark:#343a40;--white:#ffffff}
+*{box-sizing:border-box}
+body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background-color:#eef2f5;color:var(--dark);margin:0;padding:20px;line-height:1.55}
+.container{max-width:1200px;margin:0 auto;background:var(--white);border-radius:12px;box-shadow:0 4px 20px rgba(0,0,0,0.08);overflow:hidden;position:relative}
+.header{background:linear-gradient(135deg,var(--primary),var(--secondary));color:var(--white);padding:40px 30px;text-align:center;position:relative}
+.header h1{margin:0;font-size:2.2em;text-transform:uppercase;letter-spacing:1px}
+.header p{margin:5px 0 0;opacity:0.92;font-size:1.02em}
+.header p b,.header p strong{color:var(--white)}
+.header .ref-line{margin-top:12px;font-size:0.85em;opacity:0.85}
+.download-btn{position:absolute;top:30px;right:30px;background:var(--white);color:var(--primary);border:none;padding:10px 20px;font-size:14px;font-weight:bold;border-radius:5px;cursor:pointer;box-shadow:0 2px 5px rgba(0,0,0,0.2);transition:0.2s}
+.download-btn:hover{background:#f0f0f0;transform:translateY(-2px)}
+.content{padding:40px}
+.verdict-block{display:flex;justify-content:space-between;align-items:flex-start;gap:20px;flex-wrap:wrap;margin-bottom:20px}
+.verdict-badge{border-radius:10px;padding:14px 20px;text-align:center;min-width:220px;font-weight:bold}
+.verdict-badge.pass{background:#e6f4ea;border:1px solid var(--success);color:#1e7e34}
+.verdict-badge.fail{background:#fdecea;border:1px solid var(--danger);color:#a71d2a}
+.verdict-badge .big{font-size:1.05em;display:block}
+.verdict-badge .small{font-size:0.75em;font-weight:normal;display:block;margin-top:4px}
+.authenticity-alert{background:#7a1220;color:var(--white);border-radius:10px;padding:22px 26px;margin-bottom:30px}
+.authenticity-alert h3{margin:0 0 12px;font-size:1.2em}
+.authenticity-alert .watermark-box{background:rgba(255,255,255,0.12);border:1px dashed rgba(255,255,255,0.5);padding:10px 14px;border-radius:6px;font-family:'Courier New',monospace;font-size:0.85em;margin:12px 0}
+.authenticity-alert p{margin:8px 0;line-height:1.5;font-size:0.95em}
+/* ===== Section titles (canonical + generator h2.sec) ===== */
+.section-title{font-size:1.45em;color:var(--primary);border-bottom:2px solid #eee;padding-bottom:10px;margin:44px 0 20px;font-weight:700;display:flex;align-items:center}
+.section-title::before{content:'';display:inline-block;width:8px;height:22px;background:var(--secondary);margin-right:12px;border-radius:2px}
+h2.sec{font-size:1.3em;color:var(--primary);background:none;border-bottom:2px solid #eee;padding:0 0 10px;margin:40px 0 16px;font-weight:700;display:flex;align-items:center}
+h2.sec::before{content:'';display:inline-block;width:8px;height:20px;background:var(--secondary);margin-right:12px;border-radius:2px}
+h3{color:var(--primary);font-size:1.05em;margin:18px 0 8px}
+/* ===== Tables (canonical .data-table + bare generator tables) ===== */
+table{width:100%;border-collapse:collapse;font-size:0.92em;margin:12px 0 22px}
+th{background:var(--light);color:var(--primary);text-align:left;padding:10px 12px;font-weight:600;border-bottom:2px solid #ddd}
+td{padding:9px 12px;border-bottom:1px solid #eee;vertical-align:top}
+tr:nth-child(even) td{background:#fafbfc}
+.data-table{margin-bottom:30px}
+.data-table th{padding:12px}
+.data-table td{padding:11px 12px}
+.data-table tr.row-active td{background:#e0f2fe}
+tr.hl td{background:#e7f3fe !important}
+.text-right{text-align:right}.text-center{text-align:center}
+.text-success{color:var(--success);font-weight:bold}.text-danger{color:var(--danger);font-weight:bold}
+.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+/* ===== KPI cards (canonical .kpi-card + compact .kpi / .kpi-value / .kpi-label) ===== */
+.kpi-grid{display:flex;gap:14px;flex-wrap:wrap;margin:16px 0 26px}
+.kpi-card,.kpi{background:var(--white);border-radius:10px;padding:16px 18px;box-shadow:0 2px 10px rgba(0,0,0,0.05);border:1px solid #e1e4e8;border-left:5px solid var(--secondary);flex:1;min-width:190px;transition:transform 0.2s}
+.kpi-card:hover,.kpi:hover{transform:translateY(-3px)}
+.kpi-card h3,.kpi .l,.kpi-label{margin:0 0 8px;color:#666;font-size:0.92em;text-transform:uppercase;letter-spacing:0.4px;font-weight:600}
+.kpi-card .value,.kpi .v,.kpi-value{font-size:1.5em;font-weight:bold;color:var(--primary)}
+.kpi-card .note{font-size:0.85em;color:#777;margin-top:6px}
+.kpi-card.success{border-left-color:var(--success)}.kpi-card.success .value,.kpi-card.success .kpi-value{color:var(--success)}
+.kpi-card.danger{border-left-color:var(--danger)}.kpi-card.danger .value,.kpi-card.danger .kpi-value{color:var(--danger)}
+.kpi-card.warning{border-left-color:var(--warning)}.kpi-card.warning .value,.kpi-card.warning .kpi-value{color:#b8860b}
+.kpi-card.value-first{display:flex;flex-direction:column}
+.kpi-card.value-first .value{order:1}
+.kpi-card.value-first h3{order:2;margin:6px 0 0}
+.kpi-card.value-first .note{order:3}
+/* ===== Tags / badges ===== */
+.tag{background:#e9ecef;padding:3px 10px;border-radius:12px;font-size:0.85em;color:#495057;margin-right:5px;display:inline-block;margin-bottom:5px}
+.tag.in,.tag.credit{background:#e6f4ea;color:var(--success)}
+.tag.out,.tag.debit{background:#fce8e6;color:var(--danger)}
+.tag.pass{background:#e6f4ea;color:var(--success);font-weight:bold}
+.tag.fail{background:#fee2e2;color:var(--danger);font-weight:bold}
+.tag.warn{background:#fff3cd;color:#856404;font-weight:bold}
+.tag.low{background:#e0f7fa;color:var(--primary);font-weight:bold}
+.badge{display:inline-block;padding:3px 12px;border-radius:14px;font-weight:700;font-size:0.85em}
+.badge.pass,.pass{background:#e6f4ea;color:#1e7e34}
+.badge.caution,.caution{background:#fff3cd;color:#856404}
+.badge.fail,.fail{background:#fdecea;color:#a71d2a}
+.badge.info,.info{background:#e7f3fe;color:var(--primary)}
+/* ===== Alert / note boxes ===== */
+.alert-box{padding:18px 20px;border-radius:8px;margin:15px 0;border-left:5px solid}
+.alert-box.blue{background:#e7f3fe;border-color:var(--secondary)}
+.alert-box.red{background:#fff3cd;border-color:var(--warning)}
+.alert-box.green{background:#e6f4ea;border-color:var(--success)}
+.alert-box.danger{background:#fef2f2;border-color:var(--danger)}
+.alert-box h4{margin:0 0 10px;color:var(--dark)}
+.alert-box ul{margin:10px 0 0 20px;padding:0}
+.alert-box li{margin-bottom:8px}
+.note{background:#e7f3fe;border-left:4px solid var(--secondary);padding:12px 16px;font-size:0.95em;margin:12px 0;border-radius:0 7px 7px 0}
+.note.warn,.warn{background:#fffbeb;border-left:4px solid #d97706}
+.note.danger,.danger{background:#fef2f2;border-left:4px solid var(--danger)}
+/* ===== Verdict box (generator narrative verdict) ===== */
+.verdict-box{border:2.5px solid var(--primary);border-radius:11px;padding:18px 22px;background:#e7f3fe;margin:16px 0}
+/* ===== Analysis cards ===== */
+.analysis-grid{display:grid;grid-template-columns:1fr 1fr;gap:30px;margin-bottom:40px}
+@media (max-width:768px){.analysis-grid{grid-template-columns:1fr}.download-btn{position:static;margin-top:20px;display:inline-block}}
+.analysis-card{background:var(--white);border:1px solid #e1e4e8;border-radius:10px;padding:20px;box-shadow:0 2px 5px rgba(0,0,0,0.03)}
+.analysis-card.full-width{grid-column:span 2}
+.analysis-card h3{margin-top:0;color:var(--primary);display:flex;align-items:center;font-size:1.2em}
+.analysis-card h3::before{content:'';display:inline-block;width:10px;height:10px;background:var(--secondary);border-radius:50%;margin-right:10px}
+/* ===== Linked/related-account annex ===== */
+.annex-banner{background:var(--primary);color:var(--white);padding:10px 20px;border-radius:8px 8px 0 0;font-weight:bold;font-size:0.9em;letter-spacing:0.5px}
+.annex-body{border:1px solid #e1e4e8;border-top:none;border-radius:0 0 8px 8px;padding:20px;margin-bottom:30px}
+/* ===== Sign-off ===== */
+.signoff{display:flex;justify-content:space-between;align-items:flex-end;margin-top:40px;padding-top:20px;border-top:1px dashed #ccc;flex-wrap:wrap;gap:20px}
+.signoff .sig-line{border-top:1px solid var(--dark);padding-top:6px;font-size:0.85em;min-width:220px}
+.small{font-size:0.85em;color:#777;line-height:1.6}
+.footer{text-align:center;padding:20px;color:#777;font-size:0.85em;background:#f8f9fa;border-top:1px solid #eee}
+.footer p{margin:4px 0}
+.footer .legal{max-width:900px;margin:6px auto 0;line-height:1.5}
+.footer strong{color:var(--primary)}
+/* ===== Master v1.4: GRAND column group + window-total row (DL-23) ===== */
+th.grand-col{background:#e8f1f8}
+td.grand-cell{background:#f7fbfd}
+tr.total-row td{background:#eef6fa !important;font-weight:bold;border-top:2px solid var(--primary)}
+/* ===== Print contract ===== */
+@page{size:A4;margin:16mm 12mm}
+@media print{body{background:none;padding:0}.container{box-shadow:none;border-radius:0;max-width:none}.download-btn{display:none}.section-title,h2.sec,.analysis-card,.kpi-card,.kpi,.annex-body,.verdict-box,.authenticity-alert{page-break-inside:avoid}table tr,.data-table tr{page-break-inside:avoid}thead{display:table-header-group}.header{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+
+/* ===== PSR uplift layer (Master v1.5.0, DL-35 2026-10-20) =====
+   Promoted additively from the ratified Pre-Submission Statement Review
+   template v1.4-05. Every rule is new or scoped: .psr- prefixed (SO-1). */
+.psr-chip{flex:none;display:inline-flex;align-items:center;justify-content:center;min-width:46px;height:27px;padding:0 11px;border-radius:14px;background:var(--primary);color:#fff;font-size:.72em;font-weight:700;letter-spacing:.08em;margin-right:12px;font-family:'Segoe UI',Tahoma,sans-serif}
+.psr-src{clear:both;font-size:.78em;color:#66707a;margin:10px 0 12px;font-family:'Courier New',monospace;letter-spacing:.02em}
+.psr-src b{color:var(--primary);font-weight:700}
+.psr-src .f{background:#f1f5f8;border:1px solid #e0e7ee;border-radius:4px;padding:1px 6px;white-space:nowrap}
+.psr-intro{font-size:.9em;color:#3d4a56;margin:0 0 14px}
+.psr-card{border:1px solid #e3e8ee;border-radius:12px;overflow-x:auto;margin:6px 0 26px;background:#fff;box-shadow:0 1px 3px rgba(16,24,40,.05)}
+.psr-card table{margin:0;font-size:.93em}
+.psr-card th{background:#f4f7fa;color:#4a5b6b;font-size:.76em;text-transform:uppercase;letter-spacing:.06em;padding:11px 14px;border-bottom:1px solid #e3e8ee;white-space:nowrap}
+.psr-card td{padding:10px 14px;border-bottom:1px solid #eef1f4;vertical-align:middle}
+.psr-card tbody tr:nth-child(even) td{background:#fafbfd}
+.psr-card tbody tr:hover td{background:#f1f7fb}
+.psr-card tbody tr:last-child td{border-bottom:0}
+.psr-card th.dense,.psr-card td.dense{padding:9px 8px;font-size:.95em}
+.psr-card tr.total-row td{background:#eef6fa !important;border-top:2px solid var(--primary);font-weight:bold}
+.psr-card td.empty{text-align:center;color:#9aa5b1;padding:22px}
+.psr-card .tag{white-space:nowrap;margin:0;padding:3px 10px}
+.psr-num{font-variant-numeric:tabular-nums;font-feature-settings:"tnum" 1,"lnum" 1;white-space:nowrap;letter-spacing:.01em}
+.psr-dec{font-size:.82em;opacity:.72}
+.psr-zero{color:#b4bcc5}
+.psr-date{white-space:nowrap;color:#55636f;font-variant-numeric:tabular-nums}
+.psr-ref{font-family:'Courier New',monospace;font-size:.82em;word-break:break-all;color:#4a5b6b}
+.psr-b{font-weight:700}
+.psr-kpis{width:100%;border-spacing:0 10px;margin:2px 0 8px}
+.psr-kpis td.psr-kpi{vertical-align:top;background:#fff;border:1px solid #e3e8ee;border-top:3px solid var(--secondary);border-radius:0 0 10px 10px;padding:12px 16px}
+.psr-kpi{display:inline-block}
+.psr-k-green{border-top-color:var(--success)}.psr-k-red{border-top-color:var(--danger)}.psr-k-amber{border-top-color:#e0a100}.psr-k-blue{border-top-color:var(--secondary)}
+.psr-kpi .l{font-size:.72em;text-transform:uppercase;letter-spacing:.07em;color:#6b7782;margin-bottom:5px}
+.psr-kpi .v{font-size:1.38em;font-weight:700;color:#0f3b52;line-height:1.15;font-variant-numeric:tabular-nums;white-space:nowrap}
+.psr-k-green .v{color:var(--success)}.psr-k-red .v{color:var(--danger)}.psr-k-amber .v{color:#9a6b00}
+.psr-kpi .s{font-size:.78em;color:#6b7782;margin-top:3px}
+.psr-barwrap{display:flex;align-items:center;gap:10px}
+.psr-bar{flex:1;height:10px;background:#edf1f5;border-radius:6px;overflow:hidden;min-width:90px}
+.psr-bar i{display:block;height:100%;border-radius:6px;background:var(--success)}
+.psr-bar i.f1{background:var(--danger)}.psr-bar i.f2{background:#e0a100}
+.psr-pct{flex:none;font-variant-numeric:tabular-nums;font-weight:700;min-width:64px;text-align:right}
+.psr-toc{display:grid;grid-template-columns:repeat(auto-fit,minmax(236px,1fr));gap:10px;margin:0 0 10px}
+.psr-toc a{display:flex;gap:10px;align-items:flex-start;text-decoration:none;color:inherit;border:1px solid #e3e8ee;border-radius:10px;padding:10px 12px;background:#fff;transition:border-color .15s,box-shadow .15s}
+.psr-toc a:hover{border-color:var(--secondary);box-shadow:0 2px 8px rgba(0,141,203,.14)}
+.psr-toc .n{flex:none;width:30px;height:30px;border-radius:8px;background:#e7f3fe;color:var(--primary);font-weight:700;display:flex;align-items:center;justify-content:center;font-size:.78em}
+.psr-toc .t{font-size:.85em;font-weight:600;color:var(--primary);line-height:1.25}
+.psr-toc .d{font-size:.74em;color:#6b7782;margin-top:2px;line-height:1.35}
+.psr-specimen{display:inline-block;background:rgba(255,255,255,.16);border:1px dashed rgba(255,255,255,.55);border-radius:6px;padding:6px 16px;font-size:.78em;letter-spacing:.14em;font-weight:700;margin-top:16px;text-transform:uppercase}
+.psr-badge-warn{background:#fff3cd !important;border:1px solid #d97706 !important;color:#8a5a00 !important}
+.psr-gate{border-left:4px solid var(--secondary)}
+.psr-gate.psr-g-warn{border-left-color:#d97706}
+.psr-gate.psr-g-fail{border-left-color:var(--danger)}
+.psr-gate b:first-child{color:var(--primary)}
+@media (max-width:640px){.psr-kpis,.psr-kpis tr{display:block;width:auto;border-spacing:0}.psr-kpis td{display:block;margin-bottom:8px}.psr-toc{grid-template-columns:1fr}}
+@media print{.psr-toc{display:none}.psr-kpi,.psr-card,.psr-bar,.psr-card .tag,.psr-card th,.psr-card tr.total-row td{-webkit-print-color-adjust:exact;print-color-adjust:exact}.psr-card{box-shadow:none}}
+
+/* ===== FIR one-paper-per-section layer (Master v1.6.0, DL-38 2026-10-21) =====
+   Promoted additively from the owner-ratified Financial Intelligence Report
+   design (owner-attached HTML; proven live on the real Royal Way Travel EGP
+   build DL-37, public/GlobalEIS_FIR_RoyalWayTravel_EGP.html). Every rule is
+   new or scoped under .sheet (SO-1) — no existing report renders a pixel
+   differently. .sheet carries the NAMED page firpage so the Master default
+   @page contract above is untouched; FIR papers print A4 9mm/11mm. */
+.sheet{max-width:1200px;margin:0 auto 28px;background:var(--white);border-radius:12px;box-shadow:0 4px 20px rgba(0,0,0,0.08);overflow:hidden;position:relative;page:firpage;line-height:normal}
+.sheet .header h1{font-size:2.5em}
+.sheet .header p{opacity:0.9;font-size:1.1em}
+.sheet .content{padding:36px 40px 30px}
+.sheet .kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:20px;margin:0 0 34px}
+.sheet .kpi-card{padding:20px;background:var(--white);border:0;border-left:5px solid var(--secondary)}
+.sheet .kpi-card.success{border-left-color:var(--success)}
+.sheet .kpi-card.danger{border-left-color:var(--danger)}
+.sheet .kpi-card.warning{border-left-color:var(--warning)}
+.sheet .kpi-card:hover{transform:translateY(-5px)}
+.sheet .kpi-card h3{margin:0 0 10px;font-size:1.02em;letter-spacing:0}
+.sheet .kpi-card .value{font-size:1.8em}
+.sheet .kpi-card .note{font-size:0.8em;color:#666;margin:4px 0 0;padding:0;background:none;border:none;border-radius:0}
+.sheet .kpi-card.warning .value{color:#c79100}
+.sheet .section-title{font-size:1.6em;margin:0 0 20px}
+.sheet .data-table{margin:0 0 26px;font-size:0.95em}
+.sheet .data-table th{padding:11px;font-weight:700;text-align:left}
+.sheet .data-table td{padding:11px;vertical-align:middle;font-variant-numeric:tabular-nums}
+.sheet .data-table tr:nth-child(even) td{background:transparent}
+.sheet .analysis-grid{gap:26px;margin-bottom:26px}
+.sheet .analysis-card h3{font-size:1.3em;margin:0 0 1em}
+.sheet .alert-box{padding:20px;margin:6px 0 20px;border-left-width:5px}
+.sheet .tag{border:0}
+.sheet .alert-box p{line-height:1.55}
+.sheet .num{font-weight:700}
+.sheet .footer{border-top:none}
+.sheet .footer strong{color:inherit}
+.data-table.compact th,.data-table.compact td{padding:7px 10px;font-size:0.92em}
+.sub-title{color:var(--primary);margin:6px 0 14px;font-size:1.15em}
+.muted{color:#8a97a0;font-weight:400}
+.dec{font-size:0.72em;font-weight:600;opacity:0.75}
+.src-line{margin-top:24px;padding-top:10px;border-top:1px dashed #e5e9ed;color:#8a97a0;font-size:0.78em;line-height:1.5}
+.src-line b{color:#61707a}
+.pageno{position:absolute;bottom:12px;right:22px;color:#b3bcc2;font-size:0.78em}
+.map-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:12px}
+.map-item{border:1px solid #e1e8ee;border-radius:8px;padding:12px 14px;font-size:0.92em;background:#fbfdfe;line-height:1.5}
+.map-item .no{display:inline-block;background:var(--secondary);color:#fff;border-radius:4px;padding:1px 8px;font-size:0.8em;font-weight:700;margin-right:8px}
+@media (max-width:768px){.sheet .content{padding:24px 20px}}
+@page firpage{size:A4;margin:9mm 11mm}
+@media print{
+.sheet{box-shadow:none;border-radius:0;max-width:none;margin:0;page-break-after:always}
+.sheet:last-of-type{page-break-after:auto}
+.sheet .content{padding:14px 4px 20px;font-size:0.94em}
+.pageno{display:none}
+.sheet .header{padding:26px 20px}
+.sheet .header h1{font-size:2em}
+.sheet .kpi-card,.sheet .data-table,.sheet .alert-box{page-break-inside:avoid}
+.sheet .kpi-card:hover{transform:none}
+.sheet .kpi-card{padding:13px 15px}
+.sheet .kpi-card .value{font-size:1.5em}
+.sheet .kpi-grid{gap:12px;margin-bottom:16px}
+.sheet .alert-box{padding:13px 16px;margin-bottom:14px}
+.sheet .alert-box p,.sheet .alert-box li{line-height:1.45}
+.sheet .data-table{margin-bottom:14px}
+.sheet .data-table th,.sheet .data-table td{padding:6px 8px}
+.sheet .data-table.compact th,.sheet .data-table.compact td{padding:4px 7px}
+.sheet .analysis-grid{grid-template-columns:1fr 1fr;gap:14px}
+.sheet .analysis-card{padding:12px 14px}
+.sheet .src-line{margin-top:14px}
+.sheet .map-grid{gap:8px}
+.sheet .map-item{padding:8px 10px;font-size:0.85em}
+/* v1.6.1 print-only compaction for the Net Cash Flow card (screen design untouched) */
+.sheet .ncf{padding:8px 10px}
+.sheet .ncf h3{font-size:11px;margin:0 0 4px}
+.sheet .ncf table.data-table.compact th,.sheet .ncf table.data-table.compact td{padding:2px 5px;font-size:9px;line-height:1.3}
+.sheet .ncf td.small{font-size:7.8px;line-height:1.3}
+.sheet .ncf p.muted{margin:4px 0 0;font-size:8px;line-height:1.35}
+}
+</style>
+</head>
+<body>
+
+<section class="sheet cover">
+  <div class="header">
+    <button class="download-btn" onclick="window.print()">&#11015; Download PDF Report</button>
+    <h1>Financial Intelligence Report</h1>
+    <p><strong>Account Holder:</strong> ROYAL WAY TRAVEL (Royal Way Travel) &nbsp;|&nbsp; <strong>Bank:</strong> Crédit Agricole Egypt</p>
+    <p><strong>Period:</strong> 01 Apr 2026 - 07 Oct 2026 &nbsp;|&nbsp; <strong>Classification:</strong> Confidential</p>
+  </div>
+  <div class="content">
+    <div class="kpi-grid" style="margin-bottom:26px;">
+      <div class="kpi-card success"><h3>Balance Chain</h3><div class="value">142/142 PASS</div><div class="note">0 errors, to the piastre</div></div>
+      <div class="kpi-card success"><h3>Visa Readiness</h3><div class="value">4/4 + 4/4</div><div class="note">closing + avg-daily vs baselines</div></div>
+      <div class="kpi-card warning"><h3>Overall Verdict</h3><div class="value" style="font-size:1.3em;">CONDITIONAL</div><div class="note">4 documentary supplements</div></div>
+    </div>
+    <h3 class="sub-title">Report Map — one paper per section</h3>
+    <div class="map-grid">
+      <div class="map-item"><span class="no">1</span><b>Executive Dashboard</b> — verified profitability, KPIs, flags</div>
+      <div class="map-item"><span class="no">2</span><b>Account Identification</b> — holder, bank, document screening</div>
+      <div class="map-item"><span class="no">3</span><b>Reconciliation</b> — as-reported vs adjusted (external only)</div>
+      <div class="map-item"><span class="no">4</span><b>Monthly Trajectory</b> — 7 months + gap remediation</div>
+      <div class="map-item"><span class="no">5</span><b>Source of Funds</b> — income backbone &amp; expenditure patterns</div>
+      <div class="map-item"><span class="no">6</span><b>Associated Parties</b> — rails, internal links, net exposure</div>
+      <div class="map-item"><span class="no">7</span><b>Risk &amp; Compliance</b> — advisory flags vs positive indicators</div>
+      <div class="map-item"><span class="no">8</span><b>Analyst Conclusion</b> — recommendations &amp; final assessment</div>
+    </div>
+    <p class="muted" style="margin-top:18px; font-size:0.9em;">Every section is a full self-contained paper (prints one A4 page each). All figures are derived directly from the 142-posting verified ledger of account 00031100008670; the companion pre-submission review (GlobalEIS_PSR_RoyalWayTravel_EGP) carries the full 12-section intelligence appendix.</p>
+  </div>
+  <div class="pageno">Paper 1 / 9</div>
+</section>
+<section class="sheet">
+  <div class="content">
+    <h2 class="section-title">1. Executive Dashboard &amp; Verified Profitability</h2>
+    
+<div class="alert-box green">
+  <h4>&#9989; OVERVIEW: Strong, chain-verified account with a conditionally-clean intelligence profile</h4>
+  <p>Across the 190-day window (01 Apr 2026 &#8594; 07 Oct 2026) the account grew from <span class="num">120,677<span class="dec">.83</span></span> to <b><span class="num">768,014<span class="dec">.78</span></span> EGP</b> — a net build-up of <span class="text-success">+ 647,336.95</span> — and every one of the 142 postings reconciles to the piastre against the printed statement totals (0 chain errors). The closing balance clears all four visa baselines, and the average daily balance of <span class="num">743,769<span class="dec">.76</span></span> EGP clears them as well, which is the stricter and more persuasive test. The profile's open items are documentary, not arithmetic: one same-day round-trip candidate, one bank-printed duplicate credit corrected by the bank itself, and 27 postings with no printed reference that will need payer-side proof.</p>
+</div>
+<div class="kpi-grid">
+  <div class="kpi-card success"><h3>Closing Balance</h3><div class="value"><span class="num">768,014<span class="dec">.78</span></span> EGP</div><div class="note">07 Oct 2026 &middot; chain-verified</div></div>
+  <div class="kpi-card warning"><h3>Opening Balance</h3><div class="value"><span class="num">120,677<span class="dec">.83</span></span> EGP</div><div class="note">01 Apr 2026</div></div>
+  <div class="kpi-card warning"><h3>Total Credits</h3><div class="value"><span class="num">27,335,750<span class="dec">.00</span></span> EGP</div><div class="note">190-day window &middot; all sources</div></div>
+  <div class="kpi-card danger"><h3>Unreferenced Credits</h3><div class="value"><span class="num">1,799,150<span class="dec">.00</span></span> EGP</div><div class="note">3 postings &middot; payer-side proof required</div></div>
+</div>
+<div class="kpi-grid">
+  <div class="kpi-card"><h3>Net Cash Flow</h3><div class="value"><span class="text-success">+ 647,336.95</span> EGP</div><div class="note">verified: 120,677.83 + 27,335,750.00 &minus; 26,688,413.05 = 768,014.78</div></div>
+  <div class="kpi-card success"><h3>Avg Daily Balance</h3><div class="value"><span class="num">743,769<span class="dec">.76</span></span> EGP</div><div class="note">190 end-of-day points rebuilt</div></div>
+  <div class="kpi-card danger"><h3>Intelligence Flags</h3><div class="value">29</div><div class="note">round-trip 1 &middot; bank correction 1 &middot; no-ref 27</div></div>
+  <div class="kpi-card success"><h3>Visa Readiness</h3><div class="value">4/4 + 4/4</div><div class="note">closing + avg-daily vs baselines</div></div>
+</div>
+    <div class="analysis-card full-width ncf"><h3>Net Cash Flow &amp; Annualized Run-Rate (Standard 6-Month Basis)</h3><table class="data-table compact"><thead><tr><th>Metric</th><th class="text-right">Value</th><th>Derivation</th></tr></thead><tbody><tr><td>Net cash flow — statement window</td><td class="text-right"><span class="num"><strong>647,336.95 EGP</strong></span> <span class="tag pass">NET POSITIVE</span></td><td class="small">verified credits 27,335,750.00 &minus; verified debits 26,688,413.05</td></tr><tr><td>Annualized revenue — standard basis</td><td class="text-right"><span class="num">54,671,500.00 EGP</span></td><td class="small">credits &times; 12 &divide; 6 = &times;2 — 6-month standard (&times;12&divide;n if shorter)</td></tr><tr><td>Monthly expense run-rate — owner rule</td><td class="text-right"><span class="num">4,448,068.84 EGP</span></td><td class="small">debits &divide; 6 — expenses on a MONTHLY basis; annualized &times;2 = 53,376,826.10 EGP</td></tr><tr><td><b>NET CASH FLOW — ANNUAL</b></td><td class="text-right"><span class="num"><strong>1,294,673.90 EGP</strong></span></td><td class="small">net &times; 2 — the annualized net position at the standard basis</td></tr><tr><td><b>NET CASH FLOW — MONTHLY</b></td><td class="text-right"><span class="num"><strong>107,889.49 EGP</strong></span></td><td class="small">net &divide; 6 — the monthly earn/burn balance the annual figure is built from</td></tr></tbody></table><p class="muted">Firm standard basis: the analysis window is the LAST 6 MONTHS — annual revenue = total credits &times; 2, monthly expenses = total debits &divide; 6 (shorter windows: &times;12&divide;n and &divide;n). Exact-day cross-check on this 190-day window (01/04/2026 → 07/10/2026): &times;1.9211 &rarr; annual net 1,243,568.35 EGP &middot; monthly (30.44-day) 103,710.19 EGP. Computed by the builder from chain-verified totals — no hand-typed values (G8).</p></div>
+<div class="src-line"><b>Intelligence source:</b> verify_chain &middot; balance_stability &middot; coverage_table — ported from <b>eis_analysis_functions.py</b> (agent-side derivation; every figure above re-computed from the raw ledger and chain-verified to the piastre)</div>
+  </div>
+  <div class="pageno">Paper 2 / 9</div>
+</section>
+<section class="sheet">
+  <div class="content">
+    <h2 class="section-title">2. Account &amp; Holder Identification</h2>
+    
+<table class="data-table">
+<tr><td style="width:30%; font-weight:bold;">Account Holder Name:</td><td>ASHRAF SAID SAID MOHAMED AND MOHAMED ALI ABD EL SAMEI AND HIS PARTNERS — trading as <b>ROYAL WAY TRAVEL</b></td></tr>
+<tr><td style="font-weight:bold;">Bank Name / Branch:</td><td>Crédit Agricole Egypt — TALAAT HARB BRANCH (Down Town)</td></tr>
+<tr><td style="font-weight:bold;">Account Number:</td><td>00031100008670 (EGP) &middot; linked USD account 00031110000150 at the same branch, reviewed in its own report</td></tr>
+<tr><td style="font-weight:bold;">Account Type:</td><td>Current account — business (travel agency partnership)</td></tr>
+<tr><td style="font-weight:bold;">Statement Period:</td><td>01 Apr 2026 to 07 Oct 2026 (190 days &middot; six full calendar months Apr 2026&ndash;Sep 2026 + partial Oct 2026)</td></tr>
+<tr><td style="font-weight:bold;">Source Document:</td><td>8-page scanned statement (CamScanner 13/10/2026) &middot; triple-pass OCR re-extraction agent-side: <b>133/142 rows triple-unanimous</b>, remainder resolved by superior passes and confirmed by the 0-error chain</td></tr>
+<tr><td style="font-weight:bold;">Assessment Date:</td><td>20/10/2026 — latest posting 07 Oct 2026, <b>13 days old</b> (inside the 30-day embassy age-out window; re-request after 06/11/2026)</td></tr>
+<tr><td style="font-weight:bold;">Classification:</td><td><span class="tag warn">CONFIDENTIAL — client advisory</span></td></tr>
+</table>
+<div class="alert-box blue">
+  <h4>&#128269; Document Screening Verdict</h4>
+  <p>The statement passes every screening gate that does not require the bank's involvement: the window is complete and continuous, printed totals are present and reconcile exactly, and the scan layer survived a triple-pass forensic OCR with every value resolved. Because the document is a scan, transaction descriptions are not machine-readable, so all source intelligence in this report is established from printed references, cheque numbers, amounts and dates — the classification basis is disclosed on every section. The account is inside its submission freshness window, so the remediation list in Section 8 can still be actioned without re-requesting the statement.</p>
+</div>
+    <div class="src-line"><b>Intelligence source:</b> document_checks &middot; parse_statements — ported from <b>eis_analysis_functions.py</b> (agent-side derivation; every figure above re-computed from the raw ledger and chain-verified to the piastre)</div>
+  </div>
+  <div class="pageno">Paper 3 / 9</div>
+</section>
+<section class="sheet">
+  <div class="content">
+    <h2 class="section-title">3. Reconciliation &amp; Adjusted Cash Flow Analysis</h2>
+    
+<p>To guarantee the integrity of the financial data, a strict mathematical reconciliation was performed first: every row's balance was recomputed from its predecessor, and the window was closed against the statement's own printed totals. On top of the verified ledger, an <b>Adjusted View</b> isolates true external operating activity by stripping out <span class="num">1,564,000<span class="dec">.00</span></span> EGP of internal book transfers received from the holder's own linked account (2 postings, reference = this same account number) and <span class="num">750<span class="dec">.00</span></span> EGP of transfers out to it.</p>
+<table class="data-table">
+<thead><tr><th class="">Metric (EGP)</th><th class="text-right">As Reported</th><th class="text-right">Adjusted (External Only)</th></tr></thead>
+<tbody>
+<tr><td class="">Opening Balance</td><td class="text-right"><span class="num">120,677<span class="dec">.83</span></span></td><td class="text-right"><span class="num">120,677<span class="dec">.83</span></span></td></tr>
+<tr><td class="">Add: Total Credits (Inflows)</td><td class="text-right"><span class="text-success">+ 27,335,750.00</span></td><td class="text-right"><span class="text-success">+ 25,771,750.00</span></td></tr>
+<tr><td class="">Less: Total Debits (Outflows)</td><td class="text-right text-danger">&minus; 26,688,413.05</td><td class="text-right text-danger">&minus; 26,687,663.05</td></tr>
+<tr><td class=""><strong>Net Cash Flow (6-month profit/loss)</strong></td><td class="text-right"><strong><span class="text-success">+ 647,336.95</span></strong></td><td class="text-right"><strong><span class="text-danger">&minus; 915,913.05</span></strong></td></tr>
+<tr style="background:#f0fdf4;"><td class=""><strong>Closing Balance (verified)</strong></td><td class="text-right"><strong>768,014.78</strong></td><td class="text-right">incl. 1,564,000.00 internal funding</td></tr>
+</tbody></table>
+<div class="alert-box blue">
+  <h4>&#128269; Adjusted View Insight</h4>
+  <p>By removing <span class="num">1,564,000<span class="dec">.00</span></span> of identified internal transfers, the Adjusted Net Cash Flow is <b>-915,913.05 EGP</b>: external cheque disbursements (<span class="num">26,641,099<span class="dec">.00</span></span> across 66 cheques — 99.8% of all outflows) outpace external credits, and the account's net growth over the window is carried by the <span class="num">1,564,000<span class="dec">.00</span></span> internal funding from the linked account plus the dominant external funding rail. This does not weaken the file — internal moves between the holder's own accounts are legitimate — but it makes <b>proving the funding rail's ownership (Section 6) and the linked-account relationship</b> the single most valuable documentation upgrade available before submission. Separately, the printed credit total already nets off a bank-printed duplicate correction: gross credits 28,382,550.00 &minus; 1,046,800.00 bank reversal = 27,335,750.00 printed (Section 7).</p>
+</div>
+    <div class="src-line"><b>Intelligence source:</b> verify_chain &middot; monthly_inflows_by_source &middot; recurring_counterparties — ported from <b>eis_analysis_functions.py</b> (agent-side derivation; every figure above re-computed from the raw ledger and chain-verified to the piastre)</div>
+  </div>
+  <div class="pageno">Paper 4 / 9</div>
+</section>
+<section class="sheet">
+  <div class="content">
+    <h2 class="section-title">4. Monthly Financial Trajectory &amp; Total Expenses</h2>
+    
+<p>The month-by-month trajectory is rebuilt directly from the verified chain, so each closing figure is the printed end-of-month balance and each net flow is the exact arithmetic of that month's postings. The profile is accumulation-led: credits lead debits in five of the seven calendar buckets, the balance never runs negative on any of the 190 end-of-day points (lowest EOD <span class="num">10,128<span class="dec">.83</span></span>), and the strongest single month builds the majority of the closing cushion.</p>
+<table class="data-table compact">
+<thead><tr><th class="">Month</th><th class="text-right">Total Credits (EGP)</th><th class="text-right">Total Debits / Expenses (EGP)</th><th class="text-right">Net Flow (EGP)</th><th class="text-right">Closing Balance (EGP)</th></tr></thead>
+<tbody>
+<tr><td class=""><b>Apr 2026</b></td><td class="text-right text-success">6,753,800.00</td><td class="text-right text-danger">5,641,684.00</td><td class="text-right"><span class="text-success">+ 1,112,116.00</span></td><td class="text-right"><b>1,232,793.83</b></td></tr><tr><td class=""><b>May 2026</b></td><td class="text-right text-success">2,397,750.00</td><td class="text-right text-danger">2,899,337.40</td><td class="text-right"><span class="text-danger">&minus; 501,587.40</span></td><td class="text-right"><b>731,206.43</b></td></tr><tr><td class=""><b>Jun 2026</b></td><td class="text-right text-success">2,768,300.00</td><td class="text-right text-danger">2,282,335.20</td><td class="text-right"><span class="text-success">+ 485,964.80</span></td><td class="text-right"><b>1,217,171.23</b></td></tr><tr><td class=""><b>Jul 2026</b></td><td class="text-right text-success">1,757,850.00</td><td class="text-right text-danger">2,076,686.45</td><td class="text-right"><span class="text-danger">&minus; 318,836.45</span></td><td class="text-right"><b>898,334.78</b></td></tr><tr><td class=""><b>Aug 2026</b></td><td class="text-right text-success">2,276,750.00</td><td class="text-right text-danger">2,804,875.00</td><td class="text-right"><span class="text-danger">&minus; 528,125.00</span></td><td class="text-right"><b>370,209.78</b></td></tr><tr><td class=""><b>Sep 2026</b></td><td class="text-right text-success">7,722,700.00</td><td class="text-right text-danger">7,513,465.00</td><td class="text-right"><span class="text-success">+ 209,235.00</span></td><td class="text-right"><b>579,444.78</b></td></tr><tr><td class=""><b>Oct 2026</b> <span class="tag low">partial</span></td><td class="text-right text-success">3,658,600.00</td><td class="text-right text-danger">3,470,030.00</td><td class="text-right"><span class="text-success">+ 188,570.00</span></td><td class="text-right"><b>768,014.78</b></td></tr>
+<tr style="background:#f0fdf4;"><td class=""><b>WINDOW TOTAL</b></td><td class="text-right text-success"><b>27,335,750.00</b></td><td class="text-right text-danger"><b>26,688,413.05</b></td><td class="text-right"><b><span class="text-success">+ 647,336.95</span></b></td><td class="text-right"><b>768,014.78</b></td></tr>
+</tbody></table>
+<div class="alert-box red">
+  <h4>&#9888; Summary of Trajectory Gaps (Agent Action Required)</h4>
+  <p>Assessors read balance behaviour for signs of distress or artificial inflation. The gaps below are the ones this statement will actually show, each with the exact remediation that satisfies embassy compliance:</p>
+  <ul>
+    <li><b>Bank-printed duplicate credit &amp; same-day reversal (06 Oct 2026, <span class="num">1,046,800<span class="dec">.00</span></span>):</b> a credit posted twice and reversed by the bank the same day — visible on the statement as a negative credit line.<br><em>Agent Action:</em> none needed on the document itself; pre-empt assessor questions with a one-line cover-letter note that the bank self-corrected.</li>
+    <li><b>Same-day round-trip candidate (19 Apr 2026, <span class="num">775,800<span class="dec">.00</span></span> in/out, difference 0.00):</b> an amount that entered and left within the same day — the classic pattern assessors test for "borrowed" funds.<br><em>Agent Action:</em> obtain the payer/payee context for 19 Apr 2026 and explain it as ordinary settlement before it is asked about.</li>
+    <li><b>Late build-up (13.4% of window credits arrived in the final 5 days):</b> the closing balance is genuinely held, but its timing invites a build-up question.<br><em>Agent Action:</em> pair the statement with the avg-daily balance evidence (<span class="num">743,769<span class="dec">.76</span></span> over 190 days), which proves the funds are not staged for the snapshot.</li>
+  </ul>
+</div>
+    <div class="src-line"><b>Intelligence source:</b> monthly_summary &middot; detect_roundtrips &middot; detect_reversals &middot; late_build_up — ported from <b>eis_analysis_functions.py</b> (agent-side derivation; every figure above re-computed from the raw ledger and chain-verified to the piastre)</div>
+  </div>
+  <div class="pageno">Paper 5 / 9</div>
+</section>
+<section class="sheet">
+  <div class="content">
+    <h2 class="section-title">5. Source of Funds &amp; Utilization Analysis</h2>
+    
+<p>With the scan layer carrying no machine-readable descriptions, sources are established the quantitative way: printed references identify the rails, cheque numbers identify the paper rail, and same-amount repeats across months identify proven recurring streams. Every figure reconciles to the verified ledger.</p>
+<div class="analysis-grid">
+  <div class="analysis-card">
+    <h3>Major Income Sources</h3>
+    <table class="data-table compact" style="margin-bottom:0;">
+      <thead><tr><th class="">Income Source</th><th class="text-right">Window Total (EGP)</th><th class="">Character Pattern</th></tr></thead>
+      <tbody>
+        <tr><td>Account rail 00031110001150 <span class="muted">(dominant external funder)</span></td><td class="text-right">24,257,850.00</td><td><span class="tag in">Recurring</span> <span class="tag low">36 credits</span></td></tr>
+        <tr><td>0298-series referenced credit <span class="muted">(bank operation no. — likely cheque deposit)</span></td><td class="text-right">761,550.00</td><td><span class="tag warn">One-off</span> <span class="tag low">1 posting</span></td></tr>
+        <tr><td>Internal book transfers (linked own account)</td><td class="text-right">1,564,000.00</td><td><span class="tag warn">Internal</span> <span class="tag low">2 postings</span></td></tr>
+        <tr><td>Unreferenced credits (payer unknown)</td><td class="text-right">1,799,150.00</td><td><span class="tag warn">Variable</span> <span class="tag fail">proof needed</span></td></tr>
+        <tr><td>Bank-printed duplicate correction (06 Oct 2026)</td><td class="text-right text-danger">&minus; 1,046,800.00</td><td><span class="tag out">Bank correction</span> <span class="tag low">netted</span></td></tr>
+        <tr style="background:#f0fdf4;"><td><b>Net printed credits</b></td><td class="text-right"><b>27,335,750.00</b></td><td><span class="tag pass">ties to chain</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="analysis-card">
+    <h3>Major Expenditure Patterns</h3>
+    <table class="data-table compact" style="margin-bottom:0;">
+      <thead><tr><th class="">Expense Category</th><th class="text-right">Window Total (EGP)</th><th class="">Character Pattern</th></tr></thead>
+      <tbody>
+        <tr><td>Cheque outflows (paper rail)</td><td class="text-right">26,641,099.00</td><td><span class="tag out">Structured</span> <span class="tag low">99.8% of debits</span></td></tr>
+        <tr><td>Fixed payment &#8776; 500,000.00</td><td class="text-right">7,000,000.00</td><td><span class="tag out">Recurring</span> <span class="tag low">14&times; over 6 months</span></td></tr><tr><td>Fixed payment &#8776; 250,000.00</td><td class="text-right">1,750,000.00</td><td><span class="tag out">Recurring</span> <span class="tag low">7&times; over 3 months</span></td></tr><tr><td>Fixed payment &#8776; 50,000.00</td><td class="text-right">250,000.00</td><td><span class="tag out">Recurring</span> <span class="tag low">5&times; over 5 months</span></td></tr>
+        <tr><td>Unreferenced debits</td><td class="text-right">46,564.05</td><td><span class="tag fail">No reference</span> <span class="tag low">24 postings</span></td></tr>
+        <tr><td>Self-account transfers out</td><td class="text-right">750.00</td><td><span class="tag warn">Internal</span> <span class="tag low">8 postings</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+<div class="alert-box green">
+  <h4>&#9989; Proven Recurring Streams (the income backbone)</h4>
+  <p>5 same-amount credit streams repeat across at least two months and together contribute <b>13,417,400.00 EGP</b> — 49.1% of all window credits. The remaining variable credits (<span class="num">13,918,350<span class="dec">.00</span></span>) are legitimate trading revenue but should be explainable line-by-line before submission.</p>
+</div>
+    <div class="src-line"><b>Intelligence source:</b> monthly_inflows_by_source &middot; recurring_counterparties &middot; detect_installments — ported from <b>eis_analysis_functions.py</b> (agent-side derivation; every figure above re-computed from the raw ledger and chain-verified to the piastre)</div>
+  </div>
+  <div class="pageno">Paper 6 / 9</div>
+</section>
+<section class="sheet">
+  <div class="content">
+    <h2 class="section-title">6. Key Associated Parties &amp; Net Exposure</h2>
+    
+<p>Counterparty intelligence groups the verified ledger by printed reference family — the "Net Exposure" is the exact net financial impact (inflow minus outflow) for each party or rail. Because the dominant external funder arrives through a 14-digit account reference, proving that account's ownership is what converts this table from descriptive to persuasive.</p>
+<table class="data-table compact">
+<thead><tr><th class="">Party / Reference</th><th class="">Role</th><th class="text-right">Total In (EGP)</th><th class="text-right">Total Out (EGP)</th><th class="text-right">Net Exposure (EGP)</th></tr></thead>
+<tbody>
+<tr><td class=""><b>CHEQUE (number printed)</b></td><td class="">Cheque rail (issued)</td><td class="text-right text-success">0.00 <span class="muted">(0)</span></td><td class="text-right text-danger">26,641,099.00 <span class="muted">(66)</span></td><td class="text-right text-danger"><b>&minus; 26,641,099.00</b></td></tr><tr><td class=""><b>14-DIGIT ACCOUNT RAIL</b></td><td class="">External funding rail</td><td class="text-right text-success">24,257,850.00 <span class="muted">(36)</span></td><td class="text-right text-danger">0.00 <span class="muted">(0)</span></td><td class="text-right text-success"><b>+ 24,257,850.00</b></td></tr><tr><td class=""><b>UNPRINTED</b></td><td class="">Unreferenced postings</td><td class="text-right text-success">1,799,150.00 <span class="muted">(3)</span></td><td class="text-right text-danger">46,564.05 <span class="muted">(24)</span></td><td class="text-right text-success"><b>+ 1,752,585.95</b></td></tr><tr><td class=""><b>SELF a/c REF (internal book transfer)</b></td><td class="">Internal book transfer (own linked account)</td><td class="text-right text-success">1,564,000.00 <span class="muted">(2)</span></td><td class="text-right text-danger">750.00 <span class="muted">(8)</span></td><td class="text-right text-success"><b>+ 1,563,250.00</b></td></tr><tr><td class=""><b>0298-SERIES RAIL</b></td><td class="">0298 series — cheque/advice numbers</td><td class="text-right text-success">761,550.00 <span class="muted">(1)</span></td><td class="text-right text-danger">0.00 <span class="muted">(0)</span></td><td class="text-right text-success"><b>+ 761,550.00</b></td></tr>
+</tbody></table>
+<div class="alert-box blue">
+  <h4>&#128269; Party Intelligence Read</h4>
+  <p>The single funding rail 00031110001150 delivered <b>24,257,850.00 EGP</b> across 36 credits — 88.7% of all window credits — making it the account's financial backbone; a source-of-funds letter naming that account is the highest-value single document the client can add. The self-referenced book transfers (2 in / 8 out, 1,564,000.00 EGP) tie the account to its linked USD sibling 00031110000150 and are excluded from external income in Section 3. The 27 postings with no printed reference (1,799,150.00 in / 46,564.05 out) are the only parties this statement cannot identify — payer-side documentation is gated in Section 8.</p>
+</div>
+    <div class="src-line"><b>Intelligence source:</b> recurring_counterparties &middot; monthly_inflows_by_source — ported from <b>eis_analysis_functions.py</b> (agent-side derivation; every figure above re-computed from the raw ledger and chain-verified to the piastre)</div>
+  </div>
+  <div class="pageno">Paper 7 / 9</div>
+</section>
+<section class="sheet">
+  <div class="content">
+    <h2 class="section-title">7. Risk &amp; Compliance Indicators (Agent Action Items)</h2>
+    
+<div class="analysis-grid">
+  <div class="analysis-card">
+    <h3>Advisory Flags (Requires Agent Attention)</h3>
+    <ul style="padding-left:20px; margin:10px 0;">
+      <li style="margin-bottom:10px; color:var(--danger);"><b>Duplicate credit + same-day bank reversal (<span class="num">1,046,800<span class="dec">.00</span></span>, 06 Oct 2026):</b> gross credits 28,382,550.00 &minus; 1,046,800.00 = printed 27,335,750.00; the reconciliation holds exactly. <b>Action:</b> cover-letter note; no document change needed.</li>
+      <li style="margin-bottom:10px; color:var(--danger);"><b>Same-day round-trip candidate (<span class="num">775,800<span class="dec">.00</span></span>, 19 Apr 2026):</b> in and out within one day, difference 0.00. <b>Action:</b> payer/payee context note before submission.</li>
+      <li style="margin-bottom:10px;"><b>27 unreferenced postings (1,799,150.00 in / 46,564.05 out):</b> the scan layer prints no reference for these rows. <b>Action:</b> payer-side proofs or bank confirmation for the credit side.</li>
+      <li style="margin-bottom:10px;"><b>Late build-up 13.4% of credits in final 5 days:</b> timing exposure on the closing figure. <b>Action:</b> lead with avg-daily evidence <span class="num">743,769<span class="dec">.76</span></span>.</li>
+    </ul>
+  </div>
+  <div class="analysis-card">
+    <h3>Positive Indicators (Strengthens Profile)</h3>
+    <ul style="padding-left:20px; margin:10px 0;">
+      <li style="margin-bottom:10px;"><b>Perfect arithmetic integrity:</b> 142 postings, 0 chain errors, printed totals tie to the piastre — the strongest possible technical footing.</li>
+      <li style="margin-bottom:10px;"><b>Full baseline coverage:</b> closing AND 190-day average daily balance clear all four visa baselines; weakest line still 289.6% of threshold (United States).</li>
+      <li style="margin-bottom:10px;"><b>No distress behaviour:</b> zero negative balance days; lowest end-of-day point <span class="num">10,128<span class="dec">.83</span></span> EGP.</li>
+      <li style="margin-bottom:10px;"><b>Proven income backbone:</b> 5 recurring credit streams = 49.1% of credits; fixed obligations behave contractually.</li>
+      <li style="margin-bottom:10px;"><b>Freshness:</b> latest posting only 13 days old — comfortably inside the 30-day window.</li>
+    </ul>
+  </div>
+</div>
+    <div class="src-line"><b>Intelligence source:</b> detect_roundtrips &middot; detect_reversals &middot; coverage_table &middot; overdraft_days — ported from <b>eis_analysis_functions.py</b> (agent-side derivation; every figure above re-computed from the raw ledger and chain-verified to the piastre)</div>
+  </div>
+  <div class="pageno">Paper 8 / 9</div>
+</section>
+<section class="sheet">
+  <div class="content">
+    <h2 class="section-title">8. Analyst Conclusion &amp; Recommendations</h2>
+    
+<p><b>Executive Summary:</b> This 190-day statement of the ROYAL WAY TRAVEL current account reconciles perfectly — 142 postings, zero chain errors, printed totals exact to the piastre — and shows a business accumulating cash: 120,677.83 opening, <span class="num">27,335,750<span class="dec">.00</span></span> credits, <span class="num">26,688,413<span class="dec">.05</span></span> debits, <span class="num">768,014<span class="dec">.78</span></span> closing. The intelligence layer found one bank-corrected duplicate credit, one same-day round-trip candidate, 27 unreferenced postings and a 13.4% late-window build-up; none of these is disqualifying, and every one has a concrete, executable fix below.</p>
+<p><b>Financial Strength:</b> The account is genuinely liquid and stable: the average daily balance of <span class="num">743,769<span class="dec">.76</span></span> EGP exceeds even the strictest baseline tested, the balance never went negative, and 49.1% of credits arrive through proven recurring streams. The adjusted view shows external cheque disbursements (<span class="num">26,641,099<span class="dec">.00</span></span>) outpacing external credits, with the linked-account funding (<span class="num">1,564,000<span class="dec">.00</span></span>) and the dominant rail (24,257,850.00) carrying the growth — which is precisely why the ownership proofs below matter more than any additional balance.</p>
+<div class="alert-box danger" style="margin-top:20px;">
+  <h4>&#9888; Critical Recommendation for Official Submission</h4>
+  <p>To preemptively address strict financial compliance checks, the agent is strongly advised to include the following supplementary documents:</p>
+  <ul>
+    <li><b>Source-of-funds letter for rail 00031110001150:</b> names and explains the account behind 88.7% of all credits (24,257,850.00 EGP).</li>
+    <li><b>Payer-side proofs for the 3 unreferenced credits (<span class="num">1,799,150<span class="dec">.00</span></span>):</b> the only inflows this statement cannot self-identify.</li>
+    <li><b>Linked-account relationship evidence (00031110000150):</b> confirms the <span class="num">1,564,000<span class="dec">.00</span></span> internal book transfers are the holder's own funds.</li>
+    <li><b>Context note for 19 Apr 2026 (<span class="num">775,800<span class="dec">.00</span></span> same-day in/out)</b> and a one-line explanation of the 06 Oct 2026 bank-corrected duplicate.</li>
+  </ul>
+</div>
+<p><b>Final Assessment:</b> <span class="tag warn">CONDITIONAL PASS — suitable for submission once the four documentary supplements above are attached</span> The arithmetic spine of this file is flawless and both balance views clear every baseline; the condition attaches purely to proving what the statement cannot say for itself. Annualized reference figures (mechanical extrapolation, never a KPI): credits run at 52,513,414.47 EGP/year and 4,379,474.89 EGP/month across the window.</p>
+<div class="footer" style="margin-top:22px; text-align:center; padding:14px 16px 16px; color:#777; font-size:0.88em; background:#f8f9fa; border-radius:8px;">
+<p style="margin:4px 0;"><strong>Prepared By:</strong> Global EIS - Financial Intelligence Services</p>
+<p style="margin:4px 0;"><strong>Disclaimer:</strong> This analysis is generated based on the provided bank statement document. All mathematical reconciliations are verified against official bank totals. This report does not constitute legal advice.</p>
+</div>
+    <div class="src-line"><b>Intelligence source:</b> annualization &middot; coverage_table &middot; large_deposit_docs — ported from <b>eis_analysis_functions.py</b> (agent-side derivation; every figure above re-computed from the raw ledger and chain-verified to the piastre)</div>
+  </div>
+  <div class="pageno">Paper 9 / 9</div>
+</section>
+</body>
+</html>

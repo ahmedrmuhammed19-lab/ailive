@@ -162,7 +162,7 @@
  * footer.
  */
 
-export const TEMPLATE_VERSION = "Master v1.6.0 (STANDARD — FIR one-paper-per-section layer promoted additively from the owner-ratified Financial Intelligence Report design, owner-approved 2026-10-21; lineage: v1.5.0 PSR uplift layer promoted from the ratified Pre-Submission Statement Review template v1.4-05, owner-approved 2026-10-20; v1.4.0 GRAND debit/credit totals + window-prorated income & expense summary from the audited Bola Ayad Gerges Rev 3 build, owner-approved 2026-10-18; v1.3.0 Elgarayadli build promoted 2026-10-15; SO-9 balance double-check appendix A2 added 2026-10-15; v1.2.6 three-way coverage audit 2026-10-11, SO-10 passport appendix 2026-10-11, section order contract 2026-10-11, visa readiness matrix + action gates 2026-10-11, disclaimer hardened 2026-10-11; v1.2 promoted 2026-10-06)";
+export const TEMPLATE_VERSION = "Master v1.6.1 (STANDARD — FIR net-cash-flow annualization block added (owner 6-month standard: credits ×2 annualized, debits ÷6 monthly-basis, formulas printed), owner order ORD-1021-N1 2026-10-21; lineage: v1.6.0 FIR one-paper-per-section layer promoted additively from the owner-ratified Financial Intelligence Report design, owner-approved 2026-10-21; v1.5.0 PSR uplift layer promoted from the ratified Pre-Submission Statement Review template v1.4-05, owner-approved 2026-10-20; v1.4.0 GRAND debit/credit totals + window-prorated income & expense summary from the audited Bola Ayad Gerges Rev 3 build, owner-approved 2026-10-18; v1.3.0 Elgarayadli build promoted 2026-10-15; SO-9 balance double-check appendix A2 added 2026-10-15; v1.2.6 three-way coverage audit 2026-10-11, SO-10 passport appendix 2026-10-11, section order contract 2026-10-11, visa readiness matrix + action gates 2026-10-11, disclaimer hardened 2026-10-11; v1.2 promoted 2026-10-06)";
 
 export const REPORT_CSS = `
 /* ===== Master v1.3 tokens (SO-1 locked) ===== */
@@ -395,6 +395,12 @@ tr.total-row td{background:#eef6fa !important;font-weight:bold;border-top:2px so
 .sheet .src-line{margin-top:14px}
 .sheet .map-grid{gap:8px}
 .sheet .map-item{padding:8px 10px;font-size:0.85em}
+/* v1.6.1 print-only compaction for the Net Cash Flow card (screen design untouched) */
+.sheet .ncf{padding:8px 10px}
+.sheet .ncf h3{font-size:11px;margin:0 0 4px}
+.sheet .ncf table.data-table.compact th,.sheet .ncf table.data-table.compact td{padding:2px 5px;font-size:9px;line-height:1.3}
+.sheet .ncf td.small{font-size:7.8px;line-height:1.3}
+.sheet .ncf p.muted{margin:4px 0 0;font-size:8px;line-height:1.35}
 }
 `;
 
@@ -1042,4 +1048,83 @@ export function firSourceLine(fns: string[], lib = "eis_analysis_functions.py"):
 /** FIR document shell — full HTML doc whose body is the joined papers (no .container wrapper, no outer footer; the footer lives inside the last paper per the ratified design). */
 export function firShell(opts: { pageTitle: string; sheets: string[] }): string {
   return `<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="UTF-8">\n<meta name="viewport" content="width=device-width, initial-scale=1.0">\n<title>${escHtml(opts.pageTitle)}</title>\n<style>${REPORT_CSS}</style></head>\n<body>\n\n${opts.sheets.join("\n")}\n</body>\n</html>`;
+}
+
+/**
+ * Master v1.6.1 — FIR Net Cash Flow block (owner order ORD-1021-N1, 2026-10-21).
+ * Firm standard input: the LAST 6 MONTHS statement. On the standard basis the
+ * annualization factor is 12 ÷ 6 = 2 (owner rule: total credits × 2 = annual
+ * revenue) and monthly expenses are window debits ÷ 6 (owner rule: expenses on
+ * a MONTHLY basis). Statements shorter than 6 months annualize ×(12 ÷ n) and
+ * monthly-average ÷ n — the same formulas generalized. The exact-day
+ * cross-check reuses the v1.4 canonical run-rate math (annualRunRate /
+ * monthlyRunRate). Fail-loud doctrine: raw numbers in, every rendered figure
+ * computed HERE — no hand-typed strings (G8).
+ */
+export interface FirNetCashFlowInput {
+  currency: string;
+  /** Standard-basis window length in months (firm standard: 6). */
+  months: number;
+  /** GRAND verified window credits (gross income). */
+  credits: number;
+  /** GRAND verified window debits (gross expenses). */
+  debits: number;
+  /** Actual window days — enables the exact-day transparency note. */
+  windowDays?: number;
+  /** Period label for the note, e.g. "01/04/2026 → 07/10/2026". */
+  periodLabel?: string;
+}
+
+export function firNetCashFlow(input: FirNetCashFlowInput): string {
+  if (!(input.months > 0)) throw new Error("firNetCashFlow: months must be > 0");
+  const cur = escHtml(input.currency);
+  const n = input.months;
+  const f = 12 / n;
+  const fLabel = f.toFixed(4).replace(/0+$/, "").replace(/\.$/, "");
+  const net = input.credits - input.debits;
+  const netTone = net >= 0 ? "pass" : "fail";
+  const netWord = net >= 0 ? "NET POSITIVE" : "NET NEGATIVE";
+  const money = (x: number, strong = false) =>
+    `<span class="num">${strong ? "<strong>" : ""}${fmt2(x)} ${cur}${strong ? "</strong>" : ""}</span>`;
+  const rows: string[] = [];
+  rows.push(
+    `<tr><td>Net cash flow — statement window</td>` +
+      `<td class="text-right">${money(net, true)} <span class="tag ${netTone}">${netWord}</span></td>` +
+      `<td class="small">verified credits ${fmt2(input.credits)} &minus; verified debits ${fmt2(input.debits)}</td></tr>`,
+  );
+  rows.push(
+    `<tr><td>Annualized revenue — standard basis</td>` +
+      `<td class="text-right">${money(input.credits * f)}</td>` +
+      `<td class="small">credits &times; 12 &divide; ${n} = &times;${fLabel} — 6-month standard (&times;12&divide;n if shorter)</td></tr>`,
+  );
+  rows.push(
+    `<tr><td>Monthly expense run-rate — owner rule</td>` +
+      `<td class="text-right">${money(input.debits / n)}</td>` +
+      `<td class="small">debits &divide; ${n} — expenses on a MONTHLY basis; annualized &times;${fLabel} = ${fmt2(input.debits * f)} ${cur}</td></tr>`,
+  );
+  rows.push(
+    `<tr><td><b>NET CASH FLOW — ANNUAL</b></td>` +
+      `<td class="text-right">${money(net * f, true)}</td>` +
+      `<td class="small">net &times; ${fLabel} — the annualized net position at the standard basis</td></tr>`,
+  );
+  rows.push(
+    `<tr><td><b>NET CASH FLOW — MONTHLY</b></td>` +
+      `<td class="text-right">${money(net / n, true)}</td>` +
+      `<td class="small">net &divide; ${n} — the monthly earn/burn balance the annual figure is built from</td></tr>`,
+  );
+  let note =
+    `<p class="muted">Firm standard basis: the analysis window is the LAST 6 MONTHS — annual revenue = total credits &times; 2, ` +
+    `monthly expenses = total debits &divide; 6 (shorter windows: &times;12&divide;n and &divide;n).`;
+  if (input.windowDays && input.windowDays > 0) {
+    note +=
+      ` Exact-day cross-check on this ${input.windowDays}-day window${input.periodLabel ? ` (${escHtml(input.periodLabel)})` : ""}: &times;${(365 / input.windowDays).toFixed(4)} &rarr; ` +
+      `annual net ${annualRunRate(net, input.windowDays)} ${cur} &middot; monthly (30.44-day) ${monthlyRunRate(net, input.windowDays)} ${cur}.`;
+  }
+  note += ` Computed by the builder from chain-verified totals — no hand-typed values (G8).</p>`;
+  return (
+    `<div class="analysis-card full-width ncf"><h3>Net Cash Flow &amp; Annualized Run-Rate (Standard 6-Month Basis)</h3>` +
+    `<table class="data-table compact"><thead><tr><th>Metric</th><th class="text-right">Value</th><th>Derivation</th></tr></thead><tbody>` +
+    rows.join("") +
+    `</tbody></table>${note}</div>`
+  );
 }

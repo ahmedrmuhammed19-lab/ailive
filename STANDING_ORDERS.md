@@ -116,6 +116,21 @@ Final pipeline state JSONs (rows/solved/gates) are force-tracked at cycle end;
 intermediate line-level files may stay untracked. `scripts/restore_env.sh`
 restores .env + DB + seeds after any wipe; run it before working.
 
+**SO-13 · HTML-ONLY DELIVERY (ORD-1021-H1)**
+Every future bank-statement deliverable is ONE self-contained HTML file on the
+Master design — no PDF, no ZIP, no XLSX attachments on any channel. Delivery
+surfaces: chat + repo/public per the ORD-1019-F1 mail freeze.
+
+**SO-14 · SIX-MONTH STANDARD & NET CASH FLOW ANNUALIZATION (ORD-1021-N1)**
+The firm's standard analysis input is the LAST 6 MONTHS statement. Every FIR
+carries the Net Cash Flow block (`firNetCashFlow`, Master v1.6.1) with the
+formulas PRINTED on the report: annualized revenue = total credits × 2 on a
+6-month window (×12÷n when shorter); monthly expense run-rate = total debits
+÷ 6 — expenses on a MONTHLY basis (÷n when shorter); net cash flow reported
+ANNUAL and MONTHLY. An exact-day cross-check (365÷days) is printed as a
+transparency note. All figures builder-computed from chain-verified totals —
+never hand-typed (G8).
+
 ---
 
 ---
@@ -150,6 +165,9 @@ restores .env + DB + seeds after any wipe; run it before working.
 | ORD-1018-P1 | 2026-10-19 | "if i sent you any thing to do just you work on it not depends or use engine in portal" — personal-work mandate generalized | ACCEPTED | **GENERALIZES ORD-1015-T5 from the queue flow to ALL owner-sent work**: any document the owner sends is worked PERSONALLY by the agent end-to-end — own OCR/extraction, own running-balance chain arithmetic, own SO-9 two-pass double-check, own report generator rendering the Master v1.4.0 design (SO-1 look unchanged; template file read as design reference only). ZERO imports from / dependence on the portal engine (`src/lib/analyze.ts`); the portal is at most a delivery surface when the owner asks, never part of the analysis path. DL-27 was the last hybrid (engine parser+report builder used) — that split is now retired · worklog DL-28 |
 | ORD-1019-F1 | 2026-10-19 | "stop sending abdulrahman" — freeze the client-delivery channel | ENFORCED | **CHANNEL FROZEN**: NO emails to abdulrahman.ali@global-operation.com from now until the owner explicitly re-authorizes a recipient. Supersedes the DL-29/DL-30 per-task delivery authorization (both DL-30 mails had already gone out before the freeze landed — no recall sent, since sending again would breach the freeze). Enforcement: hard guard at top of `scripts/abdl_mail.ts` (exit 78 before any mail logic, verified by dry-run); no cron/no daemon paths exist. All future report deliverables are HELD locally (`download/`) and presented to the owner in chat; nothing leaves to any client address without a named-recipient owner instruction · worklog DL-31 |
 | ORD-1019-P2 | 2026-10-19 | "portal just if i want to share and some one will be upload bank statement, i will give you order to work on it by yourself, engine will be disabled. all work will be done from you" — portal demoted to upload/share surface, engine disabled, 100% personal work | ACCEPTED + **ENFORCED IN CODE** | **ENGINE DISABLED BY DEFAULT** (commit 9021fb1, prod via auto-deploy): `AUTO_WORK` is now OPT-IN in `src/app/api/upload/route.ts` — default OFF (uploads sit WAITING, manual Start Analysis still available as draft assist), `AUTO_WORK=1` re-enables zero-tap. Proof: `test_autowork.py` **12/12** with `AUTO_WORK=1` (opt-in intact) + `dl32_engine_off_probe.py` **4/4** on default boot (upload → autoWork=false, WAITING, 0 engine firings in 8s). Gates: src tsc 0 + next build 0. When someone uploads, the owner orders the analyst directly; the full ORD-1018-P1 personal pipeline applies (own OCR → own chain → SO-9 → Master v1.4.0 report). Deliveries stay frozen per ORD-1019-F1 · worklog DL-32 |
+| ORD-1021-H1 | 2026-10-21 | "in next bank statements send only html" — HTML-only delivery rule | ACCEPTED | **SO-13 codified**: every future statement deliverable = ONE self-contained HTML on the Master design; no PDF/ZIP/XLSX on any channel; chat + repo/public per ORD-1019-F1 · worklog DL-39 |
+| ORD-1021-N1 | 2026-10-21 | "add Net cash flow … multiply the total credit by 2 if the period is 6 months … divide it by 6 because I want the expenses on a monthly basis" + "our standard rule is to use bank statements for the last 6 months" | DONE | **SO-14 codified**; `firNetCashFlow` builder promoted into `report_design.ts` (Master v1.6.1, additive — SO-1); proof build FIR v2 for Royal Way Travel EGP (new file, v1 byte-frozen sha 9e7daaf0…): annual revenue 54,671,500.00 · monthly expenses 4,448,068.84 · NET CASH FLOW annual 1,294,673.90 · monthly 107,889.49 EGP, exact-day cross-check ×1.9211 printed; §8 kept untouched (A4 ceiling) — block lives in §1 Dashboard; print = EXACTLY 9 A4 papers; gates src tsc 0 + next build 0 · worklog DL-39 |
+| ORD-1021-E1 | 2026-10-21 | "i wanna 2 appendix of eid" | PROPOSED — awaiting owner word | Plan: two appendix papers (FIR .sheet vocabulary) for the Eid Farag NBE case — **Appendix A** full 462-row transaction census, **Appendix B** classification atlas & source-document gaps — delivered as ONE self-contained HTML per SO-13. Sandbox wiped the raw Eid rows (SO-12 wipe pattern), so the appendices re-parse + re-verify from the committed census artifact `public/GlobalEIS_Report_EidFarag_NBE_EGP_v4_462rows.html` (G8: abort on any disagreement with printed totals). Owner says `go` to fire |
 
 **Open items (owner side, no pressure — listed once):**
 - Bank-issued **digital PDF** for this account → glyph-exact fast-lane confirmation AND closes the two open v3.2 disclosures (S2 fee mass reclassification, S3 counterparty/sign fix).
