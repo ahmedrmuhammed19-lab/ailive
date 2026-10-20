@@ -162,7 +162,7 @@
  * footer.
  */
 
-export const TEMPLATE_VERSION = "Master v1.6.1 (STANDARD — FIR net-cash-flow annualization block added (owner 6-month standard: credits ×2 annualized, debits ÷6 monthly-basis, formulas printed), owner order ORD-1021-N1 2026-10-21; lineage: v1.6.0 FIR one-paper-per-section layer promoted additively from the owner-ratified Financial Intelligence Report design, owner-approved 2026-10-21; v1.5.0 PSR uplift layer promoted from the ratified Pre-Submission Statement Review template v1.4-05, owner-approved 2026-10-20; v1.4.0 GRAND debit/credit totals + window-prorated income & expense summary from the audited Bola Ayad Gerges Rev 3 build, owner-approved 2026-10-18; v1.3.0 Elgarayadli build promoted 2026-10-15; SO-9 balance double-check appendix A2 added 2026-10-15; v1.2.6 three-way coverage audit 2026-10-11, SO-10 passport appendix 2026-10-11, section order contract 2026-10-11, visa readiness matrix + action gates 2026-10-11, disclaimer hardened 2026-10-11; v1.2 promoted 2026-10-06)";
+export const TEMPLATE_VERSION = "Master v1.6.2 (STANDARD — monthly net (صافي) after exclusions block + closing-balance reconciliation (the statement's LAST posting) added to the FIR Net Cash Flow card, owner order ORD-1022-N2 2026-10-21; lineage: v1.6.1 FIR net-cash-flow annualization block added (owner 6-month standard: credits ×2 annualized, debits ÷6 monthly-basis, formulas printed), owner order ORD-1021-N1 2026-10-21; lineage: v1.6.0 FIR one-paper-per-section layer promoted additively from the owner-ratified Financial Intelligence Report design, owner-approved 2026-10-21; v1.5.0 PSR uplift layer promoted from the ratified Pre-Submission Statement Review template v1.4-05, owner-approved 2026-10-20; v1.4.0 GRAND debit/credit totals + window-prorated income & expense summary from the audited Bola Ayad Gerges Rev 3 build, owner-approved 2026-10-18; v1.3.0 Elgarayadli build promoted 2026-10-15; SO-9 balance double-check appendix A2 added 2026-10-15; v1.2.6 three-way coverage audit 2026-10-11, SO-10 passport appendix 2026-10-11, section order contract 2026-10-11, visa readiness matrix + action gates 2026-10-11, disclaimer hardened 2026-10-11; v1.2 promoted 2026-10-06)";
 
 export const REPORT_CSS = `
 /* ===== Master v1.3 tokens (SO-1 locked) ===== */
@@ -401,6 +401,18 @@ tr.total-row td{background:#eef6fa !important;font-weight:bold;border-top:2px so
 .sheet .ncf table.data-table.compact th,.sheet .ncf table.data-table.compact td{padding:2px 5px;font-size:9px;line-height:1.3}
 .sheet .ncf td.small{font-size:7.8px;line-height:1.3}
 .sheet .ncf p.muted{margin:4px 0 0;font-size:8px;line-height:1.35}
+/* v1.6.2 print-only compaction for the Monthly Net (After Exclusions) block (screen design untouched) */
+.sheet .mnf{padding:8px 10px}
+.sheet .mnf h3{font-size:11px;margin:0 0 4px}
+.sheet .mnf table.data-table.compact th,.sheet .mnf table.data-table.compact td{padding:2px 5px;font-size:9px;line-height:1.3}
+.sheet .mnf td.small{font-size:7.8px;line-height:1.3}
+.sheet .mnf p.muted{margin:4px 0 0;font-size:8px;line-height:1.35}
+/* v1.6.2 fit pass — the two papers gained content; print-only pixel savings (screen untouched) */
+.sheet .ncf{padding:5px 8px}
+.sheet .ncf h3,.sheet .mnf h3{font-size:10.5px;margin:0 0 3px}
+.sheet .ncf td.small,.sheet .mnf td.small{font-size:7.4px;line-height:1.25}
+.sheet .ncf p.muted,.sheet .mnf p.muted{margin:3px 0 0;font-size:7.2px;line-height:1.22}
+.sheet .ncf + .src-line,.sheet .mnf + .src-line{margin-top:4px;font-size:7px;line-height:1.3}
 }
 `;
 
@@ -1073,6 +1085,12 @@ export interface FirNetCashFlowInput {
   windowDays?: number;
   /** Period label for the note, e.g. "01/04/2026 → 07/10/2026". */
   periodLabel?: string;
+  /** v1.6.2 (ORD-1022-N2) — verified opening balance; enables the closing-balance reconciliation row. */
+  openingBalance?: number;
+  /** v1.6.2 (ORD-1022-N2) — the ending balance carried by the statement's LAST posting. */
+  closingBalance?: number;
+  /** v1.6.2 (ORD-1022-N2) — date of that last posting, e.g. "07 Oct 2026". */
+  lastPostingDate?: string;
 }
 
 export function firNetCashFlow(input: FirNetCashFlowInput): string {
@@ -1112,6 +1130,18 @@ export function firNetCashFlow(input: FirNetCashFlowInput): string {
       `<td class="text-right">${money(net / n, true)}</td>` +
       `<td class="small">net &divide; ${n} — the monthly earn/burn balance the annual figure is built from</td></tr>`,
   );
+  if (input.openingBalance !== undefined && input.closingBalance !== undefined) {
+    const recomputed = input.openingBalance + net;
+    if (Math.abs(recomputed - input.closingBalance) > 0.005)
+      throw new Error(
+        `firNetCashFlow: closing-balance reconciliation failed — opening ${fmt2(input.openingBalance)} + net ${fmt2(net)} = ${fmt2(recomputed)} but closing ${fmt2(input.closingBalance)} (G8 abort)`,
+      );
+    rows.push(
+      `<tr><td><b>Closing balance — the statement's last posting</b></td>` +
+        `<td class="text-right">${money(input.closingBalance, true)}</td>` +
+        `<td class="small">opening ${fmt2(input.openingBalance)} + net ${fmt2(net)} = closing ${fmt2(input.closingBalance)} — the last posting's ending balance${input.lastPostingDate ? ` (${escHtml(input.lastPostingDate)})` : ""}, chain-verified</td></tr>`,
+    );
+  }
   let note =
     `<p class="muted">Firm standard basis: the analysis window is the LAST 6 MONTHS — annual revenue = total credits &times; 2, ` +
     `monthly expenses = total debits &divide; 6 (shorter windows: &times;12&divide;n and &divide;n).`;
@@ -1125,6 +1155,95 @@ export function firNetCashFlow(input: FirNetCashFlowInput): string {
     `<div class="analysis-card full-width ncf"><h3>Net Cash Flow &amp; Annualized Run-Rate (Standard 6-Month Basis)</h3>` +
     `<table class="data-table compact"><thead><tr><th>Metric</th><th class="text-right">Value</th><th>Derivation</th></tr></thead><tbody>` +
     rows.join("") +
+    `</tbody></table>${note}</div>`
+  );
+}
+
+/**
+ * Master v1.6.2 — FIR Monthly Net After Exclusions block (owner order ORD-1022-N2, 2026-10-21):
+ * a net cash flow (صافي) figure for EVERY month AFTER exclusions, with the exclusions themselves
+ * rendered as explicit NEGATIVE lines (owner: "نضيف سالب الاستبعادات"). Monthly nets arrive
+ * chain-derived; internal (own-account) credit exclusions are placed in their evidence-backed
+ * months. Outflow exclusions the retained artifacts do not itemize by month stay at window level
+ * with a printed disclosure — placement is never fabricated (G8). Fail-loud: the monthly sums
+ * plus window-level exclusions MUST tie to the verified Adjusted Net Cash Flow exactly, or the
+ * build aborts.
+ */
+export interface FirMonthlyNetRow {
+  /** Month label, e.g. "Sep 2026". */
+  month: string;
+  /** Chain-derived net flow for the month as reported (credits − debits). */
+  net: number;
+  /** Internal (own-account) credit exclusions for this month — rendered as a negative line. */
+  internalCreditExclusions?: number;
+  /** Evidence for the placement, e.g. "29 Sep 2026 · ref prints the account's own number". */
+  basis?: string;
+}
+
+export interface FirMonthlyNetInput {
+  currency: string;
+  rows: FirMonthlyNetRow[];
+  /** Outflow exclusions not itemized by month on the retained artifacts (window-level, disclosed). */
+  windowDebitExclusions?: { amount: number; postings: number; note: string };
+  /** The verified Adjusted Net Cash Flow this block must tie to exactly (G8). */
+  adjustedNet: number;
+}
+
+export function firMonthlyNet(input: FirMonthlyNetInput): string {
+  if (!(input.rows.length > 0)) throw new Error("firMonthlyNet: rows required");
+  const cur = escHtml(input.currency);
+  const signed = (x: number, strong = false) =>
+    `<span class="num">${strong ? "<strong>" : ""}${x < 0 ? "&minus; " : "+ "}${fmt2(Math.abs(x))} ${cur}${strong ? "</strong>" : ""}</span>`;
+  let sumNet = 0;
+  let sumExcl = 0;
+  const body: string[] = [];
+  for (const r of input.rows) {
+    const excl = r.internalCreditExclusions ?? 0;
+    sumNet += r.net;
+    sumExcl += excl;
+    const after = r.net - excl;
+    body.push(
+      `<tr><td>${escHtml(r.month)}${r.basis ? ` <span class="small">${escHtml(r.basis)}</span>` : ""}</td>` +
+        `<td class="text-right">${signed(r.net)}</td>` +
+        `<td class="text-right">${excl > 0 ? `&minus; ${fmt2(excl)}` : `<span class="muted">&mdash;</span>`}</td>` +
+        `<td class="text-right">${signed(after, true)}</td></tr>`,
+    );
+  }
+  const sumAfter = sumNet - sumExcl;
+  let debitAddBack = 0;
+  let debitRow = "";
+  if (input.windowDebitExclusions) {
+    debitAddBack = input.windowDebitExclusions.amount;
+    debitRow =
+      `<tr><td>Plus: outflow exclusions — transfers out to the holder's own linked account, window-level <span class="small">(${input.windowDebitExclusions.postings} postings — ${escHtml(input.windowDebitExclusions.note)})</span></td>` +
+      `<td class="text-right"><span class="muted">&mdash;</span></td>` +
+      `<td class="text-right">+ ${fmt2(debitAddBack)}</td>` +
+      `<td class="text-right">${signed(sumAfter + debitAddBack, true)}</td></tr>`;
+  }
+  const total = sumAfter + debitAddBack;
+  if (Math.abs(total - input.adjustedNet) > 0.005)
+    throw new Error(
+      `firMonthlyNet: tie-out failed — Σ monthly nets ${fmt2(sumNet)} − credit exclusions ${fmt2(sumExcl)} + outflow exclusions ${fmt2(debitAddBack)} = ${fmt2(total)} but verified adjusted net ${fmt2(input.adjustedNet)} (G8 abort)`,
+    );
+  const netTone = input.adjustedNet >= 0 ? "pass" : "fail";
+  const netWord = input.adjustedNet >= 0 ? "NET POSITIVE" : "NET NEGATIVE";
+  const placed = input.rows
+    .filter((r) => (r.internalCreditExclusions ?? 0) > 0)
+    .map((r) => `${escHtml(r.basis ?? r.month)} · ${fmt2(r.internalCreditExclusions!)}`)
+    .join(" and ");
+  const note =
+    `<p class="muted">Owner rule (ORD-1022-N2): the net (صافي) is reported for every month AFTER exclusions, with the exclusions shown as negatives. ` +
+    `Exclusions = internal book transfers between the holder's own accounts (never external income): the placed credit postings are ` +
+    `${placed}, and outflow exclusions of ` +
+    `${fmt2(debitAddBack)} across ${input.windowDebitExclusions?.postings ?? 0} postings are disclosed at window level because the retained artifacts do not itemize their months — placement is never asserted without evidence (G8). ` +
+    `The block ties to the verified Adjusted Net Cash Flow of ${fmt2(input.adjustedNet)} ${cur} in Section 3, to the piastre.</p>`;
+  return (
+    `<div class="analysis-card full-width mnf"><h3>Monthly Net Cash Flow After Exclusions (صافي كل شهر بعد الاستبعادات)</h3>` +
+    `<table class="data-table compact"><thead><tr><th>Month</th><th class="text-right">Net flow (as reported)</th><th class="text-right">Internal exclusions (&minus;)</th><th class="text-right">Net after exclusions</th></tr></thead><tbody>` +
+    body.join("") +
+    `<tr><td><b>WINDOW TOTAL</b></td><td class="text-right">${signed(sumNet)}</td><td class="text-right">&minus; ${fmt2(sumExcl)}</td><td class="text-right">${signed(sumAfter, true)}</td></tr>` +
+    debitRow +
+    `<tr><td><b>ADJUSTED NET CASH FLOW — VERIFIED</b></td><td class="text-right"><span class="muted">&mdash;</span></td><td class="text-right"><span class="muted">&mdash;</span></td><td class="text-right">${signed(input.adjustedNet, true)} <span class="tag ${netTone}">${netWord}</span></td></tr>` +
     `</tbody></table>${note}</div>`
   );
 }

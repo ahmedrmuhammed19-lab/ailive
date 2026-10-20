@@ -131,6 +131,18 @@ ANNUAL and MONTHLY. An exact-day cross-check (365÷days) is printed as a
 transparency note. All figures builder-computed from chain-verified totals —
 never hand-typed (G8).
 
+**SO-15 · NCF CLOSING-BALANCE RECONCILIATION + MONTHLY NET AFTER EXCLUSIONS (ORD-1022-N2)**
+Every FIR Net Cash Flow card (Master v1.6.2) additionally reconciles the result
+to the statement's ENDING BALANCE — the balance carried by the LAST posting:
+opening + net window flow = closing, chain-verified, fail-loud (G8 abort on
+any disagreement). Every FIR also carries the Monthly Net block
+(`firMonthlyNet`): a net (صافي) figure for EVERY month AFTER exclusions, with
+the exclusions rendered as explicit NEGATIVE lines. Exclusions = internal
+(own-account) book transfers, placed only in evidence-backed months; outflow
+exclusions the retained artifacts do not itemize by month stay at window level
+with a printed disclosure — placement is never fabricated. The block ties to
+the verified Adjusted Net Cash Flow to the piastre (G8).
+
 ---
 
 ---
@@ -168,6 +180,7 @@ never hand-typed (G8).
 | ORD-1021-H1 | 2026-10-21 | "in next bank statements send only html" — HTML-only delivery rule | ACCEPTED | **SO-13 codified**: every future statement deliverable = ONE self-contained HTML on the Master design; no PDF/ZIP/XLSX on any channel; chat + repo/public per ORD-1019-F1 · worklog DL-39 |
 | ORD-1021-N1 | 2026-10-21 | "add Net cash flow … multiply the total credit by 2 if the period is 6 months … divide it by 6 because I want the expenses on a monthly basis" + "our standard rule is to use bank statements for the last 6 months" | DONE | **SO-14 codified**; `firNetCashFlow` builder promoted into `report_design.ts` (Master v1.6.1, additive — SO-1); proof build FIR v2 for Royal Way Travel EGP (new file, v1 byte-frozen sha 9e7daaf0…): annual revenue 54,671,500.00 · monthly expenses 4,448,068.84 · NET CASH FLOW annual 1,294,673.90 · monthly 107,889.49 EGP, exact-day cross-check ×1.9211 printed; §8 kept untouched (A4 ceiling) — block lives in §1 Dashboard; print = EXACTLY 9 A4 papers; gates src tsc 0 + next build 0 · worklog DL-39 |
 | ORD-1021-E1 | 2026-10-21 | "i wanna 2 appendix of eid" | PROPOSED — awaiting owner word | Plan: two appendix papers (FIR .sheet vocabulary) for the Eid Farag NBE case — **Appendix A** full 462-row transaction census, **Appendix B** classification atlas & source-document gaps — delivered as ONE self-contained HTML per SO-13. Sandbox wiped the raw Eid rows (SO-12 wipe pattern), so the appendices re-parse + re-verify from the committed census artifact `public/GlobalEIS_Report_EidFarag_NBE_EGP_v4_462rows.html` (G8: abort on any disagreement with printed totals). Owner says `go` to fire |
+| ORD-1022-N2 | 2026-10-21 | "you applied a net cash flow in general also? and can you add which the ending balance or closed was contains to this result, i mean the last transaction in any bank statement + can we add also a net cash flow (صافي) كل شهر بعد استبعادات؟ ونضيف سلب استبعادات؟" | DONE | **SO-15 codified**; Master v1.6.2 additive: `firNetCashFlow` + closing-balance reconciliation row (opening + net = closing, the LAST posting's ending balance, fail-loud G8) and new `firMonthlyNet` builder (net per month AFTER exclusions, exclusions as negatives, ties to verified adjusted net); proof build FIR v3 Royal Way Travel EGP (new file, v2 byte-frozen sha de85f5c3…): placements recovered from committed PSR S10 evidence — Sep 2026 −1,041,000.00 (29 Sep) · Oct 2026 −523,000.00 (07 Oct), refs = own account 00031100008670, sum ties §3 internal 1,564,000.00; self-out debits 750.00 (8 postings) disclosed window-level (not month-itemized on retained artifacts — no fabricated placement); WINDOW TOTAL −916,663.05 → ADJUSTED NET −915,913.05 NET NEGATIVE ties §3 to the piastre; 47 G8 gates PASS, print EXACTLY 9 A4 papers (chrome-headless-shell QA), screens untouched; gates src tsc 0 + next build 0 · worklog DL-40 |
 
 **Open items (owner side, no pressure — listed once):**
 - Bank-issued **digital PDF** for this account → glyph-exact fast-lane confirmation AND closes the two open v3.2 disclosures (S2 fee mass reclassification, S3 counterparty/sign fix).

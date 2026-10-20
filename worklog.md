@@ -3269,3 +3269,61 @@ Stage Summary:
 - HTML-only delivery (SO-13) and the six-month standard (SO-14) are locked rules.
 - Awaiting owner word: ORD-1021-E1 (Eid Farag 2 appendix papers — `go` fires it); USD FIR
   build remains queued behind it.
+
+---
+Task ID: DL-40
+Agent: main (Z.ai)
+Task: Owner — "you applied a net cash flow in general also? and can you add which the ending
+balance or closed was contains to this result, i mean the last transaction in any bank statement
++ can we add also a net cash flow (صافي) كل شهر بعد استبعادات؟ ونضيف سلب استبعادات؟"
+
+Work Log:
+- Q1 answered: YES — general since DL-39 (Master v1.6.1 `firNetCashFlow` + SO-14); Royal Way was
+  only the proof. Re-verified: tree clean, synced with origin, v1/v2 shas intact.
+- Standing orders: SO-15 (NCF CLOSING-BALANCE RECONCILIATION + MONTHLY NET AFTER EXCLUSIONS)
+  codified; ledger row ORD-1022-N2 (DONE).
+- Master promotion (additive, v1.6.2): (a) `FirNetCashFlowInput` + optional openingBalance/
+  closingBalance/lastPostingDate → renders "Closing balance — the statement's last posting" row,
+  builder ASSERTS opening + net = closing (±0.005) else throws (G8); (b) new `firMonthlyNet`
+  builder — net (صافي) per month AFTER exclusions, exclusions as explicit NEGATIVE lines,
+  month placements only from evidence-backed rows, window-level disclosure row for outflow
+  exclusions not itemized by month, fail-loud tie to the verified adjusted net; (c) print-only
+  .mnf compaction + fit-pass rules (screen untouched); TEMPLATE_VERSION → v1.6.2. Caught and
+  fixed en route: the builder note initially hard-typed the two posting dates — rewritten to
+  derive the placed-postings phrase from the input rows (no hand-typed values, G8).
+- Ledger recovery (the DL-37 lesson in action): 142-row rows_a.json wiped again (untracked),
+  but the per-month exclusion placement was recovered from COMMITTED artifacts — PSR S10 Large
+  Deposits carries the two self-ref credits with dates+refs (29 Sep 2026 · 1,041,000.00 and
+  07 Oct 2026 · 523,000.00, ref = own account 00031100008670, sum 1,564,000.00 = FIR §3/§5/§6
+  internal total). The 8 self-out debits (750.00 total) sit below every itemization threshold
+  on retained artifacts → disclosed at window level, placement NOT fabricated (G8).
+- Proof build (scripts/dl40_ncf3.ts — COMMITTED this cycle, ends the wipe pattern): parses EVERY
+  figure from the byte-frozen v2 (sha de85f5c3…) + PSR (no hand-typed numbers): §3 reconciliation
+  table, §4 monthly table (7 months + WINDOW TOTAL, signs from span classes), §6 SELF row,
+  PSR S10 self-ref rows, identity across 3 sites, adjusted-view algebra. 47/47 gates PASS.
+  FIR v3 emitted as NEW file (public/ + download/), v1+v2 untouched; embedded stylesheet
+  upgraded to the Master v1.6.2 constant with an in-order line-subset additive proof.
+- Monthly figures (EGP): Σ nets 647,336.95 − internal credits 1,564,000.00 = −916,663.05 →
+  + outflow exclusions 750.00 (8 postings, window-level) = ADJUSTED NET −915,913.05 NET
+  NEGATIVE, ties §3 to the piastre. Placement effect: Sep +209,235.00 → −831,765.00 and
+  Oct +188,570.00 → −334,430.00 after exclusions — the late-window "strength" is internal
+  funding, now visible per month.
+- Print QA (chrome-headless-shell + pdfinfo, rig noted for reuse): first build 11 pages (both
+  modified papers spilled), fit-pass v2 → 9 pages, visual pass on papers 2+4 at 80 DPI: §1 NCF
+  card with the closing row fits; §3 monthly table renders with Arabic (صافي كل شهر بعد
+  الاستبعادات), negatives, disclosure row and verified tag. QA temps deleted (storage order).
+  Playwright-core install failed (no registry) — chrome-headless-shell CLI +
+  ~/.cache/ms-playwright/chromium_headless_shell-1200 used directly (survives wipes).
+- Gates: full-repo bunx tsc --noEmit → ^src/ count 0; bunx next build exit 0. No mail (DL-31);
+  no engine (DL-32); analyze.ts untouched (ORD-1018-P1); delivered v1/v2 bytes frozen (SO-1).
+  Delivery per SO-13: ONE HTML — chat (download/) + repo/public.
+
+Stage Summary:
+- Master v1.6.2 is the STANDARD: every future FIR now auto-reconciles its Net Cash Flow to the
+  statement's last-posting ending balance AND reports the monthly net (صافي) after exclusions
+  with exclusions as negatives — all derived, all tie-checked, none hand-typed.
+- Exclusion-placement evidence now lives in committed artifacts (PSR S10), proving recovery
+  from git alone works even after sandbox wipes.
+- dl40_ncf3.ts committed — build rigs are no longer wipe-expendable.
+- Awaiting owner word: ORD-1021-E1 (Eid Farag 2 appendix papers — `go` fires it); USD FIR
+  build queued behind it (will carry v1.6.2 blocks automatically).
