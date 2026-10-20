@@ -136,13 +136,33 @@
  * bytes. The PSR doctrine: run BEFORE the visa file is submitted, so
  * nothing in the statement can surprise the assessor.
  *
+ * v1.6.0 (2026-10-21, DL-38): owner RATIFIED ("ratify") the Financial
+ * Intelligence Report (FIR) design — the one-paper-per-section layout the
+ * owner attached as "the html nearest in my mind" and that DL-37 proved
+ * live on the real Royal Way Travel EGP statement (9 A4 papers, one
+ * section per page, print-verified). Promoted additively exactly as
+ * ratified (SO-1). REPORT_CSS gains the .sheet paper layer (one white
+ * paper per section on screen; one A4 page per section in print via the
+ * NAMED @page firpage — the Master default @page contract is untouched),
+ * the paper furniture (.pageno, .map-grid/.map-item report map, .src-line
+ * intelligence-source line, .sub-title, .muted/.dec numeric typography,
+ * .data-table.compact) and FIR-exact metrics for the shared vocabulary
+ * (kpi-cards, section titles, data tables, alert boxes, analysis grids)
+ * all scoped under .sheet so not one existing report renders a pixel
+ * differently. Canonical builders ship with it: firShell(), firCover(),
+ * firSheet(), firPageno(), firMapItem(), firReportMap(), firSourceLine()
+ * — pure string builders, byte-faithful to the ratified markup. Every
+ * v1.5.0 class and export keeps its name and signature. FIR doctrine:
+ * every section is a self-contained paper; every paper names the analysis
+ * functions that produce its figures; print = one section, one page.
+ *
  * Tokens: --primary #005677 / --secondary #008DCB on Segoe UI, gradient
  * header, KPI cards with colored left borders, section bars, pill tags,
  * left-bordered alert boxes, readiness matrix + action gates, prepared-by
  * footer.
  */
 
-export const TEMPLATE_VERSION = "Master v1.5.0 (STANDARD — PSR uplift layer promoted additively from the ratified Pre-Submission Statement Review template v1.4-05, owner-approved 2026-10-20; lineage: v1.4.0 GRAND debit/credit totals + window-prorated income & expense summary from the audited Bola Ayad Gerges Rev 3 build, owner-approved 2026-10-18; v1.3.0 Elgarayadli build promoted 2026-10-15; SO-9 balance double-check appendix A2 added 2026-10-15; v1.2.6 three-way coverage audit 2026-10-11, SO-10 passport appendix 2026-10-11, section order contract 2026-10-11, visa readiness matrix + action gates 2026-10-11, disclaimer hardened 2026-10-11; v1.2 promoted 2026-10-06)";
+export const TEMPLATE_VERSION = "Master v1.6.0 (STANDARD — FIR one-paper-per-section layer promoted additively from the owner-ratified Financial Intelligence Report design, owner-approved 2026-10-21; lineage: v1.5.0 PSR uplift layer promoted from the ratified Pre-Submission Statement Review template v1.4-05, owner-approved 2026-10-20; v1.4.0 GRAND debit/credit totals + window-prorated income & expense summary from the audited Bola Ayad Gerges Rev 3 build, owner-approved 2026-10-18; v1.3.0 Elgarayadli build promoted 2026-10-15; SO-9 balance double-check appendix A2 added 2026-10-15; v1.2.6 three-way coverage audit 2026-10-11, SO-10 passport appendix 2026-10-11, section order contract 2026-10-11, visa readiness matrix + action gates 2026-10-11, disclaimer hardened 2026-10-11; v1.2 promoted 2026-10-06)";
 
 export const REPORT_CSS = `
 /* ===== Master v1.3 tokens (SO-1 locked) ===== */
@@ -306,6 +326,76 @@ tr.total-row td{background:#eef6fa !important;font-weight:bold;border-top:2px so
 .psr-gate b:first-child{color:var(--primary)}
 @media (max-width:640px){.psr-kpis,.psr-kpis tr{display:block;width:auto;border-spacing:0}.psr-kpis td{display:block;margin-bottom:8px}.psr-toc{grid-template-columns:1fr}}
 @media print{.psr-toc{display:none}.psr-kpi,.psr-card,.psr-bar,.psr-card .tag,.psr-card th,.psr-card tr.total-row td{-webkit-print-color-adjust:exact;print-color-adjust:exact}.psr-card{box-shadow:none}}
+
+/* ===== FIR one-paper-per-section layer (Master v1.6.0, DL-38 2026-10-21) =====
+   Promoted additively from the owner-ratified Financial Intelligence Report
+   design (owner-attached HTML; proven live on the real Royal Way Travel EGP
+   build DL-37, public/GlobalEIS_FIR_RoyalWayTravel_EGP.html). Every rule is
+   new or scoped under .sheet (SO-1) — no existing report renders a pixel
+   differently. .sheet carries the NAMED page firpage so the Master default
+   @page contract above is untouched; FIR papers print A4 9mm/11mm. */
+.sheet{max-width:1200px;margin:0 auto 28px;background:var(--white);border-radius:12px;box-shadow:0 4px 20px rgba(0,0,0,0.08);overflow:hidden;position:relative;page:firpage;line-height:normal}
+.sheet .header h1{font-size:2.5em}
+.sheet .header p{opacity:0.9;font-size:1.1em}
+.sheet .content{padding:36px 40px 30px}
+.sheet .kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:20px;margin:0 0 34px}
+.sheet .kpi-card{padding:20px;background:var(--white);border:0;border-left:5px solid var(--secondary)}
+.sheet .kpi-card.success{border-left-color:var(--success)}
+.sheet .kpi-card.danger{border-left-color:var(--danger)}
+.sheet .kpi-card.warning{border-left-color:var(--warning)}
+.sheet .kpi-card:hover{transform:translateY(-5px)}
+.sheet .kpi-card h3{margin:0 0 10px;font-size:1.02em;letter-spacing:0}
+.sheet .kpi-card .value{font-size:1.8em}
+.sheet .kpi-card .note{font-size:0.8em;color:#666;margin:4px 0 0;padding:0;background:none;border:none;border-radius:0}
+.sheet .kpi-card.warning .value{color:#c79100}
+.sheet .section-title{font-size:1.6em;margin:0 0 20px}
+.sheet .data-table{margin:0 0 26px;font-size:0.95em}
+.sheet .data-table th{padding:11px;font-weight:700;text-align:left}
+.sheet .data-table td{padding:11px;vertical-align:middle;font-variant-numeric:tabular-nums}
+.sheet .data-table tr:nth-child(even) td{background:transparent}
+.sheet .analysis-grid{gap:26px;margin-bottom:26px}
+.sheet .analysis-card h3{font-size:1.3em;margin:0 0 1em}
+.sheet .alert-box{padding:20px;margin:6px 0 20px;border-left-width:5px}
+.sheet .tag{border:0}
+.sheet .alert-box p{line-height:1.55}
+.sheet .num{font-weight:700}
+.sheet .footer{border-top:none}
+.sheet .footer strong{color:inherit}
+.data-table.compact th,.data-table.compact td{padding:7px 10px;font-size:0.92em}
+.sub-title{color:var(--primary);margin:6px 0 14px;font-size:1.15em}
+.muted{color:#8a97a0;font-weight:400}
+.dec{font-size:0.72em;font-weight:600;opacity:0.75}
+.src-line{margin-top:24px;padding-top:10px;border-top:1px dashed #e5e9ed;color:#8a97a0;font-size:0.78em;line-height:1.5}
+.src-line b{color:#61707a}
+.pageno{position:absolute;bottom:12px;right:22px;color:#b3bcc2;font-size:0.78em}
+.map-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:12px}
+.map-item{border:1px solid #e1e8ee;border-radius:8px;padding:12px 14px;font-size:0.92em;background:#fbfdfe;line-height:1.5}
+.map-item .no{display:inline-block;background:var(--secondary);color:#fff;border-radius:4px;padding:1px 8px;font-size:0.8em;font-weight:700;margin-right:8px}
+@media (max-width:768px){.sheet .content{padding:24px 20px}}
+@page firpage{size:A4;margin:9mm 11mm}
+@media print{
+.sheet{box-shadow:none;border-radius:0;max-width:none;margin:0;page-break-after:always}
+.sheet:last-of-type{page-break-after:auto}
+.sheet .content{padding:14px 4px 20px;font-size:0.94em}
+.pageno{display:none}
+.sheet .header{padding:26px 20px}
+.sheet .header h1{font-size:2em}
+.sheet .kpi-card,.sheet .data-table,.sheet .alert-box{page-break-inside:avoid}
+.sheet .kpi-card:hover{transform:none}
+.sheet .kpi-card{padding:13px 15px}
+.sheet .kpi-card .value{font-size:1.5em}
+.sheet .kpi-grid{gap:12px;margin-bottom:16px}
+.sheet .alert-box{padding:13px 16px;margin-bottom:14px}
+.sheet .alert-box p,.sheet .alert-box li{line-height:1.45}
+.sheet .data-table{margin-bottom:14px}
+.sheet .data-table th,.sheet .data-table td{padding:6px 8px}
+.sheet .data-table.compact th,.sheet .data-table.compact td{padding:4px 7px}
+.sheet .analysis-grid{grid-template-columns:1fr 1fr;gap:14px}
+.sheet .analysis-card{padding:12px 14px}
+.sheet .src-line{margin-top:14px}
+.sheet .map-grid{gap:8px}
+.sheet .map-item{padding:8px 10px;font-size:0.85em}
+}
 `;
 
 export function escHtml(s: string): string {
@@ -902,4 +992,54 @@ export function psrTocEntry(anchor: string, no: string, title: string, desc: str
 /** Assessment-map TOC grid (hidden in print). */
 export function psrToc(entries: string[]): string {
   return `<div class="psr-toc">${entries.join("")}</div>`;
+}
+
+/* ===== FIR canonical builders (Master v1.6.0, DL-38 2026-10-21) =====
+   Byte-faithful string builders for the owner-ratified Financial
+   Intelligence Report vocabulary (one paper per section). Pure additive
+   exports — no existing export is touched. Doctrine: every section is a
+   self-contained paper (screen: one white card; print: one A4 page), every
+   paper ends with its intelligence-source line naming the analysis
+   functions that produce its figures. Pair with the shared vocabulary
+   builders above (kpiCard/kpiGrid/sectionTitle/alertBox/analysisCard/
+   analysisGrid/tag) — inside a .sheet they render with the ratified FIR
+   metrics via the scoped CSS layer. */
+
+/** One paper: <section class="sheet">…</section> with its Paper N / M folio. extraClass: semantic marker (e.g. "cover") — carries no CSS, mirrors the ratified markup. */
+export function firSheet(innerHtml: string, no: number, total: number, extraClass?: string): string {
+  const cls = extraClass ? ` ${extraClass}` : "";
+  return `<section class="sheet${cls}">\n${innerHtml}\n${firPageno(no, total)}\n</section>`;
+}
+
+/** Paper folio — bottom-right, screen only (hidden in print). */
+export function firPageno(no: number, total: number): string {
+  return `<div class="pageno">Paper ${no} / ${total}</div>`;
+}
+
+/** Cover paper header — gradient banner, optional download button (owner design keeps it ON), sub-lines. */
+export function firCover(opts: { title: string; subLines: string[]; downloadButton?: boolean }): string {
+  const btn = opts.downloadButton === false ? "" : `<button class="download-btn" onclick="window.print()">&#11015; Download PDF Report</button>`;
+  const lines = opts.subLines.map((l) => `<p>${l}</p>`).join("\n");
+  return `<div class="header">\n${btn}\n<h1>${escHtml(opts.title)}</h1>\n${lines}\n</div>`;
+}
+
+/** One report-map tile — chip number + bold title + em-dash description. */
+export function firMapItem(no: string, title: string, desc: string): string {
+  return `<div class="map-item"><span class="no">${escHtml(no)}</span><b>${escHtml(title)}</b> — ${desc}</div>`;
+}
+
+/** Report map grid (the cover's one-paper-per-section map). */
+export function firReportMap(items: string[]): string {
+  return `<div class="map-grid">\n${items.join("\n")}\n</div>`;
+}
+
+/** FIR intelligence-source line — the same traceability doctrine as the PSR, in the ratified FIR voice. */
+export function firSourceLine(fns: string[], lib = "eis_analysis_functions.py"): string {
+  const list = fns.map((f) => escHtml(f)).join(" &middot; ");
+  return `<div class="src-line"><b>Intelligence source:</b> ${list} — ported from <b>${escHtml(lib)}</b> (agent-side derivation; every figure above re-computed from the raw ledger and chain-verified to the piastre)</div>`;
+}
+
+/** FIR document shell — full HTML doc whose body is the joined papers (no .container wrapper, no outer footer; the footer lives inside the last paper per the ratified design). */
+export function firShell(opts: { pageTitle: string; sheets: string[] }): string {
+  return `<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="UTF-8">\n<meta name="viewport" content="width=device-width, initial-scale=1.0">\n<title>${escHtml(opts.pageTitle)}</title>\n<style>${REPORT_CSS}</style></head>\n<body>\n\n${opts.sheets.join("\n")}\n</body>\n</html>`;
 }
